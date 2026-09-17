@@ -45,11 +45,16 @@ law("L4 uncoverable send fails", () => {
   assert.throws(() => o.nextBalance("0"), /cannot cover/);
 });
 
-law("L5 balance after is exactly minus the starter", () => {
-  const before = "1000000000000000000000000"; // 0.001 XNO
+law("L5 balance after is exactly minus the starter, and the starter is really 0.00001 XNO", () => {
+  const XNO = 10n ** 30n; // 1 XNO in raw — the unit that makes this law worth having
+  const before = (XNO / 1000n).toString(); // 0.001 XNO
   const after = o.nextBalance(before);
   assert.strictEqual(BigInt(before) - BigInt(after), BigInt(o.STARTER_RAW));
-  assert.strictEqual(o.STARTER_RAW, "10000000000000000000000");
+  // Derive the expected amount rather than restating the literal: the previous version of this law asserted the
+  // constant against itself, so it passed happily while the starter was 1000x too small.
+  assert.strictEqual(BigInt(o.STARTER_RAW), XNO / 100000n, "the starter must be 0.00001 XNO");
+  // A starter below a node's default receive_minimum (0.000001 XNO) may never be auto-received.
+  assert.ok(BigInt(o.STARTER_RAW) > XNO / 1000000n, "the starter must clear the default receive_minimum");
 });
 
 law("L6 an opening needs an address and a block hash", () => {
@@ -72,7 +77,7 @@ law("L8 we cannot send from an unopened account", () => {
   // same fact the whole project rests on: nobody opens their own account, including us.
   assert.throws(() => o.sendBlock(nano, {
     secretKey: sk, account: self, previous: "0".repeat(64), representative: self,
-    balanceRaw: "1000000000000000000000000", to: other,
+    balanceRaw: "1000000000000000000000000000", to: other,
   }), /impossible/i);
 });
 
@@ -82,12 +87,12 @@ law("signing matches holdergameDex's call shape", () => {
     account: self,
     previous: "B".repeat(64), // our frontier, once someone has opened us
     representative: self,
-    balanceRaw: "1000000000000000000000000",
+    balanceRaw: "1000000000000000000000000000",
     to: other,
   });
   assert.strictEqual(b.hash.length, 64);
   assert.strictEqual(b.block.signature.length, 128);
-  assert.strictEqual(BigInt(b.balanceAfter), BigInt("1000000000000000000000000") - BigInt(o.STARTER_RAW));
+  assert.strictEqual(BigInt(b.balanceAfter), BigInt("1000000000000000000000000000") - BigInt(o.STARTER_RAW));
 });
 
 console.log(failed ? `\n${failed} law(s) failed` : "\nall laws pass");

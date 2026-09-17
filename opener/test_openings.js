@@ -35,7 +35,10 @@ const law = (n, fn) => {
 law("L1 a first claim succeeds", (p) => {
   const db = led.open(p);
   assert.strictEqual(led.reserve(db, A, { foundVia: "test" }).ok, true);
-  assert.deepStrictEqual(led.counts(db), { sent: 0, reserved: 1, unknown: 0 });
+  const c = led.counts(db);
+  assert.strictEqual(c.reserved, 1);
+  assert.strictEqual(c.starters_sent, 0);
+  assert.strictEqual(c.opened_by_us, 0);
 });
 
 law("L2 a second claim is refused", (p) => {
@@ -93,15 +96,37 @@ law("L7 an unknown outcome is never claimable again", (p) => {
   assert.strictEqual(led.release(db, A, "try to force it").ok, false, "release must not resurrect an unknown");
 });
 
-law("L8 only sent rows are openings", (p) => {
+law("L8 a starter sent is not an account opened until the chain says so", (p) => {
   const db = led.open(p);
   led.reserve(db, A); led.confirm(db, A, HASH);
   led.reserve(db, B); // still only reserved
-  const rows = led.opened(db);
-  assert.strictEqual(rows.length, 1);
-  assert.strictEqual(rows[0].account, A);
-  assert.strictEqual(rows[0].block, HASH);
-  assert.deepStrictEqual(led.counts(db), { sent: 1, reserved: 1, unknown: 0 });
+
+  // The send happened. That is spending, not adoption.
+  const sent = led.startersSent(db);
+  assert.strictEqual(sent.length, 1);
+  assert.strictEqual(sent[0].account, A);
+  assert.strictEqual(sent[0].block, HASH);
+  assert.strictEqual(led.opened(db).length, 0, "an unverified send must never be published as an opening");
+
+  let c = led.counts(db);
+  assert.strictEqual(c.starters_sent, 1);
+  assert.strictEqual(c.opened_by_us, 0);
+  assert.strictEqual(c.unverified, 1);
+
+  // The chain says the account was already open before us: still not ours to claim.
+  led.recordChainCheck(db, A, { openedByUs: false, received: true });
+  assert.strictEqual(led.opened(db).length, 0);
+  c = led.counts(db);
+  assert.strictEqual(c.not_opened_by_us, 1);
+  assert.strictEqual(c.unverified, 0);
+
+  // Only when our own block is the account's open block does it count.
+  led.recordChainCheck(db, A, { openedByUs: true, received: true });
+  const opened = led.opened(db);
+  assert.strictEqual(opened.length, 1);
+  assert.strictEqual(opened[0].account, A);
+  assert.ok(opened[0].verified_at, "an opening carries the time it was checked");
+  assert.strictEqual(led.counts(db).opened_by_us, 1);
 });
 
 law("L9 the lock excludes a live sender and ignores a dead one", (p, dir) => {

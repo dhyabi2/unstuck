@@ -8,7 +8,11 @@
  * Everything that decides is a pure function below, so the laws can be tested without a chain, a key or a network.
  */
 
-const STARTER_RAW = "10000000000000000000000"; // 0.00001 XNO
+// 0.00001 XNO. **1 XNO = 10^30 raw**, so this is 10^25 — it is written out in full because getting it wrong is silent:
+// the first version of this line had three zeros too few (10^22 = 0.00000001 XNO), and 11 agents were opened with a
+// thousandth of the intended starter before the chain balance gave it away. 10^22 also sits below a node's default
+// receive_minimum of 0.000001 XNO, so those sends may never be auto-received at all.
+const STARTER_RAW = "10000000000000000000000000";
 const SEND_DIFFICULTY = "fffffff800000000";
 
 /** A Nano address is checkable offline; we never send to one we cannot check. */

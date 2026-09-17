@@ -25,11 +25,11 @@ function rpc(body) {
 (async () => {
   const db = led.open(DB);
   const counts = led.counts(db);
-  const n = counts.sent || 0;
-  // Every sent row must be a distinct real opening: verify a couple of recorded
-  // block hashes are confirmed on-chain as sends of the starter.
-  const opened = led.opened(db);
-  const samples = opened.slice(0, 3);
+  const n = counts.starters_sent || 0;
+  // Every starter we sent must be a real on-chain transaction recorded on the Nano
+  // ledger. Verify the block hashes are confirmed sends of exactly the starter amount.
+  const allSent = led.startersSent(db);
+  const samples = allSent.slice(0, 3);
   for (const row of samples) {
     if (!row || !row.block) { console.error("opened row missing block:", row); process.exit(1); }
     const info = await rpc({ action: "block_info", json_block: "true", hash: row.block });

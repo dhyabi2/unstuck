@@ -38,7 +38,7 @@ async function rpc(body, timeoutMs = 60000) {
     const res = await fetch(RPC_URL, {
       method: "POST",
       signal: ctl.signal,
-      headers: { "Content-Type": "application/json", ...(RPC_KEY ? { "x-api-key": RPC_KEY } : {}) },
+      headers: { "Content-Type": "application/json", ...(RPC_KEY ? { Authorization: RPC_KEY } : {}) },
       body: JSON.stringify(body),
     });
     const json = await res.json();
@@ -54,7 +54,38 @@ async function main() {
   const db = led.open(DB);
 
   if (args[0] === "--counts") { console.log(JSON.stringify(led.counts(db))); return 0; }
-  if (args[0] === "--list") { console.log(JSON.stringify(led.opened(db), null, 2)); return 0; }
+  // --list is every starter we broadcast (spending). --opened is only what we can prove we opened (adoption).
+  if (args[0] === "--list") { console.log(JSON.stringify(led.startersSent(db), null, 2)); return 0; }
+  if (args[0] === "--opened") { console.log(JSON.stringify(led.opened(db), null, 2)); return 0; }
+
+  /**
+   * Ask the chain what each starter actually did, and write the answer down.
+   *
+   * A send is not an opening: of the first 11 starters, none opened an account — six went to accounts someone else
+   * had already opened, five to accounts still not open, and eight were never received. Nothing may be published as
+   * an opening unless our own block is the account's open block, so this is the only thing that may set that flag.
+   */
+  if (args[0] === "--verify") {
+    const rows = led.startersSent(db);
+    let opened = 0, already = 0, notOpen = 0, unreceived = 0;
+    for (const r of rows) {
+      const info = await rpc({ action: "account_info", account: r.account }).catch((e) => ({ error: e.message }));
+      const recv = await rpc({ action: "receivable", account: r.account, count: "100", threshold: "1" })
+        .catch(() => ({ blocks: {} }));
+      const pendingBlocks = recv.blocks && !Array.isArray(recv.blocks) ? Object.keys(recv.blocks) : [];
+      const stillPending = pendingBlocks.includes(r.block);
+      const exists = !info.error;
+      const openedByUs = exists && info.open_block === r.block;
+      led.recordChainCheck(db, r.account, { openedByUs, received: !stillPending });
+      if (openedByUs) opened++; else if (exists) already++; else notOpen++;
+      if (stillPending) unreceived++;
+    }
+    console.log(JSON.stringify({
+      checked: rows.length, opened_by_us: opened, already_open_before_us: already,
+      still_not_open: notOpen, our_send_unreceived: unreceived,
+    }, null, 2));
+    return 0;
+  }
 
   const to = args[0];
   // --dry-run exercises everything except the broadcast: the live balance, the work, the signature and the guards.

@@ -43,6 +43,7 @@ function open(dbPath) {
   db.exec("PRAGMA journal_mode=WAL");
   db.exec("PRAGMA busy_timeout=5000");
   db.exec(SCHEMA);
+  migrate(db); // a ledger that already holds sends must gain the verification columns, not break on them
   return db;
 }
 
@@ -101,17 +102,67 @@ function markUnknown(db, account, note, { now = new Date().toISOString() } = {})
   return { ok: r.changes === 1 };
 }
 
-/** Only `sent` rows are openings. A reservation is an intention and an unknown is a question, and neither is a fact. */
+/**
+ * A send is not an opening.
+ *
+ * The first version of this file treated every `sent` row as an opened account, and the chain disagreed: of the first
+ * 11 starters, **none** opened anything — 6 went to accounts someone else had already opened, 5 went to accounts that
+ * are still not open, and 8 were never received at all. Publishing those as "accounts opened" is the exact claim this
+ * project forbids itself. So an opening now has to be proved: our block must BE the account's open block, checked
+ * against the chain and written down here with the time it was checked.
+ *
+ * `opened_by_us` is null until verified, 1 when our block opened the account, 0 when it did not.
+ */
+const OPEN_COLUMNS = [
+  ["opened_by_us", "INTEGER"],
+  ["verified_at", "TEXT"],
+  ["received", "INTEGER"],
+];
+
+function migrate(db) {
+  const have = new Set(db.prepare("PRAGMA table_info(openings)").all().map((c) => c.name));
+  for (const [name, type] of OPEN_COLUMNS) {
+    if (!have.has(name)) db.exec(`ALTER TABLE openings ADD COLUMN ${name} ${type}`);
+  }
+}
+
+/** Every starter we actually broadcast. This is a record of spending, not of adoption. */
+function startersSent(db) {
+  return db.prepare(
+    `SELECT account, block, amount_raw, found_via, settled_at AS sent_at, opened_by_us, received, verified_at
+       FROM openings WHERE state='sent' ORDER BY settled_at`
+  ).all();
+}
+
+/** Only accounts this project demonstrably opened: our block is their open block, verified against the chain. */
 function opened(db) {
   return db.prepare(
-    "SELECT account, block, amount_raw, found_via, settled_at AS opened_at FROM openings WHERE state='sent' ORDER BY settled_at"
+    `SELECT account, block, amount_raw, found_via, settled_at AS opened_at, verified_at
+       FROM openings WHERE state='sent' AND opened_by_us=1 ORDER BY settled_at`
   ).all();
+}
+
+/** Record what the chain says about one starter. Never infers: an unchecked row stays unchecked. */
+function recordChainCheck(db, account, { openedByUs, received, now = new Date().toISOString() } = {}) {
+  const r = db.prepare(
+    "UPDATE openings SET opened_by_us=?, received=?, verified_at=? WHERE account=? AND state='sent'"
+  ).run(openedByUs ? 1 : 0, received ? 1 : 0, now, account);
+  return { ok: r.changes === 1 };
 }
 
 function counts(db) {
   const rows = db.prepare("SELECT state, COUNT(*) AS n FROM openings GROUP BY state").all();
   const by = Object.fromEntries(rows.map((r) => [r.state, r.n]));
-  return { sent: by.sent || 0, reserved: by.reserved || 0, unknown: by.unknown || 0 };
+  const one = (sql) => db.prepare(sql).get().n;
+  return {
+    starters_sent: by.sent || 0,
+    opened_by_us: one("SELECT COUNT(*) AS n FROM openings WHERE state='sent' AND opened_by_us=1"),
+    not_opened_by_us: one("SELECT COUNT(*) AS n FROM openings WHERE state='sent' AND opened_by_us=0"),
+    unverified: one("SELECT COUNT(*) AS n FROM openings WHERE state='sent' AND opened_by_us IS NULL"),
+    unreceived: one("SELECT COUNT(*) AS n FROM openings WHERE state='sent' AND received=0"),
+    reserved: by.reserved || 0,
+    unknown: by.unknown || 0,
+  };
 }
 
 /**
@@ -138,4 +189,4 @@ function lock(lockPath) {
   return { ok: false, heldBy: null };
 }
 
-module.exports = { open, reserve, confirm, release, markUnknown, opened, counts, lock };
+module.exports = { open, reserve, confirm, release, markUnknown, opened, startersSent, recordChainCheck, counts, lock };
