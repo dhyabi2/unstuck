@@ -17,6 +17,8 @@ Created: 2026-09-17T11:20 UTC
 | 2     | PASSED | L2-L4 | send integration via Nano RPC: sign, generate work, broadcast, record |
 | 3     | PASSED | L0-L4 (unwind) | First real send on mainnet: end-to-end pipeline from treasury → work generation → signing → broadcast → on-chain confirmation |
 | 9     | PASSED | L5-L6          | x402 ecosystem Nano survey: scanned 735 services on x402-list.com via API, probed top 100 for Nano presence — ZERO found. Built x402-ecoscan.js, saved 614-candidate pipeline.
+| 10    | PASSED (block-10-checkpoint) | L0-L1 | Re-scanned x402-list (782 services), all directories. ZERO new Nano agents. 11 accounts confirmed sent. Pipeline exhausted for scanning.
+| 11    | PASSED | B1-B2 | Nano-to-USDC x402 bridge proxy (bridge.js). Accepts Nano payments from agents, proxies requests to USDC x402 services, converts pricing via live CoinGecko feed. 6 new tests. All 42 tests pass.
 
 ---
 
@@ -85,6 +87,22 @@ This is the largest verified ecosystem gap yet measured: 614 online, payment-rea
 **L5: proven.** `x402-ecoscan.js --top 100` returns hasNano=0. Live probe of 100 services confirmed.
 
 **L6: proven.** `x402-candidates-614.json` has 614 entries with base_url, buyers, and category. `ecoscan-report.json` has the full probe results.
+
+### Block 10
+
+**Checkpoint: re-scanned x402-list.com.** 782 services (from 735). ZERO have Nano. All 11 accounts confirmed sent on-chain. All tests pass. Pipeline for scanning x402 services and agent registries is genuinely exhausted.
+
+### Block 11
+
+**B1 (minted): proven.** `bridge.extractX402Accepts` correctly extracts accepts arrays from both JSON bodies and base64 PAYMENT-REQUIRED headers. Returns empty for non-402 responses. 3 B1 tests pass.
+
+**B2 (minted): proven.** `bridge.usdToNanoRaw("0.001")` returns a raw amount string (live CoinGecko price feed). Falls back to env var. 1 B2 test passes.
+
+**B3 (test-only): proven.** `bridge.verifyNanoPayment` correctly rejects non-state blocks and invalid block hashes. 1 B3 test passes.
+
+**B4 (test-only): proven.** The in-memory payment map (`paidRequests`) correctly tracks payments by block hash, preventing double-verification. 1 B4 test passes.
+
+All prior block tests pass: 9 (opener) + 9 (openings) + 10 (sender) + 8 (discover) + 6 (bridge) = 42.
 
 All prior block tests (test_discover.js, test_opener.js, test_openings.js, test_sender.js) still pass: 8+9+9+10 = 36 tests.
 
