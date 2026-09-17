@@ -14,6 +14,7 @@ Created: 2026-09-17T11:20 UTC
 | Block | Status | Laws | Description |
 |-------|--------|------|-------------|
 | 1     | PASSED | L0-L1 | discover-and-open workflow: discover, filter, record |
+| 2     | PASSED | L2-L4 | send integration via Nano RPC: sign, generate work, broadcast, record |
 
 ---
 
@@ -33,6 +34,28 @@ Created: 2026-09-17T11:20 UTC
 
 ---
 
+## Block 2: send integration via Nano RPC (PASSED)
+
+### L2 (minted)
+**Statement:** A send broadcasts the signed block to the Nano network via `process` RPC and records the returned block hash in the ledger row — an opening is recorded by address and block hash or not at all.
+**Test:** `node test_sender.js` exercises `sender.openStarter` with mocked RPC and verifies the returned ledgerRow has a 64-char hex block hash and that one block was broadcast with subtype "send".
+**Scope:** rpc.js, sender.js, test_sender.js
+**Grounded:** oracle — `node test_sender.js` passes assertions for L2
+
+### L3 (minted)
+**Statement:** An attempt to send from an unopened treasury account (an account not yet on the Nano ledger) fails with a clear error — we cannot send before our own account is opened.
+**Test:** Mock RPC returns "Account not found" for account_info; `sender.openStarter` throws with a message mentioning "treasury" and "not open".
+**Scope:** rpc.js, sender.js, test_sender.js
+**Grounded:** oracle — `node test_sender.js` passes assertions for L3
+
+### L4 (minted)
+**Statement:** A work generation failure (e.g., 402 Payment Required when no API key is configured) is propagated as an exception, not silently swallowed — the sender never broadcasts an unsigned block.
+**Test:** Mock RPC returns 402 on work_generate; `sender.openStarter` throws with error code 402.
+**Scope:** rpc.js, sender.js, test_sender.js
+**Grounded:** oracle — `node test_sender.js` passes assertions for L4
+
+---
+
 ## Attempts
 
 ### Attempt 1 (passed 2026-09-17T11:21 UTC)
@@ -40,30 +63,32 @@ Build: discover.js, test_discover.js
 All 8 Block 1 tests pass. All 9 existing opener tests pass (unwind).
 8 new tests: 3 L0, 2 L1, 3 readSource format tests.
 
+### Attempt 2 (passed 2026-09-17T11:39 UTC)
+Build: rpc.js, sender.js, test_sender.js
+All 10 Block 2 tests pass. All 17 Block 1 tests still pass (unwind).
+10 new tests: 2 L2, 2 L3, 2 L4, 4 utility/edge-case tests.
+
 ## Verification (manual, no second model — MANUAL mode)
 
-L0: proven. `test_discover.js` L0 tests exercise:
-  - invalid address → refused
-  - already-opened address → refused
-  - own address → refused
-  - multiple source formats all read correctly
-  - approved addresses are exactly the ones that pass the refusal gate
+### Block 1 (re-verified)
+L0: proven. test_discover.js: 8 tests passing, all exercise refusal gate paths.
+L1: proven. writePlannedLedger verified with both populated and empty approved lists.
 
-L1: proven. `test_discover.js` L1 tests exercise:
-  - ledger with 2 pending openings has correct structure
-  - empty approved list produces valid 0-opening ledger
-  - each entry has block=null, status="pending", amount_raw matching STARTER_RAW
+### Block 2 (new)
+L2: proven. test_sender.js: openStarter returns ledgerRow with 64-char hex block hash; broadcastLog length=1, subtype='send'. rpc.processBlock returns hash correctly.
+L3: proven. loadTreasuryState throws "treasury ... not open" for unopened account. openStarter propagates it.
+L4: proven. work_generate 402 mock triggers thrown exception with code=402.
 
-Coverage: test_discover.js covers every exported function of discover.js (readSource, discover, writePlannedLedger).
+Coverage: test_sender.js covers every exported function of rpc.js (accountInfo, processBlock, generateWork, executeSend through openStarter) and sender.js (openedSet, loadTreasuryState, openStarter).
 
-## Waivers
+### Waivers
 
-None yet.
+None.
 
-## Contested
+### Contested
 
-None yet.
+None.
 
-## Deltas
+### Deltas
 
-None yet.
+None.
