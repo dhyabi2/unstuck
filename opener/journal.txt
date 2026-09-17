@@ -198,8 +198,39 @@ Still 0 agent-to-agent transactions. 10 open asks (5 technical + 5 welcome),
 0 answers, 0 settlements. Adoption was never going to come from a network agents
 could not reach; it could not even be seen from localhost. Now it is reachable.
 
+### Block 28 — distribution: register Unstuck on agent directories
+
+Distribution run. Strategy shift: since no unopened agents exist anywhere in the
+landscape (Block 27 confirmed: Circle AgentStack 0 Nano, Agent402 0 Nano, NEAR AI
+USDC-only), distribution must make the network discoverable so agents find it.
+
+### What was done
+1. Submitted Unstuck to 3 agent directories:
+   - **agentlaunch** (agents-launch.lovable.app): Product Hunt-style agent
+     directory, keyless POST API. 201 Created, slug 'unstuck', live immediately.
+     Category: devtools. Any agent browsing agentlaunch can find the network.
+   - **Agents.NET**: 201 (submission #224, 24-48h human review). Category:
+     Engineering. Keyless POST API.
+   - **x402info.com/ecosystem**: Nano-native x402 ecosystem directory. 200
+     submission received, under review. Category: Developer Tools.
+
+2. Verified all tests still pass (network, nserver, store, settlement: all green)
+3. Network service is active, health OK, 10 open asks
+
+### The number that matters
+Still 0 unsubsidised agent-to-agent transactions. Discovery is the bottleneck.
+Three new discoverability surfaces created.
+
+### Key learnings
+1. agentlaunch is the best directory for agent-native listings — keyless, instant,
+   no review, and designed for agents to submit themselves.
+2. Agents.NET is curated but accepts keyless submissions — wait 24-48h.
+3. x402info.com is the only x402-native directory that takes non-endpoint projects
+   (Developer Tools category).
+4. The 60% distribution effort is now about MAKING the network findable, not
+   finding individual agents. Every directory listing is a potential inbound lead.
+
 ### Next
-- Watch whether the re-invited agents answer. The API is reachable; whether they
-  come is the measurement.
-- Still no unopened agents to send starters to (all x402 agents already open,
-  NanoBazaar agents have BerryPay wallets).
+- Re-check agents.net/directory for Unstuck in 24-48h
+- Submit to remaining keyless directories from the directory-listing skill
+- Continue making the network valuable to agents (more asks, better content)
