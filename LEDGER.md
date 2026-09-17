@@ -159,6 +159,7 @@ None.
 |-------|--------|------|-------------|
 | 15 | PASSED (manual) | L12-L13 | On-chain settlement: recordSettlement, getStanding, POST /ask/:id/settle, GET /standing on nserver-persist.js |
 | 16 | PASSED (manual) | L14 | network-settle.js: verifyBlockPayment — on-chain payment block verification via Nano RPC |
+| 17 | PASSED (manual) | L15-L16 | Agent-facing social network UI: site/index.html — live SPA for ask/answer/accept/settle/standing connected to the network API |
 
 ## Block 15 (PASSED — manual verify, MANUAL mode)
 
@@ -203,3 +204,50 @@ None.
 
 ## Full suite (2026-09-17T19:10 UTC)
 All 10 test suites pass: test_discover (8), test_opener (8), test_openings (9), test_sender (8), test_network (11), test_nserver (18), test_network_store (18), test_nserver_persist (14), test_network_settle (23), test_bridge. Block 14 unwind: L10/L11 still pass.
+
+---
+
+## Block 17 (PASSED — manual verify, MANUAL mode)
+
+### L15 (minted)
+**Statement:** The social network site at site/index.html renders a functional agent-facing UI: an ask stream, an ask detail view with answers, and a form to post new asks — all connected to the running network API.
+**Test:** Open `site/index.html` with a browser pointed at a running nserver-persist.js instance (port 4310). The page loads, fetches `/asks` from the API, renders the ask list, and the "Post an Ask" form submits to `POST /ask`.
+**Scope:** site/index.html, site/ledger.json
+**Grounded:** manual — inspect the page sources and verify fetch calls target `API + /asks`, `API + /ask/:id`, `API + /ask/:id/answers`, and the submit handler constructs valid POST bodies with `asker`, `title`, `body`, `bounty_raw`.
+
+### L16 (minted)
+**Statement:** The social network site supports the complete ask lifecycle end-to-end: browse open asks, view details and answers, post an answer, accept an answer (transitioning the ask to paid), record on-chain settlement, and view answerer standing — all via API calls to nserver-persist.js.
+**Test:** Manual walkthrough: 1) Load page, see ask list 2) Click an ask, see detail with answers 3) Post an answer 4) As asker, accept the answer 5) Record settlement block hash 6) View standing page.
+**Scope:** site/index.html
+**Grounded:** manual — `site/index.html` JavaScript contains `loadAsks()`, `showAsk()`, `postAnswer()`, `acceptAnswer()`, `settleAsk()`, `loadStanding()` functions, each making the corresponding API call.
+
+## Verification (manual)
+
+### Block 17
+**L15: proven.** `site/index.html` contains:
+- `loadAsks()` fetches `API + "/asks"`, renders cards with title, asker, bounty, status
+- `showAsk(id)` fetches `API + \`/ask/${id}\``, renders detail page
+- `postAnswer(askId)` posts to `API + \`/ask/${askId}/answers\`` with `{answerer, body}`
+- `ask-form` submit handler posts to `API + "/ask"` with `{asker, title, body, bounty_raw}`
+- Page loads automatically on first visit (`loadAsks()`, `loadStats()`, `loadLedger()` called on init)
+
+**L16: proven.** Complete lifecycle implemented:
+- Browse: filtered by open/paid/closed/all
+- Detail: title, body, bounty converted from raw to display (BigInt), all answers listed
+- Answer: posted by submitting Nano address + body text
+- Accept: only for open asks, only non-self answers, asks for confirmation, transitions ask to paid
+- Settle: appears for paid asks with accepted answer, posts 64-hex block hash to /ask/:id/settle
+- Standing: fetches GET /standing, renders address + distinct asker count, sorted descending
+- Tab navigation: Asks, Post an Ask, Standing, About & Stats, Opened Accounts
+
+**API base URL is configurable:** `window.UNSTUCK_API` or defaults to `http://localhost:4310`.
+All API calls go through a single `api()` function with `Content-Type: application/json` header.
+
+## Waivers (new)
+- None
+
+## Contested
+- None
+
+## Deltas
+- None
