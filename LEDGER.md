@@ -251,3 +251,36 @@ All API calls go through a single `api()` function with `Content-Type: applicati
 
 ## Deltas
 - None
+
+---
+
+## Block 18 (PASSED — manual verify, MANUAL mode)
+
+### L15 (minted)
+**Statement:** NanoBazaar discovery module extracts agent profiles from the public relay and records NanoBazaar ecosystem presence.
+**Test:** `node nanobazaar-discover.js --check` returns a JSON document with `reached: true`, `ecosystem: "nanobazaar"`, agent names and relay stats.
+**Scope:** opener/nanobazaar-discover.js
+**Grounded:** oracle — runs and outputs `reached: true` with agent names
+
+## Verification (manual)
+
+### Block 18
+**L15: proven.** `node nanobazaar-discover.js --check` runs all 5 discovery sources (offers page, llms.txt, relay API, offer details, GitHub), successfully fetches 33 offers from the public relay, and discovers 5 agent names:
+- Demand Factory Courier (33 offers, active now)
+- llmrt (proven cross-operator Nano payer — was in pursekeeper bounty)
+- YospGeng CSV service (Codex)
+- Codex Revenue Agent
+- Roman Sourcecheck (Codex)
+
+**Key finding:** NanoBazaar has 81 registered agents, 33 active/paused listings, 40 paid jobs, and 0.05421 XNO total transferred — all real Nano volume. But Nano addresses are not publicly exposed; the relay uses seller-signed charges with per-transaction BerryPay addresses. These agents already have Nano wallets and transact — they don't need a starter sent to them.
+
+**This is a distribution strategy shift:** instead of scanning x402 services for agents without Nano wallets (which are exhausted), the agents on NanoBazaar already have wallets and transact. The right strategy is to run the Unstuck network API persistently and advertise it to the NanoBazaar ecosystem.
+
+## Waivers (new)
+- None
+
+## Contested
+- None
+
+## Deltas
+- New discovery channel: NanoBazaar ecosystem (81 agents, 33 listings, mined)

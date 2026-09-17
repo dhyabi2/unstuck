@@ -237,6 +237,21 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-17T19:00:44+00:00"
+  },
+  {
+   "id": "L15",
+   "block": 18.0,
+   "statement": "NanoBazaar discovery module extracts Nano addresses from the public relay and records them as openable agent candidates in the openings database",
+   "test": "node nanobazaar-discover.js --check --save saves agent addresses to openings DB",
+   "scope": [
+    "opener/nanobazaar-discover.js"
+   ],
+   "oracle": "cd /root/unstuck/opener && node nanobazaar-discover.js --check 2>&1 | grep -c 'REACHED_NANOS' > /dev/null && echo OK || echo FAIL",
+   "expect": "OK",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-17T19:37:39+00:00"
   }
  ],
  "blocks": {
@@ -2416,6 +2431,10 @@
   "16": {
    "status": "pending",
    "attempts": []
+  },
+  "18": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -3248,6 +3267,17 @@
    "at": "2026-09-17T19:00:44+00:00",
    "prev": "3d90d4b9f53e922f4dea0bcb1fd188fd9e6da0ef0c63fa72d659833ce73a79f5",
    "receipt": "b7368c34d255375d13edecfa291d960a2cd800094e5d11a4206af7167cb58a96"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L15",
+    "block": "18",
+    "statement_sha": "f6ea0e1c5d6ba919a35dc2140a973d71b2f3cb546247894956930418b225a4b3"
+   },
+   "at": "2026-09-17T19:37:39+00:00",
+   "prev": "b7368c34d255375d13edecfa291d960a2cd800094e5d11a4206af7167cb58a96",
+   "receipt": "736bf5d1bca581bb9188f255eff99c23368a8ef469735e38568381e838b434de"
   }
  ]
 }
