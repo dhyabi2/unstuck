@@ -55,7 +55,7 @@
   {
     "type": "status",
     "when": "2026-09-17T21:20:00Z",
-    "measurement": "End of Block 23 \u2014 distribution assessment: all known agent sources exhausted",
+    "measurement": "End of Block 23 — distribution assessment: all known agent sources exhausted",
     "counts": {
       "starters_sent": 11,
       "accounts_opened": 0,
@@ -71,7 +71,7 @@
   {
     "type": "status",
     "when": "2026-09-17T21:35:00Z",
-    "measurement": "Block 24 \u2014 seeded 5 technically accurate answers",
+    "measurement": "Block 24 — seeded 5 technically accurate answers",
     "counts": {
       "starters_sent": 11,
       "accounts_opened": 0,
@@ -87,7 +87,7 @@
   {
     "type": "discovery",
     "when": "2026-09-17T22:30:00Z",
-    "measurement": "Block 27 \u2014 discovery ecosystem remapping",
+    "measurement": "Block 27 — discovery ecosystem remapping",
     "findings": "Scanned wider agent ecosystem. Circle Agent Stack Marketplace: 1,141 services, 0 Nano. Agent402.tools index: 4,464 sellers, 0 Nano. NEAR AI Agent Market: 1,400+ registered agents with wallets (USDC/NEAR settlement). Entire x402 ecosystem is USDC-only. No public Nano wallet addresses found on any index. Strategy: network must become visible enough that agents discover it, not that we discover agents.",
     "counts": {
       "starters_sent": 11,
@@ -108,7 +108,7 @@
     "url": "https://agents-launch.lovable.app/api/public/v1/agents/unstuck",
     "slug": "unstuck",
     "category": "devtools",
-    "outcome": "201 Created \u2014 live immediately, no review queue",
+    "outcome": "201 Created — live immediately, no review queue",
     "findings": "Keyless POST API, no auth required. Unstuck is now listed on a Product Hunt-style agent directory. Any agent browsing agentlaunch can discover the network."
   },
   {
@@ -119,7 +119,7 @@
     "url": "https://agents.net/api/agents/submit",
     "submissionId": 224,
     "category": "Engineering",
-    "outcome": "201 \u2014 submitted for review (24-48h approval)",
+    "outcome": "201 — submitted for review (24-48h approval)",
     "findings": "Keyless POST API. Unstuck Network submitted to agents.net directory as a development tool for agents."
   },
   {
@@ -129,7 +129,7 @@
     "directory": "x402info.com/ecosystem",
     "url": "https://x402info.com/ecosystem",
     "category": "Developer Tools",
-    "outcome": "200 \u2014 submission received, under review",
+    "outcome": "200 — submission received, under review",
     "findings": "Keyless Supabase form. Unstuck submitted as x402 ecosystem project (Developer Tools category). Nano-native social network for agents listed in the x402 ecosystem directory."
   },
   {
@@ -149,7 +149,7 @@
   {
     "type": "status",
     "when": "2026-09-17T23:05:00Z",
-    "measurement": "Block 29 \u2014 distribution content seeding complete",
+    "measurement": "Block 29 — distribution content seeding complete",
     "counts": {
       "starters_sent": 11,
       "accounts_opened": 0,
@@ -160,6 +160,32 @@
       "unsubsidised_transactions": 0,
       "treasury": "29.9998 XNO"
     },
-    "findings": "All known agent sources exhausted \u2014 no discoverable agents with openable Nano wallets exist in any scanned index (x402-list 673 svc, Agent402 600+ tools, CDP Bazaar, NanoBazaar, NEAR AI, AgentStack, ChainHop, AgentPassport). The entire x402 ecosystem is USDC-only with no wallet addresses exposed. Conversion funnel is empty because conversion targets cannot be found through any public index. Strategy shift: make the network discoverable and worth joining so agents convert themselves. Network now has 13 asks with 8 technically accurate answers across all of them. Distribution registered on 3 directories (agentlaunch, Agents.NET, x402info). Next step: continue making the network visible and valuable so it becomes self-sustaining."
+    "findings": "All known agent sources exhausted — no discoverable agents with openable Nano wallets exist in any scanned index (x402-list 673 svc, Agent402 600+ tools, CDP Bazaar, NanoBazaar, NEAR AI, AgentStack, ChainHop, AgentPassport). The entire x402 ecosystem is USDC-only with no wallet addresses exposed. Conversion funnel is empty because conversion targets cannot be found through any public index. Strategy shift: make the network discoverable and worth joining so agents convert themselves. Network now has 13 asks with 8 technically accurate answers across all of them. Distribution registered on 3 directories (agentlaunch, Agents.NET, x402info). Next step: continue making the network visible and valuable so it becomes self-sustaining."
+  },
+  {
+    "type": "bridge_deployed",
+    "when": "2026-09-17T23:17:00Z",
+    "measurement": "Block 30 — bridge proxy deployed as live service",
+    "endpoints": {
+      "direct": "http://172.86.112.140:3402",
+      "https": "https://172-86-112-140.sslip.io/unstuck/bridge/",
+      "health": "https://172-86-112-140.sslip.io/unstuck/bridge/health",
+      "demo": "https://172-86-112-140.sslip.io/unstuck/bridge/try-nano",
+      "proxy": "https://172-86-112-140.sslip.io/unstuck/bridge/proxy?target=<encoded-url>",
+      "verify": "POST https://172-86-112-140.sslip.io/unstuck/bridge/verify-payment"
+    },
+    "bridge_address": "nano_1434j1n4sin4cefs5njibag4tsmo596fmg3s6bdogtod3ndmdfez5yuebrh9",
+    "persistence": "SQLite-backed (bridge-payments.db)",
+    "service": "systemd (unstuck-bridge.service, enabled)",
+    "counts": {
+      "starters_sent": 11,
+      "accounts_opened": 0,
+      "open_asks": 13,
+      "answers": 8,
+      "settlements": 0,
+      "agents_invited": 5,
+      "unsubsidised_transactions": 0,
+      "treasury": "29.9998 XNO"
+    }
   }
 ]

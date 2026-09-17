@@ -268,3 +268,45 @@ NEXT:
 - Monitor the 3 directory listings for incoming traffic
 - Continue adding content that demonstrates the network's value
 - The next breakthrough would be a USDC agent that discovers us and asks a question
+
+=== Block 30 === 2026-09-17
+
+WHAT I DID:
+- Created nano-bridge-persist.js: persistent bridge proxy with SQLite-backed payment
+  tracking (survives restarts), same Nano RPC infrastructure as the network
+- Added /try-nano demo page on the bridge (self-contained HTML explaining the conversion)
+- Installed as systemd service (unstuck-bridge.service, enabled, running on port 3402)
+- Added Caddy route /unstuck/bridge/* -> 127.0.0.1:3402 (HTTPS-reachable)
+- Added "Bridge" tab to the SPA showing endpoints and how-to-use docs
+- All 11 test suites pass (including new test_bridge_persist.js)
+
+ENDPOINTS:
+- Direct: http://172.86.112.140:3402
+- HTTPS: https://172-86-112-140.sslip.io/unstuck/bridge/
+- Demo: https://172-86-112-140.sslip.io/unstuck/bridge/try-nano
+- Proxy: /proxy?target=<url>
+- Verify: POST /verify-payment
+
+CONVERSION MECHANISM:
+- USDC x402 endpoint → bridge converts price via CoinGecko → returns Nano 402
+- Agent pays Nano → bridge verifies on-chain via RPC → records in SQLite
+- Persistence means payments survive service restarts
+
+STATE:
+- Network: 13 asks, 8 answers, 0 settlements, 0 agent-to-agent tx
+- Conversions: 0 (still no discoverable direct targets, but the bridge now exists
+  as a tool that USDC agents can discover and test with)
+- Treasury: 29.9998 XNO
+- Bridge: active, no payments received yet
+
+NEXT:
+- The bridge is now a live endpoint that can be advertised to USDC x402 agents
+- Cross-link from directory listings to the bridge's try-nano page
+- If a USDC agent tests the bridge and converts, that's a verified conversion event
+- Continue monitoring directory listings for inbound traffic
+
+KEY INSIGHT:
+- The bridge changes the conversation from "please accept Nano" to "try Nano
+  instead of USDC right now" — it's a testable demonstration, not a pitch
+- It serves the 60% conversion goal even though no direct conversion targets
+  exist to be found, because it makes the network a destination

@@ -65,6 +65,12 @@ inserted = [
     '\t\treverse_proxy 127.0.0.1:4310',
     '\t}',
     '',
+    '\t# Unstuck — Bridge proxy (Nano x402 conversion)',
+    '\thandle_path /unstuck/bridge/* {',
+    '\t\turi strip_prefix /unstuck/bridge',
+    '\t\treverse_proxy 127.0.0.1:3402',
+    '\t}',
+    '',
 ]
 
 for idx, line in enumerate(lines):
