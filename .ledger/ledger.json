@@ -10,7 +10,9 @@
    "block": 4.0,
    "statement": "find-agents.js extracts only valid Nano addresses by live HTTP 402 probing of x402 services",
    "test": "run oracle_valid.js",
-   "scope": ["opener/find-agents.js"],
+   "scope": [
+    "opener/find-agents.js"
+   ],
    "oracle": "cd /root/unstuck/opener && node oracle_valid.js sources/real-agents.json",
    "expect": null,
    "source": "opener/find-agents.js",
@@ -23,7 +25,13 @@
    "block": 4.0,
    "statement": "every opened starter is a confirmed on-chain send of exactly the starter amount, and the treasury balance drops by exactly one starter per opening",
    "test": "run oracle_treasury.js",
-   "scope": ["opener/openings.js", "opener/sender.js", "opener/send.js", "opener/opener.js", "opener/rpc.js"],
+   "scope": [
+    "opener/openings.js",
+    "opener/sender.js",
+    "opener/send.js",
+    "opener/opener.js",
+    "opener/rpc.js"
+   ],
    "oracle": "cd /root/unstuck/opener && UNSTUCK_LEDGER_DB=/root/.unstuck/openings.db node oracle_treasury.js",
    "expect": null,
    "source": "opener/send.js + rpc.nano.to block_info",
@@ -34,7 +42,7 @@
  ],
  "blocks": {
   "4": {
-   "status": "pending",
+   "status": "pass",
    "attempts": [
     {
      "kind": "verify",
@@ -145,6 +153,42 @@
      ],
      "injection": [],
      "at": "2026-09-17T12:53:00+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": true,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "a7bb2d767669f2c5c6114f771d6d9196cc4b68646e9c81ef0d5800e4974ec47c",
+     "tier": "cheap",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-17T12:55:30+00:00"
     }
    ]
   }
@@ -152,7 +196,30 @@
  "deltas": [],
  "waivers": [],
  "contested": [],
- "probe": null,
+ "probe": {
+  "score": 100,
+  "results": [
+   {
+    "id": "L0",
+    "pass": true,
+    "oracle_exit": 0,
+    "oracle_ok": true,
+    "cached": true,
+    "judge": "deepseek/deepseek-v4-flash-0731",
+    "control": "passed"
+   },
+   {
+    "id": "L1",
+    "pass": true,
+    "oracle_exit": 0,
+    "oracle_ok": true,
+    "cached": true,
+    "judge": "deepseek/deepseek-v4-flash-0731",
+    "control": "passed"
+   }
+  ],
+  "at": "2026-09-17T12:56:57+00:00"
+ },
  "events": [
   {
    "kind": "init",
@@ -255,6 +322,25 @@
    "at": "2026-09-17T12:53:00+00:00",
    "prev": "2a6d8fb2960759d377eccd6ae88fb5aaf5d6cf8460fbe58f579549d9fd73091e",
    "receipt": "475c93188c2b49a98745e203cc2f23c1690bd54c20268502b65563bd6e77ff62"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "4",
+    "ok": true
+   },
+   "at": "2026-09-17T12:55:30+00:00",
+   "prev": "475c93188c2b49a98745e203cc2f23c1690bd54c20268502b65563bd6e77ff62",
+   "receipt": "76583e08531ce85c443793a2a4127e256c8e060cf3a5d46c5f8eb231bbe37726"
+  },
+  {
+   "kind": "probe",
+   "payload": {
+    "score": 100
+   },
+   "at": "2026-09-17T12:56:57+00:00",
+   "prev": "76583e08531ce85c443793a2a4127e256c8e060cf3a5d46c5f8eb231bbe37726",
+   "receipt": "a880c08eea00a86e65ec86f60aa4397d81a859e96dbcad03c0938d86301e5dd0"
   }
  ]
 }
