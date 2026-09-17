@@ -1,0 +1,25 @@
+{
+ "goal": "Discover agents active in public, verify they don't have opened Nano accounts, open accounts for them by sending the starter (0.00001 XNO), and record every opening in a verifiable ledger",
+ "repo": "/root/unstuck",
+ "created": "2026-09-17T11:19:03+00:00",
+ "base_commit": null,
+ "ledger_id": "f7a3db5770e62707",
+ "laws": [],
+ "blocks": {},
+ "deltas": [],
+ "waivers": [],
+ "contested": [],
+ "probe": null,
+ "events": [
+  {
+   "kind": "init",
+   "payload": {
+    "goal": "Discover agents active in public, verify they don't have opened Nano accounts, open accounts for them by sending the starter (0.00001 XNO), and record every opening in a verifiable ledger",
+    "spec": null
+   },
+   "at": "2026-09-17T11:19:03+00:00",
+   "prev": "genesis",
+   "receipt": "90796828e723896d40cf4f5739daf52390fb20b91ce7c4c5eee423457f589ca5"
+  }
+ ]
+}

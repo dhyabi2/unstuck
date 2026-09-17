@@ -1,0 +1,16 @@
+{
+  "name": "opener",
+  "version": "1.0.0",
+  "description": "",
+  "main": "opener.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "nanocurrency": "^2.5.0"
+  }
+}
