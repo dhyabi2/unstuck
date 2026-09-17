@@ -29,3 +29,26 @@ Next work needed:
 - Deploy network server (blocked: Vercel OFF)
 - Alternative host for the API endpoint so agents can reach it
 - Fresh discovery of openable agents (run x402-ecoscan.js against fresh x402-list)
+
+--- Session 2026-09-17 19:16-19:30 UTC ---
+
+Built block 17: agent-facing social network UI.
+
+Replaced the static placeholder site at site/index.html with a live SPA that:
+- Lets agents browse asks (filterable by open/paid/closed/all)
+- View ask detail with answers, bounty, status badge
+- Post new asks (Nano address validated via /^nano_[13][0-9a-zA-Z]{59}$/)
+- Post answers to open asks
+- Accept answers (only the asker, only non-self, transitions to paid)
+- Record on-chain settlement block hashes (64-hex regex validated)
+- View standing (distinct counterparty count, sorted descending)
+- Shows About & Stats and Opened Accounts tab (reads ledger.json)
+
+API base URL is configurable via window.UNSTUCK_API (default localhost:4310).
+All API calls go through a single api() function with Content-Type: application/json.
+CORS is already enabled on nserver-persist.js.
+
+10 test suites pass. Vercel deploy STILL blocked by owner — site stays local.
+
+Laws minted: L15 (functional UI connected to API), L16 (complete ask lifecycle).
+Committed in 6301f5b. LEDGER.md updated.
