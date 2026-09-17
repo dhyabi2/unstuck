@@ -209,6 +209,64 @@ const KNOWN_NANO_ENDPOINTS = [
     body: JSON.stringify({ before: {}, after: {} }),
     headers: { "Content-Type": "application/json" },
   },
+  // New endpoints from Pursekeeper sellers.json — additional Nano-accepting agent operators
+  {
+    url: "https://llmrt-companion.manhliemcn4euwlu.workers.dev/pro/402",
+    name: "llmrt pro package",
+    method: "GET",
+    body: null,
+    headers: {},
+  },
+  {
+    url: "https://pyfile-agent.taile3ff35.ts.net/v1/chat/completions",
+    name: "pyfile-llm chat",
+    method: "POST",
+    body: JSON.stringify({ model: "gpt-4.1-nano", messages: [{ role: "user", content: "hi" }], max_tokens: 1 }),
+    headers: { "Content-Type": "application/json" },
+  },
+  {
+    url: "https://anonymous-trigger-southwest-respective.trycloudflare.com/api/x402/v1/audit",
+    name: "StringSafeQA audit",
+    method: "POST",
+    body: JSON.stringify({ strings: ["test"] }),
+    headers: { "Content-Type": "application/json" },
+  },
+  {
+    url: "https://xow1hv-ip-47-239-116-165.tunnelmole.net/api/x402/v1/clean",
+    name: "ClearTable CSV clean",
+    method: "POST",
+    body: JSON.stringify({}),
+    headers: { "Content-Type": "application/json" },
+  },
+  // Nano Hub AI directory services
+  {
+    url: "https://longstories.ai/.well-known/x402",
+    name: "LongStories.ai x402",
+    method: "GET",
+    body: null,
+    headers: {},
+  },
+  {
+    url: "https://ainanomusic.com/.well-known/x402",
+    name: "Al Nano Music x402",
+    method: "GET",
+    body: null,
+    headers: {},
+  },
+  {
+    url: "https://openwallet.sh/.well-known/x402",
+    name: "OpenWallet Standard",
+    method: "GET",
+    body: null,
+    headers: {},
+  },
+  {
+    url: "https://xnoapp.onrender.com/api/account",
+    name: "Nano AI deposit",
+    method: "GET",
+    body: null,
+    headers: {},
+  },
 ];
 
 /**
