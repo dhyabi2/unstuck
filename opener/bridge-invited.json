@@ -1,0 +1,2224 @@
+[
+  {
+    "base_url": "https://api.onesource.io",
+    "name": "OneSource",
+    "category": "Blockchain",
+    "probed_at": "2026-09-17T23:31:00.022Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"description\":\"OneSource - three data families for AI agents on one host: Ethereum mainnet, Sepolia testnet, and Robinhood Chain RPC (served from OneSource-operated nodes), plus Deepstate on-chain market data (order books, trades, candles, stats, analytics) under /deepstate/v1/* - spec at https://api.onesource.io/deepstate/openapi.yaml - plus The Standard Reserve (TSR), an on-chain reserve protocol on Robinhood Chain, under /standard/v1/* - spec at https://api.onesource.io/standard/openapi.yaml"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":14,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://content.hugen.tokyo",
+    "name": "Content Intelligence API",
+    "category": "Content",
+    "probed_at": "2026-09-17T23:31:00.497Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://content.hugen.tokyo/content/analyze\",\"https://content.hugen.tokyo/content/extract\",\"https://content.hugen.tokyo/content/links\",\"https://content.hugen.tokyo/content/metadata\",\"https://content.hugen.tokyo/content/structured\",\"https://content.hugen.tokyo/content/summary\"],\"instructions\":\"# Content Intelligence API\\n\\nExtract, summarize, and analyze web content — no scraping library, no LLM setup, no headless browser needed.\\n\\n## Endpoints\\n- `GET /content/metadat"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":15,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://defi.hugen.tokyo",
+    "name": "Hugen DeFi Intelligence API",
+    "category": "Blockchain",
+    "probed_at": "2026-09-17T23:31:00.973Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://defi.hugen.tokyo/defi/address\",\"https://defi.hugen.tokyo/defi/approval\",\"https://defi.hugen.tokyo/defi/bridge/chains\",\"https://defi.hugen.tokyo/defi/bridge/quote\",\"https://defi.hugen.tokyo/defi/bridge/routes\",\"https://defi.hugen.tokyo/defi/bridge/status\",\"https://defi.hugen.tokyo/defi/bridge/tokens\",\"https://defi.hugen.tokyo/defi/bridge/tools\",\"https://defi.hugen.tokyo/defi/chains\",\"https://defi.hugen.tokyo/defi/dapp\",\"https://defi.hugen.tokyo/defi/dex/volume\","
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":16,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://intel.hugen.tokyo",
+    "name": "Hugen Intel API",
+    "category": "Blockchain",
+    "probed_at": "2026-09-17T23:31:01.455Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://intel.hugen.tokyo/intel/token-report\",\"https://intel.hugen.tokyo/intel/token-report/lite\",\"https://intel.hugen.tokyo/intel/wallet-report\",\"https://intel.hugen.tokyo/intel/wallet-report/lite\",\"https://intel.hugen.tokyo/intel/yield-report\",\"https://intel.hugen.tokyo/intel/yield-report/lite\",\"https://intel.hugen.tokyo/intel/contract-report\",\"https://intel.hugen.tokyo/intel/contract-report/lite\"],\"instructions\":\"# Intel API — AI Due Diligence for Crypto\\n\\nMulti-so"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":17,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://gotobi.hugen.tokyo",
+    "name": "Gotobi Calendar API",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:31:01.954Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://gotobi.hugen.tokyo/gotobi/today\",\"https://gotobi.hugen.tokyo/gotobi/next\",\"https://gotobi.hugen.tokyo/gotobi/dates\",\"https://gotobi.hugen.tokyo/gotobi/holidays\",\"https://gotobi.hugen.tokyo/gotobi/holidays/today\",\"https://gotobi.hugen.tokyo/gotobi/holidays/next\"],\"instructions\":\"# Gotobi Calendar API\\n\\nThe only programmatic source for Japanese FX gotobi (五十日) dates.\\nNo public gotobi calendar exists — building one requires Japanese holiday law knowledge and wee"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":18,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://domain.hugen.tokyo",
+    "name": "Domain Intelligence API",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:36:22.057Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://domain.hugen.tokyo/domain/dns\",\"https://domain.hugen.tokyo/domain/full\",\"https://domain.hugen.tokyo/domain/headers\",\"https://domain.hugen.tokyo/domain/redirect\",\"https://domain.hugen.tokyo/domain/ssl\",\"https://domain.hugen.tokyo/domain/subdomains\",\"https://domain.hugen.tokyo/domain/tech\",\"https://domain.hugen.tokyo/domain/whois\"],\"instructions\":\"# Domain Intelligence API\\n\\n7 domain intelligence checks in one API. No tool setup, no result aggregation needed.\\nT"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":19,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://visual.hugen.tokyo",
+    "name": "Hugen Visual API",
+    "category": "Compute",
+    "probed_at": "2026-09-17T23:36:22.559Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://visual.hugen.tokyo/visual/ocr\",\"https://visual.hugen.tokyo/visual/parse\",\"https://visual.hugen.tokyo/visual/pdf\",\"https://visual.hugen.tokyo/visual/screenshot\"],\"instructions\":\"# Visual API\\n\\nScreenshot capture, PDF rendering, PDF parsing, and OCR. No browser infrastructure needed. Pay per operation.\\n\\n## Endpoints\\n- `GET /visual/screenshot?url={url}` — Screenshot as JPEG/PNG ($0.02)\\n- `GET /visual/pdf?url={url}` — URL to PDF ($0.02)\\n- `GET /visual/parse?u"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":20,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://whale.hugen.tokyo",
+    "name": "Whale Intelligence API",
+    "category": "Blockchain",
+    "probed_at": "2026-09-17T23:36:23.602Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://whale.hugen.tokyo/whale/activity\",\"https://whale.hugen.tokyo/whale/lookup\",\"https://whale.hugen.tokyo/whale/movements\"],\"instructions\":\"# Whale Intelligence API\\n\\nOn-chain whale tracking with 412K+ labeled Ethereum addresses.\\n\\n## Endpoints\\n- `GET /whale/lookup?address=0x...` — Label lookup ($0.01)\\n- `GET /whale/activity?address=0x...` — Wallet profiling ($0.02)\\n- `GET /whale/movements?min_eth=100&limit=20` — Large transfers ($0.02)\\n\"}"
+    },
+    "resource_probe": {
+      "direct_status": 402,
+      "direct_body": "{\"_notice\":\"Payment required ($0.02 USDC on Base). Sample response below.\",\"_alternatives\":{\"mcp\":{\"info\":\"Access this and 2300+ x402 APIs via MCP\",\"url\":\"https://mcp.hugen.tokyo/mcp\"},\"sdk\":{\"info\":\"pip install x402-pay\",\"usage\":\"import x402_pay; r = x402_pay.get('https://whale.hugen.tokyo/whale/lookup?address=0x28c6c06298d514db089934071355e5743bf21d60')\"},\"intel\":{\"info\":\"Full crypto intelligence — risk scoring, due diligence, recommendations ($0.50/call)\",\"url\":\"https://intel.hugen.tokyo/llms",
+      "has_402": true,
+      "reachable": true,
+      "accepts_nano": false
+    },
+    "first_resource": "https://whale.hugen.tokyo/whale/activity",
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":21,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://scout.hugen.tokyo",
+    "name": "Scout Multi-Source Intelligence API",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:36:24.195Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://scout.hugen.tokyo/scout/hn\",\"https://scout.hugen.tokyo/scout/npm\",\"https://scout.hugen.tokyo/scout/github\",\"https://scout.hugen.tokyo/scout/github/repo\",\"https://scout.hugen.tokyo/scout/pypi\",\"https://scout.hugen.tokyo/scout/ph\",\"https://scout.hugen.tokyo/scout/x\",\"https://scout.hugen.tokyo/scout/x402\",\"https://scout.hugen.tokyo/scout/report\",\"https://scout.hugen.tokyo/scout/report/full\",\"https://scout.hugen.tokyo/scout/devto\",\"https://scout.hugen.tokyo/scout/h"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":22,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://tick.hugen.tokyo",
+    "name": "Tick Aggregator FX API",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:36:25.092Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://tick.hugen.tokyo/tick/latest\",\"https://tick.hugen.tokyo/tick/all\",\"https://tick.hugen.tokyo/tick/symbols\"],\"instructions\":\"# Tick Aggregator API\\n\\nMulti-source aggregated FX Best Bid/Ask from multiple institutional LPs.\\n62-88% tighter spreads than any single source.\\n\\n## Endpoints — $0.005/request\\n- `GET /tick/latest?symbol=EURUSD` — Best Bid/Ask for one pair\\n- `GET /tick/all` — All pairs in one call\\n- `GET /tick/symbols` — Available symbols\\n\\n## Unique "
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":23,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://weather.hugen.tokyo",
+    "name": "Hugen Weather API",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:36:25.612Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://weather.hugen.tokyo/weather/current\",\"https://weather.hugen.tokyo/weather/forecast\"],\"instructions\":\"# Weather API\\n\\nInstant weather data by city name — no API keys, no geocoding setup, no rate limits.\\n\\n## Why use this instead of a free weather API?\\n- Free weather APIs require geocoding setup + API key management + response parsing\\n- This API: pass a city name, get structured JSON. One call, one payment, done\\n\\n## Endpoints\\n- `GET /weather/current?city=T"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":24,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://stableenrich.dev",
+    "name": "StableEnrich",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:36:25.827Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://stableenrich.dev/api/google-maps/place-details/partial\",\"https://stableenrich.dev/api/google-maps/solar/building-insights\",\"https://stableenrich.dev/api/whitepages/person-search\",\"https://stableenrich.dev/api/fullenrich/people-search\",\"https://stableenrich.dev/api/fullenrich/company-search\",\"https://stableenrich.dev/api/companyenrich/org-enrich\",\"https://stableenrich.dev/api/companyenrich/properties-enrich\",\"https://stableenrich.dev/api/pdl/people-enrich\",\"http"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":25,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://x402.ottoai.services",
+    "name": "Otto AI",
+    "category": "AI",
+    "probed_at": "2026-09-17T23:36:26.218Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"POST /lp-pool-apr\",\"POST /lp-intelligence\",\"GET /crypto-news\",\"GET /filtered-news\",\"GET /twitter-summary\",\"GET /token-details\",\"GET /token-alpha\",\"GET /kol-sentiment\",\"GET /yield-alpha\",\"GET /trending-altcoins\",\"GET /mega-report\",\"GET /token-security\",\"GET /funding-rates\",\"GET /defi-analytics\",\"GET /tradfi-data\",\"POST /generate-meme\",\"GET /generate-meme\",\"POST /llm-research\",\"GET /llm-research\",\"POST /tx-explainer\",\"GET /tx-explainer\",\"POST /video-gen\",\"GET /portfolio\""
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":26,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://x402.clashofcoins.com",
+    "name": "Clash of Coins Checkout",
+    "category": "Other",
+    "probed_at": "2026-09-17T23:36:26.447Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"POST /agentic/x402/buy\",\"POST /shop/x402/buy\",\"POST /shop/x402/player-lookup\",\"GET /x402/cheap-health\",\"POST /x402/report-tx\",\"POST /agent-wallet/x402/fund\",\"POST /craft/x402/burn\",\"POST /craft/x402/accelerate\"],\"service\":{\"name\":\"Clash of Coins\",\"slug\":\"clash-of-coins\",\"description\":\"Agentic checkout for Clash of Coins\",\"category\":\"Gaming\",\"tags\":[\"Gaming\"]},\"category\":\"Gaming\",\"tags\":[\"Gaming\"],\"addresses\":{\"agent\":\"0x93862e5b2b1fa10a01772e7e9ca7cdc7deb5ca25\",\"treasu"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":27,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://agent402.tools",
+    "name": "Agent402.tools",
+    "category": "AI",
+    "probed_at": "2026-09-17T23:36:26.606Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"spec\":\"agent402-service-manifest/1\",\"version\":1,\"resources\":[\"https://agent402.tools/api/extract\",\"https://agent402.tools/api/meta\",\"https://agent402.tools/api/dns\",\"https://agent402.tools/api/render\",\"https://agent402.tools/api/screenshot\",\"https://agent402.tools/api/pdf\",\"https://agent402.tools/api/memory\",\"https://agent402.tools/api/memory/incr\",\"https://agent402.tools/api/memory/cas\",\"https://agent402.tools/api/memory/grant\",\"https://agent402.tools/api/memory/revoke\",\"https://agent402.tool"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":28,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://api.exa.ai",
+    "name": "Exa",
+    "category": "AI",
+    "probed_at": "2026-09-17T23:36:26.711Z",
+    "direct_probe": {
+      "well_known_status": 404,
+      "well_known_body": "{\"requestId\":\"65bf65476ee0053ca21f5b52163b0fb5\",\"error\":\"Not found\",\"tag\":\"NOT_FOUND\"}"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://api.loyalspark.online",
+    "name": "Loyal Spark",
+    "category": "Blockchain",
+    "probed_at": "2026-09-17T23:36:27.022Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"x402Version\":1,\"name\":\"Loyal Spark — Onchain Loyalty Protocol on Base\",\"title\":\"Loyal Spark — Onchain Loyalty Protocol on Base\",\"provider\":\"Loyal Spark\",\"brand\":\"Loyal Spark\",\"website\":\"https://loyalspark.online\",\"documentation\":\"https://loyalspark.online/for-agents\",\"description\":\"Loyal Spark is an onchain loyalty-as-a-service protocol on Base L2. AI agents and merchants can create B20 loyalty programs, mint tokens to customer wallets, manage rewards catalogs, trade tokens on a P2P escrow mar"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":29,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://glim.sh",
+    "name": "glim.sh",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:36:27.934Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"POST /api/v1/twitter/search\",\"POST /api/v1/twitter/get\",\"POST /api/v1/reddit/search\",\"POST /api/v1/reddit/get\",\"POST /api/v1/web/search\",\"POST /api/v1/web/fetch\",\"POST /api/v1/github/search\",\"POST /api/v1/github/get\",\"POST /api/v1/twitter/tweets/search\",\"POST /api/v1/twitter/tweets/:id\",\"POST /api/v1/twitter/tweets\",\"POST /api/v1/twitter/tweets/:id/replies\",\"POST /api/v1/twitter/tweets/:id/quotes\",\"POST /api/v1/twitter/tweets/:id/retweeters\",\"POST /api/v1/twitter/tweet"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":30,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://stablesocial.dev",
+    "name": "StableSocial",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:36:28.311Z",
+    "direct_probe": {
+      "well_known_status": 404,
+      "well_known_body": "<!DOCTYPE html><!--zKJpzRiuOW4onw_sF8h2o--><html lang=\"en\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/db5c8c04a82b96ec.css?dpl=dpl_Ecg7NPChDpScpynbSLw6r4pjfz7q\" data-precedence=\"next\"/><link rel=\"preload\" as=\"script\" fetchPriority=\"low\" href=\"/_next/static/chunks/93c2f850dc8f54e9.js?dpl=dpl_Ecg7NPChDpScpynbSLw6r4pjfz7q\"/><script src=\"/_next/static/chunks/62669082d73d5641.js?dpl=dpl_Ecg7NPChDp"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://api.nansen.ai",
+    "name": "Nansen",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:36:28.426Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"description\":\"Nansen blockchain analytics API. Pay-per-call via x402 — no API key required. MPP (Tempo) is also available as an alternate payment rail.\",\"instructions\":\"Endpoints cost $0.01-$7.50 per request. Send a POST request with a JSON body. x402 supports Base, Solana, and Monad USDC payments. When MPP is enabled, clients can also use `Authorization: Payment ...` and read `Payment-Receipt` on success.\",\"paymentProtocols\":[\"x402\",\"mpp\"],\"resources\":[\"POST /api/v1/agent/expert\","
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":31,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://api.cn402.com",
+    "name": "cn402",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:36:28.692Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://api.cn402.com/bazi/dayun\",\"https://api.cn402.com/bazi/full\",\"https://api.cn402.com/bazi/nayin\",\"https://api.cn402.com/bazi/qiwang\",\"https://api.cn402.com/bazi/shensha\",\"https://api.cn402.com/bazi/shishen\",\"https://api.cn402.com/bazi/sizhu\",\"https://api.cn402.com/bazi/wuxing\",\"https://api.cn402.com/bazi/xiaoyun\",\"https://api.cn402.com/bazi/yongshen\",\"https://api.cn402.com/fengshui/24shan\",\"https://api.cn402.com/fengshui/bagua-direction\",\"https://api.cn402.com/fe"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":32,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://api.bitrefill.com",
+    "name": "Bitrefill",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:36:29.106Z",
+    "direct_probe": {
+      "well_known_status": 404,
+      "well_known_body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /.well-known/x402</pre>\n</body>\n</html>\n"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://2s.io",
+    "name": "2s.io",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:36:30.561Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"x402Version\": 2,\n  \"service\": {\n    \"name\": \"2s\",\n    \"description\": \"Unified JSON REST API for AI agents — ever-expanding catalog of endpoints, pay per call in USDC on Base or Solana via x402. No accounts, no API keys.\",\n    \"url\": \"https://2s.io\",\n    \"homepage\": \"https://2s.io\",\n    \"directory\": \"https://2s.io/api/directory\",\n    \"openapi\": \"https://2s.io/api/openapi\",\n    \"llmsTxt\": \"https://2s.io/llms.txt\",\n    \"mcpServerCard\": \"https://2s.io/.well-known/mcp/server-card.json\",\n    \"aiP"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":33,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://api.x402.printmoneylab.com",
+    "name": "x402watch",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:36:31.022Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"x402Version\":2,\"publisher\":\"PrintMoneyLab\",\"openapi\":\"https://api.x402.printmoneylab.com/openapi.json\",\"mcp\":\"https://api.x402.printmoneylab.com/mcp\",\"documentation\":\"https://x402.printmoneylab.com/docs/methodology\"}"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":34,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://api.printmoneylab.com",
+    "name": "KR Crypto Intelligence",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:36:31.355Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"x402Version\":2,\"name\":\"KR Crypto Intelligence\",\"description\":\"Korean crypto market + AI analysis + Korean news (K-pop, semiconductor) → English for AI agents. 15 paid endpoints, 189+ tokens. Kimchi Premium, exchange intelligence, AI sentiment, divergence (light/deep), market read, Korean news headlines + AI synthesis.\",\"url\":\"https://api.printmoneylab.com\",\"mcp\":\"https://mcp.printmoneylab.com/mcp\",\"source\":\"https://github.com/bakyang2/kr-crypto-intelligence\",\"llms_txt\":\"https://api.printmoneyl"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":35,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://vibesprings.net",
+    "name": "Vibe Springs",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:37:49.072Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": \"1.0\",\n  \"facilitator\": \"https://api.cdp.coinbase.com/platform/v2/x402\",\n  \"contact\": \"support@vibesprings.net\",\n  \"network\": \"eip155:8453\",\n  \"payTo\": \"0x38C063312719220c676E988f0DEE14B4ec0e44C8\",\n  \"catalog\": \"https://vibesprings.net/api/catalog\",\n  \"llms\": \"https://vibesprings.net/llms.txt\",\n  \"openapi\": \"https://vibesprings.net/openapi.yaml\",\n  \"endpoints\": [\n    {\n      \"path\": \"/api/weather\",\n      \"method\": \"GET\",\n      \"price\": \"$0.002\",\n      \"category\": \"data/weather\"\n  "
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":36,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://api.agentstools.dev",
+    "name": "agentstools",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:37:50.559Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[{\"resource\":\"https://api.agentstools.dev/extract\",\"type\":\"http\",\"x402Version\":2,\"method\":\"GET\",\"mimeType\":\"application/json\",\"description\":\"Fetch any public web page and return its main readable content as clean Markdown or plain text plus metadata (title), stripping nav/ads/boilerplate (trafilatura). Optional JS rendering via headless browser for SPAs; markdown or text output. Robots-respecting, public content only — the reader/scraper building block for RAG and agent "
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":37,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://onchainpulse-nine.vercel.app",
+    "name": "OnchainPulse",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:37:50.685Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n \"version\": 1,\n \"x402Version\": 2,\n \"name\": \"OnchainPulse\",\n \"description\": \"Intelligence API for the onchain financial transition. Decodes legislation, tracks real world asset tokenization in depth (yield comparison, issuer/redemption risk, tokenized gold), models sector impact scenarios, guides onchain integration, monitors institutional adoption, tracks crypto ETF flows, and tracks the CLARITY Act, and ships a full token due-diligence engine (safety scan, holder map, exit depth, narrative-vs"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":38,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://x402.twit.sh",
+    "name": "twit.sh",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:37:51.212Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://x402.twit.sh/users/by/username\",\"https://x402.twit.sh/users/search\",\"https://x402.twit.sh/users/followers\",\"https://x402.twit.sh/users/following\",\"https://x402.twit.sh/users\",\"https://x402.twit.sh/users/by/id\",\"https://x402.twit.sh/tweets/user\",\"https://x402.twit.sh/tweets/mentions\",\"https://x402.twit.sh/tweets/search\",\"https://x402.twit.sh/users/setProfile\",\"https://x402.twit.sh/tweets/bookmark\",\"https://x402.twit.sh/tweets/like\",\"https://x402.twit.sh/tweets/r"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":39,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://kronossignals.com",
+    "name": "Kronos Crypto Data & Forecasts",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:37:51.422Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": \"1.0\",\n  \"serviceName\": \"Kronos Crypto Data API\",\n  \"description\": \"Real-time crypto market data API for autonomous agents and trading bots. Pay-per-call endpoints across 17 crypto assets (BTC/ETH/SOL/BNB/XRP/DOGE/ADA/AVAX/LINK/DOT/LTC/TRX/BCH/ATOM/NEAR/APT/HYPE; HYPE derivatives-only). Perpetual swap derivatives (funding, open interest, basis), liquidation cluster maps, options IV, CEX premium, multi-source spot price, realized volatility, market regime alerts, and macro context "
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":40,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://vaaya.ai",
+    "name": "vaaya",
+    "category": "AI",
+    "probed_at": "2026-09-17T23:37:51.587Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://vaaya.ai/api/run/fal/upload\",\"https://vaaya.ai/api/run/cueframe/upload\",\"https://vaaya.ai/api/run/cueframe/create_project\",\"https://vaaya.ai/api/run/cueframe/put_composition\",\"https://vaaya.ai/api/run/cueframe/validate\",\"https://vaaya.ai/api/run/cueframe/render\",\"https://vaaya.ai/api/run/vaaya/consult\",\"https://vaaya.ai/api/run/vaaya/fetch\",\"https://vaaya.ai/api/run/vaaya/onesearch\",\"https://vaaya.ai/api/run/vaaya/supersearch\",\"https://vaaya.ai/api/run/vaaya/on"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":41,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://api.tickersfeed.net",
+    "name": "TickersFeed",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:37:51.841Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":2,\"x402Versions\":[2,1],\"description\":\"Pay-per-call US stock market data API for AI agents. Real-time quotes, earnings, news, crypto prices, DeFi yields, and gas data. USDC micropayments on Base via x402.\",\"mppResources\":[\"https://api.tickersfeed.net/stock/:symbol\",\"https://api.tickersfeed.net/stock/:symbol/earnings\",\"https://api.tickersfeed.net/stock/:symbol/news\",\"https://api.tickersfeed.net/stock/news/batch\",\"https://api.tickersfeed.net/calendar/earnings\",\"https://api.tickersfeed.ne"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":42,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://x402.shizu.me",
+    "name": "scrape402",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:37:52.968Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"service\":\"scrape402\",\"protocol\":\"x402\",\"network\":\"eip155:8453\",\"mode\":\"mainnet\",\"pay_to\":\"0x217e5Fe265EB78b29067bF8324ef03a7D8e167C4\",\"how_to_pay\":\"Request any paid endpoint; the 402 response carries x402 payment requirements (USDC on Base). Attach payment and retry — no signup, no keys.\",\"free\":{\"health\":\"/health\",\"status\":\"/status\",\"catalog_json\":\"/ (Accept: application/json)\",\"llms_txt\":\"/llms.txt\",\"openapi\":\"/openapi.json\",\"agent_card\":\"/.well-known/agent-card.json\",\"openai_models\":\"/v1/mo"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":43,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://api.oblique.markets",
+    "name": "Oblique Markets",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:37:53.256Z",
+    "direct_probe": {
+      "well_known_status": 301,
+      "well_known_body": ""
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://x402engine.app",
+    "name": "x402engine",
+    "category": "AI",
+    "probed_at": "2026-09-17T23:37:53.532Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"name\":\"x402engine\",\"version\":\"3.0.0\",\"x402Version\":2,\"baseUrl\":\"https://x402engine.app\",\"important\":\"Use the canonical baseUrl above for every API request.\",\"networks\":{\"base\":{\"chainId\":8453,\"caip2\":\"eip155:8453\",\"stablecoin\":\"USDC\",\"decimals\":6,\"estimatedConfirmation\":\"2s\"},\"solana\":{\"stablecoin\":\"USDC\",\"decimals\":6,\"estimatedConfirmation\":\"400ms\"},\"megaeth\":{\"chainId\":4326,\"caip2\":\"eip155:4326\",\"stablecoin\":\"USDm\",\"decimals\":18,\"estimatedConfirmation\":\"10ms\",\"features\":[\"instant-receipts\",\""
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":44,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://stableupload.dev",
+    "name": "StableUpload",
+    "category": "AI",
+    "probed_at": "2026-09-17T23:37:53.833Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://stableupload.dev/api/site\",\"PUT https://stableupload.dev/api/site\",\"https://stableupload.dev/api/upload\",\"https://stableupload.dev/api/uploads\",\"https://stableupload.dev/api/download/:uploadId\",\"https://stableupload.dev/api/site/renew\",\"https://stableupload.dev/api/site/activate\",\"https://stableupload.dev/api/site/domain\",\"DELETE https://stableupload.dev/api/site/domain\",\"https://stableupload.dev/api/site/domain/status\"],\"mppResources\":[\"https://stableupload.de"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":45,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://www.x402scan.com",
+    "name": "x402scan",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:37:53.942Z",
+    "direct_probe": {
+      "well_known_status": 404,
+      "well_known_body": "<!DOCTYPE html><!--9OooDbtmLTFre4oPJNvVn--><html lang=\"en\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/961cfb3ab2afef91.css?dpl=dpl_B16ro1Yy9WceSzkJEUC6ZZwJgjNx\" data-precedence=\"next\"/><link rel=\"stylesheet\" href=\"/_next/static/chunks/9355f9cb16a7b735.css?dpl=dpl_B16ro1Yy9WceSzkJEUC6ZZwJgjNx\" data-precedence=\"next\"/><link rel=\"preload\" as=\"script\" fetchPriority=\"low\" href=\"/_next/static/chunk"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://netintel.dev",
+    "name": "NetIntel",
+    "category": "AI",
+    "probed_at": "2026-09-17T23:37:54.173Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"x402Version\":2,\"name\":\"NetIntel\",\"description\":\"Network intelligence API — DNS, SSL, WHOIS, email security, web fingerprinting, OSINT, and more. 138 endpoints, all pay-per-call via x402 micropayments. No API keys, no subscriptions, no rate limits.\",\"version\":\"1.0.0\",\"baseUrl\":\"https://netintel.dev\",\"documentation\":\"https://netintel.dev/.well-known/x402\",\"payment\":{\"network\":\"eip155:8453\",\"networks\":[\"eip155:8453\",\"solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp\"],\"payTo\":\"0xdaDc335482AD545296Fd7b28518"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":46,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://x402.agentutility.ai",
+    "name": "agentutility",
+    "category": "AI",
+    "probed_at": "2026-09-17T23:38:04.083Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"ownershipProofs\":[\"0xa8b16c557c01945670da3bad92c9129fb615278ffb0a07ec19138c277d8b2c230903866ee2b22ab9255c4a4526c7a5737f3f04be7b703fac4b197b4906380fa61c\"]}"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":47,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://pro-api.coingecko.com/api/v3/x402",
+    "name": "CoinGecko",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:38:04.540Z",
+    "direct_probe": {
+      "well_known_status": 404,
+      "well_known_body": "{\"error\":\"Incorrect path. Please check https://docs.coingecko.com/\"}"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://api.kadec0.xyz",
+    "name": "Web Search & Data API — SERP, page reader & scrapers",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:38:04.893Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"name\":\"Web Search & Data API — SERP, page reader & scrapers\",\"description\":\"Pay-per-call web search and web data for AI agents. Multi-engine SERP (web + news, batch, rank-fused), search-and-read (top hits to markdown in one call), URL-to-markdown scraping, Google Trends (interest over time, related queries/topics, by region), structured data (WHOIS/DNS, enrichment, SEC filings, crypto/DeFi, geocoding, weather) and academic search (papers, references, cited-by, lit-review). 43 endpo"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":48,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://property.payapi.market",
+    "name": "PayAPI Market UK Property Data API",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:38:05.183Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"x402Version\":2,\"service\":{\"name\":\"UK Property Data API\",\"description\":\"Land Registry sold prices, rental yields, stamp duty, EPC, crime, flood risk, planning, council tax\",\"version\":\"1.0.0\",\"homepage\":\"https://github.com/chetparker/uk-property-api\"},\"payment\":{\"payTo\":\"0xFFc458dB291b4ABcE020fE3de4f91F2770E537b1\",\"network\":\"eip155:8453\",\"scheme\":\"exact\",\"asset\":\"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913\",\"facilitator\":\"https://api.cdp.coinbase.com/platform/v2/x402\"},\"endpoints\":[{\"method\":\"POS"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":49,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://hmo.payapi.market",
+    "name": "UK HMO Licence API",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:38:05.441Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"x402Version\":2,\"service\":{\"name\":\"HMO Licence API\",\"description\":\"UK House in Multiple Occupation licence checks aggregated from local authority registers.\",\"version\":\"1.0.0\",\"homepage\":\"https://payapi.market\"},\"payment\":{\"payTo\":\"0xFFc458dB291b4ABcE020fE3de4f91F2770E537b1\",\"network\":\"eip155:8453\",\"scheme\":\"exact\",\"asset\":\"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913\",\"facilitator\":\"https://api.cdp.coinbase.com/platform/v2/x402\"},\"endpoints\":[{\"method\":\"POST\",\"path\":\"/hmo-check\",\"price\":\"0.020\","
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":50,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://stable-deepline.dev",
+    "name": "Deepline GTM API",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:38:05.669Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://stable-deepline.dev/api/person/from-email\",\"https://stable-deepline.dev/api/contacts/by-role\",\"https://stable-deepline.dev/api/company/enrich\",\"https://stable-deepline.dev/api/email/work\",\"https://stable-deepline.dev/api/email/from-linkedin\",\"https://stable-deepline.dev/api/email/personal\",\"https://stable-deepline.dev/api/email/validate\",\"https://stable-deepline.dev/api/person/job-change\",\"https://stable-deepline.dev/api/linkedin/find\",\"https://stable-deepline."
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":51,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://x402tap.com",
+    "name": "MicroTap",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:38:05.778Z",
+    "direct_probe": {
+      "well_known_status": 404,
+      "well_known_body": "<!DOCTYPE html><html lang=\"en\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/><link rel=\"stylesheet\" href=\"/_next/static/immutable/chunks/3l_r71v_uge0-.css\" data-precedence=\"next\"/><link rel=\"preload\" as=\"script\" fetchPriority=\"low\" href=\"/_next/static/immutable/chunks/25kvgcvbp6c14.js\"/><script src=\"/_next/static/immutable/chunks/28fkf9f9btak4.js\" async=\"\"></script><script src=\"/_next/static/immutable/chunks/3lnv0x7jbflsn.js\" async=\"\"></script>"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://pro-api.coinmarketcap.com/x402/v3",
+    "name": "CoinMarketCap",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:40:06.979Z",
+    "direct_probe": {
+      "well_known_status": 402,
+      "well_known_body": "{\"x402Version\":2,\"resource\":{\"url\":\"https://pro-api.coinmarketcap.com/x402/v3/.well-known/x402\",\"mimeType\":\"application/json\"},\"accepts\":[],\"error\":\"Path not configured for x402 payment\"}"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://hyperliquid.use.x402atlas.com",
+    "name": "Hyperliquid Market Data",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:40:07.267Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://hyperliquid.use.x402atlas.com/book\",\"https://hyperliquid.use.x402atlas.com/candles\",\"https://hyperliquid.use.x402atlas.com/funding\",\"https://hyperliquid.use.x402atlas.com/mids\",\"https://hyperliquid.use.x402atlas.com/oi-caps\",\"https://hyperliquid.use.x402atlas.com/perps\",\"https://hyperliquid.use.x402atlas.com/perps-meta\",\"https://hyperliquid.use.x402atlas.com/predicted-funding\",\"https://hyperliquid.use.x402atlas.com/spot\"]}"
+    },
+    "resource_probe": {
+      "direct_status": 402,
+      "direct_body": "{\"error\":\"payment_required\",\"hint\":\"This endpoint requires x402 payment. The price and payment options are in the PAYMENT-REQUIRED response header (x402 v2). Pay with an x402 client, then retry to receive the data.\",\"price\":\"$0.01 per call\",\"method\":\"GET\",\"resource\":{\"url\":\"https://hyperliquid.use.x402atlas.com/book\",\"description\":\"Live L2 order book for one Hyperliquid asset — bids and asks with price, size and order count, up to 20 levels per side.\",\"mimeType\":\"application/json\",\"serviceName\":",
+      "has_402": true,
+      "reachable": true,
+      "accepts_nano": false
+    },
+    "first_resource": "https://hyperliquid.use.x402atlas.com/book",
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":52,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://x402stock.xyz",
+    "name": "x402stock",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:40:07.541Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"x402Version\":1,\"items\":[{\"resource\":\"https://x402stock.xyz/api/v1/overview/AAPL\",\"type\":\"http\",\"x402Version\":1,\"routeTemplate\":\"/api/v1/overview/:ticker\",\"pathParams\":{\"ticker\":\"AAPL\"},\"accepts\":[{\"scheme\":\"exact\",\"network\":\"eip155:8453\",\"maxAmountRequired\":\"50000\",\"resource\":\"https://x402stock.xyz/api/v1/overview/AAPL\",\"description\":\"Everything about one stock in one call: profile, price, fundamentals, technicals, news, peers\",\"mimeType\":\"application/json\",\"payTo\":\"0x3070Fbb3803819fB5BdfE9286"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":53,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://agi.apify.com",
+    "name": "Apify Agentic Endpoint (AGI)",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:40:07.656Z",
+    "direct_probe": {
+      "well_known_status": 404,
+      "well_known_body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /.well-known/x402</pre>\n</body>\n</html>\n"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://api.apify.com",
+    "name": "Apify Actors API",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:40:07.765Z",
+    "direct_probe": {
+      "well_known_status": 404,
+      "well_known_body": "{\n  \"error\": {\n    \"type\": \"page-not-found\",\n    \"message\": \"We have bad news: there is no API endpoint at this URL. Did you specify it correctly?\"\n  }\n}"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://api.anchor-x402.com",
+    "name": "anchor-x402",
+    "category": "Blockchain",
+    "probed_at": "2026-09-17T23:40:07.955Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": \"2.0\",\n  \"name\": \"anchor-x402\",\n  \"description\": \"Eighteen x402-paid services for AI agents on three settlement rails — Base USDC, Solana USDC, and JPYC on Polygon (¥1 per anchor call). Nine commodity primitives, one async due-diligence investigator ($1.77 / ¥350), one verifiable signed RNG (drop-in VRF), and five universal LLM endpoints (roast, oracle with on-chain anchored verdict, TL;DR, aura, grade), and a two-endpoint x402 spend-accounting ledger (summary + signed anchored ex"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":54,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://defillama.use.x402atlas.com",
+    "name": "DefiLlama Data API (x402 Atlas)",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:40:08.082Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://defillama.use.x402atlas.com/batch-historical\",\"https://defillama.use.x402atlas.com/block\",\"https://defillama.use.x402atlas.com/chain-tvl\",\"https://defillama.use.x402atlas.com/chains\",\"https://defillama.use.x402atlas.com/dex-summary\",\"https://defillama.use.x402atlas.com/dexs\",\"https://defillama.use.x402atlas.com/dexs-chain\",\"https://defillama.use.x402atlas.com/fee-summary\",\"https://defillama.use.x402atlas.com/fees\",\"https://defillama.use.x402atlas.com/fees-chain"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":55,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://api.linkedpanda.com",
+    "name": "Linked Panda",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:40:08.567Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"x402Version\":2,\"name\":\"Linked Panda LinkedIn Enrichment Agent API\",\"description\":\"Read-only x402 API for LinkedIn profile enrichment, bulk LinkedIn enrichment, verified work-email lookup, and post engagement data.\",\"homepage\":\"https://linkedpanda.com\",\"origin\":\"https://api.linkedpanda.com\",\"openapi\":\"https://api.linkedpanda.com/agent/v1/openapi.json\",\"openapiUrl\":\"https://api.linkedpanda.com/agent/v1/openapi.json\",\"llms\":\"https://api.linkedpanda.com/agent/v1/llms.txt\",\"resources\":[\"POST /agent"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":56,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://news.apitoll.cloud",
+    "name": "ApiToll Crypto News",
+    "category": "Content",
+    "probed_at": "2026-09-17T23:40:09.193Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://news.apitoll.cloud/v1/cointelegraph/news\"]}"
+    },
+    "resource_probe": {
+      "direct_status": 402,
+      "direct_body": "{\"error\":\"payment_required\",\"message\":\"This endpoint requires an x402 micropayment (USDC on Base). See the 402 `accepts` for payment details.\"}",
+      "has_402": true,
+      "reachable": true,
+      "accepts_nano": false
+    },
+    "first_resource": "https://news.apitoll.cloud/v1/cointelegraph/news",
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":57,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://perpsignals.use.x402atlas.com",
+    "name": "Crypto Perp Signals",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:40:13.016Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://perpsignals.use.x402atlas.com/fear-greed\",\"https://perpsignals.use.x402atlas.com/funding-rates\",\"https://perpsignals.use.x402atlas.com/pairs\"]}"
+    },
+    "resource_probe": {
+      "direct_status": 402,
+      "direct_body": "{\"error\":\"payment_required\",\"hint\":\"This endpoint requires x402 payment. The price and payment options are in the PAYMENT-REQUIRED response header (x402 v2). Pay with an x402 client, then retry to receive the data.\",\"price\":\"$0.005 per call\",\"method\":\"GET\",\"resource\":{\"url\":\"https://perpsignals.use.x402atlas.com/fear-greed\",\"description\":\"Crypto Fear \\u0026 Greed index — the current market-sentiment score (0-100) and its label (Extreme Fear … Extreme Greed), as a clean snake_case envelope.\",\"mim",
+      "has_402": true,
+      "reachable": true,
+      "accepts_nano": false
+    },
+    "first_resource": "https://perpsignals.use.x402atlas.com/fear-greed",
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":58,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://evm-gas.apitoll.cloud",
+    "name": "ApiToll Multi-Chain EVM Gas",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:40:13.635Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://evm-gas.apitoll.cloud/v1/evm/gas\"]}"
+    },
+    "resource_probe": {
+      "direct_status": 402,
+      "direct_body": "{\"error\":\"payment_required\",\"message\":\"This endpoint requires an x402 micropayment (USDC on Base). See the 402 `accepts` for payment details.\"}",
+      "has_402": true,
+      "reachable": true,
+      "accepts_nano": false
+    },
+    "first_resource": "https://evm-gas.apitoll.cloud/v1/evm/gas",
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":59,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://api.webbersites.com",
+    "name": "WebberSites x402 Data API",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:40:13.925Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"x402Version\":2,\"items\":[{\"resource\":\"https://api.webbersites.com/api/price/:coin\",\"type\":\"http\",\"x402Version\":2,\"accepts\":[{\"scheme\":\"exact\",\"network\":\"eip155:8453\",\"amount\":\"1000\",\"maxAmountRequired\":\"1000\",\"asset\":\"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913\",\"payTo\":\"0xdd5fcEa81CA6f1EB39FEd5B973DE794293B81ba6\",\"maxTimeoutSeconds\":300,\"resource\":\"https://api.webbersites.com/api/price/:coin\",\"description\":\"Current USD spot price and 24-hour percent change for any crypto asset by CoinGecko id. "
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":60,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://stableemail.dev",
+    "name": "StableEmail",
+    "category": "AI",
+    "probed_at": "2026-09-17T23:40:14.155Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://stableemail.dev/api/subdomain/inbox/update\",\"https://stableemail.dev/api/subdomain/inbox/messages/delete\",\"https://stableemail.dev/api/inbox/messages\",\"https://stableemail.dev/api/inbox/topup\",\"https://stableemail.dev/api/subdomain/inbox/messages\",\"https://stableemail.dev/api/subdomain/send\",\"https://stableemail.dev/api/send\",\"https://stableemail.dev/api/subdomain/buy\",\"https://stableemail.dev/api/inbox/buy\",\"https://stableemail.dev/api/inbox/send\",\"https://sta"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":61,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://rubric-protocol.com",
+    "name": "Rubric Protocol — Post-Quantum AI Attestation",
+    "category": "Verification",
+    "probed_at": "2026-09-17T23:40:14.398Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"x402Version\": 2,\n  \"name\": \"Rubric Protocol\",\n  \"serviceName\": \"Rubric Protocol\",\n  \"description\": \"Pay-per-attestation for AI decisions. An agent pays $0.005 USDC and receives an ML-DSA-65 (FIPS 204, post-quantum) signed attestation of its decision, anchored to Hedera mainnet HCS within ~60s. Payment metadata is sealed inside the ZK-committed attested payload \\u2014 the evidence carries its own receipt. Verification and the audit portal are free and public.\",\n  \"url\": \"https://rubric-proto"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":62,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://floyd.lonestaroracle.xyz",
+    "name": "Floyd Coding Agent",
+    "category": "AI",
+    "probed_at": "2026-09-17T23:40:14.638Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://floyd.lonestaroracle.xyz/hire\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x00000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":63,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://copperhead.lonestaroracle.xyz",
+    "name": "CopperheadAI",
+    "category": "Verification",
+    "probed_at": "2026-09-17T23:40:14.869Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://copperhead.lonestaroracle.xyz/audit\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x00000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":64,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://contract.lonestaroracle.xyz",
+    "name": "LoneStarOracle ContractCheck",
+    "category": "Blockchain",
+    "probed_at": "2026-09-17T23:40:15.083Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://contract.lonestaroracle.xyz/verify\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":65,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://weather.lonestaroracle.xyz",
+    "name": "LoneStarOracle WeatherOracle",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:40:15.296Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://weather.lonestaroracle.xyz/forecast\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x00000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":66,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://trade.lonestaroracle.xyz",
+    "name": "TradePulse",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:40:15.513Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://trade.lonestaroracle.xyz/trade\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":67,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://equity.lonestaroracle.xyz",
+    "name": "LoneStarOracle EquityScope",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:40:15.651Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://equity.lonestaroracle.xyz/equity\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x00000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":68,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://wealth.lonestaroracle.xyz",
+    "name": "LoneStarOracle WealthPulse",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:40:15.858Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://wealth.lonestaroracle.xyz/analyze\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":69,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://insider.lonestaroracle.xyz",
+    "name": "LoneStarOracle InsiderFlow",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:40:16.077Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://insider.lonestaroracle.xyz/trades\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":70,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://wallet.lonestaroracle.xyz",
+    "name": "WalletRisk",
+    "category": "Blockchain",
+    "probed_at": "2026-09-17T23:40:16.294Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://wallet.lonestaroracle.xyz/score\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":71,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://launches.lonestaroracle.xyz",
+    "name": "LoneStarOracle TokenLaunch",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:40:16.433Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://launches.lonestaroracle.xyz/scan\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x00000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":72,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://govedge.lonestaroracle.xyz",
+    "name": "GovEdge",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:40:16.652Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://govedge.lonestaroracle.xyz/report\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":73,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://liq.lonestaroracle.xyz",
+    "name": "LoneStarOracle Liquidations",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:40:16.859Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://liq.lonestaroracle.xyz/liquidations\",\n    \"https://liq.lonestaroracle.xyz/biggest\",\n    \"https://liq.lonestaroracle.xyz/signal\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssu"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":74,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://doc.lonestaroracle.xyz",
+    "name": "DocEdge",
+    "category": "AI",
+    "probed_at": "2026-09-17T23:40:17.006Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://doc.lonestaroracle.xyz/convert\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":75,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://rattler.lonestaroracle.xyz",
+    "name": "RattlerAI",
+    "category": "Verification",
+    "probed_at": "2026-09-17T23:40:17.230Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://rattler.lonestaroracle.xyz/audit\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x00000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":76,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://minerals.lonestaroracle.xyz",
+    "name": "StrategicMaterials",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:40:17.368Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://minerals.lonestaroracle.xyz/minerals\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":77,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://options.lonestaroracle.xyz",
+    "name": "LoneStarOracle OptionsFlow",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:40:17.505Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://options.lonestaroracle.xyz/flow\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":78,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://chainscout.lonestaroracle.xyz",
+    "name": "LoneStarOracle ChainScout",
+    "category": "Blockchain",
+    "probed_at": "2026-09-17T23:41:07.352Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://chainscout.lonestaroracle.xyz/report\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":79,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://news.lonestaroracle.xyz",
+    "name": "LoneStarOracle NewsSentiment",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:07.505Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://news.lonestaroracle.xyz/news\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x000000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":80,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://whale.lonestaroracle.xyz",
+    "name": "LoneStarOracle WhaleAlert",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:07.707Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://whale.lonestaroracle.xyz/whales\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":81,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://aero.lonestaroracle.xyz",
+    "name": "AeroCheck",
+    "category": "Blockchain",
+    "probed_at": "2026-09-17T23:41:07.924Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://aero.lonestaroracle.xyz/pool\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x000000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":82,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://cottonmouth.lonestaroracle.xyz",
+    "name": "CottonmouthAI",
+    "category": "Verification",
+    "probed_at": "2026-09-17T23:41:08.136Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://cottonmouth.lonestaroracle.xyz/audit\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":83,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://rwa.lonestaroracle.xyz",
+    "name": "RWA Risk",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:08.267Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://rwa.lonestaroracle.xyz/rwa-risk\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":84,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://cascade.lonestaroracle.xyz",
+    "name": "CascadeWatch",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:08.402Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://cascade.lonestaroracle.xyz/risk\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":85,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://crownblock.lonestaroracle.xyz",
+    "name": "CrownBlock",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:08.618Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://crownblock.lonestaroracle.xyz/report\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":86,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://geo.lonestaroracle.xyz",
+    "name": "LoneStarOracle GeoPulse",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:08.775Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://geo.lonestaroracle.xyz/risk\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":87,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://portfolio.lonestaroracle.xyz",
+    "name": "LoneStarOracle PortfolioRisk",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:08.988Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://portfolio.lonestaroracle.xyz/analyze\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":88,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://earnings.lonestaroracle.xyz",
+    "name": "LoneStarOracle EarningsCalendar",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:09.141Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://earnings.lonestaroracle.xyz/calendar\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":89,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://lease.lonestaroracle.xyz",
+    "name": "LeaseEdge",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:09.291Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://lease.lonestaroracle.xyz/report\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":90,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://consumer.lonestaroracle.xyz",
+    "name": "ConsumerPulse",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:09.515Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://consumer.lonestaroracle.xyz/consumer\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":91,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://labor.lonestaroracle.xyz",
+    "name": "LaborPulse",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:09.746Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://labor.lonestaroracle.xyz/labor\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":92,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://grid.lonestaroracle.xyz",
+    "name": "GridPulse",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:09.891Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://grid.lonestaroracle.xyz/report\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":93,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://realestate.lonestaroracle.xyz",
+    "name": "RealEstatePulse",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:10.026Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://realestate.lonestaroracle.xyz/report\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":94,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://stake.lonestaroracle.xyz",
+    "name": "StakeEdge",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:12.120Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://stake.lonestaroracle.xyz/report\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":95,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://funding.lonestaroracle.xyz",
+    "name": "FundingRates",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:12.258Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://funding.lonestaroracle.xyz/rates\",\n    \"https://funding.lonestaroracle.xyz/extremes\",\n    \"https://funding.lonestaroracle.xyz/signal\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz."
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":96,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://latam.lonestaroracle.xyz",
+    "name": "LatAmPulse",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:12.480Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://latam.lonestaroracle.xyz/report\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":97,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://oi.lonestaroracle.xyz",
+    "name": "OpenInterest",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:12.616Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://oi.lonestaroracle.xyz/oi\",\n    \"https://oi.lonestaroracle.xyz/extremes\",\n    \"https://oi.lonestaroracle.xyz/signal\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":98,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://cycle.lonestaroracle.xyz",
+    "name": "CyclePulse",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:12.759Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://cycle.lonestaroracle.xyz/cycle\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":99,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://compute.lonestaroracle.xyz",
+    "name": "ComputePulse",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:12.893Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://compute.lonestaroracle.xyz/report\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":100,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://stable.lonestaroracle.xyz",
+    "name": "StablePulse",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:13.031Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://stable.lonestaroracle.xyz/pulse\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":101,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://metals.lonestaroracle.xyz",
+    "name": "IndustrialMetals",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:13.175Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://metals.lonestaroracle.xyz/report\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x00000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":102,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://supply.lonestaroracle.xyz",
+    "name": "SupplyChainPulse",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:13.387Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://supply.lonestaroracle.xyz/report\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x00000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":103,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://agri.lonestaroracle.xyz",
+    "name": "AgriPulse",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:13.547Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://agri.lonestaroracle.xyz/report\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":104,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://ta.lonestaroracle.xyz",
+    "name": "TechAnalysis",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:13.683Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://ta.lonestaroracle.xyz/scan\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x00000000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":105,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://token.lonestaroracle.xyz",
+    "name": "LoneStarOracle TokenScope",
+    "category": "Blockchain",
+    "probed_at": "2026-09-17T23:41:13.817Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://token.lonestaroracle.xyz/report\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":106,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://defi.lonestaroracle.xyz",
+    "name": "DeFiRisk",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:13.951Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://defi.lonestaroracle.xyz/risk\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x000000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":107,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://macro.lonestaroracle.xyz",
+    "name": "LoneStarOracle MacroPulse",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:14.102Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://macro.lonestaroracle.xyz/macro\"\n  ],\n  \"ownershipProofs\": [\n    {\n      \"type\": \"erc1271\",\n      \"chainId\": 8453,\n      \"address\": \"0x52Ab53912D37759B2ad364f22dD06B16714b6C06\",\n      \"message\": \"LoneStarOracle x402 service ownership proof.\\nWallet 0x52Ab53912D37759B2ad364f22dD06B16714b6C06 operates the x402 services served under lonestaroracle.xyz.\\nIssued: 2026-06-26\\n\",\n      \"signature\": \"0x0000000000000000000000000000000000000000000000000000000"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":108,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://api.myceliasignal.com",
+    "name": "Mycelia Signal",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:14.320Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "[{\"method\":\"GET\",\"resource\":\"https://api.myceliasignal.com/oracle/price/btc/usd\",\"accepts\":[{\"scheme\":\"exact\",\"network\":\"eip155:8453\",\"amount\":\"10000\",\"maxAmountRequired\":\"10000\",\"resource\":\"https://api.myceliasignal.com/oracle/price/btc/usd\",\"description\":\"Real-time Bitcoin price in USD, aggregated from 9 exchanges including Binance, Coinbase and Kraken\",\"mimeType\":\"application/json\",\"payTo\":\"0xD593832Ce9C2B13B192ba50B55dd9AF44e96700d\",\"recipient\":\"0xD593832Ce9C2B13B192ba50B55dd9AF44e96700d\",\"a"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":109,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://coingecko.use.x402atlas.com",
+    "name": "CoinGecko Crypto Price & Data (x402 Atlas)",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:14.499Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://coingecko.use.x402atlas.com/coin\",\"https://coingecko.use.x402atlas.com/history\",\"https://coingecko.use.x402atlas.com/markets\",\"https://coingecko.use.x402atlas.com/ohlc\",\"https://coingecko.use.x402atlas.com/price\",\"https://coingecko.use.x402atlas.com/trending\"]}"
+    },
+    "resource_probe": {
+      "direct_status": 402,
+      "direct_body": "{\"error\":\"payment_required\",\"hint\":\"This endpoint requires x402 payment. The price and payment options are in the PAYMENT-REQUIRED response header (x402 v2). Pay with an x402 client, then retry to receive the data.\",\"price\":\"$0.005 per call\",\"method\":\"GET\",\"resource\":{\"url\":\"https://coingecko.use.x402atlas.com/coin\",\"description\":\"Crypto coin metadata and market data by CoinGecko id — name, symbol, market-cap rank, price, homepage and categories for any token.\",\"mimeType\":\"application/json\",\"ser",
+      "has_402": true,
+      "reachable": true,
+      "accepts_nano": false
+    },
+    "first_resource": "https://coingecko.use.x402atlas.com/coin",
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":110,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://data.rcqsignals.com",
+    "name": "RC Quantum Data Oracle",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:14.622Z",
+    "direct_probe": {
+      "well_known_status": 404,
+      "well_known_body": "{\n  \"error\": \"not_found\",\n  \"try\": [\n    \"/\",\n    \"/v1/catalog\",\n    \"/v1/sample\",\n    \"/v1/verify\",\n    \"/llms.txt\"\n  ]\n}\n"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://api-v2.ixs.finance",
+    "name": "IXS",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:15.421Z",
+    "direct_probe": {
+      "well_known_status": 404,
+      "well_known_body": "{\"error\":{\"code\":\"NOT_FOUND\",\"message\":\"Not found\",\"status\":404}}"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://api.strale.io",
+    "name": "Strale",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:15.657Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://api.strale.io/x402/v2/spanish-company-data\",\"https://api.strale.io/x402/v2/eu-regulation-search\",\"https://api.strale.io/x402/v2/robots-txt-parse\",\"https://api.strale.io/x402/v2/phone-validate\",\"https://api.strale.io/x402/v2/price-compare\",\"https://api.strale.io/x402/v2/canadian-company-data\",\"https://api.strale.io/x402/v2/redirect-trace\",\"https://api.strale.io/x402/v2/nginx-config-generate\",\"https://api.strale.io/x402/v2/adverse-media-check\",\"https://api.strale"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":111,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://edgar.apitoll.cloud",
+    "name": "ApiToll SEC EDGAR Data",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:16.175Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"service\":{\"name\":\"ApiToll SEC EDGAR smart-money suite\",\"description\":\"Normalized SEC EDGAR data by ticker or CIK: filings (10-K/10-Q/8-K), Form 4 insider trades, 13F-HR institutional holdings, and a one-call smart-money bundle. Paid per call via x402 on Base + Solana. Free coverage precheck.\",\"tags\":[\"sec\",\"edgar\",\"filings\",\"insider-trades\",\"13f\",\"smart-money\",\"finance\"],\"category\":\"finance\",\"price\":\"$0.003\",\"schemaUrl\":\"https://edgar.apitoll.cloud/openapi.json\"},\"resources\":[{\"url"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":112,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://api.venice.ai/api/v1",
+    "name": "Venice AI",
+    "category": "AI",
+    "probed_at": "2026-09-17T23:41:16.273Z",
+    "direct_probe": {
+      "well_known_status": 404,
+      "well_known_body": "{\"error\":\"Not found\"}"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://web.cyberwarex.com",
+    "name": "Agent Web Access",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:16.887Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"description\":\"Give your AI agent reliable eyes on the live web \\u2014 the one thing an LLM can't do natively. Fetches JavaScript-rendered pages as clean, LLM-ready markdown/text, extracts elements by CSS selector, and captures full-page screenshots or PDFs of any public URL. Pay-per-call via x402 (USDC on Base) \\u2014 no API key, no signup, no subscription.\",\"endpoints\":[{\"method\":\"GET\",\"params\":{\"format\":\"markdown|text|html (default markdown)\",\"url\":\"string (public http/https)\"},\"path\":\"/fetc"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":113,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://sat.ipintel.ai",
+    "name": "IPIntel.ai Satellite & GeoRisk API",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:17.187Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"openapi\":\"3.1.0\",\"info\":{\"title\":\"Satellite & GeoRisk x402 API\",\"version\":\"1.0.0\",\"description\":\"Agent-first paid geocoding, satellite imagery, and current multi-hazard location risk intelligence over x402 v2.\",\"contact\":{\"email\":\"support@ipintel.ai\"},\"x-guidance\":\"Use POST /address-to-coordinates to convert an address or place name into coordinates. Use POST /coordinates-to-address to convert coordinates into an address. Use POST /satellite-observe to request satellite imagery for a location."
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":114,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://api.ipintel.ai",
+    "name": "IPIntel.ai IP Lookup & Risk API",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:17.714Z",
+    "direct_probe": {
+      "well_known_status": 525,
+      "well_known_body": "error code: 525\n"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://tools.ipintel.ai",
+    "name": "IPIntel.ai x402 Tools",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:18.037Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"openapi\": \"3.1.0\",\n  \"info\": {\n    \"title\": \"IPIntel.ai x402 Tools API\",\n    \"version\": \"1.0.0\",\n    \"contact\": {\n      \"email\": \"support@ipintel.ai\"\n    },\n    \"x-logo\": {\n      \"url\": \"https://tools.ipintel.ai/favicon.png\",\n      \"altText\": \"IPIntel.ai\"\n    },\n    \"description\": \"Pay-per-call x402 APIs for satellite observation, DNS lookup, domain health checks, reverse DNS, WHOIS lookup, domain availability checks, JSON Schema validation, JWT decoding, Base64 encoding/decoding, and HTTP "
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":115,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://store.agentexchange.work",
+    "name": "Agent Exchange",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:18.430Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"description\":\"Agent Exchange — pay-per-call APIs for AI agents. Includes real LLM inference (POST /v1/chat/completions, $0.01, Cloudflare Workers AI: Llama / GPT-OSS / GLM / Granite), plus trading-lane data, on-chain RPC reads, AI-visibility audits, prediction-market odds, DeFi yields, and macro prices.\",\"instructions\":\"Every paid GET returns HTTP 402 with x402 payment requirements; pay in USDC on Base (eip155:8453) — Solana SPL USDC also accepted — and retry with the X-PAYMENT header. No API "
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":116,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://gateway.spraay.app",
+    "name": "Spraay Gateway",
+    "category": "AI",
+    "probed_at": "2026-09-17T23:41:18.710Z",
+    "direct_probe": {
+      "well_known_status": 308,
+      "well_known_body": "Permanent Redirect. Redirecting to /.well-known/x402.json"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://lionx402.com",
+    "name": "LION — Verified Company & Compliance Data",
+    "category": "Verification",
+    "probed_at": "2026-09-17T23:41:19.014Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"product\":\"LION — Verified Company Data\",\"serviceName\":\"LION Verified Company\",\"resources\":[\"https://lionx402.com/api/x402/wallet-screen-json\",\"https://lionx402.com/api/x402/multi-sanctions-bundle-json\",\"https://lionx402.com/api/x402/company-research\",\"https://lionx402.com/api/x402/company-enrich\",\"https://lionx402.com/api/x402/company-dossier\",\"https://lionx402.com/api/x402/compliance-bundle-json\",\"https://lionx402.com/api/x402/entity-sanctions-screen-json\",\"https://lionx402.com/ap"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":117,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://cpi-report-us.underscoredone.com",
+    "name": "US CPI Data & Inflation Report API",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:19.224Z",
+    "direct_probe": {
+      "well_known_status": 404,
+      "well_known_body": "{\"detail\":\"Not Found\"}"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://curl-http-request.underscoredone.com",
+    "name": "Curl HTTP Request",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:19.403Z",
+    "direct_probe": {
+      "well_known_status": 404,
+      "well_known_body": "{\"detail\":\"Not Found\"}"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://dmarc-lookup.underscoredone.com",
+    "name": "Bulk DMARC Record Lookup",
+    "category": "Other",
+    "probed_at": "2026-09-17T23:41:19.590Z",
+    "direct_probe": {
+      "well_known_status": 404,
+      "well_known_body": "{\"detail\":\"Not Found\"}"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  },
+  {
+    "base_url": "https://hyperliquid-predict.use.x402atlas.com",
+    "name": "Hyperliquid Prediction Markets Data (x402 Atlas)",
+    "category": "Finance",
+    "probed_at": "2026-09-17T23:41:19.748Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\"version\":1,\"resources\":[\"https://hyperliquid-predict.use.x402atlas.com/outcomes\",\"https://hyperliquid-predict.use.x402atlas.com/settled\"]}"
+    },
+    "resource_probe": {
+      "direct_status": 402,
+      "direct_body": "{\"error\":\"payment_required\",\"hint\":\"This endpoint requires x402 payment. The price and payment options are in the PAYMENT-REQUIRED response header (x402 v2). Pay with an x402 client, then retry to receive the data.\",\"price\":\"$0.005 per call\",\"method\":\"GET\",\"resource\":{\"url\":\"https://hyperliquid-predict.use.x402atlas.com/outcomes\",\"description\":\"The catalog of Hyperliquid prediction-market outcomes and their metadata.\",\"mimeType\":\"application/json\",\"serviceName\":\"Hyperliquid Prediction Markets\",\"",
+      "has_402": true,
+      "reachable": true,
+      "accepts_nano": false
+    },
+    "first_resource": "https://hyperliquid-predict.use.x402atlas.com/outcomes",
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":118,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": "https://regimeshift.xyz",
+    "name": "RegimeShift Clearinghouse",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:20.335Z",
+    "direct_probe": {
+      "well_known_status": 200,
+      "well_known_body": "{\n  \"version\": 1,\n  \"resources\": [\n    \"https://regimeshift.xyz/api/v1/rate/sofr/usd\",\n    \"https://regimeshift.xyz/api/v1/risk/max-ltv\",\n    \"https://regimeshift.xyz/api/v1/asset/eth/vrp\",\n    \"https://regimeshift.xyz/api/v1/asset/btc/vrp\"\n  ],\n  \"ownershipProofs\": [\n    \"0xa61877a7ba74666242e9985d81f29b3777638d67519c9cf777bb71ef36050e4b3a4945edf0f2112412104eea2a3d6a60e5d66a79d9869f4797a159b1fa6b17541c\"\n  ]\n}\n"
+    },
+    "resource_probe": {
+      "direct_status": 402,
+      "direct_body": "{\"x402Version\":2,\"error\":\"Payment required\",\"resource\":{\"url\":\"https://regimeshift.xyz/api/v1/rate/sofr/usd\",\"description\":\"Agent-SOFR — decentralized USD short-rate benchmark for AI agents. Weighted-median of 7 sources + variance + regime premiums. BNS-calibrated 6-mode classifier on 444k ETH/USDC 5-min bars (λ=1.097 closed-form). Open + IPFS-pinned methodology: agent-sofr-v1.\",\"mimeType\":\"application/json\"},\"accepts\":[{\"scheme\":\"exact\",\"network\":\"eip155:8453\",\"asset\":\"0x833589fCD6eDb6E08f4c7C3",
+      "has_402": true,
+      "reachable": true,
+      "accepts_nano": false
+    },
+    "first_resource": "https://regimeshift.xyz/api/v1/rate/sofr/usd",
+    "is_x402_service": true,
+    "welcome_ask": {
+      "ask_created": true,
+      "ask_status": 201,
+      "ask_body": "{\"id\":119,\"status\":\"open\"}"
+    }
+  },
+  {
+    "base_url": " https://api.northeastdealintel.com",
+    "name": "Northeast Deal Intel",
+    "category": "Data",
+    "probed_at": "2026-09-17T23:41:20.437Z",
+    "direct_probe": {
+      "well_known_status": 301,
+      "well_known_body": "<html>\r\n<head><title>301 Moved Permanently</title></head>\r\n<body>\r\n<center><h1>301 Moved Permanently</h1></center>\r\n<hr><center>nginx/1.24.0 (Ubuntu)</center>\r\n</body>\r\n</html>\r\n"
+    },
+    "resource_probe": null,
+    "first_resource": null,
+    "is_x402_service": false,
+    "welcome_ask": null
+  }
+]

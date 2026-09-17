@@ -18,6 +18,7 @@ const { DatabaseSync } = require("node:sqlite");
 const path = require("path");
 const http = require("http");
 const https = require("https");
+const fs = require("fs");
 const { URL } = require("url");
 
 // --- Configuration ---

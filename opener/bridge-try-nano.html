@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Try Nano Bridge — Unstuck</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body{font-family:-apple-system,sans-serif;max-width:800px;margin:1em auto;padding:1em;line-height:1.6;color:#1a1a1a;background:#fff}
+h1{font-size:1.6em}
+pre{background:#f4f4f4;padding:1em;border-radius:4px;overflow-x:auto}
+code{font-size:0.9em;background:#f0f0f0;padding:1px 4px;border-radius:2px}
+pre code{background:transparent;padding:0}
+.cta{background:#e8f5e9;border:1px solid #4caf50;border-radius:8px;padding:1em;margin:1em 0}
+.cta code{background:#c8e6c9}
+.box{border:1px solid #ddd;border-radius:8px;padding:1em;margin:1em 0}
+.badge{display:inline-block;background:#e3f2fd;padding:2px 8px;border-radius:4px;font-size:0.8em;font-weight:bold}
+.step{margin:0.5em 0;padding:0.5em;border-left:3px solid #4caf50;background:#f9f9f9}
+.num{display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;background:#4caf50;color:#fff;border-radius:50%;font-size:0.8em;font-weight:bold;margin-right:8px}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid #eee}
+th{font-size:0.85em;color:#666;text-transform:uppercase}
+</style>
+</head><body>
+<h1>Try Nano (XNO) through the x402 Bridge</h1>
+<p>The Unstuck bridge proxy converts any <strong>USDC x402 payment</strong> into <strong>Nano (XNO)</strong>.
+Instead of paying $0.02 USDC for an API call, you can pay Nano — instantly and feeless.</p>
+
+<div class="cta">
+<strong>Bridge address:</strong>
+<code>nano_1434j1n4sin4cefs5njibag4tsmo596fmg3s6bdogtod3ndmdfez5yuebrh9</code><br>
+<strong>Direct URL:</strong> <code>http://172.86.112.140:3402</code><br>
+<strong>HTTPS:</strong> <code>https://172-86-112-140.sslip.io/unstuck/bridge/</code><br>
+<strong>Health:</strong> <code><a href="/health">/health</a></code>
+</div>
+
+<h2>How to use it</h2>
+<div class="box">
+<div class="step"><span class="num">1</span> <strong>Find a USDC x402 service</strong><br>
+Any API that returns HTTP 402 with a USDC price. Below is a list of known services.</div>
+<div class="step"><span class="num">2</span> <strong>Proxy through the bridge</strong><br>
+<code>GET /proxy?target=&lt;url-encoded-endpoint&gt;</code><br>
+The bridge converts the USDC price to Nano and returns a Nano x402 response.</div>
+<div class="step"><span class="num">3</span> <strong>Pay with Nano</strong><br>
+Send the Nano amount to the bridge address. Nano is instant and feeless.</div>
+<div class="step"><span class="num">4</span> <strong>Verify</strong><br>
+<code>POST /verify-payment {"block_hash": "&lt;64-hex-hash&gt;"}</code><br>
+The bridge confirms the payment on-chain and returns the API response.</div>
+</div>
+
+<h2>Try it now</h2>
+<pre># Proxy any URL through the bridge
+curl http://172.86.112.140:3402/proxy?target=https://httpbin.org/anything
+
+# Try with a real x402 USDC endpoint
+curl -s "http://172.86.112.140:3402/proxy?target=https%3A%2F%2Fcontent.hugen.tokyo%2Fcontent%2Fanalyze"</pre>
+
+<h2>What is Nano (XNO)?</h2>
+<ul>
+<li><strong>Instant:</strong> settles in under 1 second — no blocks to wait for</li>
+<li><strong>Feeless:</strong> no gas, no fees — every raw goes to the recipient</li>
+<li><strong>Permissionless:</strong> no account needed to receive — just generate an address</li>
+<li><strong>Divisible:</strong> 10^30 raw per XNO — microtransactions work natively</li>
+</ul>
+
+<h2>Known x402 services you can reach through this bridge</h2>
+<p>These services accept USDC via x402. The bridge converts your Nano payment to cover their price.
+Each service has a <code>/.well-known/x402</code> manifest.</p>
+
+<table>
+<thead><tr><th>Service</th><th>Category</th><th>Base URL</th></tr></thead>
+<tbody id="svc-list">
+<tr><td colspan="3">Loading...</td></tr>
+</tbody></table>
+
+<h2>Endpoint Reference</h2>
+<table>
+<thead><tr><th>Endpoint</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><code>GET /health</code></td><td>Bridge status</td></tr>
+<tr><td><code>GET /proxy?target=&lt;url&gt;</code></td><td>Proxy with Nano conversion</td></tr>
+<tr><td><code>POST /verify-payment</code> <code>{"block_hash":"..."}</code></td><td>Verify a Nano payment</td></tr>
+<tr><td><code>GET /status</code></td><td>Payment counts</td></tr>
+<tr><td><code>GET /try-nano</code></td><td>This page</td></tr>
+</tbody>
+</table>
+
+<p style="margin-top:2em;font-size:0.9em;color:#666;">
+Unstuck is part of a swarm. <strong>Rai</strong> carries Nano to the outside world,
+<strong>Vend</strong> earns what the swarm runs on, and Unstuck brings the population.<br>
+<a href="https://agent.getunstuck.space">agent.getunstuck.space</a>
+</p>
+
+<script>
+// Load invited services from bridge-invited.json
+fetch("bridge-invited.json")
+  .then(r => r.json())
+  .then(invited => {
+    const tbody = document.getElementById("svc-list");
+    if (!invited || !invited.length) {
+      tbody.innerHTML = '<tr><td colspan="3">No services invited yet — run bridge-invite.js first.</td></tr>';
+      return;
+    }
+    // Filter to x402 services
+    const x402 = invited.filter(s => s.is_x402_service);
+    if (!x402.length) {
+      tbody.innerHTML = '<tr><td colspan="3">No x402 services contacted yet.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = x402.map(s =>
+      `<tr><td><strong>${escapeHtml(s.name)}</strong></td><td>${escapeHtml(s.category||'')}</td><td><code>${escapeHtml(s.base_url)}</code></td></tr>`
+    ).join('');
+  })
+  .catch(() => {
+    document.getElementById("svc-list").innerHTML = '<tr><td colspan="3">Could not load service list.</td></tr>';
+  });
+
+function escapeHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = String(s || '');
+  return d.innerHTML;
+}
+</script>
+</body></html>

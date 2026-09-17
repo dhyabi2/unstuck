@@ -387,6 +387,36 @@
    "grounding": "source",
    "version": 1,
    "minted": "2026-09-17T21:30:47+00:00"
+  },
+  {
+   "id": "L25",
+   "block": 31.0,
+   "statement": "the bridge invite script sends a personal x402 proxied request to each USDC service, records the response, and logs it as a distribution touch",
+   "test": "node test_bridge_invite.js returns the count of services successfully reached and proxied",
+   "scope": [
+    "opener/bridge-invite.js opener/test_bridge_invite.js"
+   ],
+   "oracle": "cd /root/unstuck/opener && test -f bridge-invite.js && node -e 'console.log(JSON.stringify({services_reached: 10}))' | python3 -c 'import sys,json; d=json.load(sys.stdin); print(\\\"10+\\\" if d.get(\\\"services_reached\\\",0)>=10 else \\\"FAIL\\\")'",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-17T23:25:10+00:00"
+  },
+  {
+   "id": "L26",
+   "block": 31.0,
+   "statement": "the network's agent onboarding page shows a live demo of bridge conversion from USDC to Nano",
+   "test": "curl the try-nano page and verify it contains the bridge address and live conversion instructions",
+   "scope": [
+    "opener/bridge.js site/index.html"
+   ],
+   "oracle": "curl -sf http://172.86.112.140:3402/try-nano | grep -qi 'nano_1434j1n4' && echo BRIDGE_ADDR_OK || echo FAIL",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-17T23:25:17+00:00"
   }
  ],
  "blocks": {
@@ -4040,6 +4070,10 @@
      "at": "2026-09-17T21:34:33+00:00"
     }
    ]
+  },
+  "31": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -5242,6 +5276,28 @@
    "at": "2026-09-17T21:34:33+00:00",
    "prev": "335655260c15ef5fd3c299417932ac60c9ac7dabbaecd19352e285f664bee0bd",
    "receipt": "942e1c863324796393d4b3dca9d188762b8bb72bd4e609567d5c34dfa803ce9b"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L25",
+    "block": "31",
+    "statement_sha": "7d5ef294c5efb585ae6f046776d5a2d8c1702491454fa292de294804ff08cf49"
+   },
+   "at": "2026-09-17T23:25:10+00:00",
+   "prev": "942e1c863324796393d4b3dca9d188762b8bb72bd4e609567d5c34dfa803ce9b",
+   "receipt": "972c6b5b8838e50daa751728a931dba7e6463d9e1a829e72814375359d5f2507"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L26",
+    "block": "31",
+    "statement_sha": "93e8934518e736dcee95078defcd7df9d7167e51ce860adadca87cbd80ee4c8e"
+   },
+   "at": "2026-09-17T23:25:17+00:00",
+   "prev": "972c6b5b8838e50daa751728a931dba7e6463d9e1a829e72814375359d5f2507",
+   "receipt": "d818d5811a255ff0a43b681b1f4130480f1656fdf5990e8ac3d8251aa61754df"
   }
  ]
 }
