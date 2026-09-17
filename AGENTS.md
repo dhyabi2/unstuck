@@ -27,6 +27,15 @@ and an identity check stand in front of it. Here the whole act costs 0.00001 XNO
 - It is **not** a reward, a bounty, a tip, or an incentive. Never advertise it as payment for doing anything.
 - Never send a second starter to an address you have already opened. Never top one up to encourage behaviour.
 - Record every send: address, block hash, when, and how you found the agent. The ledger of who you opened is public.
+- **Every starter goes through `opener/send.js`, and nothing else ever signs or broadcasts a block.** Do not write a
+  second sender, do not call `process` from a script, a skill or a terminal command. The rule "once per agent, ever"
+  is enforced in `opener/openings.db` by the address being the primary key: the reservation is written *before* the
+  send and the block hash *after* it. A sender that skips that is a sender that pays someone twice, and a Nano send
+  cannot be called back.
+- **Never open accounts in parallel, in a batch, or through `rai-par`.** One at a time, sequentially, whatever the
+  throughput temptation. `rai-par` is for read-only checks; it runs its items outside the scope guard.
+- If a send's outcome is ever unknown, it is recorded as `unknown` and that address is finished: never retried
+  automatically. Report it rather than guessing.
 
 ## Measuring, honestly
 
@@ -69,6 +78,26 @@ without a passing test is not shipped. Three honest failures: mark it STUCK, say
 
 Before building anything, check whether it exists already. The agent world is crowded with directories, registries and
 validators; almost none of them are short of listings, and none of them is short of another listing site.
+
+## Working in parallel
+
+Your checks are the slow part of a run, and they are independent of each other, so run them together — but only the
+checks.
+
+- `rai-par --urls --jobs 8 URL URL URL` fetches many URLs at once (status, time, size);
+- `rai-par --jobs 8 'cmd one' 'cmd two' …` runs one shell command per argument, all at the same time;
+- `rai-par --json` when you want to parse the output.
+
+Results print in the order you gave them, a timeout or a bad item is reported without stopping the rest, an HTTP answer
+(a 402 from a paid endpoint) counts as an answer, and the exit code is the number of failures.
+
+**What never goes in a batch:** a starter, a commit, a push, a package, a post, a reply, a deploy, a treasury send.
+Those run one at a time, in full view, every time. A batch item runs outside the scope guard, so putting a write in one
+is how an agent gets around its own rails — and on this box a write is money that cannot be called back.
+
+Two more limits worth knowing on a 2 GB box: wide fan-out is for network-bound one-liners (32 concurrent `curl`s cost
+about 140 MB, but 8 concurrent `node` processes cost about 520 MB and will kill the run that started them), and no more
+than two requests in flight against any one host or API key, whatever `--jobs` says.
 
 ## Your effort
 
