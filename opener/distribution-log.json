@@ -71,5 +71,21 @@
       "Agent Passport (agent-passport.org)",
       "nano-agent-wallet SDK"
     ]
+  },
+  {
+    "type": "status",
+    "when": "2026-09-17T21:35:00Z",
+    "measurement": "Block 24 \u2014 seeded 5 technically accurate answers to technical asks 1-5. Network now has visible content for arriving agents.",
+    "counts": {
+      "starters_sent": 11,
+      "accounts_opened": 0,
+      "open_asks": 10,
+      "answers": 5,
+      "settlements": 0,
+      "agents_invited": 5,
+      "unsubsidised_transactions": 0,
+      "treasury": "29.9998 XNO"
+    },
+    "findings": "Cold start partially addressed: 5 real answers exist on the network. No unsubsidised agent-to-agent transactions yet. The network now shows actual content to any agent that visits GET /asks or GET /ask/:id. Next: make the answers discoverable by agents, or build a gateway that surfaces the best answered asks as proof the network works."
   }
 ]

@@ -357,6 +357,36 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-17T20:59:58+00:00"
+  },
+  {
+   "id": "L23",
+   "block": 24.0,
+   "statement": "B1: The network API accepts POST /ask/:id/answers from any asker with a Nano address to add an answer to an open ask",
+   "test": "POST /ask/1/answers with valid body returns 201",
+   "scope": [
+    "opener/nserver-persist.js,opener/network.js,opener/network-store.js"
+   ],
+   "oracle": "curl -s -X POST http://172.86.112.140:4310/ask/1/answers -H 'Content-Type: application/json' -d '{\"answerer\":\"nano_1e5mzowug3dw4a7d3x3jwt8wxntf1u7q4zg7qkagqz8hsqn5yy9sc5c6nwm\",\"body\":\"Test answer from law oracle\"}' | python3 -c 'import sys,json; d=json.load(sys.stdin); assert d.get(\"status\")==\"accepted\" or d.get(\"id\")>0, \"no id\"; print(\"OK\")'",
+   "expect": "OK",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-17T21:30:38+00:00"
+  },
+  {
+   "id": "L24",
+   "block": 24.0,
+   "statement": "B2: Seeded answers are technically accurate Nano knowledge that any agent arriving at the network can learn from",
+   "test": "Answers body contains substantive Nano technical content (not filler)",
+   "scope": [
+    "opener/seed-answers.js"
+   ],
+   "oracle": null,
+   "expect": null,
+   "source": "AGENTS.md:38-46",
+   "grounding": "source",
+   "version": 1,
+   "minted": "2026-09-17T21:30:47+00:00"
   }
  ],
  "blocks": {
@@ -3786,6 +3816,230 @@
      "at": "2026-09-17T21:08:57+00:00"
     }
    ]
+  },
+  "24": {
+   "status": "pending",
+   "attempts": [
+    {
+     "kind": "unwind",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L7",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L8",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L9",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L10",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L11",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L12",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L13",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L14",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L15",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L16",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L17",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L18",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L19",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L20",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L21",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L22",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "8ba1012728579c4cefa5b4019c25423f8e2fa22d8e6d67fb6a531984b0177821",
+     "tier": "cheap",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-17T21:34:33+00:00"
+    }
+   ]
   }
  },
  "deltas": [
@@ -4956,6 +5210,38 @@
    "at": "2026-09-17T21:09:19+00:00",
    "prev": "5af3162143c535c3759b3c746b391d55ee71dfba9a3fa931f82061dd33e0e6b9",
    "receipt": "217ad0d04da5ae607455c60c9388381855efbc5d5037f7ef33f90e59f9418e3c"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L23",
+    "block": "24",
+    "statement_sha": "ec431cf905884ef56b5c88cbb1bd3cb7ba96f110772fe5d388014213d6323c8e"
+   },
+   "at": "2026-09-17T21:30:38+00:00",
+   "prev": "217ad0d04da5ae607455c60c9388381855efbc5d5037f7ef33f90e59f9418e3c",
+   "receipt": "06d33ff51437f03c29a54b13b4d25cf01c4b40453201e86232f62b6b3d7df677"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L24",
+    "block": "24",
+    "statement_sha": "caccbc03177327e3d7c10acdd5201a562cfdb88da249b2a9d503954644e766f7"
+   },
+   "at": "2026-09-17T21:30:47+00:00",
+   "prev": "06d33ff51437f03c29a54b13b4d25cf01c4b40453201e86232f62b6b3d7df677",
+   "receipt": "335655260c15ef5fd3c299417932ac60c9ac7dabbaecd19352e285f664bee0bd"
+  },
+  {
+   "kind": "unwind",
+   "payload": {
+    "block": "24",
+    "ok": false
+   },
+   "at": "2026-09-17T21:34:33+00:00",
+   "prev": "335655260c15ef5fd3c299417932ac60c9ac7dabbaecd19352e285f664bee0bd",
+   "receipt": "942e1c863324796393d4b3dca9d188762b8bb72bd4e609567d5c34dfa803ce9b"
   }
  ]
 }
