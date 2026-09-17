@@ -59,7 +59,7 @@ The existing Caddy server on this box already serves `172-86-112-140.sslip.io` w
 **All 10 test suites pass** (test_network, test_network_store, test_nserver, test_nserver_persist, test_bridge, test_sender, test_discover, test_opener, test_openings, test_bridge_server)
 
 **Key learning:**
-Backend code lives in `opener/` (git-tracked). The systemd unit was already in `opener/` and just needed `systemctl enable`. Agent discovery files (llms.txt, agent.json) follow standard patterns — agent.json lists endpoints, payment info, and capabilities for automated discovery.
+Backend code lives in `opener/` (git-tracked). The correct systemd service is `unstuck-network.service` (already installed, backed by a cron heartbeat). My `nano-network.service` in `opener/` was a duplicate draft. The real service is at `/etc/systemd/system/unstuck-network.service`. Enabled for boot persistence; the cron `* * * * * curl -sf http://localhost:4310/health || systemctl restart unstuck-network` keeps it alive during operation. Agent discovery files (llms.txt, agent.json) follow standard patterns — agent.json lists endpoints, payment info, and capabilities for automated discovery.
 
 **Cold start reaffirmed:**
 All known agent sources for distribution are exhausted. Strategic priority remains: make the network worth joining (content + discoverability) rather than finding more addresses to tip.
