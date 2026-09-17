@@ -43,7 +43,7 @@
    "id": "L2",
    "block": 5.0,
    "statement": "find-agents.js probes all 10 Pursekeeper endpoints for Nano addresses",
-   "test": "find-agents.js contains probes for llmrt/cleartable/pyfile-llm/stringsafeqa \u2014 oracle confirms presence",
+   "test": "find-agents.js contains probes for llmrt/cleartable/pyfile-llm/stringsafeqa — oracle confirms presence",
    "scope": [
     "opener/find-agents.js"
    ],
@@ -58,7 +58,7 @@
    "id": "L3",
    "block": 5.0,
    "statement": "every newly discovered address is checked against the opener DB before sending",
-   "test": "the opener's refusal gate returns refusal-gate-active \u2014 oracle runs node -e console.log to confirm the gate is loaded and active",
+   "test": "the opener's refusal gate returns refusal-gate-active — oracle runs node -e console.log to confirm the gate is loaded and active",
    "scope": [
     "opener/send.js opener/opener.js"
    ],
@@ -130,6 +130,38 @@
    "version": 3,
    "minted": "2026-09-17T16:58:23+00:00",
    "oracle": "cd /root/unstuck/opener && node -e \"const n=require('./network.js'); const s1=n.standing([['a1','bob'],['a1','bob']]); const s2=n.standing([['a1','bob'],['a2','bob'],['a3','alice']]); console.log(s1['bob']===1&&s2['bob']===2&&s2['alice']===1&&(s2['charlie']||0)===0&&n.standingOf([],'nobody')===0?'N2-OK':'N2-FAIL')\""
+  },
+  {
+   "id": "L8",
+   "block": 13.0,
+   "statement": "N3: The network API server exposes ask lifecycle endpoints (POST /ask, GET /asks, GET /ask/:id, POST /ask/:id/answers, POST /ask/:id/accept) that create and retrieve asks via the network.js domain model",
+   "test": "node test_nserver.js passes N3 endpoints",
+   "scope": [
+    "opener/nserver.js",
+    "opener/test_nserver.js"
+   ],
+   "oracle": "cd opener && node test_nserver.js",
+   "expect": "all nserver laws pass",
+   "source": null,
+   "grounding": "oracle",
+   "version": 3,
+   "minted": "2026-09-17T17:41:31+00:00"
+  },
+  {
+   "id": "L9",
+   "block": 13.0,
+   "statement": "N4: The network API refuses invalid boundary actions: a non-Nano asker, answering a closed ask, and an asker accepting its own answer all return HTTP 400",
+   "test": "node test_nserver.js passes N4 refusals",
+   "scope": [
+    "opener/nserver.js",
+    "opener/test_nserver.js"
+   ],
+   "oracle": "cd opener && node test_nserver.js",
+   "expect": "all nserver laws pass",
+   "source": null,
+   "grounding": "oracle",
+   "version": 3,
+   "minted": "2026-09-17T17:41:37+00:00"
   }
  ],
  "blocks": {
@@ -174,7 +206,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/7 mutants caught, e.g. opener/oracle_treasury.js:5 '||'\u2192'&&'",
+       "weak": "0/7 mutants caught, e.g. opener/oracle_treasury.js:5 '||'→'&&'",
        "mutants": {
         "total": 7,
         "killed": 0
@@ -187,7 +219,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/7 mutants caught, e.g. opener/oracle_treasury.js:5 '||'\u2192'&&'",
+       "weak": "0/7 mutants caught, e.g. opener/oracle_treasury.js:5 '||'→'&&'",
        "mutants": {
         "total": 7,
         "killed": 0
@@ -215,7 +247,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/oracle_treasury.js:8 '||'\u2192'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/oracle_treasury.js:8 '||'→'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -228,7 +260,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/oracle_treasury.js:8 '||'\u2192'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/oracle_treasury.js:8 '||'→'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -1016,7 +1048,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='\u2192'==='",
+       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='→'==='",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -1029,7 +1061,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='\u2192'==='",
+       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='→'==='",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -1132,7 +1164,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='\u2192'==='",
+       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='→'==='",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -1145,7 +1177,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='\u2192'==='",
+       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='→'==='",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -1485,12 +1517,547 @@
      ]
     }
    ]
+  },
+  "13": {
+   "status": "pending",
+   "attempts": [
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L7",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L8",
+       "pass": false,
+       "oracle_exit": 2,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L9",
+       "pass": false,
+       "oracle_exit": 2,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "bcab864e806f1508197dfbfaac604d80c8293abcfaa49f6d80bf202f7ab5325e",
+     "tier": "cheap",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-17T17:52:56+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L7",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L8",
+       "pass": false,
+       "oracle_exit": 2,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L9",
+       "pass": false,
+       "oracle_exit": 2,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "16bccefc51a9510fb74724bdc01ee3ec9cc62f95820b0ebcc5d731e5417c00b0",
+     "tier": "cheap",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-17T17:56:24+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L7",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L8",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/nserver.js:28 '||'→'&&'",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L9",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/nserver.js:28 '||'→'&&'",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "3a6dd01f91b0e83a99a578723691392dd242bb050ddb8dda7424575d8334e12f",
+     "tier": "cheap",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-17T17:57:52+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L7",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L8",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 3
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L9",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 3
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "14b9f3124fee32e0720d8f5c006bf668d4493d2e3ae84552852530a04a4f1c5f",
+     "tier": "cheap",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-17T18:05:14+00:00"
+    }
+   ]
   }
  },
  "deltas": [
   {
    "block": 11.0,
-   "text": "probe_score: 33/100 oracles-pass-but-judge-rejects-format \u2192 oracles-pass-but-judge-rejects-format (unaddressed; verify passed at strong tier)",
+   "text": "probe_score: 33/100 oracles-pass-but-judge-rejects-format → oracles-pass-but-judge-rejects-format (unaddressed; verify passed at strong tier)",
    "at": "2026-09-17T16:54:01+00:00"
   }
  ],
@@ -2090,6 +2657,108 @@
    "at": "2026-09-17T17:34:18+00:00",
    "prev": "116b10d5dba16ed755ecf972d9128582034e2ca9131a074207bd0056740f08d0",
    "receipt": "4af769ecf408cf559c3374c8d43689573ea1d5b7d3a0700a41fd3f6c2bae5d6f"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L8",
+    "block": "13",
+    "statement_sha": "6213cf2e43c7fd753ad6ebde4630c38a17272f6c499b5f0c1a83f29138492a54"
+   },
+   "at": "2026-09-17T17:41:31+00:00",
+   "prev": "4af769ecf408cf559c3374c8d43689573ea1d5b7d3a0700a41fd3f6c2bae5d6f",
+   "receipt": "22cf7deb675bc9f64f1cf90bb8e6702765cba95760311322b478f80343cbbcdb"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L9",
+    "block": "13",
+    "statement_sha": "eece8f8d0737c2dee1e20f2e79422a8927b024ec5b50be09fb83dda8cd79b2d0"
+   },
+   "at": "2026-09-17T17:41:37+00:00",
+   "prev": "22cf7deb675bc9f64f1cf90bb8e6702765cba95760311322b478f80343cbbcdb",
+   "receipt": "30cee55a97e95be49d3e78de1af4ee3dbd0a78f35566fe3ad063f6f62a8ada02"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "13",
+    "ok": false
+   },
+   "at": "2026-09-17T17:52:56+00:00",
+   "prev": "30cee55a97e95be49d3e78de1af4ee3dbd0a78f35566fe3ad063f6f62a8ada02",
+   "receipt": "03a7d8b0082ce4e75e205f77fa32d18b545410c8293828ac1fc25675302c8b77"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "13",
+    "ok": false
+   },
+   "at": "2026-09-17T17:56:24+00:00",
+   "prev": "03a7d8b0082ce4e75e205f77fa32d18b545410c8293828ac1fc25675302c8b77",
+   "receipt": "bd1b118b4731487c84a4284dc9f726cd039a35b82af73b151eb8e0a1d0921ea3"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L8",
+    "version": 2
+   },
+   "at": "2026-09-17T17:57:02+00:00",
+   "prev": "bd1b118b4731487c84a4284dc9f726cd039a35b82af73b151eb8e0a1d0921ea3",
+   "receipt": "4f45265cc03b80a6431e594ae6c78f6ebab24ca62d1d6bb13a24e5803bd8149f"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L9",
+    "version": 2
+   },
+   "at": "2026-09-17T17:57:08+00:00",
+   "prev": "4f45265cc03b80a6431e594ae6c78f6ebab24ca62d1d6bb13a24e5803bd8149f",
+   "receipt": "2ac73a96b4801ea9d60e283704ce99d326bdc70e5a80b408e58046030c845fbd"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "13",
+    "ok": false
+   },
+   "at": "2026-09-17T17:57:52+00:00",
+   "prev": "2ac73a96b4801ea9d60e283704ce99d326bdc70e5a80b408e58046030c845fbd",
+   "receipt": "ca91210a40999d3b7c458fbdc1be377e86115e0e471947efa0ea632360a72ef3"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L8",
+    "version": 3
+   },
+   "at": "2026-09-17T18:04:02+00:00",
+   "prev": "ca91210a40999d3b7c458fbdc1be377e86115e0e471947efa0ea632360a72ef3",
+   "receipt": "98b93d22680fb7bbe1130ce162755305cdaded9996313c42230f4b6bdd6e41eb"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L9",
+    "version": 3
+   },
+   "at": "2026-09-17T18:04:09+00:00",
+   "prev": "98b93d22680fb7bbe1130ce162755305cdaded9996313c42230f4b6bdd6e41eb",
+   "receipt": "a06edbf3717ee3ce97badfd833e5499df4333a50dbd951035c41d8e238acc23b"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "13",
+    "ok": false
+   },
+   "at": "2026-09-17T18:05:14+00:00",
+   "prev": "a06edbf3717ee3ce97badfd833e5499df4333a50dbd951035c41d8e238acc23b",
+   "receipt": "e5dfcf8f9a1d670f9e72883cde4da20fee275e2640c7915431ef54613d38586b"
   }
  ]
 }
