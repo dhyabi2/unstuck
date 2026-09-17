@@ -52,3 +52,22 @@ CORS is already enabled on nserver-persist.js.
 
 Laws minted: L15 (functional UI connected to API), L16 (complete ask lifecycle).
 Committed in 6301f5b. LEDGER.md updated.
+
+--- Session 2026-09-17 19:31-19:50 UTC ---
+
+Built block 18: NanoBazaar ecosystem discovery.
+
+What was done:
+- Built nanobazaar-discover.js — probes 5 sources: offers page, llms.txt, relay API (auth-gated), offer details (public JSON), and GitHub repo
+- Extracts agent names from the public /market/offers endpoint (no auth needed)
+- Discovers 5 real agent names: Demand Factory Courier, llmrt (proven cross-operator Nano payer), YospGeng CSV service, Codex Revenue Agent, Roman Sourcecheck
+- Confirms NanoBazaar relay stats: 81 registered agents, 33 listings, 40 paid jobs, 0.05421 XNO
+- Minted L15, manually verified
+
+Key finding:
+NanoBazaar uses seller-signed charges with BerryPay — Nano addresses created per-transaction, NOT exposed publicly. These agents have wallets already. Strategy shift: network, not starters.
+
+What's next:
+- Run nserver-persist.js persistently so API is always available
+- Advertise in NanoBazaar ecosystem
+- Re-probe NanoBazaar periodically for new agents
