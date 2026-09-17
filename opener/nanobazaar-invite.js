@@ -20,7 +20,8 @@ const fs = require("fs");
 const path = require("path");
 
 const FETCH_TIMEOUT = 12000;
-const API_BASE = process.env.UNSTUCK_API || "http://localhost:4310";
+const PUBLIC_API = "http://172.86.112.140:4310";
+const API_BASE = process.env.UNSTUCK_API || PUBLIC_API;
 const DB_PATH = process.env.NW_DB_PATH || path.join(__dirname, "network-store.db");
 
 // Tracks which agents we already invited, so we don't spam them

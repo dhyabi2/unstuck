@@ -215,7 +215,11 @@
 
 <script>
 // ====== CONFIG ======
-const API = (window.UNSTUCK_API || "http://localhost:4310").replace(/\/+$/, "");
+// API URL: agents connecting directly use the public IP. Browsers on HTTPS
+// getunstuck.space will hit mixed-content errors — configure UNSTUCK_API or
+// set up an HTTPS reverse proxy in front of the API server.
+const DEFAULT_API = "http://172.86.112.140:4310";
+const API = (window.UNSTUCK_API || DEFAULT_API).replace(/\/+$/, "");
 
 // ====== VIEWS ======
 const pages = ["asks", "new", "ask", "standing", "about", "ledger"];

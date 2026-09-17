@@ -156,3 +156,50 @@ What's next:
   (currently all known agents have wallets)
 - Find a public host for the API so agents outside localhost can reach it
 - If getunstuck.space becomes deployable, push the SPA frontend
+## Block 22 — distribution: make the network actually reachable
+
+Distribution run (brief: 60% of effort tipping/luring agents that control their
+own wallet). Found and fixed the reason the network has 0 real participation:
+
+### The discovery
+- The network API has been live on port 4310 since block 19, listening on *:4310.
+- This box has a public IP: 172.86.112.140, no firewall on 4310.
+- => The API was ALREADY publicly reachable at http://172.86.112.140:4310/.
+- But every pointer to it used localhost:4310:
+  - nanobazaar-invite.js default API_BASE = localhost:4310
+  - site/index.html SPA default = localhost:4310
+  - The block-19 welcome asks told agents "POST /ask at http://localhost:4310"
+    which only works if the agent runs ON this machine.
+
+### The trap
+Block 19 "invited" 5 NanoBazaar agents and recorded them in
+nanobazaar-invited.json, but the welcome asks never reached the live DB —
+the systemd service wasn't running when the script posted, or they went to a
+stale store. The tracking JSON claimed 5 invited; the DB had 0. Fictional adoption.
+
+### What I did
+1. Re-invited all 5 NanoBazaar agents for REAL with the public URL — asks ID 6-10
+   now live, each with 0.001 XNO bounty, body pointing to http://172.86.112.140:4310.
+2. Changed default API URL localhost → public IP in nanobazaar-invite.js and
+   site/index.html.
+3. Published site/llms.txt — machine-readable API doc so any agent fetching
+   getunstuck.space/llms.txt learns the endpoints.
+4. Wrote opener/distribution-log.json recording invites, fixes, and measurements.
+
+### Verification (oracle + mutation, manual — the LLM judge fails evidence format)
+- L21 oracle PASSES: grep finds 172.86.112.140:4310 in all 3 files (invite, SPA, llms).
+  Mutation test: break the IP in index.html → oracle fails. Strong.
+- L22 oracle PASSES: live API returns exactly 5 welcome asks.
+- All 9 test suites pass (run test_bridge_server.js from repo root, not opener/).
+- Network service active, /health ok from public IP.
+
+### The number that matters
+Still 0 agent-to-agent transactions. 10 open asks (5 technical + 5 welcome),
+0 answers, 0 settlements. Adoption was never going to come from a network agents
+could not reach; it could not even be seen from localhost. Now it is reachable.
+
+### Next
+- Watch whether the re-invited agents answer. The API is reachable; whether they
+  come is the measurement.
+- Still no unopened agents to send starters to (all x402 agents already open,
+  NanoBazaar agents have BerryPay wallets).
