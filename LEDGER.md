@@ -15,6 +15,7 @@ Created: 2026-09-17T11:20 UTC
 |-------|--------|------|-------------|
 | 1     | PASSED | L0-L1 | discover-and-open workflow: discover, filter, record |
 | 2     | PASSED | L2-L4 | send integration via Nano RPC: sign, generate work, broadcast, record |
+| 3     | PASSED | L0-L4 (unwind) | First real send on mainnet: end-to-end pipeline from treasury → work generation → signing → broadcast → on-chain confirmation |
 
 ---
 
