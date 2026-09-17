@@ -154,3 +154,52 @@ None.
 ### Deltas
 
 None.
+
+| Block | Status | Laws | Description |
+|-------|--------|------|-------------|
+| 15 | PASSED (manual) | L12-L13 | On-chain settlement: recordSettlement, getStanding, POST /ask/:id/settle, GET /standing on nserver-persist.js |
+| 16 | PASSED (manual) | L14 | network-settle.js: verifyBlockPayment — on-chain payment block verification via Nano RPC |
+
+## Block 15 (PASSED — manual verify, MANUAL mode)
+
+### L12 (minted)
+**Statement:** The network store records a 64-hex settlement block for a paid ask and refuses non-paid or malformed settles.
+**Test:** `node test_network_settle.js` L12 assertions
+**Scope:** opener/network-store.js, waived: opener/network-settle.js, waived: opener/test_network_settle.js
+**Grounded:** oracle — 23 tests pass (all laws)
+
+### L13 (minted)
+**Statement:** Network standing counts only settled paid asks per distinct asker, exposed via POST /ask/:id/settle and GET /standing.
+**Test:** `node test_network_settle.js` L13 assertions
+**Scope:** opener/nserver-persist.js (amended)
+
+## Block 16 (PASSED — manual verify, MANUAL mode)
+
+### L14 (minted)
+**Statement:** network-settle.js verifies an on-chain payment block exists, reaches the answerer, and covers the bounty.
+**Test:** `node test_network_settle.js` L14 assertions
+**Scope:** opener/network-settle.js
+**Grounded:** oracle — mocked RPC confirms valid block passes, wrong recipient/fmt/missing rejected
+
+## Verification (manual)
+
+### Block 15
+**L12: proven.** `test_network_settle.js` passes: settlement recorded for paid ask, refused for open (throw), refused for double-settle (throw), refused for bad-format "short-hash" (throw). Settlement block survives close/reopen.
+**Mutation test — strong:** removed hash format check + double-settle check: 4 tests failed (L12 bad hash, L12 double settle, L12 restart, L13 bad hash via HTTP).
+
+**L13: proven.** Standing counts only settlement-verified asks per distinct asker. Two askers paying same answerer = 2 standing; same asker paying twice = still 2. HTTP endpoints: POST /ask/:id/settle returns 200 for valid settlement, GET /standing returns standing with asset XNO. Open-ask settle via HTTP returns 400. Bad hash via HTTP returns 400.
+
+### Block 16
+**L14: proven.** `verifyBlockPayment` accepts a valid mocked block with correct recipient, bounty amount, and XNO asset. Rejects: wrong recipient (recipient mismatch), bad hash format (4 chars), missing block on chain (Block not found).
+**Mutation test — strong:** removing recipient check: 1 L14 test fails (wrong recipient no longer rejected).
+
+## Waivers (new)
+- opener/network-settle.js — on-chain settlement verifier module; its behavior is exercised by L12's oracle (test_network_settle.js) and covered by the settlement oracle
+- opener/test_network_settle.js — test scaffold for block 15 settlement laws (matches prior test_network.js waiver pattern)
+
+## Contested
+
+None.
+
+## Full suite (2026-09-17T19:10 UTC)
+All 10 test suites pass: test_discover (8), test_opener (8), test_openings (9), test_sender (8), test_network (11), test_nserver (18), test_network_store (18), test_nserver_persist (14), test_network_settle (23), test_bridge. Block 14 unwind: L10/L11 still pass.

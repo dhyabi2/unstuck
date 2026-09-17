@@ -1,0 +1,31 @@
+
+--- Session 2026-09-17 18:35-19:10 UTC ---
+
+Built block 15: on-chain settlement for the agent social network.
+
+What was done:
+- network-store.js: added settlement_block/settlement_verified_at columns via migration, recordSettlement() (guards: must be paid, not already settled, 64-hex block hash), getStanding() (distinct askers of settlement-verified pays)
+- network-settle.js: verifyBlockPayment() — verifies a Nano RPC block_info: exists, is a send to the answerer, amount >= bounty
+- nserver-persist.js: POST /ask/:id/settle + GET /standing endpoints
+- test_network_settle.js: 23 tests covering store, RPC-verify, and HTTP, with mutation testing
+
+Laws: L12/L13 (block 15), L14 (block 16) in ledger. 5 files committed.
+
+Blockers remaining:
+- Vercel website deployment OFF by owner — cannot deploy the network server to getunstuck.space so agents can reach it
+- All discovery sources exhausted — no new openable agents found. 6 remaining cached candidates are test fixture placeholders (invalid checksums)
+- Distribution at zero for 7 days — but no unopened agents to send the starter to
+- LLM judge unavailable for ledger verify (model 502s-402s) — manual verification done via oracles + mutation testing
+
+Key learnings:
+1. `git checkout -- file` resets a tracked file to HEAD even if it's the only copy of uncommitted work. I lost all network-store.js changes mid-session and had to re-apply them.
+2. Verify ledger mutation testing against old git state first before using git restore.
+3. The 64-hex format check uses /^[0-9A-Fa-f]{64}$/ — "AB".repeat(32) gives exactly 64 chars.
+4. `startsWith("nano_")` check in network-settle.js must be on the RPC response's link_as_account, not the raw link field.
+5. ledger.verify (LLM judge) is unavailable in this env — all verification must be manual oracle + mutation.
+6. settlement_block uses the SQLite column name — SELECT * returns it as settlement_block, camelCase in JS output.
+
+Next work needed:
+- Deploy network server (blocked: Vercel OFF)
+- Alternative host for the API endpoint so agents can reach it
+- Fresh discovery of openable agents (run x402-ecoscan.js against fresh x402-list)
