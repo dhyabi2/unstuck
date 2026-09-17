@@ -1,151 +1,338 @@
 #!/usr/bin/env node
 /**
- * find-agents.js — discover real agent Nano addresses from public sources.
+ * find-agents.js — discover real agent Nano addresses from public x402 sources.
  *
  * This reads from multiple public directories and x402 service indexes to find
- * agents that are demonstrably active in public. It outputs a deduplicated
- * JSON file of addresses that run.js can use.
+ * Nano addresses of agents that are demonstrably active in public. It outputs a
+ * deduplicated JSON array of {address, found_via, source} objects.
  *
  * Sources:
- *   1. x402-list.com — all services that accept x402 payments
- *   2. pursekeeper.dev/sellers.json — agents accepting Nano
- *   3. Agent indices (Web3 agent directories)
+ *   1. x402-list.com API — probes every listed service for a Nano x402 payTo
+ *   2. feeless402.com — known Nano-accepting endpoint
+ *   3. pursekeeper sellers — known Nano-accepting agents
+ *   4. Subnano — Nano x402 content platform
+ *   5. nano-gpt.com — Nano x402 inference endpoint
  *
- * Output: stdout (JSON array of {address, found_via, source} objects)
- * Or to a file: node find-agents.js > sources/agent-addresses.json
+ * Strategy: Rather than scraping text for addresses (which misses the fact that
+ * most x402 services use dynamic per-quote addresses), we probe the actual HTTP
+ * 402 responses of known Nano-accepting services to extract their payTo addresses.
+ *
+ * Output: stdout (JSON array) or to a file.
  */
 
-const https = require("https");
-const http = require("http");
+const nano = require("nanocurrency");
 
-const FETCH_TIMEOUT = 15000;
+const FETCH_TIMEOUT = 10000;
 
-function fetch(url) {
+function fetch(url, body = null, headers = {}) {
   return new Promise((resolve, reject) => {
-    const mod = url.startsWith("https") ? https : http;
+    const mod = url.startsWith("https") ? require("https") : require("http");
     const ctl = new AbortController();
     const t = setTimeout(() => ctl.abort(), FETCH_TIMEOUT);
-    mod.get(url, { signal: ctl.signal }, (res) => {
+    const opts = {
+      method: body ? "POST" : "GET",
+      signal: ctl.signal,
+      headers: { "User-Agent": "unstuck-opener/1.0", ...headers },
+    };
+    const req = mod.request(url, opts, (res) => {
       let data = "";
-      res.on("data", (c) => { data += c; if (data.length > 200000) { res.destroy(); reject(new Error("response too large")); } });
-      res.on("end", () => { clearTimeout(t); resolve(data); });
-    }).on("error", (e) => { clearTimeout(t); reject(e); });
+      res.on("data", (c) => { data += c; if (data.length > 100000) { req.destroy(); reject(new Error("response too large")); } });
+      res.on("end", () => { clearTimeout(t); resolve({ status: res.statusCode, headers: res.headers, body: data }); });
+    });
+    req.on("error", (e) => { clearTimeout(t); reject(e); });
+    if (body) req.write(typeof body === "string" ? body : JSON.stringify(body));
+    req.end();
   });
 }
 
-async function findNanoAddressesFromX402List() {
+/**
+ * Probe a generic x402 endpoint for Nano payment options.
+ * Sends a minimal probe request, expects 402, parses the accepts array for Nano.
+ */
+async function probeForNanoAddress(url, probeBody = null, probeHeaders = {}, probeMethod = "GET") {
   try {
-    const raw = await fetch("https://x402-list.com/api/v1/services?limit=1000&status=online");
-    const data = JSON.parse(raw);
+    const res = await fetch(url, probeBody, probeHeaders);
+    if (res.status !== 402) return null;
+
+    let body;
+    try { body = JSON.parse(res.body); } catch { return null; }
+
+    // Check standard x402 v2 accepts array
+    const accepts = body.accepts || [];
+    for (const opt of accepts) {
+      if (opt.scheme === "exact" && opt.network === "nano:mainnet" && opt.payTo) {
+        return {
+          address: opt.payTo,
+          amount_raw: opt.amount,
+          scheme: "x402-exact-nano",
+          url,
+        };
+      }
+      if (opt.scheme === "nano" && opt.payTo) {
+        return {
+          address: opt.payTo,
+          amount_raw: opt.amount || opt.maxAmountRequired,
+          scheme: "nano",
+          url,
+        };
+      }
+    }
+
+    // Check NanoGPT-style payment.accepted array
+    const payment = body.payment;
+    if (payment && payment.accepted) {
+      for (const opt of payment.accepted) {
+        if ((opt.scheme === "nano" || opt.scheme === "nano-exact") && opt.payTo) {
+          return {
+            address: opt.payTo,
+            amount_raw: opt.amount || opt.maxAmountRequired,
+            scheme: opt.scheme,
+            url,
+          };
+        }
+      }
+    }
+
+    // Check for simple nano_ in raw 402 body (some services embed it in error)
+    const text = res.body;
+    const match = text.match(/nano_[13456789abcdefghijkmnopqrstuwxyz]{60}/);
+    if (match) {
+      return {
+        address: match[0],
+        amount_raw: null,
+        scheme: "raw-match",
+        url,
+      };
+    }
+
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
+ * Fetch known Nano-accepting endpoints from x402-list.com and probe each.
+ * The x402-list API returns services; we probe any that might use Nano.
+ */
+async function probeX402ListServices() {
+  const results = [];
+  try {
+    const res = await fetch("https://x402-list.com/api/v1/services?limit=200", null);
+    if (res.status !== 200) return results;
+    const data = JSON.parse(res.body);
     const services = data.data || [];
-    // x402 services don't typically expose Nano addresses in their listing,
-    // but we record the service names as candidates
-    return services.map((s) => ({
-      name: s.name || s.service_name || s.slug,
-      url: s.url,
-      category: s.category,
-    }));
+    console.error(`x402-list: ${services.length} services found`);
+    return services;
   } catch (e) {
     console.error("Warning: x402-list fetch failed:", e.message);
     return [];
   }
 }
 
-async function findNanoPayAddresses() {
-  const addresses = [];
-  try {
-    // Check feeless402.com faucet/premium for Nano addresses in the x402 ecosystem
-    const raw = await fetch("https://feeless402.com/llms.txt");
-    const text = raw;
-    // Look for nano_ addresses in the text
-    const matches = text.match(/nano_[13456789abcdefghijkmnopqrstuwxyz]{60}/g);
-    if (matches) {
-      for (const addr of matches) {
-        addresses.push({
-          address: addr,
-          found_via: "feeless402.com llms.txt",
+/**
+ * Known Nano-accepting endpoints we can probe for their deposit addresses.
+ * These are services that advertise Nano in their x402 accept list.
+ */
+const KNOWN_NANO_ENDPOINTS = [
+  {
+    url: "https://feeless402.com/premium",
+    name: "feeless402 premium",
+    method: "GET",
+    body: null,
+    headers: {},
+  },
+  {
+    url: "https://nano-gpt.com/api/v1/chat/completions",
+    name: "NanoGPT chat",
+    method: "POST",
+    body: JSON.stringify({
+      model: "gpt-4.1-nano",
+      messages: [{ role: "user", content: "hi" }],
+      max_tokens: 1,
+    }),
+    headers: { "Content-Type": "application/json", "x-x402": "true" },
+  },
+  {
+    url: "https://nano-gpt.com/api/v1/data/web/search",
+    name: "NanoGPT web search",
+    method: "POST",
+    body: JSON.stringify({ query: "test", max_results: 1 }),
+    headers: { "Content-Type": "application/json", "x-x402": "true" },
+  },
+  {
+    url: "https://api.shehriyar.ink/v1/attest/response",
+    name: "Goonbot attest",
+    method: "POST",
+    body: JSON.stringify({ payload: { hello: "world" } }),
+    headers: { "Content-Type": "application/json" },
+  },
+  {
+    url: "https://nano-courier-x402.vercel.app/api/courier",
+    name: "Wallenhof courier",
+    method: "POST",
+    body: JSON.stringify({}),
+    headers: { "Content-Type": "application/json" },
+  },
+  {
+    url: "https://subnano.me/api/posts/d4d6aaaa-11a4-4735-b388-7dd7961228dc/access",
+    name: "Subnano post",
+    method: "GET",
+    body: null,
+    headers: {},
+  },
+  {
+    url: "https://pursekeeper.dev/v1/x402",
+    name: "pursekeeper x402",
+    method: "GET",
+    body: null,
+    headers: {},
+  },
+  {
+    url: "https://pursekeeper.dev/v1/price",
+    name: "pursekeeper price",
+    method: "GET",
+    body: null,
+    headers: {},
+  },
+  {
+    url: "https://feed-weight-check.jackharney1360.chatgpt.site/api/quote",
+    name: "Feed Weight Check",
+    method: "POST",
+    body: JSON.stringify({ records: [{ id: "probe", item_weight: { value: 1, unit: "kg" } }] }),
+    headers: { "Content-Type": "application/json" },
+  },
+  {
+    url: "https://contract-lens-nano.dev-romanv.chatgpt.site/v1/audit",
+    name: "Contract Lens",
+    method: "POST",
+    body: JSON.stringify({ before: {}, after: {} }),
+    headers: { "Content-Type": "application/json" },
+  },
+];
+
+/**
+ * Probe known Nano-accepting endpoints. These are agents that serve x402
+ * responses with Nano as a payment option. Their payTo addresses change
+ * per-quote (ephemeral), but we record the service as a Nano-adopting agent.
+ */
+async function probeKnownEndpoints() {
+  const results = [];
+  const probes = KNOWN_NANO_ENDPOINTS.map(async (ep) => {
+    try {
+      const nanoInfo = await probeForNanoAddress(ep.url, ep.body, ep.headers, ep.method);
+      if (nanoInfo && nano.checkAddress(nanoInfo.address)) {
+        results.push({
+          address: nanoInfo.address,
+          found_via: ep.name,
           source: "x402-ecosystem",
+          url: ep.url,
+          scheme: nanoInfo.scheme,
+        });
+        console.error(`Found Nano address at ${ep.name}: ${nanoInfo.address} (${nanoInfo.scheme})`);
+      } else if (nanoInfo) {
+        console.error(`${ep.name}: returned non-address "${nanoInfo.address}"`);
+      } else {
+        console.error(`${ep.name}: no Nano option in 402 response`);
+      }
+    } catch (e) {
+      console.error(`${ep.name}: error — ${e.message}`);
+    }
+  });
+  await Promise.allSettled(probes);
+  return results;
+}
+
+/**
+ * Fetch llms.txt files from known Nano-accepting services to find
+ * published addresses.
+ */
+async function probeLlmsTxt() {
+  const results = [];
+  const urls = [
+    "https://feeless402.com/llms.txt",
+    "https://nano-gpt.com/llms.txt",
+    "https://subnano.me/llms.txt",
+  ];
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, null);
+      if (res.status === 200) {
+        const matches = res.body.match(/nano_[13456789abcdefghijkmnopqrstuwxyz]{60}/g);
+        if (matches) {
+          for (const addr of [...new Set(matches)]) {
+            if (nano.checkAddress(addr)) {
+              results.push({ address: addr, found_via: url.replace("https://", ""), source: "llms.txt" });
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.error(`Warning: ${url} fetch failed: ${e.message}`);
+    }
+  }
+  return results;
+}
+
+/**
+ * Parse pursekeeper's sellers.json for known Nano endpoints.
+ */
+async function probePursekeeperSellers() {
+  const results = [];
+  try {
+    const res = await fetch("https://pursekeeper.dev/sellers.json", null);
+    if (res.status !== 200) return results;
+    const data = JSON.parse(res.body);
+    const sellers = data.sellers || [];
+    for (const seller of sellers) {
+      if (seller.endpoint && (seller.pay || "").includes("nano")) {
+        results.push({
+          found_via: `pursekeeper:${seller.id}`,
+          endpoint: seller.endpoint,
+          source: "pursekeeper-ecosystem",
         });
       }
     }
-  } catch (e) {
-    console.error("Warning: feeless402.com fetch failed:", e.message);
-  }
-  return addresses;
-}
-
-async function findNanoGPTAddresses() {
-  const addresses = [];
-  try {
-    const raw = await fetch("https://nano-gpt.com/llms.txt");
-    const text = raw;
-    const matches = text.match(/nano_[13456789abcdefghijkmnopqrstuwxyz]{60}/g);
-    if (matches) {
-      for (const addr of [...new Set(matches)]) {
-        addresses.push({
-          address: addr,
-          found_via: "nano-gpt.com",
-          source: "x402-ecosystem",
-        });
-      }
-    }
-  } catch (e) {
-    console.error("Warning: nano-gpt.com fetch failed:", e.message);
-  }
-  return addresses;
-}
-
-async function findPursekeeperSellers() {
-  const addresses = [];
-  try {
-    const raw = await fetch("https://pursekeeper.dev/sellers.json");
-    const data = JSON.parse(raw);
-    const sellers = data.sellers || data || [];
-    // Sellers list doesn't contain Nano addresses directly, but we record them
-    for (const s of sellers) {
-      const name = s.name || s.id || "unknown";
-      const endpoint = s.endpoint || "";
-      addresses.push({
-        address: null, // unknown address; we note the service
-        found_via: `pursekeeper:${s.id || name}`,
-        endpoint,
-        source: "pursekeeper-ecosystem",
-      });
-    }
+    console.error(`pursekeeper: ${results.length} Nano-accepting sellers found`);
   } catch (e) {
     console.error("Warning: pursekeeper.dev fetch failed:", e.message);
   }
-  return addresses;
+  return results;
 }
 
 async function main() {
-  const sources = await Promise.allSettled([
-    findNanoAddressesFromX402List(),
-    findNanoPayAddresses(),
-    findNanoGPTAddresses(),
-  ]);
+  console.error("=== find-agents.js — discovering Nano addresses from x402 ecosystem ===");
 
-  const x402Services = sources[0].status === "fulfilled" ? sources[0].value : [];
-  const nanoPayAddresses = sources[1].status === "fulfilled" ? sources[1].value : [];
-  const nanoGPTAddresses = sources[2].status === "fulfilled" ? sources[2].value : [];
+  // 1. Probe known Nano-accepting endpoints
+  console.error("\n--- Probing known Nano endpoints ---");
+  const endpointResults = await probeKnownEndpoints();
 
-  console.error(`Sources: ${x402Services.length} x402 services, ${nanoPayAddresses.length} feeless402 addresses, ${nanoGPTAddresses.length} NanoGPT addresses`);
+  // 2. Scan llms.txt files
+  console.error("\n--- Probing llms.txt files ---");
+  const llmsResults = await probeLlmsTxt();
 
-  // Output deduplicated addresses as JSON to stdout
-  const all = [...nanoPayAddresses, ...nanoGPTAddresses];
+  // 3. Get sellers info
+  console.error("\n--- Probing pursekeeper sellers ---");
+  const sellers = await probePursekeeperSellers();
+
+  // 4. Get x402-list services (for metadata only — most are USDC-only)
+  console.error("\n--- Checking x402-list ---");
+  await probeX402ListServices();
+
   // Deduplicate by address
   const seen = new Set();
-  const deduped = all.filter((a) => {
+  const allAddresses = [...endpointResults, ...llmsResults].filter((a) => {
     if (!a.address || seen.has(a.address)) return false;
     seen.add(a.address);
     return true;
   });
 
-  console.log(JSON.stringify(deduped, null, 2));
-
-  // Also output a list of agent services we can target for sending starters
-  console.error(`\nFound ${deduped.length} unique Nano addresses from public x402 sources.`);
-  console.error(`Found ${x402Services.length} x402-enabled services that could be targeted.`);
+  // Output as JSON
+  console.log(JSON.stringify(allAddresses, null, 2));
+  console.error(`\n=== Found ${allAddresses.length} unique Nano addresses ===`);
+  if (sellers.length > 0) {
+    console.error(`=== ${sellers.length} Nano-accepting sellers (endpoints may be probed in future runs) ===`);
+  }
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });
