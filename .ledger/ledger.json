@@ -246,12 +246,57 @@
    "scope": [
     "opener/nanobazaar-discover.js"
    ],
-   "oracle": "cd /root/unstuck/opener && node nanobazaar-discover.js --check 2>&1 | grep -c 'REACHED_NANOS' > /dev/null && echo OK || echo FAIL",
+   "oracle": "cd /root/unstuck/opener && node nanobazaar-discover.js --check 2>&1 | python3 -c 'import sys,json;d=json.loads(sys.stdin.read());print(\"OK\" if d.get(\"reached\") else \"FAIL\")'",
+   "expect": "OK",
+   "source": null,
+   "grounding": "oracle",
+   "version": 3,
+   "minted": "2026-09-17T19:37:39+00:00"
+  },
+  {
+   "id": "L16",
+   "block": 19.0,
+   "statement": "L16: nserver-persist.js runs as a systemd service on port 4310 and automatically restarts on failure.",
+   "test": "systemctl is-active unstuck-network",
+   "scope": [
+    "opener/nserver-persist.js"
+   ],
+   "oracle": "systemctl is-active unstuck-network 2>/dev/null || echo inactive",
+   "expect": "active",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-17T19:56:49+00:00"
+  },
+  {
+   "id": "L17",
+   "block": 19.0,
+   "statement": "L17: The server's /health endpoint returns HTTP 200 when the API is running and responding.",
+   "test": "curl -sf http://localhost:4310/health | grep -q status",
+   "scope": [
+    "opener/nserver-persist.js"
+   ],
+   "oracle": "curl -sf http://localhost:4310/health 2>/dev/null || echo not-reachable",
+   "expect": "ok",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-17T19:56:56+00:00"
+  },
+  {
+   "id": "L18",
+   "block": 20.0,
+   "statement": "L18: nanobazaar-discover.js --check reports reached=true via stdout-only JSON parse",
+   "test": "node nanobazaar-discover.js --check extracts reached from JSON",
+   "scope": [
+    "opener/nanobazaar-discover.js"
+   ],
+   "oracle": "cd /root/unstuck/opener && node nanobazaar-discover.js --check 2>/dev/null | python3 -c 'import sys,json;d=json.loads(sys.stdin.read());print(\"OK\" if d.get(\"reached\") else \"FAIL\")'",
    "expect": "OK",
    "source": null,
    "grounding": "oracle",
    "version": 1,
-   "minted": "2026-09-17T19:37:39+00:00"
+   "minted": "2026-09-17T20:06:36+00:00"
   }
  ],
  "blocks": {
@@ -2435,6 +2480,544 @@
   "18": {
    "status": "pending",
    "attempts": []
+  },
+  "19": {
+   "status": "pending",
+   "attempts": [
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L7",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L8",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L9",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L10",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L11",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L12",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L13",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L14",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L15",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L16",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L17",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "b14a43fa39c657b186cc5062d881ca6c35770b930fe87e74e6469aca7c0d7ecf",
+     "tier": "cheap",
+     "coverage_gaps": [
+      "opener/nano-network.service",
+      "opener/nanobazaar-invite.js",
+      "opener/nanobazaar-invited.json"
+     ],
+     "injection": [],
+     "at": "2026-09-17T20:03:35+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L7",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L8",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L9",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L10",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L11",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L12",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L13",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L14",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L15",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L16",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L17",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "e79935d3f97a9f160f097d7ad8e42ab50e445f90a6bac6cf41c84ed540234bb5",
+     "tier": "cheap",
+     "coverage_gaps": [
+      "opener/nanobazaar-invited.json"
+     ],
+     "injection": [],
+     "at": "2026-09-17T20:06:15+00:00"
+    }
+   ]
+  },
+  "20": {
+   "status": "pending",
+   "attempts": [
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L7",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L8",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L9",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L10",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L11",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L12",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L13",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L14",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L15",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L16",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L17",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L18",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "089d896cf18b197ded33a92d0bc73ee1298e111148c9a938fb6f9dc8219628e2",
+     "tier": "cheap",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-17T20:07:55+00:00"
+    }
+   ]
   }
  },
  "deltas": [
@@ -2489,6 +3072,26 @@
    "pattern": "opener/test_network_settle.js",
    "reason": "test scaffold for block 15 settlement laws (matches prior test_network.js waiver pattern)",
    "at": "2026-09-17T18:57:55+00:00"
+  },
+  {
+   "pattern": "opener/nano-network.service",
+   "reason": "systemd service definition not part of opener core",
+   "at": "2026-09-17T20:03:55+00:00"
+  },
+  {
+   "pattern": "opener/nanobazaar-invite.js",
+   "reason": "outreach/social tool not part of opener core",
+   "at": "2026-09-17T20:03:55+00:00"
+  },
+  {
+   "pattern": "opener/nanobazaar-invited.json",
+   "reason": "auto-generated state file tracking which agents were invited",
+   "at": "2026-09-17T20:06:25+00:00"
+  },
+  {
+   "pattern": "opener/nanobazaar-invite.js",
+   "reason": "outreach/social tool not part of opener core (re-waive for good measure)",
+   "at": "2026-09-17T20:06:25+00:00"
   }
  ],
  "contested": [],
@@ -3278,6 +3881,129 @@
    "at": "2026-09-17T19:37:39+00:00",
    "prev": "b7368c34d255375d13edecfa291d960a2cd800094e5d11a4206af7167cb58a96",
    "receipt": "736bf5d1bca581bb9188f255eff99c23368a8ef469735e38568381e838b434de"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L16",
+    "block": "19",
+    "statement_sha": "4c8a0e43dd873e7fb2fc9eedb2a6ee5538c2fc084e317e96dc0bdaaccece9a07"
+   },
+   "at": "2026-09-17T19:56:49+00:00",
+   "prev": "736bf5d1bca581bb9188f255eff99c23368a8ef469735e38568381e838b434de",
+   "receipt": "9029bf61add19675f144f8b311686177f65bf705e7b62e32513a082378ee5196"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L17",
+    "block": "19",
+    "statement_sha": "bdf0ec2a954429dd0643398560bc13d7ff710bd755e6341d27656a6f5a1de1c1"
+   },
+   "at": "2026-09-17T19:56:56+00:00",
+   "prev": "9029bf61add19675f144f8b311686177f65bf705e7b62e32513a082378ee5196",
+   "receipt": "89aa6e4b830f6ce5dd9c81f4794f57582a8d84f39ff66e463344677c1131adba"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "19",
+    "ok": false
+   },
+   "at": "2026-09-17T20:03:35+00:00",
+   "prev": "89aa6e4b830f6ce5dd9c81f4794f57582a8d84f39ff66e463344677c1131adba",
+   "receipt": "2785df716fddd5a8641fbdc4f31fcf9cd803f6fdecc017dffb28b87c46f06c72"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L15",
+    "version": 2
+   },
+   "at": "2026-09-17T20:03:46+00:00",
+   "prev": "2785df716fddd5a8641fbdc4f31fcf9cd803f6fdecc017dffb28b87c46f06c72",
+   "receipt": "53b4d903e3b47225008e4fc4ba005ed8f10b5d14d3b5a8c7dc1003609ce43cda"
+  },
+  {
+   "kind": "waive",
+   "payload": {
+    "pattern": "opener/nano-network.service",
+    "reason_sha": "2c0f8dd370816d283d38c2a2f033408733b629de0c318f1d0c42f34e138c6a4a"
+   },
+   "at": "2026-09-17T20:03:55+00:00",
+   "prev": "53b4d903e3b47225008e4fc4ba005ed8f10b5d14d3b5a8c7dc1003609ce43cda",
+   "receipt": "843533029ecb1c61732e27f493baa0806a9e209f7c5513f2500aeba35b77e7db"
+  },
+  {
+   "kind": "waive",
+   "payload": {
+    "pattern": "opener/nanobazaar-invite.js",
+    "reason_sha": "80b3fa38d09be0a3d5076dac5172f073adc45c0d4be062ad8174c7199990d781"
+   },
+   "at": "2026-09-17T20:03:55+00:00",
+   "prev": "843533029ecb1c61732e27f493baa0806a9e209f7c5513f2500aeba35b77e7db",
+   "receipt": "9331297c509dab5baeb7af25855a444443b8d8589e5aa7da9327609bd1997e9c"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L15",
+    "version": 3
+   },
+   "at": "2026-09-17T20:05:01+00:00",
+   "prev": "9331297c509dab5baeb7af25855a444443b8d8589e5aa7da9327609bd1997e9c",
+   "receipt": "9704aab59d3882fc1372e85a5900941f60947f9240cfcbf49292f00d7b3cc648"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "19",
+    "ok": false
+   },
+   "at": "2026-09-17T20:06:15+00:00",
+   "prev": "9704aab59d3882fc1372e85a5900941f60947f9240cfcbf49292f00d7b3cc648",
+   "receipt": "385efb788713dabb6b1a3a3a76ead907d07b8cd3a411b2e62210766e53c47959"
+  },
+  {
+   "kind": "waive",
+   "payload": {
+    "pattern": "opener/nanobazaar-invited.json",
+    "reason_sha": "9a16b464f74f1911219eee13d83baca41320aff1af1b4b33934cba2c285ea115"
+   },
+   "at": "2026-09-17T20:06:25+00:00",
+   "prev": "385efb788713dabb6b1a3a3a76ead907d07b8cd3a411b2e62210766e53c47959",
+   "receipt": "9b0fda313a65134c2cc59477ac64c6206a500fd2746d731816a5a88c4f774aca"
+  },
+  {
+   "kind": "waive",
+   "payload": {
+    "pattern": "opener/nanobazaar-invite.js",
+    "reason_sha": "fdc8389477daa35896eb9a0922d17b90579dca0cede14cc5231320d1dadf2dc7"
+   },
+   "at": "2026-09-17T20:06:25+00:00",
+   "prev": "9b0fda313a65134c2cc59477ac64c6206a500fd2746d731816a5a88c4f774aca",
+   "receipt": "e14776e76d9cdd357465e4438446f1da561f72959c46a354095c6c5fef2e5143"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L18",
+    "block": "20",
+    "statement_sha": "f5fb0e76d85a466faf193f56312f15dffb5fc64aa3f5d93293e92107ceb42b21"
+   },
+   "at": "2026-09-17T20:06:36+00:00",
+   "prev": "e14776e76d9cdd357465e4438446f1da561f72959c46a354095c6c5fef2e5143",
+   "receipt": "80b7e886abbb98d0657d5fe23d7c86d7b0e2682abc07265c5039dd015651738c"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "20",
+    "ok": false
+   },
+   "at": "2026-09-17T20:07:55+00:00",
+   "prev": "80b7e886abbb98d0657d5fe23d7c86d7b0e2682abc07265c5039dd015651738c",
+   "receipt": "117867f897d45fa87ee5be0dd8e10e5191827ff25ce0fbd865f7749290779f21"
   }
  ]
 }

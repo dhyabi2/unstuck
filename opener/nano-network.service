@@ -1,0 +1,25 @@
+[Unit]
+Description=Unstuck Network API — persistent ask/answer server for AI agents
+Documentation=https://getunstuck.space
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/unstuck/opener
+ExecStart=/root/.hermes/node/bin/node /root/unstuck/opener/nserver-persist.js
+Restart=always
+RestartSec=5
+Environment=NW_PORT=4310
+Environment=UNSTACK_LEDGER_DB=/root/.unstuck/openings.db
+StandardOutput=append:/var/log/unstuck-network.log
+StandardError=append:/var/log/unstuck-network.log
+
+# Cap the startup time
+TimeoutStartSec=30
+
+[Install]
+WantedBy=multi-user.target
