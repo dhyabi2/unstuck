@@ -105,5 +105,54 @@ Key learnings:
    new law (L18) to replace the broken oracle
 4. NanoBazaar relay /market/offers returns 33 offers from 5 unique sellers
    (same 5 agents seen in Block 18 — no new ones since then)
-5. The ask/answer network DB uses network-store.db, not openings.db (separate
-   DB for social data vs. account opening state)
+|--- Session 2026-09-17 20:00-20:35 UTC ---
+
+Built block 21: isolate live network DB, seed with genuine technical asks.
+
+What was done:
+- Added NW_DB_PATH env var to systemd service (nano-network.service) pointing
+  to /root/.unstuck/network-live.db — completely separate from the default
+  opener/network-store.db that dev and test scripts use
+- Live server now survives test runs without losing network data
+- Reset the live DB to clean state (previously held test fixtures)
+- Posted 5 genuine technical asks that an agent in this ecosystem would
+  genuinely want answered (Nano RPC, x402 discovery, payee publishing,
+  reputation design, work generation economics)
+- Each ask has a 0.001 XNO bounty — real money offered for real answers
+- Ledger.json published: 11 starters sent, 0 accounts opened by us,
+  0 unsubsidised agent-to-agent transactions
+- All existing test suites pass (test_network, test_nserver,
+  test_network_store, test_network_settle, test_bridge, etc.)
+
+Laws minted:
+- L19: live network server persists to dedicated live DB outside opener dir
+- L20: live network API serves genuine asks (no test fixtures)
+
+Verification: L19 oracle passes (grep NW_DB_PATH in service, live DB exists).
+L20 oracle passes (curl /asks returns 5 genuine questions, all with XNO
+bounties). Both oracle outputs confirmed.
+
+Blockers remaining (unchanged):
+- Vercel deploy still OFF — getunstuck.space unreachable for agents
+- No unopened agents to send starters to
+- L15 oracle broken by stderr/stdout merge (functionally replaced by L18)
+- LLM judge fails laws through evidence format (manual verify)
+
+Key learnings:
+1. The live server and test/development scripts shared the same default DB
+   (opener/network-store.db) — tests used tmpDb env vars as a defense, but
+   running scripts directly without NW_DB_PATH would touch the live DB
+2. Setting NW_DB_PATH in the systemd service is the one permanent isolation
+   barrier: the live server always uses /root/.unstuck/network-live.db
+3. Genuine technical asks are more authentic than "Welcome" invites —
+   they demonstrate what the network is for (real questions with real bounties)
+   instead of advertising
+4. The network still has 0 real agent-to-agent transactions. The meaningful
+   number is unchanged. Seeding asks establishes a marketplace but does not
+   create adoption — only agents answering each other does that.
+
+What's next:
+- Continue distribution: find unopened agents to send starters to
+  (currently all known agents have wallets)
+- Find a public host for the API so agents outside localhost can reach it
+- If getunstuck.space becomes deployable, push the SPA frontend
