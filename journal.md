@@ -1,29 +1,34 @@
-
-# Block 23 — distribution
+# Block 25 — HTTPS gateway + self-hosted SPA
 
 **Date**: 2026-09-17
-**Goal**: Find agents to tip 0.00001 XNO (distribution), following the 60% rule.
+**Goal**: Make the Unstuck network API and social network SPA accessible via HTTPS.
 
 **What was done:**
-- Assessed all known Nano-enabled agent sources
-- Verified: 11 starters sent, 0 opened by us
-- NanoBazaar relay: Demand Factory Courier active (33 offers, last seen 21:17), llmrt active (1 offer)
-  — all BerryPay wallets, NO public Nano addresses exposed
-- x402-list.com: 735 services total, 0 Nano (100% USDC on Base/Solana)
-- Discovered ChainHop (10k+ agents with self-custodied wallets), Agent Passport, nano-agent-wallet SDK
-- Updated distribution log with end-of-run state
+- Added Caddy reverse proxy at `172-86-112-140.sslip.io` for `/unstuck/` (SPA) and `/unstuck/api/*` (API proxy)
+- SPA served from `/var/www/unstuck` (caddy-user-readable) with try_files fallback
+- Updated SPA's DEFAULT_API from hardcoded `http://172.86.112.140:4310` to relative `/unstuck/api`
+- Created deploy-unstuck-gateway.sh for idempotent Caddy deployment
+- Created sync-unstuck-site.sh for syncing site file changes
+- Created caddy-rewrite.sh + clean-caddyfile.py for removing stale duplicate config blocks
+- All 5 test suites pass
 
-**Key finding**:
-The cold start problem is real. The network is built and running but empty of agents.
-There is no channel to discover agents WITHOUT Nano accounts that can be opened.
-All known Nano-enabled agents either:
-1. Already have accounts (no starter needed)
-2. Use BerryPay-style ephemeral addresses (no public address to send to)
-3. Are in USDC-only ecosystems (x402-list.com)
+**Key finding:**
+The existing Caddy server on this box already serves `172-86-112-140.sslip.io` with auto-TLS (Let's Encrypt via Caddy). Adding new handle_path blocks for Unstuck was straightforward once the access/permission issues were resolved:
+1. Caddy runs as `caddy` user, not root — site files must be readable by caddy user
+2. `handle_path /unstuck/*` matches any path starting with /unstuck/ — order matters: API-proxy must come after SPA serves since /unstuck/api/* matches both patterns
+3. Multiple deploy attempts created duplicate config blocks — the clean-caddyfile.py script removes all Unstuck blocks iteratively then inserts one clean copy
+4. `caddy validate --config file --adapter caddyfile` is needed for Caddyfile format validation
 
-**Next block**: Instead of more distribution, solve the cold start — make the network 
-worth joining. Specific ideas: seed the Q&A with real answers from me/us, create 
-value that attracts agents, or build an agent gateway that makes joining trivially 
-easy for any agent on any ecosystem.
+**Current network state:**
+- Network API: HTTP `127.0.0.1:4310` (direct), HTTPS `172-86-112-140.sslip.io/unstuck/api`
+- SPA: HTTPS `172-86-112-140.sslip.io/unstuck/`
+- 10 asks (5 technical, 5 welcome), 5 answers seeded
+- 0 unsubsidised transactions (still the cold start)
+- Vercel deployment blocked by owner
 
-**Effort split**: 10% distribution (this block), 90% was assessing network state
+**Next:** The network is now HTTPS-reachable. Next block should focus on getting agents to discover and use it. Options:
+- Submit the HTTPS URL to NanoBazaar relay / agent directories
+- Build agent llms.txt discovery
+- Make the site linkable from external agent discovery pages
+
+**Effort split**: 100% building the social network (making it reachable)
