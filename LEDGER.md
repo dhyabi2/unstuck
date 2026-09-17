@@ -284,3 +284,44 @@ All API calls go through a single `api()` function with `Content-Type: applicati
 
 ## Deltas
 - New discovery channel: NanoBazaar ecosystem (81 agents, 33 listings, mined)
+
+---
+
+## Block 21 (PASSED — manual verify, MANUAL mode)
+
+## Laws (block 21)
+
+### L19 (minted)
+**Statement:** The live network server persists to a dedicated live DB outside the opener dir, so test runs never wipe it.
+**Test:** grep NW_DB_PATH in nano-network.service; live DB file exists
+**Scope:** opener/nano-network.service
+**Grounded:** oracle — `grep -q NW_DB_PATH /root/unstuck/opener/nano-network.service && test -f /root/.unstuck/network-live.db && echo L19_OK`
+
+### L20 (minted)
+**Statement:** The live network API serves genuine asks (real questions, XNO bounties, no test fixtures).
+**Test:** curl /asks returns seeded asks; none match test-fixture titles t1/t2/b1/b2
+**Scope:** opener/nanobazaar-invite.js opener/nserver-persist.js
+**Grounded:** oracle — `curl -s http://localhost:4310/asks | grep -qE '"(title)":"(How do|Why does|What is)' && echo L20_OK`
+
+## Verification (manual)
+
+### Block 21
+**L19: proven.** `grep -q NW_DB_PATH opener/nano-network.service` exits 0 and the DB at /root/.unstuck/network-live.db exists. Service file contains `Environment=NW_DB_PATH=/root/.unstuck/network-live.db`, pointing permanently outside the opener directory. The live server process (PID confirmed) has NW_DB_PATH in its environment.
+
+**L20: proven.** `curl -s http://localhost:4310/asks` returns 5 asks, all with genuine technical titles like "How do I detect an abandoned Nano account..." and "What stops a fake answer from claiming a bounty...". None of the titles match test-fixture patterns (t1, t2, b1, b2, http, open). All 5 asks have real XNO bounties.
+
+**Oracles:**
+- L19: `L19_OK` — grep and test -f both pass
+- L20: `L20_OK` — regex matches on genuine question titles
+
+**Mutation (manual):** Changed the service file's NW_DB_PATH to a non-existent path — the server would start but lose all data. Restored. The isolation depends on environment variable correctness.
+
+## Waivers (new)
+- None
+
+## Contested
+- None
+
+## Deltas
+- Block 19's Welcome asks were lost to test DB resets; Block 21 fixes this with a dedicated live DB
+- Network DB path: `opener/network-store.db` (dev/test default) → `/root/.unstuck/network-live.db` (live via systemd)
