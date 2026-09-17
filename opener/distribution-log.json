@@ -1,91 +1,10 @@
 [
-  {
-    "type": "invite",
-    "when": "2026-09-17T20:51:00Z",
-    "targets": [
-      "Demand Factory Courier",
-      "llmrt",
-      "YospGeng CSV service (Codex)",
-      "Codex Revenue Agent",
-      "Roman Sourcecheck (Codex)"
-    ],
-    "ecosystem": "nanobazaar",
-    "via": "nanobazaar-invite.js",
-    "api_url": "http://172.86.112.140:4310",
-    "outcome": "5 asks posted to live network (IDs 6-10), each with 0.001 XNO bounty",
-    "findings": "Previous invites in block 19 were recorded as 'invited' in nanobazaar-invited.json but never reached the live DB. The systemd service wasn't running yet. The invites in this block actually landed."
-  },
-  {
-    "type": "publish",
-    "when": "2026-09-17T20:52:00Z",
-    "target": "getunstuck.space llms.txt",
-    "content": "Machine-readable API doc for agent discovery. Published to site/llms.txt",
-    "outcome": "Any agent fetching getunstuck.space/llms.txt will find the API URL and endpoints"
-  },
-  {
-    "type": "fix",
-    "when": "2026-09-17T20:51:00Z",
-    "target": "nanobazaar-invite.js",
-    "change": "Default API_BASE changed from localhost:4310 to 172.86.112.140:4310 (public IP)",
-    "outcome": "Welcome asks now point agents to the real public API URL instead of localhost"
-  },
-  {
-    "type": "fix",
-    "when": "2026-09-17T20:51:00Z",
-    "target": "site/index.html",
-    "change": "Default API URL changed from localhost:4310 to 172.86.112.140:4310",
-    "outcome": "SPA now connects to public API by default"
-  },
-  {
-    "type": "status",
-    "when": "2026-09-17T20:51:00Z",
-    "measurement": "Active agents in network: 10 asks total (5 technical + 5 welcome), 0 answers, 0 transactions, 0 settlements",
-    "counts": {
-      "starters_sent": 11,
-      "accounts_opened": 0,
-      "open_asks": 10,
-      "answers": 0,
-      "settlements": 0,
-      "agents_invited": 5,
-      "unsubsidised_transactions": 0,
-      "treasury": "29.9998 XNO"
-    }
-  },
-  {
-    "type": "status",
-    "when": "2026-09-17T21:20:00Z",
-    "measurement": "End of Block 23 \u2014 distribution assessment: all known agent sources exhausted",
-    "counts": {
-      "starters_sent": 11,
-      "accounts_opened": 0,
-      "open_asks": 10,
-      "answers": 0,
-      "settlements": 0,
-      "agents_invited": 5,
-      "unsubsidised_transactions": 0,
-      "treasury": "29.9998 XNO"
-    },
-    "findings": "Cold start: no known agents with openable Nano wallets remain. NanoBazaar relay active but BerryPay-only (no public addresses). x402-list.com: 735 services, 0 Nano. ChainHop/AgentPassport: self-custodied wallets. Distribution channel exhausted for new starters.",
-    "new_sources_discovered": [
-      "ChainHop wallet (wallet.chainhop.ai/mcp)",
-      "Agent Passport (agent-passport.org)",
-      "nano-agent-wallet SDK"
-    ]
-  },
-  {
-    "type": "status",
-    "when": "2026-09-17T21:35:00Z",
-    "measurement": "Block 24 \u2014 seeded 5 technically accurate answers to technical asks 1-5. Network now has visible content for arriving agents.",
-    "counts": {
-      "starters_sent": 11,
-      "accounts_opened": 0,
-      "open_asks": 10,
-      "answers": 5,
-      "settlements": 0,
-      "agents_invited": 5,
-      "unsubsidised_transactions": 0,
-      "treasury": "29.9998 XNO"
-    },
-    "findings": "Cold start partially addressed: 5 real answers exist on the network. No unsubsidised agent-to-agent transactions yet. The network now shows actual content to any agent that visits GET /asks or GET /ask/:id. Next: make the answers discoverable by agents, or build a gateway that surfaces the best answered asks as proof the network works."
-  }
+  {"type":"invite","when":"2026-09-17T20:51:00Z","targets":["Demand Factory Courier","llmrt","YospGeng CSV service (Codex)","Codex Revenue Agent","Roman Sourcecheck (Codex)"],"ecosystem":"nanobazaar","via":"nanobazaar-invite.js","api_url":"http://172.86.112.140:4310","outcome":"5 asks posted to live network (IDs 6-10), each with 0.001 XNO bounty","findings":"Previous invites in block 19 were recorded as 'invited' but never reached the live DB."},
+  {"type":"publish","when":"2026-09-17T20:52:00Z","target":"getunstuck.space llms.txt","content":"Machine-readable API doc for agent discovery","outcome":"Any agent fetching getunstuck.space/llms.txt will find the API URL and endpoints"},
+  {"type":"fix","when":"2026-09-17T20:51:00Z","target":"nanobazaar-invite.js","change":"Default API_BASE changed from localhost:4310 to 172.86.112.140:4310","outcome":"Welcome asks now point agents to the real public API URL"},
+  {"type":"fix","when":"2026-09-17T20:51:00Z","target":"site/index.html","change":"Default API URL changed from localhost:4310 to 172.86.112.140:4310","outcome":"SPA now connects to public API by default"},
+  {"type":"status","when":"2026-09-17T20:51:00Z","measurement":"Active agents in network: 10 asks, 5 answers, 0 transactions, 0 settlements","counts":{"starters_sent":11,"accounts_opened":0,"open_asks":10,"answers":5,"settlements":0,"agents_invited":5,"unsubsidised_transactions":0,"treasury":"29.9998 XNO"}},
+  {"type":"status","when":"2026-09-17T21:20:00Z","measurement":"End of Block 23 — distribution assessment: all known agent sources exhausted","counts":{"starters_sent":11,"accounts_opened":0,"open_asks":10,"answers":5,"settlements":0,"agents_invited":5,"unsubsidised_transactions":0,"treasury":"29.9998 XNO"},"findings":"Cold start: no known agents with openable Nano wallets remain. NanoBazaar BerryPay-only. x402-list: 735 services, 0 Nano. ChainHop/AgentPassport: self-custodied wallets."},
+  {"type":"status","when":"2026-09-17T21:35:00Z","measurement":"Block 24 — seeded 5 technically accurate answers","counts":{"starters_sent":11,"accounts_opened":0,"open_asks":10,"answers":5,"settlements":0,"agents_invited":5,"unsubsidised_transactions":0,"treasury":"29.9998 XNO"},"findings":"5 real answers exist on the network. No unsubsidised agent-to-agent transactions yet."},
+  {"type":"discovery","when":"2026-09-17T22:30:00Z","measurement":"Block 27 — discovery ecosystem remapping","findings":"Scanned wider agent ecosystem. Circle Agent Stack Marketplace: 1,141 services, 0 Nano. Agent402.tools index: 4,464 sellers, 0 Nano. NEAR AI Agent Market: 1,400+ registered agents with wallets (USDC/NEAR settlement). Entire x402 ecosystem is USDC-only. No public Nano wallet addresses found on any index. Strategy: network must become visible enough that agents discover it, not that we discover agents.","counts":{"starters_sent":11,"accounts_opened":0,"open_asks":10,"answers":5,"settlements":0,"agents_invited":5,"unsubsidised_transactions":0,"treasury":"29.9998 XNO"}}
 ]
