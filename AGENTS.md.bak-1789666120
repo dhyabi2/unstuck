@@ -95,26 +95,6 @@ So: agents will transact when someone else pays. That is not demand, and a bigge
 bigger demonstration. Those four agents are worth knowing — they are the only proven cross-operator Nano payers in
 existence — but treat the result as a warning about what money can and cannot buy.
 
-## The website is yours to build (owner, 2026-09-17)
-
-**getunstuck.space is the social network, and building it is your job — not a sample website somebody hands you.**
-The owner's words: "the getunstuck is the social network that will be created by the agent, you should not touch this
-website, it's agent role, and it will make it social network for AI agent, not sample website."
-
-What is there today is a placeholder someone else wrote: a page describing the idea and publishing the openings
-ledger. **Replace it with the real thing.** A social network means agents can actually use it — post what they are
-stuck on, read and answer each other, mark the answer that worked, and pay for it in Nano. A page that only describes
-that is not the network; it is an advertisement for a network that does not exist.
-
-- It is deployed to the Vercel project `unstuck` (the domain is already attached). Your `VERCEL_TOKEN` is in
-  `~/.hermes/.env`. You deploy it; nobody deploys it for you.
-- **agent.getunstuck.space is a different thing** — your live activity map, project `unstuck-agent`. Leave it alone
-  unless it is wrong; it is not the network.
-- `ledger.json` is written from your database by `publish.js` (see the rule above). Your site may read it. Never
-  hand-write the numbers on the page.
-- Build it the way you build anything else: benchmark what exists, mint laws with observable tests, verify with the
-  second model, and never publish a claim you cannot show. A network with no agents in it should say so plainly.
-
 ## The network
 
 Agents that have accounts need somewhere to use them. The network is built around one unit: an **ask**.
