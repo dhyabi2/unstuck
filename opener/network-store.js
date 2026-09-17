@@ -26,6 +26,22 @@ const n = require("./network.js");
 
 const DB_PATH = process.env.NW_DB_PATH || path.join(__dirname, "network-store.db");
 
+/**
+ * Migration for settlement columns added in Block 15.
+ * The asks table gains settlement_block (TEXT) and settlement_verified_at (TEXT)
+ * columns if they don't exist.
+ */
+const SETTLEMENT_COLUMNS = [
+  ["settlement_block", "TEXT"],
+  ["settlement_verified_at", "TEXT"],
+];
+function migrateSettlementColumns(db) {
+  const have = new Set(db.prepare("PRAGMA table_info(asks)").all().map((c) => c.name));
+  for (const [name, type] of SETTLEMENT_COLUMNS) {
+    if (!have.has(name)) db.exec(`ALTER TABLE asks ADD COLUMN ${name} ${type}`);
+  }
+}
+
 let _db = null;
 
 /** Get or create the singleton database connection. */
@@ -57,6 +73,7 @@ function getDb() {
       at TEXT NOT NULL
     )
   `);
+  migrateSettlementColumns(_db);
   return _db;
 }
 
@@ -111,6 +128,8 @@ function getAsk(id) {
     status: row.status,
     acceptedAnswerId: row.accepted_answer_id,
     created_at: row.created_at,
+    settlementBlock: row.settlement_block || null,
+    settlementVerifiedAt: row.settlement_verified_at || null,
     answers: answers.map((a) => ({
       id: a.id,
       answerer: a.answerer,
@@ -143,6 +162,8 @@ function listAsks(status) {
     status: r.status,
     acceptedAnswerId: r.accepted_answer_id,
     created_at: r.created_at,
+    settlementBlock: r.settlement_block || null,
+    settlementVerifiedAt: r.settlement_verified_at || null,
     answers: [],  // not loaded in list view for efficiency
   }));
 }
@@ -189,12 +210,68 @@ function acceptAnswer(askId, answerId, acceptedBy) {
   return { askId, answerId };
 }
 
+// --- Settlement (Block 15) ---
+
+/**
+ * Record an on-chain settlement block hash for an ask that has been accepted
+ * (status 'paid'). Returns { ok, settlementBlock, verified }.
+ *
+ * The block hash is the proof the asker actually sent the bounty on-chain.
+ * Callers should verify it against the Nano ledger (verifyBlockPayment)
+ * before recording; the store records the block and the verification time.
+ */
+function recordSettlement(askId, blockHash, { now = new Date().toISOString() } = {}) {
+  const db = getDb();
+  const ask = getAsk(askId);
+  if (!ask) throw new Error(`no ask ${askId}`);
+  if (ask.status !== "paid") {
+    throw new Error(`cannot settle an ask that is ${ask.status}, only paid asks settle`);
+  }
+  if (ask.settlementBlock) {
+    throw new Error(`ask ${askId} is already settled with block ${ask.settlementBlock}`);
+  }
+  if (!blockHash || !/^[0-9A-Fa-f]{64}$/.test(String(blockHash))) {
+    throw new Error("a settlement is recorded by a 64-hex block hash or not at all");
+  }
+  db.prepare("UPDATE asks SET settlement_block = ?, settlement_verified_at = ? WHERE id = ? AND status = 'paid'")
+    .run(blockHash, now, askId);
+  return { ok: true, settlementBlock: blockHash, settledAt: now };
+}
+
+/**
+ * Standing is distinct counterparts, never volume: the number of DIFFERENT
+ * askers who paid an answerer. Unlike network.standing (which counts every
+ * paid pair), this counts only asks with a recorded on-chain settlement block.
+ *
+ * Returns { answerer: distinctSettledAskerCount }.
+ */
+function getStanding() {
+  const db = getDb();
+  const rows = db.prepare(
+    `SELECT a.id, a.asker, ans.answerer FROM asks a
+     JOIN answers ans ON ans.id = a.accepted_answer_id
+     WHERE a.status = 'paid' AND a.settlement_block IS NOT NULL`
+  ).all();
+  const byAnswerer = {};
+  for (const r of rows) {
+    if (!byAnswerer[r.answerer]) byAnswerer[r.answerer] = new Set();
+    byAnswerer[r.answerer].add(r.asker);
+  }
+  const out = {};
+  for (const [answerer, askers] of Object.entries(byAnswerer)) {
+    out[answerer] = askers.size;
+  }
+  return out;
+}
+
 module.exports = {
   createAsk,
   getAsk,
   listAsks,
   addAnswer,
   acceptAnswer,
+  recordSettlement,
+  getStanding,
   resetDb,
   closeDb,
   getDb,

@@ -93,6 +93,21 @@ function handleAccept(req, res, id) {
   }).catch(() => send(res, 400, { error: "invalid JSON body" }));
 }
 
+function handleSettle(req, res, id) {
+  readJson(req).then((body) => {
+    try {
+      const r = s.recordSettlement(Number(id), body.paymentBlock, body.acceptedBy);
+      send(res, 200, r);
+    } catch (e) {
+      send(res, 400, { error: e.message });
+    }
+  }).catch(() => send(res, 400, { error: "invalid JSON body" }));
+}
+
+function handleStanding(req, res) {
+  send(res, 200, { standing: s.getStanding(), asset: n.VALID_ASSET });
+}
+
 // --- Server --------------------------------------------------------------
 
 const server = http.createServer(async (req, res) => {
@@ -119,6 +134,11 @@ const server = http.createServer(async (req, res) => {
 
   const acc = path.match(/^\/ask\/(\d+)\/accept$/);
   if (req.method === "POST" && acc) return handleAccept(req, res, acc[1]);
+
+  const settle = path.match(/^\/ask\/(\d+)\/settle$/);
+  if (req.method === "POST" && settle) return handleSettle(req, res, settle[1]);
+
+  if (req.method === "GET" && path === "/standing") return handleStanding(req, res);
 
   send(res, 404, { error: "not found" });
 });

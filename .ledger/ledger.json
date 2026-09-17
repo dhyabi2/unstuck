@@ -192,6 +192,51 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-17T18:11:13+00:00"
+  },
+  {
+   "id": "L12",
+   "block": 15.0,
+   "statement": "L12: The network store records an on-chain settlement block hash for a paid (accepted) ask, refuses to settle a non-paid ask, and only a 64-hex block hash settles an ask.",
+   "test": "node test_network_settle.js passes L12 assertions",
+   "scope": [
+    "opener/network-store.js"
+   ],
+   "oracle": "cd opener && node test_network_settle.js",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 2,
+   "minted": "2026-09-17T18:56:26+00:00"
+  },
+  {
+   "id": "L13",
+   "block": 15.0,
+   "statement": "Network standing counts only settled paid asks per distinct asker, exposed via POST /ask/:id/settle and GET /standing.",
+   "test": "node test_network_settle.js L13 assertions",
+   "scope": [
+    "opener/network-store.js"
+   ],
+   "oracle": "cd opener && node test_network_settle.js",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 2,
+   "minted": "2026-09-17T18:56:49+00:00"
+  },
+  {
+   "id": "L14",
+   "block": 16.0,
+   "statement": "network-settle.js verifies an on-chain payment block exists, reaches the answerer, and covers the bounty.",
+   "test": "node test_network_settle.js L14 assertions",
+   "scope": [
+    "opener/network-settle.js"
+   ],
+   "oracle": "cd opener && node test_network_settle.js",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-17T19:00:44+00:00"
   }
  ],
  "blocks": {
@@ -2363,6 +2408,14 @@
      "at": "2026-09-17T18:27:58+00:00"
     }
    ]
+  },
+  "15": {
+   "status": "pending",
+   "attempts": []
+  },
+  "16": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -2407,6 +2460,16 @@
    "pattern": "opener/test_network.js",
    "reason": "scope already on L6/L7 but stored as single string fnmatch issue",
    "at": "2026-09-17T17:11:28+00:00"
+  },
+  {
+   "pattern": "opener/network-settle.js",
+   "reason": "on-chain settlement verifier module; its behavior is exercised by L12's oracle test and covered by the settlement oracle",
+   "at": "2026-09-17T18:57:55+00:00"
+  },
+  {
+   "pattern": "opener/test_network_settle.js",
+   "reason": "test scaffold for block 15 settlement laws (matches prior test_network.js waiver pattern)",
+   "at": "2026-09-17T18:57:55+00:00"
   }
  ],
  "contested": [],
@@ -3112,6 +3175,79 @@
    "at": "2026-09-17T18:27:58+00:00",
    "prev": "243f88a416d6373d0ff070ef88235e53376de85328acc819e931a8567dc46009",
    "receipt": "cae2b078a7771733b2d7b68e26261f039569d2247d63ce6461369806d121d43e"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L12",
+    "block": "15",
+    "statement_sha": "ae28dd7c3a146b67996adf349defd61db4fafc554c517cbbc5f8181481443b98"
+   },
+   "at": "2026-09-17T18:56:26+00:00",
+   "prev": "cae2b078a7771733b2d7b68e26261f039569d2247d63ce6461369806d121d43e",
+   "receipt": "aac38b178df07031c657f54fcdf5ad2298a7b2917ac159693062155b3d710e0a"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L13",
+    "block": "15",
+    "statement_sha": "11759f272a422dfb1c3291ea620f7c417d11f1a8031337f1bd275fe5f4ccff4f"
+   },
+   "at": "2026-09-17T18:56:49+00:00",
+   "prev": "aac38b178df07031c657f54fcdf5ad2298a7b2917ac159693062155b3d710e0a",
+   "receipt": "810da8f58446debe0e02d77e22a0964a840bbd910341bf214582fb1b87a80f15"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L13",
+    "version": 2
+   },
+   "at": "2026-09-17T18:57:09+00:00",
+   "prev": "810da8f58446debe0e02d77e22a0964a840bbd910341bf214582fb1b87a80f15",
+   "receipt": "debb8b6a7421d7d0b670ec57f29dab6a91173d91e3364e139fa332c7ab64006b"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L12",
+    "version": 2
+   },
+   "at": "2026-09-17T18:57:17+00:00",
+   "prev": "debb8b6a7421d7d0b670ec57f29dab6a91173d91e3364e139fa332c7ab64006b",
+   "receipt": "1280833e9d9403bec1c5b97b1ce65b6c2ff4d707bbca40c19d0fef8ac1800845"
+  },
+  {
+   "kind": "waive",
+   "payload": {
+    "pattern": "opener/network-settle.js",
+    "reason_sha": "843e8b07be18ab82c656ab2771d182d3b1836ccccc16c34c5392a60388dd842e"
+   },
+   "at": "2026-09-17T18:57:55+00:00",
+   "prev": "1280833e9d9403bec1c5b97b1ce65b6c2ff4d707bbca40c19d0fef8ac1800845",
+   "receipt": "32e0c80b968a6d3dbd1951d3010c5485c6ffe25f32c4d8f74ef237284b3d8b2b"
+  },
+  {
+   "kind": "waive",
+   "payload": {
+    "pattern": "opener/test_network_settle.js",
+    "reason_sha": "c0f21d5e7305bb18fedfda78a171404e97ed979299744e4c1bb8d977613e7d1e"
+   },
+   "at": "2026-09-17T18:57:55+00:00",
+   "prev": "32e0c80b968a6d3dbd1951d3010c5485c6ffe25f32c4d8f74ef237284b3d8b2b",
+   "receipt": "3d90d4b9f53e922f4dea0bcb1fd188fd9e6da0ef0c63fa72d659833ce73a79f5"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L14",
+    "block": "16",
+    "statement_sha": "9d1d20a02531b068664660677b9672757c217d23b2f905f0f169aa7094e7fcce"
+   },
+   "at": "2026-09-17T19:00:44+00:00",
+   "prev": "3d90d4b9f53e922f4dea0bcb1fd188fd9e6da0ef0c63fa72d659833ce73a79f5",
+   "receipt": "b7368c34d255375d13edecfa291d960a2cd800094e5d11a4206af7167cb58a96"
   }
  ]
 }
