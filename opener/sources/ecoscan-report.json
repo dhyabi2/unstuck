@@ -1,0 +1,1255 @@
+{
+  "generatedAt": "2026-09-17T15:01:19.027Z",
+  "source": "x402-list.com API",
+  "totalServices": 614,
+  "probed": 100,
+  "summary": {
+    "haveNano": 0,
+    "usdcOnly": 81,
+    "unreachable": 19
+  },
+  "nanoServices": [],
+  "usdcServices": [
+    {
+      "name": "OneSource",
+      "slug": "onesource",
+      "domain": "api.onesource.io",
+      "base_url": "https://api.onesource.io",
+      "category": "Blockchain",
+      "buyers_30d": 2033,
+      "volume_30d": 78.914,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402"
+      ]
+    },
+    {
+      "name": "Gotobi Calendar API",
+      "slug": "gotobi-calendar-api",
+      "domain": "gotobi.hugen.tokyo",
+      "base_url": "https://gotobi.hugen.tokyo",
+      "category": "Finance",
+      "buyers_30d": 360,
+      "volume_30d": 1.1705,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402"
+      ]
+    },
+    {
+      "name": "Hugen DeFi Intelligence API",
+      "slug": "hugen-defi-intelligence-api",
+      "domain": "defi.hugen.tokyo",
+      "base_url": "https://defi.hugen.tokyo",
+      "category": "Blockchain",
+      "buyers_30d": 360,
+      "volume_30d": 1.1705,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "Content Intelligence API",
+      "slug": "content-intelligence-api",
+      "domain": "content.hugen.tokyo",
+      "base_url": "https://content.hugen.tokyo",
+      "category": "Content",
+      "buyers_30d": 360,
+      "volume_30d": 1.1705,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402"
+      ]
+    },
+    {
+      "name": "Hugen Intel API",
+      "slug": "hugen-intel-api",
+      "domain": "intel.hugen.tokyo",
+      "base_url": "https://intel.hugen.tokyo",
+      "category": "Blockchain",
+      "buyers_30d": 360,
+      "volume_30d": 1.1705,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402"
+      ]
+    },
+    {
+      "name": "Domain Intelligence API",
+      "slug": "domain-intelligence-api",
+      "domain": "domain.hugen.tokyo",
+      "base_url": "https://domain.hugen.tokyo",
+      "category": "Data",
+      "buyers_30d": 360,
+      "volume_30d": 1.1705,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "Hugen Visual API",
+      "slug": "hugen-visual-api",
+      "domain": "visual.hugen.tokyo",
+      "base_url": "https://visual.hugen.tokyo",
+      "category": "Compute",
+      "buyers_30d": 360,
+      "volume_30d": 1.1705,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402"
+      ]
+    },
+    {
+      "name": "Whale Intelligence API",
+      "slug": "whale-intelligence-api",
+      "domain": "whale.hugen.tokyo",
+      "base_url": "https://whale.hugen.tokyo",
+      "category": "Blockchain",
+      "buyers_30d": 360,
+      "volume_30d": 1.1705,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "Tick Aggregator FX API",
+      "slug": "tick-aggregator-fx-api",
+      "domain": "tick.hugen.tokyo",
+      "base_url": "https://tick.hugen.tokyo",
+      "category": "Finance",
+      "buyers_30d": 360,
+      "volume_30d": 1.1705,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "Scout Multi-Source Intelligence API",
+      "slug": "scout-multi-source-intelligence-api",
+      "domain": "scout.hugen.tokyo",
+      "base_url": "https://scout.hugen.tokyo",
+      "category": "Data",
+      "buyers_30d": 360,
+      "volume_30d": 1.1705,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402"
+      ]
+    },
+    {
+      "name": "Hugen Weather API",
+      "slug": "hugen-weather-api",
+      "domain": "weather.hugen.tokyo",
+      "base_url": "https://weather.hugen.tokyo",
+      "category": "Data",
+      "buyers_30d": 360,
+      "volume_30d": 1.1705,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402"
+      ]
+    },
+    {
+      "name": "Clash of Coins Checkout",
+      "slug": "clash-of-coins-checkout",
+      "domain": "x402.clashofcoins.com",
+      "base_url": "https://x402.clashofcoins.com",
+      "category": "Other",
+      "buyers_30d": 209,
+      "volume_30d": 26127.938000000002,
+      "hasAgentJson": true,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised",
+        "agent.json mentions payments (x402/USDC likely)"
+      ]
+    },
+    {
+      "name": "Exa",
+      "slug": "exa",
+      "domain": "api.exa.ai",
+      "base_url": "https://api.exa.ai",
+      "category": "AI",
+      "buyers_30d": 139,
+      "volume_30d": 46.231,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": [
+        "/.well-known/x402: HTTP 404"
+      ]
+    },
+    {
+      "name": "glim.sh",
+      "slug": "glim-sh",
+      "domain": "glim.sh",
+      "base_url": "https://glim.sh",
+      "category": "Data",
+      "buyers_30d": 104,
+      "volume_30d": 50.5178,
+      "hasAgentJson": true,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "Nansen",
+      "slug": "nansen",
+      "domain": "api.nansen.ai",
+      "base_url": "https://api.nansen.ai",
+      "category": "Data",
+      "buyers_30d": 96,
+      "volume_30d": 94.4,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402"
+      ]
+    },
+    {
+      "name": "cn402",
+      "slug": "cn402",
+      "domain": "api.cn402.com",
+      "base_url": "https://api.cn402.com",
+      "category": "Data",
+      "buyers_30d": 92,
+      "volume_30d": 37.08255,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "Otto AI",
+      "slug": "otto-ai",
+      "domain": "x402.ottoai.services",
+      "base_url": "https://x402.ottoai.services",
+      "category": "AI",
+      "buyers_30d": 326,
+      "volume_30d": 61.942,
+      "hasAgentJson": true,
+      "hasWellKnownX402": false,
+      "notes": [
+        "agent.json mentions payments (x402/USDC likely)"
+      ]
+    },
+    {
+      "name": "Loyal Spark",
+      "slug": "loyal-spark",
+      "domain": "api.loyalspark.online",
+      "base_url": "https://api.loyalspark.online",
+      "category": "Blockchain",
+      "buyers_30d": 108,
+      "volume_30d": 136.782,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": []
+    },
+    {
+      "name": "Bitrefill",
+      "slug": "bitrefill",
+      "domain": "api.bitrefill.com",
+      "base_url": "https://api.bitrefill.com",
+      "category": "Finance",
+      "buyers_30d": 92,
+      "volume_30d": 560.273,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": [
+        "/.well-known/x402: HTTP 404"
+      ]
+    },
+    {
+      "name": "x402watch",
+      "slug": "x402watch",
+      "domain": "api.x402.printmoneylab.com",
+      "base_url": "https://api.x402.printmoneylab.com",
+      "category": "Data",
+      "buyers_30d": 86,
+      "volume_30d": 0.799,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "KR Crypto Intelligence",
+      "slug": "kr-crypto-intelligence",
+      "domain": "api.printmoneylab.com",
+      "base_url": "https://api.printmoneylab.com",
+      "category": "Data",
+      "buyers_30d": 86,
+      "volume_30d": 0.798,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402"
+      ]
+    },
+    {
+      "name": "twit.sh",
+      "slug": "twit-sh",
+      "domain": "x402.twit.sh",
+      "base_url": "https://x402.twit.sh",
+      "category": "Data",
+      "buyers_30d": 75,
+      "volume_30d": 64.38,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402"
+      ]
+    },
+    {
+      "name": "TickersFeed",
+      "slug": "tickersfeed",
+      "domain": "api.tickersfeed.net",
+      "base_url": "https://api.tickersfeed.net",
+      "category": "Finance",
+      "buyers_30d": 71,
+      "volume_30d": 4.224,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402"
+      ]
+    },
+    {
+      "name": "Oblique Markets",
+      "slug": "oblique-markets",
+      "domain": "api.oblique.markets",
+      "base_url": "https://api.oblique.markets",
+      "category": "Data",
+      "buyers_30d": 66,
+      "volume_30d": 23.263227999999998,
+      "hasAgentJson": true,
+      "hasWellKnownX402": false,
+      "notes": [
+        "/.well-known/x402: HTTP 301",
+        "agent.json mentions payments (x402/USDC likely)"
+      ]
+    },
+    {
+      "name": "CoinGecko",
+      "slug": "coingecko",
+      "domain": "pro-api.coingecko.com",
+      "base_url": "https://pro-api.coingecko.com/api/v3/x402",
+      "category": "Data",
+      "buyers_30d": 59,
+      "volume_30d": 4.33,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": [
+        "/.well-known/x402: HTTP 301"
+      ]
+    },
+    {
+      "name": "UK HMO Licence API",
+      "slug": "uk-hmo-licence-api",
+      "domain": "hmo.payapi.market",
+      "base_url": "https://hmo.payapi.market",
+      "category": "Data",
+      "buyers_30d": 54,
+      "volume_30d": 0.17,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "Web Search & Data API — SERP, page reader & scrapers",
+      "slug": "hacker-news-stories-search",
+      "domain": "api.kadec0.xyz",
+      "base_url": "https://api.kadec0.xyz",
+      "category": "Data",
+      "buyers_30d": 56,
+      "volume_30d": 141.34,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": []
+    },
+    {
+      "name": "PayAPI Market UK Property Data API",
+      "slug": "payapi-market-uk-property-data-api",
+      "domain": "property.payapi.market",
+      "base_url": "https://property.payapi.market",
+      "category": "Data",
+      "buyers_30d": 54,
+      "volume_30d": 0.17,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": []
+    },
+    {
+      "name": "CoinMarketCap",
+      "slug": "coinmarketcap",
+      "domain": "pro-api.coinmarketcap.com",
+      "base_url": "https://pro-api.coinmarketcap.com/x402/v3",
+      "category": "Data",
+      "buyers_30d": 47,
+      "volume_30d": 1.64,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": [
+        "/.well-known/x402: HTTP 404"
+      ]
+    },
+    {
+      "name": "Hyperliquid Market Data",
+      "slug": "hyperliquid-market-data",
+      "domain": "hyperliquid.use.x402atlas.com",
+      "base_url": "https://hyperliquid.use.x402atlas.com",
+      "category": "Finance",
+      "buyers_30d": 45,
+      "volume_30d": 4.85175,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "Apify Agentic Endpoint (AGI)",
+      "slug": "apify-agentic-endpoint-agi",
+      "domain": "agi.apify.com",
+      "base_url": "https://agi.apify.com",
+      "category": "Data",
+      "buyers_30d": 45,
+      "volume_30d": 232.449725,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": [
+        "/.well-known/x402: HTTP 404"
+      ]
+    },
+    {
+      "name": "Apify Actors API",
+      "slug": "apify-actors-api",
+      "domain": "api.apify.com",
+      "base_url": "https://api.apify.com",
+      "category": "Data",
+      "buyers_30d": 44,
+      "volume_30d": 231.449725,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": [
+        "/.well-known/x402: HTTP 404"
+      ]
+    },
+    {
+      "name": "DefiLlama Data API (x402 Atlas)",
+      "slug": "defillama-data-api-x402-atlas",
+      "domain": "defillama.use.x402atlas.com",
+      "base_url": "https://defillama.use.x402atlas.com",
+      "category": "Finance",
+      "buyers_30d": 41,
+      "volume_30d": 1.57175,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "anchor-x402",
+      "slug": "anchor-x402",
+      "domain": "api.anchor-x402.com",
+      "base_url": "https://api.anchor-x402.com",
+      "category": "Blockchain",
+      "buyers_30d": 43,
+      "volume_30d": 4.311,
+      "hasAgentJson": true,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402",
+        "agent.json mentions payments (x402/USDC likely)"
+      ]
+    },
+    {
+      "name": "ApiToll Crypto News",
+      "slug": "apitoll-crypto-news",
+      "domain": "news.apitoll.cloud",
+      "base_url": "https://news.apitoll.cloud",
+      "category": "Content",
+      "buyers_30d": 39,
+      "volume_30d": 0.057,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "Crypto Perp Signals",
+      "slug": "crypto-perp-signals",
+      "domain": "perpsignals.use.x402atlas.com",
+      "base_url": "https://perpsignals.use.x402atlas.com",
+      "category": "Finance",
+      "buyers_30d": 39,
+      "volume_30d": 0.75675,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "ApiToll Multi-Chain EVM Gas",
+      "slug": "apitoll-multi-chain-evm-gas",
+      "domain": "evm-gas.apitoll.cloud",
+      "base_url": "https://evm-gas.apitoll.cloud",
+      "category": "Data",
+      "buyers_30d": 37,
+      "volume_30d": 0.055,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "NetIntel",
+      "slug": "netintel",
+      "domain": "netintel.dev",
+      "base_url": "https://netintel.dev",
+      "category": "AI",
+      "buyers_30d": 64,
+      "volume_30d": 21.534,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": []
+    },
+    {
+      "name": "Floyd Coding Agent",
+      "slug": "floyd-coding-agent",
+      "domain": "floyd.lonestaroracle.xyz",
+      "base_url": "https://floyd.lonestaroracle.xyz",
+      "category": "AI",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "CopperheadAI",
+      "slug": "copperheadai",
+      "domain": "copperhead.lonestaroracle.xyz",
+      "base_url": "https://copperhead.lonestaroracle.xyz",
+      "category": "Verification",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "LoneStarOracle ContractCheck",
+      "slug": "lonestaroracle-contractcheck",
+      "domain": "contract.lonestaroracle.xyz",
+      "base_url": "https://contract.lonestaroracle.xyz",
+      "category": "Blockchain",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "LoneStarOracle WeatherOracle",
+      "slug": "lonestaroracle-weatheroracle",
+      "domain": "weather.lonestaroracle.xyz",
+      "base_url": "https://weather.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "TradePulse",
+      "slug": "tradepulse",
+      "domain": "trade.lonestaroracle.xyz",
+      "base_url": "https://trade.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "LoneStarOracle EquityScope",
+      "slug": "lonestaroracle-equityscope",
+      "domain": "equity.lonestaroracle.xyz",
+      "base_url": "https://equity.lonestaroracle.xyz",
+      "category": "Finance",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "LoneStarOracle WealthPulse",
+      "slug": "lonestaroracle-wealthpulse",
+      "domain": "wealth.lonestaroracle.xyz",
+      "base_url": "https://wealth.lonestaroracle.xyz",
+      "category": "Finance",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "Linked Panda",
+      "slug": "linked-panda",
+      "domain": "api.linkedpanda.com",
+      "base_url": "https://api.linkedpanda.com",
+      "category": "Data",
+      "buyers_30d": 41,
+      "volume_30d": 122.09,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": []
+    },
+    {
+      "name": "LoneStarOracle InsiderFlow",
+      "slug": "lonestaroracle-insiderflow",
+      "domain": "insider.lonestaroracle.xyz",
+      "base_url": "https://insider.lonestaroracle.xyz",
+      "category": "Finance",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "WalletRisk",
+      "slug": "walletrisk",
+      "domain": "wallet.lonestaroracle.xyz",
+      "base_url": "https://wallet.lonestaroracle.xyz",
+      "category": "Blockchain",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "LoneStarOracle TokenLaunch",
+      "slug": "lonestaroracle-tokenlaunch",
+      "domain": "launches.lonestaroracle.xyz",
+      "base_url": "https://launches.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "GovEdge",
+      "slug": "govedge",
+      "domain": "govedge.lonestaroracle.xyz",
+      "base_url": "https://govedge.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "LoneStarOracle Liquidations",
+      "slug": "lonestaroracle-liquidations",
+      "domain": "liq.lonestaroracle.xyz",
+      "base_url": "https://liq.lonestaroracle.xyz",
+      "category": "Finance",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "DocEdge",
+      "slug": "docedge",
+      "domain": "doc.lonestaroracle.xyz",
+      "base_url": "https://doc.lonestaroracle.xyz",
+      "category": "AI",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "RattlerAI",
+      "slug": "rattlerai",
+      "domain": "rattler.lonestaroracle.xyz",
+      "base_url": "https://rattler.lonestaroracle.xyz",
+      "category": "Verification",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "WebberSites x402 Data API",
+      "slug": "webbersites-x402-data-api",
+      "domain": "api.webbersites.com",
+      "base_url": "https://api.webbersites.com",
+      "category": "Data",
+      "buyers_30d": 37,
+      "volume_30d": 1.49,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": []
+    },
+    {
+      "name": "LoneStarOracle OptionsFlow",
+      "slug": "lonestaroracle-optionsflow",
+      "domain": "options.lonestaroracle.xyz",
+      "base_url": "https://options.lonestaroracle.xyz",
+      "category": "Finance",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "LoneStarOracle ChainScout",
+      "slug": "lonestaroracle-chainscout",
+      "domain": "chainscout.lonestaroracle.xyz",
+      "base_url": "https://chainscout.lonestaroracle.xyz",
+      "category": "Blockchain",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "StrategicMaterials",
+      "slug": "strategicmaterials",
+      "domain": "minerals.lonestaroracle.xyz",
+      "base_url": "https://minerals.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "LoneStarOracle NewsSentiment",
+      "slug": "lonestaroracle-newssentiment",
+      "domain": "news.lonestaroracle.xyz",
+      "base_url": "https://news.lonestaroracle.xyz",
+      "category": "Finance",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "LoneStarOracle WhaleAlert",
+      "slug": "lonestaroracle-whalealert",
+      "domain": "whale.lonestaroracle.xyz",
+      "base_url": "https://whale.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "AeroCheck",
+      "slug": "aerocheck",
+      "domain": "aero.lonestaroracle.xyz",
+      "base_url": "https://aero.lonestaroracle.xyz",
+      "category": "Blockchain",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "CottonmouthAI",
+      "slug": "cottonmouthai",
+      "domain": "cottonmouth.lonestaroracle.xyz",
+      "base_url": "https://cottonmouth.lonestaroracle.xyz",
+      "category": "Verification",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "RWA Risk",
+      "slug": "rwa-risk",
+      "domain": "rwa.lonestaroracle.xyz",
+      "base_url": "https://rwa.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "CascadeWatch",
+      "slug": "cascadewatch",
+      "domain": "cascade.lonestaroracle.xyz",
+      "base_url": "https://cascade.lonestaroracle.xyz",
+      "category": "Finance",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "CrownBlock",
+      "slug": "crownblock",
+      "domain": "crownblock.lonestaroracle.xyz",
+      "base_url": "https://crownblock.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "LoneStarOracle GeoPulse",
+      "slug": "lonestaroracle-geopulse",
+      "domain": "geo.lonestaroracle.xyz",
+      "base_url": "https://geo.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "LoneStarOracle PortfolioRisk",
+      "slug": "lonestaroracle-portfoliorisk",
+      "domain": "portfolio.lonestaroracle.xyz",
+      "base_url": "https://portfolio.lonestaroracle.xyz",
+      "category": "Finance",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "LoneStarOracle EarningsCalendar",
+      "slug": "lonestaroracle-earningscalendar",
+      "domain": "earnings.lonestaroracle.xyz",
+      "base_url": "https://earnings.lonestaroracle.xyz",
+      "category": "Finance",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "LeaseEdge",
+      "slug": "leaseedge",
+      "domain": "lease.lonestaroracle.xyz",
+      "base_url": "https://lease.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "ConsumerPulse",
+      "slug": "consumerpulse",
+      "domain": "consumer.lonestaroracle.xyz",
+      "base_url": "https://consumer.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "LaborPulse",
+      "slug": "laborpulse",
+      "domain": "labor.lonestaroracle.xyz",
+      "base_url": "https://labor.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "GridPulse",
+      "slug": "gridpulse",
+      "domain": "grid.lonestaroracle.xyz",
+      "base_url": "https://grid.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "RealEstatePulse",
+      "slug": "realestatepulse",
+      "domain": "realestate.lonestaroracle.xyz",
+      "base_url": "https://realestate.lonestaroracle.xyz",
+      "category": "Finance",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "StakeEdge",
+      "slug": "stakeedge",
+      "domain": "stake.lonestaroracle.xyz",
+      "base_url": "https://stake.lonestaroracle.xyz",
+      "category": "Finance",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "FundingRates",
+      "slug": "fundingrates",
+      "domain": "funding.lonestaroracle.xyz",
+      "base_url": "https://funding.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "LatAmPulse",
+      "slug": "latampulse",
+      "domain": "latam.lonestaroracle.xyz",
+      "base_url": "https://latam.lonestaroracle.xyz",
+      "category": "Finance",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "OpenInterest",
+      "slug": "openinterest",
+      "domain": "oi.lonestaroracle.xyz",
+      "base_url": "https://oi.lonestaroracle.xyz",
+      "category": "Finance",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "CyclePulse",
+      "slug": "cyclepulse",
+      "domain": "cycle.lonestaroracle.xyz",
+      "base_url": "https://cycle.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "ComputePulse",
+      "slug": "computepulse",
+      "domain": "compute.lonestaroracle.xyz",
+      "base_url": "https://compute.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "StablePulse",
+      "slug": "stablepulse",
+      "domain": "stable.lonestaroracle.xyz",
+      "base_url": "https://stable.lonestaroracle.xyz",
+      "category": "Finance",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "IndustrialMetals",
+      "slug": "industrialmetals",
+      "domain": "metals.lonestaroracle.xyz",
+      "base_url": "https://metals.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "SupplyChainPulse",
+      "slug": "supplychainpulse",
+      "domain": "supply.lonestaroracle.xyz",
+      "base_url": "https://supply.lonestaroracle.xyz",
+      "category": "Data",
+      "buyers_30d": 34,
+      "volume_30d": 0.9739130434782609,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    }
+  ],
+  "unreachableServices": [
+    {
+      "name": "StableEnrich",
+      "slug": "stableenrich",
+      "domain": "stableenrich.dev",
+      "base_url": "https://stableenrich.dev"
+    },
+    {
+      "name": "Agent402.tools",
+      "slug": "agent402-tools",
+      "domain": "agent402.tools",
+      "base_url": "https://agent402.tools"
+    },
+    {
+      "name": "StableSocial",
+      "slug": "stablesocial",
+      "domain": "stablesocial.dev",
+      "base_url": "https://stablesocial.dev"
+    },
+    {
+      "name": "2s.io",
+      "slug": "2s-io",
+      "domain": "2s.io",
+      "base_url": "https://2s.io"
+    },
+    {
+      "name": "Vibe Springs",
+      "slug": "vibe-springs",
+      "domain": "vibesprings.net",
+      "base_url": "https://vibesprings.net"
+    },
+    {
+      "name": "agentstools",
+      "slug": "agentstools",
+      "domain": "api.agentstools.dev",
+      "base_url": "https://api.agentstools.dev"
+    },
+    {
+      "name": "OnchainPulse",
+      "slug": "onchainpulse",
+      "domain": "onchainpulse-nine.vercel.app",
+      "base_url": "https://onchainpulse-nine.vercel.app"
+    },
+    {
+      "name": "Kronos Crypto Data & Forecasts",
+      "slug": "kronos-crypto-data-forecasts",
+      "domain": "kronossignals.com",
+      "base_url": "https://kronossignals.com"
+    },
+    {
+      "name": "vaaya",
+      "slug": "vaaya",
+      "domain": "vaaya.ai",
+      "base_url": "https://vaaya.ai"
+    },
+    {
+      "name": "scrape402",
+      "slug": "scrape402",
+      "domain": "x402.shizu.me",
+      "base_url": "https://x402.shizu.me"
+    },
+    {
+      "name": "x402engine",
+      "slug": "x402engine",
+      "domain": "x402engine.app",
+      "base_url": "https://x402engine.app"
+    },
+    {
+      "name": "StableUpload",
+      "slug": "stableupload",
+      "domain": "stableupload.dev",
+      "base_url": "https://stableupload.dev"
+    },
+    {
+      "name": "x402scan",
+      "slug": "x402scan",
+      "domain": "www.x402scan.com",
+      "base_url": "https://www.x402scan.com"
+    },
+    {
+      "name": "agentutility",
+      "slug": "agentutility",
+      "domain": "x402.agentutility.ai",
+      "base_url": "https://x402.agentutility.ai"
+    },
+    {
+      "name": "Deepline GTM API",
+      "slug": "deepline-gtm-api",
+      "domain": "stable-deepline.dev",
+      "base_url": "https://stable-deepline.dev"
+    },
+    {
+      "name": "MicroTap",
+      "slug": "x402tap",
+      "domain": "x402tap.com",
+      "base_url": "https://x402tap.com"
+    },
+    {
+      "name": "x402stock",
+      "slug": "x402stock",
+      "domain": "x402stock.xyz",
+      "base_url": "https://x402stock.xyz"
+    },
+    {
+      "name": "StableEmail",
+      "slug": "stableemail",
+      "domain": "stableemail.dev",
+      "base_url": "https://stableemail.dev"
+    },
+    {
+      "name": "Rubric Protocol — Post-Quantum AI Attestation",
+      "slug": "rubric-protocol-post-quantum-ai-attestation",
+      "domain": "rubric-protocol.com",
+      "base_url": "https://rubric-protocol.com"
+    }
+  ]
+}

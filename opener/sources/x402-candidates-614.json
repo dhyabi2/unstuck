@@ -1,0 +1,5528 @@
+[
+  {
+    "slug": "onesource",
+    "name": "OneSource",
+    "category": "Blockchain",
+    "base_url": "https://api.onesource.io",
+    "buyers_30d": 2033,
+    "volume_30d": 78.914,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "content-intelligence-api",
+    "name": "Content Intelligence API",
+    "category": "Content",
+    "base_url": "https://content.hugen.tokyo",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "hugen-defi-intelligence-api",
+    "name": "Hugen DeFi Intelligence API",
+    "category": "Blockchain",
+    "base_url": "https://defi.hugen.tokyo",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "hugen-intel-api",
+    "name": "Hugen Intel API",
+    "category": "Blockchain",
+    "base_url": "https://intel.hugen.tokyo",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "gotobi-calendar-api",
+    "name": "Gotobi Calendar API",
+    "category": "Finance",
+    "base_url": "https://gotobi.hugen.tokyo",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "domain-intelligence-api",
+    "name": "Domain Intelligence API",
+    "category": "Data",
+    "base_url": "https://domain.hugen.tokyo",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "hugen-visual-api",
+    "name": "Hugen Visual API",
+    "category": "Compute",
+    "base_url": "https://visual.hugen.tokyo",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "whale-intelligence-api",
+    "name": "Whale Intelligence API",
+    "category": "Blockchain",
+    "base_url": "https://whale.hugen.tokyo",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "scout-multi-source-intelligence-api",
+    "name": "Scout Multi-Source Intelligence API",
+    "category": "Data",
+    "base_url": "https://scout.hugen.tokyo",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "tick-aggregator-fx-api",
+    "name": "Tick Aggregator FX API",
+    "category": "Finance",
+    "base_url": "https://tick.hugen.tokyo",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "hugen-weather-api",
+    "name": "Hugen Weather API",
+    "category": "Data",
+    "base_url": "https://weather.hugen.tokyo",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "stableenrich",
+    "name": "StableEnrich",
+    "category": "Data",
+    "base_url": "https://stableenrich.dev",
+    "buyers_30d": 347,
+    "volume_30d": 1950.5623999999998,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "otto-ai",
+    "name": "Otto AI",
+    "category": "AI",
+    "base_url": "https://x402.ottoai.services",
+    "buyers_30d": 326,
+    "volume_30d": 61.942,
+    "source": "submitted"
+  },
+  {
+    "slug": "clash-of-coins-checkout",
+    "name": "Clash of Coins Checkout",
+    "category": "Other",
+    "base_url": "https://x402.clashofcoins.com",
+    "buyers_30d": 209,
+    "volume_30d": 26127.938000000002,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "agent402-tools",
+    "name": "Agent402.tools",
+    "category": "AI",
+    "base_url": "https://agent402.tools",
+    "buyers_30d": 165,
+    "volume_30d": 141.75743599999998,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "exa",
+    "name": "Exa",
+    "category": "AI",
+    "base_url": "https://api.exa.ai",
+    "buyers_30d": 139,
+    "volume_30d": 46.231,
+    "source": "submitted"
+  },
+  {
+    "slug": "loyal-spark",
+    "name": "Loyal Spark",
+    "category": "Blockchain",
+    "base_url": "https://api.loyalspark.online",
+    "buyers_30d": 108,
+    "volume_30d": 136.782,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "glim-sh",
+    "name": "glim.sh",
+    "category": "Data",
+    "base_url": "https://glim.sh",
+    "buyers_30d": 104,
+    "volume_30d": 50.5178,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "stablesocial",
+    "name": "StableSocial",
+    "category": "Data",
+    "base_url": "https://stablesocial.dev",
+    "buyers_30d": 97,
+    "volume_30d": 314.22,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "nansen",
+    "name": "Nansen",
+    "category": "Data",
+    "base_url": "https://api.nansen.ai",
+    "buyers_30d": 96,
+    "volume_30d": 94.4,
+    "source": "submitted"
+  },
+  {
+    "slug": "cn402",
+    "name": "cn402",
+    "category": "Data",
+    "base_url": "https://api.cn402.com",
+    "buyers_30d": 92,
+    "volume_30d": 37.08255,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "bitrefill",
+    "name": "Bitrefill",
+    "category": "Finance",
+    "base_url": "https://api.bitrefill.com",
+    "buyers_30d": 92,
+    "volume_30d": 560.273,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "2s-io",
+    "name": "2s.io",
+    "category": "Data",
+    "base_url": "https://2s.io",
+    "buyers_30d": 87,
+    "volume_30d": 10.061784,
+    "source": "submitted"
+  },
+  {
+    "slug": "x402watch",
+    "name": "x402watch",
+    "category": "Data",
+    "base_url": "https://api.x402.printmoneylab.com",
+    "buyers_30d": 86,
+    "volume_30d": 0.799,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "kr-crypto-intelligence",
+    "name": "KR Crypto Intelligence",
+    "category": "Data",
+    "base_url": "https://api.printmoneylab.com",
+    "buyers_30d": 86,
+    "volume_30d": 0.798,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "vibe-springs",
+    "name": "Vibe Springs",
+    "category": "Data",
+    "base_url": "https://vibesprings.net",
+    "buyers_30d": 84,
+    "volume_30d": 2.811,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "agentstools",
+    "name": "agentstools",
+    "category": "Data",
+    "base_url": "https://api.agentstools.dev",
+    "buyers_30d": 83,
+    "volume_30d": 4.92,
+    "source": "submitted"
+  },
+  {
+    "slug": "onchainpulse",
+    "name": "OnchainPulse",
+    "category": "Data",
+    "base_url": "https://onchainpulse-nine.vercel.app",
+    "buyers_30d": 82,
+    "volume_30d": 268.64500000000004,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "twit-sh",
+    "name": "twit.sh",
+    "category": "Data",
+    "base_url": "https://x402.twit.sh",
+    "buyers_30d": 75,
+    "volume_30d": 64.38,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "kronos-crypto-data-forecasts",
+    "name": "Kronos Crypto Data & Forecasts",
+    "category": "Data",
+    "base_url": "https://kronossignals.com",
+    "buyers_30d": 73,
+    "volume_30d": 69.65,
+    "source": "submitted"
+  },
+  {
+    "slug": "vaaya",
+    "name": "vaaya",
+    "category": "AI",
+    "base_url": "https://vaaya.ai",
+    "buyers_30d": 72,
+    "volume_30d": 36.16,
+    "source": "submitted"
+  },
+  {
+    "slug": "tickersfeed",
+    "name": "TickersFeed",
+    "category": "Finance",
+    "base_url": "https://api.tickersfeed.net",
+    "buyers_30d": 71,
+    "volume_30d": 4.224,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "scrape402",
+    "name": "scrape402",
+    "category": "Data",
+    "base_url": "https://x402.shizu.me",
+    "buyers_30d": 68,
+    "volume_30d": 4.086,
+    "source": "submitted"
+  },
+  {
+    "slug": "oblique-markets",
+    "name": "Oblique Markets",
+    "category": "Data",
+    "base_url": "https://api.oblique.markets",
+    "buyers_30d": 66,
+    "volume_30d": 23.263227999999998,
+    "source": "submitted"
+  },
+  {
+    "slug": "x402engine",
+    "name": "x402engine",
+    "category": "AI",
+    "base_url": "https://x402engine.app",
+    "buyers_30d": 65,
+    "volume_30d": 23.986877,
+    "source": "submitted"
+  },
+  {
+    "slug": "stableupload",
+    "name": "StableUpload",
+    "category": "AI",
+    "base_url": "https://stableupload.dev",
+    "buyers_30d": 65,
+    "volume_30d": 6.035,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "x402scan",
+    "name": "x402scan",
+    "category": "Data",
+    "base_url": "https://www.x402scan.com",
+    "buyers_30d": 64,
+    "volume_30d": 17.75,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "netintel",
+    "name": "NetIntel",
+    "category": "AI",
+    "base_url": "https://netintel.dev",
+    "buyers_30d": 64,
+    "volume_30d": 21.534,
+    "source": "submitted"
+  },
+  {
+    "slug": "agentutility",
+    "name": "agentutility",
+    "category": "AI",
+    "base_url": "https://x402.agentutility.ai",
+    "buyers_30d": 61,
+    "volume_30d": 215.44799999999998,
+    "source": "submitted"
+  },
+  {
+    "slug": "coingecko",
+    "name": "CoinGecko",
+    "category": "Data",
+    "base_url": "https://pro-api.coingecko.com/api/v3/x402",
+    "buyers_30d": 59,
+    "volume_30d": 4.33,
+    "source": "submitted"
+  },
+  {
+    "slug": "hacker-news-stories-search",
+    "name": "Web Search & Data API \u2014 SERP, page reader & scrapers",
+    "category": "Data",
+    "base_url": "https://api.kadec0.xyz",
+    "buyers_30d": 56,
+    "volume_30d": 141.34,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "payapi-market-uk-property-data-api",
+    "name": "PayAPI Market UK Property Data API",
+    "category": "Data",
+    "base_url": "https://property.payapi.market",
+    "buyers_30d": 54,
+    "volume_30d": 0.17,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "uk-hmo-licence-api",
+    "name": "UK HMO Licence API",
+    "category": "Data",
+    "base_url": "https://hmo.payapi.market",
+    "buyers_30d": 54,
+    "volume_30d": 0.17,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "deepline-gtm-api",
+    "name": "Deepline GTM API",
+    "category": "Data",
+    "base_url": "https://stable-deepline.dev",
+    "buyers_30d": 54,
+    "volume_30d": 201.05,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "x402tap",
+    "name": "MicroTap",
+    "category": "Data",
+    "base_url": "https://x402tap.com",
+    "buyers_30d": 48,
+    "volume_30d": 0.606,
+    "source": "submitted"
+  },
+  {
+    "slug": "coinmarketcap",
+    "name": "CoinMarketCap",
+    "category": "Data",
+    "base_url": "https://pro-api.coinmarketcap.com/x402/v3",
+    "buyers_30d": 47,
+    "volume_30d": 1.64,
+    "source": "submitted"
+  },
+  {
+    "slug": "hyperliquid-market-data",
+    "name": "Hyperliquid Market Data",
+    "category": "Finance",
+    "base_url": "https://hyperliquid.use.x402atlas.com",
+    "buyers_30d": 45,
+    "volume_30d": 4.85175,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "x402stock",
+    "name": "x402stock",
+    "category": "Finance",
+    "base_url": "https://x402stock.xyz",
+    "buyers_30d": 45,
+    "volume_30d": 17.39,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "apify-agentic-endpoint-agi",
+    "name": "Apify Agentic Endpoint (AGI)",
+    "category": "Data",
+    "base_url": "https://agi.apify.com",
+    "buyers_30d": 45,
+    "volume_30d": 232.449725,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "apify-actors-api",
+    "name": "Apify Actors API",
+    "category": "Data",
+    "base_url": "https://api.apify.com",
+    "buyers_30d": 44,
+    "volume_30d": 231.449725,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "anchor-x402",
+    "name": "anchor-x402",
+    "category": "Blockchain",
+    "base_url": "https://api.anchor-x402.com",
+    "buyers_30d": 43,
+    "volume_30d": 4.311,
+    "source": "submitted"
+  },
+  {
+    "slug": "defillama-data-api-x402-atlas",
+    "name": "DefiLlama Data API (x402 Atlas)",
+    "category": "Finance",
+    "base_url": "https://defillama.use.x402atlas.com",
+    "buyers_30d": 41,
+    "volume_30d": 1.57175,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "linked-panda",
+    "name": "Linked Panda",
+    "category": "Data",
+    "base_url": "https://api.linkedpanda.com",
+    "buyers_30d": 41,
+    "volume_30d": 122.09,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "apitoll-crypto-news",
+    "name": "ApiToll Crypto News",
+    "category": "Content",
+    "base_url": "https://news.apitoll.cloud",
+    "buyers_30d": 39,
+    "volume_30d": 0.057,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "crypto-perp-signals",
+    "name": "Crypto Perp Signals",
+    "category": "Finance",
+    "base_url": "https://perpsignals.use.x402atlas.com",
+    "buyers_30d": 39,
+    "volume_30d": 0.75675,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "apitoll-multi-chain-evm-gas",
+    "name": "ApiToll Multi-Chain EVM Gas",
+    "category": "Data",
+    "base_url": "https://evm-gas.apitoll.cloud",
+    "buyers_30d": 37,
+    "volume_30d": 0.055,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "webbersites-x402-data-api",
+    "name": "WebberSites x402 Data API",
+    "category": "Data",
+    "base_url": "https://api.webbersites.com",
+    "buyers_30d": 37,
+    "volume_30d": 1.49,
+    "source": "submitted"
+  },
+  {
+    "slug": "stableemail",
+    "name": "StableEmail",
+    "category": "AI",
+    "base_url": "https://stableemail.dev",
+    "buyers_30d": 37,
+    "volume_30d": 27.119,
+    "source": "submitted"
+  },
+  {
+    "slug": "rubric-protocol-post-quantum-ai-attestation",
+    "name": "Rubric Protocol \u2014 Post-Quantum AI Attestation",
+    "category": "Verification",
+    "base_url": "https://rubric-protocol.com",
+    "buyers_30d": 36,
+    "volume_30d": 16.866500000000002,
+    "source": "submitted"
+  },
+  {
+    "slug": "floyd-coding-agent",
+    "name": "Floyd Coding Agent",
+    "category": "AI",
+    "base_url": "https://floyd.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "copperheadai",
+    "name": "CopperheadAI",
+    "category": "Verification",
+    "base_url": "https://copperhead.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-contractcheck",
+    "name": "LoneStarOracle ContractCheck",
+    "category": "Blockchain",
+    "base_url": "https://contract.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-weatheroracle",
+    "name": "LoneStarOracle WeatherOracle",
+    "category": "Data",
+    "base_url": "https://weather.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "tradepulse",
+    "name": "TradePulse",
+    "category": "Data",
+    "base_url": "https://trade.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-equityscope",
+    "name": "LoneStarOracle EquityScope",
+    "category": "Finance",
+    "base_url": "https://equity.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-wealthpulse",
+    "name": "LoneStarOracle WealthPulse",
+    "category": "Finance",
+    "base_url": "https://wealth.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-insiderflow",
+    "name": "LoneStarOracle InsiderFlow",
+    "category": "Finance",
+    "base_url": "https://insider.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "walletrisk",
+    "name": "WalletRisk",
+    "category": "Blockchain",
+    "base_url": "https://wallet.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-tokenlaunch",
+    "name": "LoneStarOracle TokenLaunch",
+    "category": "Data",
+    "base_url": "https://launches.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "govedge",
+    "name": "GovEdge",
+    "category": "Data",
+    "base_url": "https://govedge.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-liquidations",
+    "name": "LoneStarOracle Liquidations",
+    "category": "Finance",
+    "base_url": "https://liq.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "docedge",
+    "name": "DocEdge",
+    "category": "AI",
+    "base_url": "https://doc.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "rattlerai",
+    "name": "RattlerAI",
+    "category": "Verification",
+    "base_url": "https://rattler.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "strategicmaterials",
+    "name": "StrategicMaterials",
+    "category": "Data",
+    "base_url": "https://minerals.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-optionsflow",
+    "name": "LoneStarOracle OptionsFlow",
+    "category": "Finance",
+    "base_url": "https://options.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-chainscout",
+    "name": "LoneStarOracle ChainScout",
+    "category": "Blockchain",
+    "base_url": "https://chainscout.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-newssentiment",
+    "name": "LoneStarOracle NewsSentiment",
+    "category": "Finance",
+    "base_url": "https://news.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-whalealert",
+    "name": "LoneStarOracle WhaleAlert",
+    "category": "Data",
+    "base_url": "https://whale.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "aerocheck",
+    "name": "AeroCheck",
+    "category": "Blockchain",
+    "base_url": "https://aero.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "cottonmouthai",
+    "name": "CottonmouthAI",
+    "category": "Verification",
+    "base_url": "https://cottonmouth.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "rwa-risk",
+    "name": "RWA Risk",
+    "category": "Data",
+    "base_url": "https://rwa.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "cascadewatch",
+    "name": "CascadeWatch",
+    "category": "Finance",
+    "base_url": "https://cascade.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "crownblock",
+    "name": "CrownBlock",
+    "category": "Data",
+    "base_url": "https://crownblock.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-geopulse",
+    "name": "LoneStarOracle GeoPulse",
+    "category": "Data",
+    "base_url": "https://geo.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-portfoliorisk",
+    "name": "LoneStarOracle PortfolioRisk",
+    "category": "Finance",
+    "base_url": "https://portfolio.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-earningscalendar",
+    "name": "LoneStarOracle EarningsCalendar",
+    "category": "Finance",
+    "base_url": "https://earnings.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "leaseedge",
+    "name": "LeaseEdge",
+    "category": "Data",
+    "base_url": "https://lease.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "consumerpulse",
+    "name": "ConsumerPulse",
+    "category": "Data",
+    "base_url": "https://consumer.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "laborpulse",
+    "name": "LaborPulse",
+    "category": "Data",
+    "base_url": "https://labor.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "gridpulse",
+    "name": "GridPulse",
+    "category": "Data",
+    "base_url": "https://grid.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "realestatepulse",
+    "name": "RealEstatePulse",
+    "category": "Finance",
+    "base_url": "https://realestate.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "stakeedge",
+    "name": "StakeEdge",
+    "category": "Finance",
+    "base_url": "https://stake.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "fundingrates",
+    "name": "FundingRates",
+    "category": "Data",
+    "base_url": "https://funding.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "latampulse",
+    "name": "LatAmPulse",
+    "category": "Finance",
+    "base_url": "https://latam.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "openinterest",
+    "name": "OpenInterest",
+    "category": "Finance",
+    "base_url": "https://oi.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "cyclepulse",
+    "name": "CyclePulse",
+    "category": "Data",
+    "base_url": "https://cycle.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "computepulse",
+    "name": "ComputePulse",
+    "category": "Data",
+    "base_url": "https://compute.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "stablepulse",
+    "name": "StablePulse",
+    "category": "Finance",
+    "base_url": "https://stable.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "industrialmetals",
+    "name": "IndustrialMetals",
+    "category": "Data",
+    "base_url": "https://metals.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "supplychainpulse",
+    "name": "SupplyChainPulse",
+    "category": "Data",
+    "base_url": "https://supply.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "agripulse",
+    "name": "AgriPulse",
+    "category": "Data",
+    "base_url": "https://agri.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "techanalysis",
+    "name": "TechAnalysis",
+    "category": "Finance",
+    "base_url": "https://ta.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-tokenscope",
+    "name": "LoneStarOracle TokenScope",
+    "category": "Blockchain",
+    "base_url": "https://token.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "defirisk",
+    "name": "DeFiRisk",
+    "category": "Finance",
+    "base_url": "https://defi.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "lonestaroracle-macropulse",
+    "name": "LoneStarOracle MacroPulse",
+    "category": "Finance",
+    "base_url": "https://macro.lonestaroracle.xyz",
+    "buyers_30d": 34,
+    "volume_30d": 0.9739130434782609,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "mycelia-signal",
+    "name": "Mycelia Signal",
+    "category": "Data",
+    "base_url": "https://api.myceliasignal.com",
+    "buyers_30d": 34,
+    "volume_30d": 26.62,
+    "source": "submitted"
+  },
+  {
+    "slug": "coingecko-crypto-price-data-x402-atlas",
+    "name": "CoinGecko Crypto Price & Data (x402 Atlas)",
+    "category": "Finance",
+    "base_url": "https://coingecko.use.x402atlas.com",
+    "buyers_30d": 33,
+    "volume_30d": 0.43674999999999997,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "rc-quantum-data-oracle",
+    "name": "RC Quantum Data Oracle",
+    "category": "Data",
+    "base_url": "https://data.rcqsignals.com",
+    "buyers_30d": 32,
+    "volume_30d": 1.67,
+    "source": "submitted"
+  },
+  {
+    "slug": "ixs",
+    "name": "IXS",
+    "category": "Finance",
+    "base_url": "https://api-v2.ixs.finance",
+    "buyers_30d": 32,
+    "volume_30d": 0.094,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "strale",
+    "name": "Strale",
+    "category": "Data",
+    "base_url": "https://api.strale.io",
+    "buyers_30d": 31,
+    "volume_30d": 265.1184,
+    "source": "submitted"
+  },
+  {
+    "slug": "apitoll-sec-edgar-data",
+    "name": "ApiToll SEC EDGAR Data",
+    "category": "Finance",
+    "base_url": "https://edgar.apitoll.cloud",
+    "buyers_30d": 31,
+    "volume_30d": 0.261,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "venice-ai",
+    "name": "Venice AI",
+    "category": "AI",
+    "base_url": "https://api.venice.ai/api/v1",
+    "buyers_30d": 31,
+    "volume_30d": 284.59,
+    "source": "submitted"
+  },
+  {
+    "slug": "agent-web-access",
+    "name": "Agent Web Access",
+    "category": "Data",
+    "base_url": "https://web.cyberwarex.com",
+    "buyers_30d": 30,
+    "volume_30d": 8.735,
+    "source": "submitted"
+  },
+  {
+    "slug": "ipintel-ai-satellite-georisk-api",
+    "name": "IPIntel.ai Satellite & GeoRisk API",
+    "category": "Data",
+    "base_url": "https://sat.ipintel.ai",
+    "buyers_30d": 30,
+    "volume_30d": 2.3753333333333333,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "ipintel-ai-ip-lookup-risk-api",
+    "name": "IPIntel.ai IP Lookup & Risk API",
+    "category": "Data",
+    "base_url": "https://api.ipintel.ai",
+    "buyers_30d": 30,
+    "volume_30d": 2.3753333333333333,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "ipintel-ai-x402-tools",
+    "name": "IPIntel.ai x402 Tools",
+    "category": "Data",
+    "base_url": "https://tools.ipintel.ai",
+    "buyers_30d": 30,
+    "volume_30d": 2.3753333333333333,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "agent-exchange",
+    "name": "Agent Exchange",
+    "category": "Data",
+    "base_url": "https://store.agentexchange.work",
+    "buyers_30d": 30,
+    "volume_30d": 3.554,
+    "source": "submitted"
+  },
+  {
+    "slug": "spraay-gateway",
+    "name": "Spraay Gateway",
+    "category": "AI",
+    "base_url": "https://gateway.spraay.app",
+    "buyers_30d": 30,
+    "volume_30d": 1.127,
+    "source": "submitted"
+  },
+  {
+    "slug": "lion-verified-company-compliance-data",
+    "name": "LION \u2014 Verified Company & Compliance Data",
+    "category": "Verification",
+    "base_url": "https://lionx402.com",
+    "buyers_30d": 29,
+    "volume_30d": 7.065,
+    "source": "submitted"
+  },
+  {
+    "slug": "us-cpi-data-inflation-report-api",
+    "name": "US CPI Data & Inflation Report API",
+    "category": "Finance",
+    "base_url": "https://cpi-report-us.underscoredone.com",
+    "buyers_30d": 29,
+    "volume_30d": 5.57,
+    "source": "submitted"
+  },
+  {
+    "slug": "curl-http-request",
+    "name": "Curl HTTP Request",
+    "category": "Data",
+    "base_url": "https://curl-http-request.underscoredone.com",
+    "buyers_30d": 29,
+    "volume_30d": 5.57,
+    "source": "submitted"
+  },
+  {
+    "slug": "bulk-dmarc-record-lookup",
+    "name": "Bulk DMARC Record Lookup",
+    "category": "Other",
+    "base_url": "https://dmarc-lookup.underscoredone.com",
+    "buyers_30d": 29,
+    "volume_30d": 5.57,
+    "source": "submitted"
+  },
+  {
+    "slug": "hyperliquid-prediction-markets-data-x402-atlas",
+    "name": "Hyperliquid Prediction Markets Data (x402 Atlas)",
+    "category": "Finance",
+    "base_url": "https://hyperliquid-predict.use.x402atlas.com",
+    "buyers_30d": 28,
+    "volume_30d": 0.27675,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "regimeshift-clearinghouse",
+    "name": "RegimeShift Clearinghouse",
+    "category": "Data",
+    "base_url": "https://regimeshift.xyz",
+    "buyers_30d": 28,
+    "volume_30d": 0.17,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "northeast-deal-intel",
+    "name": "Northeast Deal Intel",
+    "category": "Data",
+    "base_url": " https://api.northeastdealintel.com",
+    "buyers_30d": 27,
+    "volume_30d": 0.56,
+    "source": "submitted"
+  },
+  {
+    "slug": "base-usdc-lending-apy",
+    "name": "Base USDC lending APY",
+    "category": "Finance",
+    "base_url": "https://raptor-base-yields.vercel.app",
+    "buyers_30d": 27,
+    "volume_30d": 0.69,
+    "source": "submitted"
+  },
+  {
+    "slug": "dns-whois-domain-lookup",
+    "name": "DNS & WHOIS Domain Lookup",
+    "category": "Data",
+    "base_url": "https://dns.use.x402atlas.com",
+    "buyers_30d": 27,
+    "volume_30d": 0.5317500000000001,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "gedx402",
+    "name": "GEDX402",
+    "category": "AI",
+    "base_url": "https://embed.gedx402.com",
+    "buyers_30d": 27,
+    "volume_30d": 1.7166,
+    "source": "submitted"
+  },
+  {
+    "slug": "api-acre",
+    "name": "API Acre",
+    "category": "Data",
+    "base_url": "https://apiacre.com",
+    "buyers_30d": 26,
+    "volume_30d": 32.969,
+    "source": "submitted"
+  },
+  {
+    "slug": "suverse-pay",
+    "name": "SuVerse Pay",
+    "category": "Data",
+    "base_url": "https://proxy.suverse.io",
+    "buyers_30d": 26,
+    "volume_30d": 1.7014999999999998,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "coil-scanner-board",
+    "name": "Coil Scanner board",
+    "category": "Finance",
+    "base_url": "https://coil.trade",
+    "buyers_30d": 26,
+    "volume_30d": 3.977,
+    "source": "submitted"
+  },
+  {
+    "slug": "agenttoll",
+    "name": "AgentToll",
+    "category": "Data",
+    "base_url": "https://agenttoll.app",
+    "buyers_30d": 25,
+    "volume_30d": 0.677,
+    "source": "submitted"
+  },
+  {
+    "slug": "fetcher-sh-twitter-tiktok-instagram-web-data-apis",
+    "name": "fetcher.sh \u2014 Twitter, TikTok, Instagram & Web Data APIs",
+    "category": "Data",
+    "base_url": "https://fetcher.sh",
+    "buyers_30d": 24,
+    "volume_30d": 6.622,
+    "source": "submitted"
+  },
+  {
+    "slug": "stablefinance",
+    "name": "StableFinance",
+    "category": "Finance",
+    "base_url": "https://stablefinance.dev",
+    "buyers_30d": 24,
+    "volume_30d": 1.86,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "google-trends-seo-keyword-data",
+    "name": "Google Trends SEO Keyword Data",
+    "category": "Data",
+    "base_url": "https://google-trends.use.x402atlas.com",
+    "buyers_30d": 24,
+    "volume_30d": 68.02675,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "signalis",
+    "name": "Signalis",
+    "category": "Data",
+    "base_url": "https://api.signalis.dev",
+    "buyers_30d": 24,
+    "volume_30d": 1.4525,
+    "source": "submitted"
+  },
+  {
+    "slug": "orcatrace",
+    "name": "OrcaTrace",
+    "category": "Data",
+    "base_url": "https://api.orcatrace.dev",
+    "buyers_30d": 24,
+    "volume_30d": 1.4525,
+    "source": "submitted"
+  },
+  {
+    "slug": "moltalyzer",
+    "name": "Moltalyzer",
+    "category": "AI",
+    "base_url": "https://api.moltalyzer.xyz",
+    "buyers_30d": 24,
+    "volume_30d": 1.4525,
+    "source": "submitted"
+  },
+  {
+    "slug": "gitbeacon",
+    "name": "gitBeacon",
+    "category": "Data",
+    "base_url": "https://api.gitbeacon.dev",
+    "buyers_30d": 24,
+    "volume_30d": 1.4525,
+    "source": "submitted"
+  },
+  {
+    "slug": "minifetch",
+    "name": "Minifetch",
+    "category": "Data",
+    "base_url": "https://minifetch.com",
+    "buyers_30d": 24,
+    "volume_30d": 0.436,
+    "source": "submitted"
+  },
+  {
+    "slug": "council-of-ai",
+    "name": "Council of AI",
+    "category": "Verification",
+    "base_url": "https://councilof.ai",
+    "buyers_30d": 23,
+    "volume_30d": 0.23,
+    "source": "submitted"
+  },
+  {
+    "slug": "x402-dex-data-agent-utilities-uniswap-v4-hook-risk-api",
+    "name": "x402 DEX data, agent utilities & Uniswap v4 hook risk API",
+    "category": "Data",
+    "base_url": "https://x402.donnyautomation.com",
+    "buyers_30d": 23,
+    "volume_30d": 1.589,
+    "source": "submitted"
+  },
+  {
+    "slug": "osha-inspection-search-api",
+    "name": "OSHA Inspection Search API",
+    "category": "Data",
+    "base_url": "https://osha-search.krimskrams.xyz",
+    "buyers_30d": 23,
+    "volume_30d": 7.074,
+    "source": "submitted"
+  },
+  {
+    "slug": "robinx",
+    "name": "RobinX",
+    "category": "Data",
+    "base_url": "https://api.robinx.io",
+    "buyers_30d": 23,
+    "volume_30d": 44.71,
+    "source": "submitted"
+  },
+  {
+    "slug": "suverse-freight-load-position",
+    "name": "SuVerse Freight Load Position",
+    "category": "Data",
+    "base_url": "https://api.suverse.io",
+    "buyers_30d": 22,
+    "volume_30d": 0.7895,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "x402-signature-service",
+    "name": "x402-signature-service",
+    "category": "Infrastructure",
+    "base_url": "https://signx402.com",
+    "buyers_30d": 21,
+    "volume_30d": 0.1065,
+    "source": "submitted"
+  },
+  {
+    "slug": "places-local-business-search",
+    "name": "Places & Local Business Search",
+    "category": "Data",
+    "base_url": "https://places.use.x402atlas.com",
+    "buyers_30d": 21,
+    "volume_30d": 0.6767500000000001,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "apple-app-store-search-reviews-app-data",
+    "name": "Apple App Store Search, Reviews & App Data",
+    "category": "Data",
+    "base_url": "https://appstore.use.x402atlas.com",
+    "buyers_30d": 21,
+    "volume_30d": 0.6767500000000001,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "hyperliquid-account-intelligence",
+    "name": "Hyperliquid Account Intelligence",
+    "category": "Finance",
+    "base_url": "https://hyperliquid-accounts.use.x402atlas.com",
+    "buyers_30d": 21,
+    "volume_30d": 0.59675,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "defi-signals-api",
+    "name": "DeFi Signals API",
+    "category": "Data",
+    "base_url": "https://defi-signals.org",
+    "buyers_30d": 21,
+    "volume_30d": 0.107,
+    "source": "submitted"
+  },
+  {
+    "slug": "skim",
+    "name": "Skim",
+    "category": "Content",
+    "base_url": "https://skim402.com",
+    "buyers_30d": 21,
+    "volume_30d": 0.754,
+    "source": "submitted"
+  },
+  {
+    "slug": "x-twitter-media-downloader",
+    "name": "X (Twitter) Media Downloader",
+    "category": "Content",
+    "base_url": "https://xmedia.use.x402atlas.com",
+    "buyers_30d": 20,
+    "volume_30d": 0.14675,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "nsgoods-agent-trust-oracle",
+    "name": "nsgoods Agent Trust & Screening Oracle",
+    "category": "AI",
+    "base_url": "https://trust.nsgoods.org",
+    "buyers_30d": 20,
+    "volume_30d": 6.41,
+    "source": "submitted"
+  },
+  {
+    "slug": "messari",
+    "name": "Messari",
+    "category": "Data",
+    "base_url": "https://api.messari.io",
+    "buyers_30d": 20,
+    "volume_30d": 55.7,
+    "source": "submitted"
+  },
+  {
+    "slug": "gblin-protocol",
+    "name": "GBLIN Protocol",
+    "category": "Finance",
+    "base_url": "https://gblin.digital",
+    "buyers_30d": 19,
+    "volume_30d": 0.409,
+    "source": "submitted"
+  },
+  {
+    "slug": "japan-transit-api",
+    "name": "Japan Transit API",
+    "category": "Data",
+    "base_url": "https://transit.agentic-jp.com",
+    "buyers_30d": 19,
+    "volume_30d": 0.08733333333333333,
+    "source": "submitted"
+  },
+  {
+    "slug": "stablebrowser",
+    "name": "StableBrowser",
+    "category": "AI",
+    "base_url": "https://www.stablebrowser.dev",
+    "buyers_30d": 19,
+    "volume_30d": 11,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "japan-address-api",
+    "name": "Japan Address API",
+    "category": "Data",
+    "base_url": "https://address.agentic-jp.com",
+    "buyers_30d": 19,
+    "volume_30d": 0.08733333333333333,
+    "source": "submitted"
+  },
+  {
+    "slug": "japan-furigana-api",
+    "name": "Japan Furigana API",
+    "category": "AI",
+    "base_url": "https://furigana.agentic-jp.com",
+    "buyers_30d": 19,
+    "volume_30d": 0.08733333333333333,
+    "source": "submitted"
+  },
+  {
+    "slug": "dripmetrics-ai",
+    "name": "DripMetrics AI",
+    "category": "Data",
+    "base_url": "https://api.dripmetrics.ai",
+    "buyers_30d": 18,
+    "volume_30d": 16.68,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "sean-claude-van-damme-s-general-store",
+    "name": "scvd.store \u2014 evidence observatory for the x402 economy",
+    "category": "Verification",
+    "base_url": "https://scvd.store",
+    "buyers_30d": 17,
+    "volume_30d": 1011.258,
+    "source": "submitted"
+  },
+  {
+    "slug": "url-unwrap-redirect-tracer",
+    "name": "URL Unwrap / Redirect Tracer",
+    "category": "Data",
+    "base_url": "https://unwrap.use.x402atlas.com",
+    "buyers_30d": 17,
+    "volume_30d": 0.18775000000000003,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "wikipedia-article-summary-mrtoqzsc-0",
+    "name": "Wikipedia Article Summary",
+    "category": "Data",
+    "base_url": "https://wiki.use.x402atlas.com",
+    "buyers_30d": 17,
+    "volume_30d": 0.12175,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "http-security-headers-check",
+    "name": "HTTP Security Headers Check",
+    "category": "Data",
+    "base_url": "https://headers.use.x402atlas.com",
+    "buyers_30d": 17,
+    "volume_30d": 0.24675000000000002,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "forgemesh-utility-apis",
+    "name": "ForgeMesh Utility APIs",
+    "category": "Data",
+    "base_url": "https://x402.forgemesh.io",
+    "buyers_30d": 17,
+    "volume_30d": 1.011,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "stock-trends-market-intelligence",
+    "name": "Stock Trends Market Intelligence",
+    "category": "Finance",
+    "base_url": "https://api.stocktrends.com",
+    "buyers_30d": 17,
+    "volume_30d": 83.324,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "hirescrape",
+    "name": "Hirescrape",
+    "category": "Data",
+    "base_url": "https://hirescrape.com",
+    "buyers_30d": 17,
+    "volume_30d": 6.26215,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "agentservices",
+    "name": "AgentServices",
+    "category": "Data",
+    "base_url": "https://agentservices.to",
+    "buyers_30d": 17,
+    "volume_30d": 1.957,
+    "source": "submitted"
+  },
+  {
+    "slug": "stelar-digital",
+    "name": "Stelar Digital",
+    "category": "Data",
+    "base_url": "https://api.stelardigital.com",
+    "buyers_30d": 16,
+    "volume_30d": 3.85,
+    "source": "submitted"
+  },
+  {
+    "slug": "email-auth-check-spf-dmarc-dkim",
+    "name": "Email Auth Check (SPF/DMARC/DKIM)",
+    "category": "Data",
+    "base_url": "https://email-auth.use.x402atlas.com",
+    "buyers_30d": 16,
+    "volume_30d": 0.22675,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "forgemesh-x402-ads",
+    "name": "ForgeMesh x402 Ads",
+    "category": "AI",
+    "base_url": "https://ads.forgemesh.io",
+    "buyers_30d": 16,
+    "volume_30d": 0.26,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "starchild-relay-all-in-one-reputable-data-source",
+    "name": "Starchild Relay \u2014 All-in-one reputable data source",
+    "category": "AI",
+    "base_url": "https://community.iamstarchild.com/5108-data-api-proxy",
+    "buyers_30d": 15,
+    "volume_30d": 0.079,
+    "source": "submitted"
+  },
+  {
+    "slug": "connskill-growth-services",
+    "name": "CONNSKILL Growth Services",
+    "category": "Data",
+    "base_url": "https://agent.connskill.com",
+    "buyers_30d": 15,
+    "volume_30d": 15.48,
+    "source": "submitted"
+  },
+  {
+    "slug": "atlas-market-data",
+    "name": "Atlas Market Data",
+    "category": "Finance",
+    "base_url": "https://marketdata.use.x402atlas.com",
+    "buyers_30d": 15,
+    "volume_30d": 1.11175,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "telesint",
+    "name": "TeleSint",
+    "category": "Data",
+    "base_url": "https://telesint-api.onrender.com",
+    "buyers_30d": 15,
+    "volume_30d": 0.94,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "polymarket-liquidity-authenticity-uma-resolution-risk",
+    "name": "Polymarket Liquidity Authenticity + UMA Resolution-Risk",
+    "category": "Data",
+    "base_url": "https://api.x402intel.uk",
+    "buyers_30d": 15,
+    "volume_30d": 5.95,
+    "source": "submitted"
+  },
+  {
+    "slug": "straits-live-premium-data",
+    "name": "Straits.live premium data",
+    "category": "Data",
+    "base_url": "https://straits.live",
+    "buyers_30d": 15,
+    "volume_30d": 0.98,
+    "source": "submitted"
+  },
+  {
+    "slug": "biotech-catalyst-sentinel",
+    "name": "Biotech Catalyst Sentinel",
+    "category": "Data",
+    "base_url": "https://api.biotechcatalystsentinel.com",
+    "buyers_30d": 15,
+    "volume_30d": 1.4300000000000002,
+    "source": "submitted"
+  },
+  {
+    "slug": "sentinel-compliance-intelligence",
+    "name": "SENTINEL Compliance Intelligence",
+    "category": "Finance",
+    "base_url": "https://mru-oracle.com",
+    "buyers_30d": 15,
+    "volume_30d": 0.161,
+    "source": "submitted"
+  },
+  {
+    "slug": "glianaai",
+    "name": "GlianaAI",
+    "category": "AI",
+    "base_url": "https://api.glianalabs.com",
+    "buyers_30d": 14,
+    "volume_30d": 89.51879,
+    "source": "submitted"
+  },
+  {
+    "slug": "agentpay",
+    "name": "AgentPay",
+    "category": "Data",
+    "base_url": "https://agentpay.tools",
+    "buyers_30d": 14,
+    "volume_30d": 0.5,
+    "source": "submitted"
+  },
+  {
+    "slug": "official-source-evidence",
+    "name": "Official Source Evidence",
+    "category": "Data",
+    "base_url": "https://evidence.regulavita.com",
+    "buyers_30d": 14,
+    "volume_30d": 1.67,
+    "source": "submitted"
+  },
+  {
+    "slug": "token-safety-check-x402",
+    "name": "Token Safety Check (x402)",
+    "category": "Blockchain",
+    "base_url": "https://x402.professorsausages.com",
+    "buyers_30d": 14,
+    "volume_30d": 0.42,
+    "source": "submitted"
+  },
+  {
+    "slug": "toon-haus-financial-data-api",
+    "name": "toon.haus Financial Data API",
+    "category": "Finance",
+    "base_url": "https://finance.toon.haus",
+    "buyers_30d": 14,
+    "volume_30d": 0.289,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "creative-tim-shadcn-ui-blocks",
+    "name": "Creative Tim shadcn/ui Blocks",
+    "category": "Content",
+    "base_url": "https://x402.creative-tim.com",
+    "buyers_30d": 14,
+    "volume_30d": 30.23,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "fabler-labs-x402-storefront",
+    "name": "Fabler Labs x402 Storefront",
+    "category": "Other",
+    "base_url": "https://x402.fablerlabs.com",
+    "buyers_30d": 14,
+    "volume_30d": 0.067,
+    "source": "submitted"
+  },
+  {
+    "slug": "proofivy-library-cryptoslate-the-phoblographer",
+    "name": "Proofivy Library (CryptoSlate + The Phoblographer)",
+    "category": "Content",
+    "base_url": "https://library.proofivy.com",
+    "buyers_30d": 13,
+    "volume_30d": 1.54,
+    "source": "submitted"
+  },
+  {
+    "slug": "sniperx-x402",
+    "name": "SniperX\u2022x402",
+    "category": "Data",
+    "base_url": "https://x402.sniperx.fun/",
+    "buyers_30d": 13,
+    "volume_30d": 451.03,
+    "source": "submitted"
+  },
+  {
+    "slug": "stacktree",
+    "name": "Stacktree",
+    "category": "Content",
+    "base_url": "https://api.stacktr.ee",
+    "buyers_30d": 13,
+    "volume_30d": 59.02,
+    "source": "submitted"
+  },
+  {
+    "slug": "bykaranteli-crypto-derivatives-data",
+    "name": "ByKaranteli Crypto Derivatives Data",
+    "category": "Data",
+    "base_url": "https://bykaranteli.com",
+    "buyers_30d": 13,
+    "volume_30d": 0.125,
+    "source": "submitted"
+  },
+  {
+    "slug": "dokimo-verify-api",
+    "name": "Dokimo Verify API",
+    "category": "Verification",
+    "base_url": "https://dokimo.augaster.com",
+    "buyers_30d": 13,
+    "volume_30d": 0.64,
+    "source": "submitted"
+  },
+  {
+    "slug": "arch-tools",
+    "name": "Arch Tools",
+    "category": "AI",
+    "base_url": "https://archtools.dev",
+    "buyers_30d": 13,
+    "volume_30d": 1.635,
+    "source": "submitted"
+  },
+  {
+    "slug": "minia2a-agent-infrastructure-intelligence",
+    "name": "minia2a \u2014 Agent Infrastructure & Intelligence",
+    "category": "AI",
+    "base_url": "https://minia2a.uk",
+    "buyers_30d": 13,
+    "volume_30d": 31.5977,
+    "source": "submitted"
+  },
+  {
+    "slug": "gdelt-news-search-and-timeline",
+    "name": "GDELT News Search and Timeline",
+    "category": "Data",
+    "base_url": "https://gdelt.use.x402atlas.com",
+    "buyers_30d": 13,
+    "volume_30d": 0.15175,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "forgemesh-anomaly-tracker",
+    "name": "ForgeMesh Anomaly Tracker",
+    "category": "Blockchain",
+    "base_url": "https://anomaly.forgemesh.io",
+    "buyers_30d": 13,
+    "volume_30d": 0.32,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "coinopai-kronos-market-intelligence",
+    "name": "CoinOpAI Kronos Market Intelligence",
+    "category": "Finance",
+    "base_url": "https://x402.coinopai.com",
+    "buyers_30d": 13,
+    "volume_30d": 0.49,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "mdapi",
+    "name": "mdapi",
+    "category": "Data",
+    "base_url": "https://md.fastdb.in",
+    "buyers_30d": 13,
+    "volume_30d": 0.981,
+    "source": "submitted"
+  },
+  {
+    "slug": "sociologic-rng",
+    "name": "SocioLogic RNG",
+    "category": "Data",
+    "base_url": "https://rng.sociologic.ai",
+    "buyers_30d": 13,
+    "volume_30d": 9.05,
+    "source": "submitted"
+  },
+  {
+    "slug": "forgemesh-library",
+    "name": "ForgeMesh Library",
+    "category": "Content",
+    "base_url": "https://library.forgemesh.io",
+    "buyers_30d": 12,
+    "volume_30d": 0.119,
+    "source": "submitted"
+  },
+  {
+    "slug": "thirdmade-shelf",
+    "name": "ThirdMade Shelf",
+    "category": "Data",
+    "base_url": "https://shelf.thirdmade.net",
+    "buyers_30d": 12,
+    "volume_30d": 0.535,
+    "source": "submitted"
+  },
+  {
+    "slug": "xfuel",
+    "name": "XFuel",
+    "category": "AI",
+    "base_url": "https://api.xfuel.app",
+    "buyers_30d": 12,
+    "volume_30d": 0.652,
+    "source": "submitted"
+  },
+  {
+    "slug": "whaletape",
+    "name": "WhaleTape",
+    "category": "Data",
+    "base_url": "https://whaletape.xyz",
+    "buyers_30d": 12,
+    "volume_30d": 36.122,
+    "source": "submitted"
+  },
+  {
+    "slug": "ot-intel-api",
+    "name": "OT Intel API",
+    "category": "Data",
+    "base_url": "https://ot-intel-api.onrender.com",
+    "buyers_30d": 12,
+    "volume_30d": 1.68,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "tensorfeed",
+    "name": "TensorFeed",
+    "category": "Data",
+    "base_url": "https://tensorfeed.ai",
+    "buyers_30d": 12,
+    "volume_30d": 0.66,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "contract-guard-api",
+    "name": "contract-guard API",
+    "category": "Blockchain",
+    "base_url": "https://eltociear-contract-guard.hf.space",
+    "buyers_30d": 12,
+    "volume_30d": 0.451,
+    "source": "submitted"
+  },
+  {
+    "slug": "relaystation",
+    "name": "Relaystation",
+    "category": "Compute",
+    "base_url": "https://api.relaystation.ai",
+    "buyers_30d": 12,
+    "volume_30d": 7.03,
+    "source": "submitted"
+  },
+  {
+    "slug": "zerion",
+    "name": "Zerion",
+    "category": "Data",
+    "base_url": "https://api.zerion.io",
+    "buyers_30d": 12,
+    "volume_30d": 5.05,
+    "source": "submitted"
+  },
+  {
+    "slug": "21millionpixels-art",
+    "name": "21millionpixels.art",
+    "category": "Content",
+    "base_url": "https://21millionpixels.art",
+    "buyers_30d": 11,
+    "volume_30d": 79.877,
+    "source": "submitted"
+  },
+  {
+    "slug": "fiatdock-marketplace",
+    "name": "FiatDock Marketplace",
+    "category": "Blockchain",
+    "base_url": "https://fiatdock.com",
+    "buyers_30d": 11,
+    "volume_30d": 0.222,
+    "source": "submitted"
+  },
+  {
+    "slug": "lotus-network-api",
+    "name": "Lotus Network API",
+    "category": "Data",
+    "base_url": "https://lotusnetworkapi.com",
+    "buyers_30d": 11,
+    "volume_30d": 0.194,
+    "source": "submitted"
+  },
+  {
+    "slug": "dwelldata-multifamily-real-estate-deals-feed",
+    "name": "DwellData \u2014 Multifamily Real Estate Deals Feed",
+    "category": "Data",
+    "base_url": "https://dwelldata.io",
+    "buyers_30d": 11,
+    "volume_30d": 0.29,
+    "source": "submitted"
+  },
+  {
+    "slug": "verza",
+    "name": "verza",
+    "category": "Verification",
+    "base_url": "https://verza.dev",
+    "buyers_30d": 11,
+    "volume_30d": 0.3,
+    "source": "submitted"
+  },
+  {
+    "slug": "aegis-ms4i848l-0",
+    "name": "Aegis",
+    "category": "Verification",
+    "base_url": "https://aegis.borisinc.com",
+    "buyers_30d": 11,
+    "volume_30d": 0.244,
+    "source": "submitted"
+  },
+  {
+    "slug": "safety-incidents-osha-severe-injury-api",
+    "name": "Safety Incidents \u2014 OSHA Severe-Injury API",
+    "category": "Data",
+    "base_url": "https://safetyincidents.org",
+    "buyers_30d": 11,
+    "volume_30d": 0.13,
+    "source": "submitted"
+  },
+  {
+    "slug": "forgemesh-x402-router",
+    "name": "ForgeMesh x402 Router",
+    "category": "AI",
+    "base_url": "https://router.forgemesh.io",
+    "buyers_30d": 11,
+    "volume_30d": 0.011,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "forgemesh-travel-agent",
+    "name": "ForgeMesh Travel Agent",
+    "category": "Data",
+    "base_url": "https://travel-agent.forgemesh.io",
+    "buyers_30d": 11,
+    "volume_30d": 0.15,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "concierge-agent",
+    "name": "Concierge Agent",
+    "category": "AI",
+    "base_url": "https://conc-exe.xyz",
+    "buyers_30d": 11,
+    "volume_30d": 0.71,
+    "source": "submitted"
+  },
+  {
+    "slug": "zaref",
+    "name": "zaref",
+    "category": "Data",
+    "base_url": "https://zaref.dev",
+    "buyers_30d": 11,
+    "volume_30d": 0.3,
+    "source": "submitted"
+  },
+  {
+    "slug": "econdash",
+    "name": "EconDash",
+    "category": "Data",
+    "base_url": "https://econdash.org/api/v1/m2m",
+    "buyers_30d": 11,
+    "volume_30d": 0.56,
+    "source": "submitted"
+  },
+  {
+    "slug": "agentmail",
+    "name": "AgentMail",
+    "category": "AI",
+    "base_url": "https://x402.api.agentmail.to",
+    "buyers_30d": 11,
+    "volume_30d": 76.03,
+    "source": "submitted"
+  },
+  {
+    "slug": "maha-context-compiler-and-deep-context-evaluation",
+    "name": "Maha Context Compiler and Deep Context Evaluation",
+    "category": "AI",
+    "base_url": "https://www.mahastrategies.com",
+    "buyers_30d": 10,
+    "volume_30d": 1.7025,
+    "source": "submitted"
+  },
+  {
+    "slug": "crypto-etf-sentinel",
+    "name": "Crypto ETF Sentinel",
+    "category": "Data",
+    "base_url": "https://api.cryptoetfsentinel.com",
+    "buyers_30d": 10,
+    "volume_30d": 13.81,
+    "source": "submitted"
+  },
+  {
+    "slug": "particle-pro",
+    "name": "Particle Pro",
+    "category": "Data",
+    "base_url": "https://api.particle.pro",
+    "buyers_30d": 10,
+    "volume_30d": 6.65,
+    "source": "submitted"
+  },
+  {
+    "slug": "coinopai-imagegen",
+    "name": "CoinopAI ImageGen",
+    "category": "AI",
+    "base_url": "https://imagegen.coinopai.com",
+    "buyers_30d": 10,
+    "volume_30d": 9.358,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "agent-web-reader-x402",
+    "name": "Agent Web Reader (x402)",
+    "category": "Data",
+    "base_url": "https://x402.charliemorrison.dev",
+    "buyers_30d": 10,
+    "volume_30d": 0.061,
+    "source": "submitted"
+  },
+  {
+    "slug": "openpay",
+    "name": "OpenPay",
+    "category": "Data",
+    "base_url": "https://open-pay.jp",
+    "buyers_30d": 9,
+    "volume_30d": 0.299,
+    "source": "submitted"
+  },
+  {
+    "slug": "forgemesh-voice",
+    "name": "ForgeMesh Voice",
+    "category": "AI",
+    "base_url": "https://voice.forgemesh.io",
+    "buyers_30d": 9,
+    "volume_30d": 0.217,
+    "source": "submitted"
+  },
+  {
+    "slug": "would-pay-again-ad-slot-booking",
+    "name": "Would Pay Again \u2014 Ad Slot Booking",
+    "category": "Content",
+    "base_url": "https://wouldpayagain.com",
+    "buyers_30d": 9,
+    "volume_30d": 0.323,
+    "source": "submitted"
+  },
+  {
+    "slug": "fueltax-ifta-rates-api",
+    "name": "FuelTax IFTA Rates API",
+    "category": "Data",
+    "base_url": "https://api.freestylevault.com",
+    "buyers_30d": 9,
+    "volume_30d": 0.065,
+    "source": "submitted"
+  },
+  {
+    "slug": "hermes-commerce-dach-x402-compliance",
+    "name": "Hermes Commerce \u2014 DACH x402 compliance",
+    "category": "Other",
+    "base_url": "https://agent.kihustle.tech",
+    "buyers_30d": 9,
+    "volume_30d": 0.2,
+    "source": "submitted"
+  },
+  {
+    "slug": "asiaref",
+    "name": "asiaref",
+    "category": "Data",
+    "base_url": "https://asiaref.dev",
+    "buyers_30d": 9,
+    "volume_30d": 0.09,
+    "source": "submitted"
+  },
+  {
+    "slug": "forgemesh-crypto-signals",
+    "name": "ForgeMesh Crypto Signals",
+    "category": "Finance",
+    "base_url": "https://crypto.forgemesh.io",
+    "buyers_30d": 9,
+    "volume_30d": 0.47,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "forgemesh-disruption-intelligence",
+    "name": "ForgeMesh Disruption Intelligence",
+    "category": "Data",
+    "base_url": "https://disruption.forgemesh.io",
+    "buyers_30d": 9,
+    "volume_30d": 0.58,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "qonoro-intelligence-api",
+    "name": "Qonoro Intelligence API",
+    "category": "Data",
+    "base_url": "https://api.qonoro.ai",
+    "buyers_30d": 9,
+    "volume_30d": 1.09,
+    "source": "submitted"
+  },
+  {
+    "slug": "zfinia-machine-economy-intelligence",
+    "name": "zFinia Machine Economy Intelligence",
+    "category": "Data",
+    "base_url": "https://api.zfinia.com",
+    "buyers_30d": 8,
+    "volume_30d": 0.338,
+    "source": "submitted"
+  },
+  {
+    "slug": "wallettriage",
+    "name": "WalletTriage",
+    "category": "Other",
+    "base_url": "https://api.wallettriage.com",
+    "buyers_30d": 8,
+    "volume_30d": 0.23,
+    "source": "submitted"
+  },
+  {
+    "slug": "penny402",
+    "name": "penny402",
+    "category": "Content",
+    "base_url": "https://penny402.fun",
+    "buyers_30d": 8,
+    "volume_30d": 0.095,
+    "source": "submitted"
+  },
+  {
+    "slug": "767-2676-com-popcorn",
+    "name": "767-2676.com - POPCORN",
+    "category": "Verification",
+    "base_url": "https://767-2676.com",
+    "buyers_30d": 8,
+    "volume_30d": 0.064,
+    "source": "submitted"
+  },
+  {
+    "slug": "ni-biashara-africa-fx-services-for-agents",
+    "name": "Ni Biashara \u2014 Africa FX & services for agents",
+    "category": "Data",
+    "base_url": "https://agents.nibiashara.biz",
+    "buyers_30d": 8,
+    "volume_30d": 4.53,
+    "source": "submitted"
+  },
+  {
+    "slug": "acoda",
+    "name": "ACODA",
+    "category": "Data",
+    "base_url": "https://acoda.xyz",
+    "buyers_30d": 8,
+    "volume_30d": 0.3,
+    "source": "submitted"
+  },
+  {
+    "slug": "agentfund-us-economic-sec-on-chain-data",
+    "name": "AgentFund US Economic, SEC & On-Chain Data",
+    "category": "Data",
+    "base_url": "https://x402.agentfund.net",
+    "buyers_30d": 8,
+    "volume_30d": 0.259,
+    "source": "submitted"
+  },
+  {
+    "slug": "busker",
+    "name": "Busker",
+    "category": "Content",
+    "base_url": "https://workbot1.oddsys.org",
+    "buyers_30d": 8,
+    "volume_30d": 0.039,
+    "source": "submitted"
+  },
+  {
+    "slug": "agent-reader",
+    "name": "agent-reader",
+    "category": "Data",
+    "base_url": "https://x402.fenixfoundry.com",
+    "buyers_30d": 8,
+    "volume_30d": 0.174,
+    "source": "submitted"
+  },
+  {
+    "slug": "losbeto-cross-asset-market-intelligence",
+    "name": "Losbeto \u2014 LLM Gateway & Market Intelligence",
+    "category": "Finance",
+    "base_url": "https://api.losbeto.xyz",
+    "buyers_30d": 8,
+    "volume_30d": 63.424,
+    "source": "submitted"
+  },
+  {
+    "slug": "apitoll-facebook-ad-library",
+    "name": "ApiToll Facebook Ad Library",
+    "category": "Data",
+    "base_url": "https://ads.apitoll.cloud",
+    "buyers_30d": 8,
+    "volume_30d": 0.39,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "ip402-xyz",
+    "name": "ip402.xyz",
+    "category": "Data",
+    "base_url": "https://ip402.xyz",
+    "buyers_30d": 8,
+    "volume_30d": 0.16,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "dataforagents",
+    "name": "DataForAgents",
+    "category": "Data",
+    "base_url": "https://dataforagents.net",
+    "buyers_30d": 8,
+    "volume_30d": 0.27,
+    "source": "submitted"
+  },
+  {
+    "slug": "fia-signals",
+    "name": "Fia Signals",
+    "category": "Finance",
+    "base_url": "https://x402.fiasignals.com",
+    "buyers_30d": 8,
+    "volume_30d": 0.26,
+    "source": "submitted"
+  },
+  {
+    "slug": "the-clinic",
+    "name": "The Clinic",
+    "category": "Other",
+    "base_url": "https://clinic.sapthumbprint.com",
+    "buyers_30d": 7,
+    "volume_30d": 3.025,
+    "source": "submitted"
+  },
+  {
+    "slug": "profitcollector-utility-node",
+    "name": "ProfitCollector Utility Node",
+    "category": "Data",
+    "base_url": "https://api.bakhour.ca",
+    "buyers_30d": 7,
+    "volume_30d": 2.246,
+    "source": "submitted"
+  },
+  {
+    "slug": "tariffmonkee",
+    "name": "TariffMonkee",
+    "category": "Data",
+    "base_url": "https://tariffmonkee.com",
+    "buyers_30d": 7,
+    "volume_30d": 6.727,
+    "source": "submitted"
+  },
+  {
+    "slug": "10x402",
+    "name": "10x402",
+    "category": "Verification",
+    "base_url": "https://10x402.com",
+    "buyers_30d": 7,
+    "volume_30d": 2.499,
+    "source": "submitted"
+  },
+  {
+    "slug": "fetchx402",
+    "name": "fetchx402",
+    "category": "Data",
+    "base_url": "https://api.fetchx402.com",
+    "buyers_30d": 7,
+    "volume_30d": 23.922,
+    "source": "submitted"
+  },
+  {
+    "slug": "lemon-toolshed",
+    "name": "Lemon Toolshed",
+    "category": "Data",
+    "base_url": "https://toolshed.lemon-agent.dev",
+    "buyers_30d": 7,
+    "volume_30d": 0.096,
+    "source": "submitted"
+  },
+  {
+    "slug": "insider-radar-paper-trading-lab-telemetry",
+    "name": "Insider Radar \u2014 Paper-Trading Lab Telemetry",
+    "category": "Data",
+    "base_url": "https://whodeployed.wtf",
+    "buyers_30d": 7,
+    "volume_30d": 0.7,
+    "source": "submitted"
+  },
+  {
+    "slug": "toolrail",
+    "name": "Toolrail",
+    "category": "Data",
+    "base_url": "https://toolrail.dev",
+    "buyers_30d": 7,
+    "volume_30d": 0.056,
+    "source": "submitted"
+  },
+  {
+    "slug": "stratalize",
+    "name": "Stratalize",
+    "category": "Finance",
+    "base_url": "https://www.stratalize.com",
+    "buyers_30d": 7,
+    "volume_30d": 0.46,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "dripstack",
+    "name": "DripStack",
+    "category": "Finance",
+    "base_url": "https://dripstack.xyz",
+    "buyers_30d": 7,
+    "volume_30d": 15.32,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "querylines",
+    "name": "QueryLines",
+    "category": "Data",
+    "base_url": "https://api.querylines.com",
+    "buyers_30d": 7,
+    "volume_30d": 0.1,
+    "source": "submitted"
+  },
+  {
+    "slug": "scry-wallet-intelligence",
+    "name": "Scry Wallet Intelligence",
+    "category": "Data",
+    "base_url": "https://scry.solanahub.de",
+    "buyers_30d": 6,
+    "volume_30d": 0.466,
+    "source": "submitted"
+  },
+  {
+    "slug": "agentwork-web-evidence",
+    "name": "AgentWork Web Evidence",
+    "category": "Data",
+    "base_url": "https://api.agentwork.run",
+    "buyers_30d": 6,
+    "volume_30d": 0.525,
+    "source": "submitted"
+  },
+  {
+    "slug": "agentbit",
+    "name": "AgentBIT",
+    "category": "Data",
+    "base_url": "https://agentbit.app",
+    "buyers_30d": 6,
+    "volume_30d": 3.1235,
+    "source": "submitted"
+  },
+  {
+    "slug": "delvorn-asset-test-fe2b3590",
+    "name": "Delvorn ASSET-TEST-FE2B3590",
+    "category": "Verification",
+    "base_url": "https://delvorn.site",
+    "buyers_30d": 6,
+    "volume_30d": 1.35,
+    "source": "submitted"
+  },
+  {
+    "slug": "premium-rewards-data-gets",
+    "name": "Premium Rewards data GETs",
+    "category": "Data",
+    "base_url": "https://api.premiumrewards.vip",
+    "buyers_30d": 6,
+    "volume_30d": 0.102,
+    "source": "submitted"
+  },
+  {
+    "slug": "data-quality-gate",
+    "name": "Data Quality Gate",
+    "category": "Verification",
+    "base_url": "https://www.aidatatools.dev/api",
+    "buyers_30d": 6,
+    "volume_30d": 0.27,
+    "source": "submitted"
+  },
+  {
+    "slug": "cloud-world-model",
+    "name": "Cloud World Model",
+    "category": "Compute",
+    "base_url": "https://www.cloudworldmodel.ai",
+    "buyers_30d": 6,
+    "volume_30d": 1.008,
+    "source": "submitted"
+  },
+  {
+    "slug": "gentech-labs-x402-gateway",
+    "name": "GenTech Labs x402 Gateway",
+    "category": "Blockchain",
+    "base_url": "https://api.gentechlabs.net",
+    "buyers_30d": 6,
+    "volume_30d": 0.41500000000000004,
+    "source": "submitted"
+  },
+  {
+    "slug": "hexscan",
+    "name": "HexScan",
+    "category": "Verification",
+    "base_url": "https://hexscan.xyz",
+    "buyers_30d": 6,
+    "volume_30d": 0.306,
+    "source": "submitted"
+  },
+  {
+    "slug": "apitoll-reddit-scraper",
+    "name": "ApiToll Reddit Scraper",
+    "category": "Data",
+    "base_url": "https://reddit.apitoll.cloud",
+    "buyers_30d": 6,
+    "volume_30d": 0.36,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "aubrai-x402-api",
+    "name": "Aubrai x402 API",
+    "category": "AI",
+    "base_url": "https://x402-api.aubr.ai",
+    "buyers_30d": 6,
+    "volume_30d": 41.51,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "wdh-sh-qr-codes",
+    "name": "WDH.sh \u2014 QR Codes",
+    "category": "Other",
+    "base_url": "https://qr.wdh.sh",
+    "buyers_30d": 6,
+    "volume_30d": 1.105,
+    "source": "submitted"
+  },
+  {
+    "slug": "gloria-ai",
+    "name": "Gloria AI",
+    "category": "Data",
+    "base_url": "https://api.itsgloria.ai",
+    "buyers_30d": 6,
+    "volume_30d": 1.487,
+    "source": "submitted"
+  },
+  {
+    "slug": "url2md",
+    "name": "url2md",
+    "category": "Data",
+    "base_url": "https://url2md.io",
+    "buyers_30d": 5,
+    "volume_30d": 1.923875,
+    "source": "submitted"
+  },
+  {
+    "slug": "sharvora",
+    "name": "Sharvora",
+    "category": "Verification",
+    "base_url": "https://sharvora.com",
+    "buyers_30d": 5,
+    "volume_30d": 0.005,
+    "source": "submitted"
+  },
+  {
+    "slug": "humanmirror",
+    "name": "HumanMirror",
+    "category": "AI",
+    "base_url": "https://humanmirror.fr",
+    "buyers_30d": 5,
+    "volume_30d": 0.05,
+    "source": "submitted"
+  },
+  {
+    "slug": "sendcheck",
+    "name": "SendCheck",
+    "category": "Verification",
+    "base_url": "https://api.pennyforge.org",
+    "buyers_30d": 5,
+    "volume_30d": 0.18,
+    "source": "submitted"
+  },
+  {
+    "slug": "automaton-colony-flash-audit",
+    "name": "Automaton Colony Flash Audit",
+    "category": "Verification",
+    "base_url": "https://automatoncolony.xyz",
+    "buyers_30d": 5,
+    "volume_30d": 7.9462,
+    "source": "submitted"
+  },
+  {
+    "slug": "agentum-apis-brasil-cnpj-cep-taxas",
+    "name": "AGENTUM \u2014 APIs Brasil (CNPJ, CEP, Taxas)",
+    "category": "Data",
+    "base_url": "https://agentum.lat",
+    "buyers_30d": 5,
+    "volume_30d": 0.5,
+    "source": "submitted"
+  },
+  {
+    "slug": "the-402-wall",
+    "name": "The 402 Wall",
+    "category": "Content",
+    "base_url": "https://404humans.xyz",
+    "buyers_30d": 5,
+    "volume_30d": 16,
+    "source": "submitted"
+  },
+  {
+    "slug": "ukintel-uk",
+    "name": "ukintel.uk",
+    "category": "Data",
+    "base_url": "https://api.ukintel.uk",
+    "buyers_30d": 5,
+    "volume_30d": 6.68,
+    "source": "submitted"
+  },
+  {
+    "slug": "contextiq",
+    "name": "ContextIQ",
+    "category": "AI",
+    "base_url": "https://contextiq.trango-compute.com",
+    "buyers_30d": 5,
+    "volume_30d": 1.32,
+    "source": "submitted"
+  },
+  {
+    "slug": "402signal",
+    "name": "402Signal",
+    "category": "Data",
+    "base_url": "https://402signal.com/",
+    "buyers_30d": 5,
+    "volume_30d": 2.163,
+    "source": "submitted"
+  },
+  {
+    "slug": "spoolis",
+    "name": "Spoolis",
+    "category": "Verification",
+    "base_url": "https://spoolis.com",
+    "buyers_30d": 5,
+    "volume_30d": 5.054620000000001,
+    "source": "submitted"
+  },
+  {
+    "slug": "bnm-data-shop",
+    "name": "BNM Data Shop",
+    "category": "Data",
+    "base_url": "https://ticks.bnm.farm",
+    "buyers_30d": 5,
+    "volume_30d": 0.19,
+    "source": "submitted"
+  },
+  {
+    "slug": "trustfetch",
+    "name": "TrustFetch",
+    "category": "Verification",
+    "base_url": "https://trustfetch.duckdns.org",
+    "buyers_30d": 5,
+    "volume_30d": 0.06,
+    "source": "submitted"
+  },
+  {
+    "slug": "trading-strategy-data",
+    "name": "Trading Strategy Data",
+    "category": "Finance",
+    "base_url": "https://strategysignals.duckdns.org",
+    "buyers_30d": 5,
+    "volume_30d": 0.06,
+    "source": "submitted"
+  },
+  {
+    "slug": "token-risk-ms0hezwz-0",
+    "name": "token-risk",
+    "category": "Data",
+    "base_url": "https://token-risk.com",
+    "buyers_30d": 5,
+    "volume_30d": 0.11,
+    "source": "submitted"
+  },
+  {
+    "slug": "image-optimizer-webp-converter",
+    "name": "Image Optimizer & WebP Converter",
+    "category": "Compute",
+    "base_url": "https://imgopt.use.x402atlas.com",
+    "buyers_30d": 5,
+    "volume_30d": 0.05675,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "forgemesh-fare-intelligence",
+    "name": "ForgeMesh Fare Intelligence",
+    "category": "Data",
+    "base_url": "https://travel.forgemesh.io",
+    "buyers_30d": 5,
+    "volume_30d": 0.403,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "miroshark",
+    "name": "MiroShark",
+    "category": "AI",
+    "base_url": "https://x402.miroshark.xyz",
+    "buyers_30d": 5,
+    "volume_30d": 11,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "atelier-ai-agent-marketplace",
+    "name": "Atelier AI Agent Marketplace",
+    "category": "AI",
+    "base_url": "https://api.useatelier.ai",
+    "buyers_30d": 5,
+    "volume_30d": 2.321,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "neurodynamic-audio",
+    "name": "NeuroDynamic Audio",
+    "category": "AI",
+    "base_url": "https://api.neurodynamic.tech",
+    "buyers_30d": 4,
+    "volume_30d": 0.275,
+    "source": "submitted"
+  },
+  {
+    "slug": "phion-agent-trust",
+    "name": "PHION Agent Trust",
+    "category": "Verification",
+    "base_url": "https://phion.systems",
+    "buyers_30d": 4,
+    "volume_30d": 0.427,
+    "source": "submitted"
+  },
+  {
+    "slug": "forgemesh-x402-notary",
+    "name": "ForgeMesh x402 Notary",
+    "category": "Verification",
+    "base_url": "https://notary.forgemesh.io",
+    "buyers_30d": 4,
+    "volume_30d": 0.016,
+    "source": "submitted"
+  },
+  {
+    "slug": "aarn-web-content-extraction",
+    "name": "AARN Web Content Extraction",
+    "category": "Data",
+    "base_url": "https://api.aarn.space",
+    "buyers_30d": 4,
+    "volume_30d": 0.024,
+    "source": "submitted"
+  },
+  {
+    "slug": "x402-swag",
+    "name": "x402 Swag",
+    "category": "Other",
+    "base_url": "https://x402swag.com",
+    "buyers_30d": 4,
+    "volume_30d": 30.09,
+    "source": "submitted"
+  },
+  {
+    "slug": "toll402",
+    "name": "Toll402",
+    "category": "AI",
+    "base_url": "https://toll402.dev",
+    "buyers_30d": 4,
+    "volume_30d": 1.8342,
+    "source": "submitted"
+  },
+  {
+    "slug": "arakel-machine-evidence-network",
+    "name": "ARAKEL Machine Evidence Network",
+    "category": "Verification",
+    "base_url": "https://proof.arakelproof.space",
+    "buyers_30d": 4,
+    "volume_30d": 0.08,
+    "source": "submitted"
+  },
+  {
+    "slug": "sentinel-global-check",
+    "name": "Sentinel Global Check",
+    "category": "Verification",
+    "base_url": "https://sentinel.rootstuff.io",
+    "buyers_30d": 4,
+    "volume_30d": 0.95,
+    "source": "submitted"
+  },
+  {
+    "slug": "khotem-cryptographic-witness",
+    "name": "KHOTEM \u2014 Cryptographic Witness",
+    "category": "Verification",
+    "base_url": "https://khotem.com",
+    "buyers_30d": 4,
+    "volume_30d": 2.23,
+    "source": "submitted"
+  },
+  {
+    "slug": "saymon-ru-data-api",
+    "name": "Saymon RU Data API",
+    "category": "Data",
+    "base_url": "https://payforapi.com",
+    "buyers_30d": 4,
+    "volume_30d": 3.033,
+    "source": "submitted"
+  },
+  {
+    "slug": "eve-s-wire",
+    "name": "Eve's Wire",
+    "category": "Finance",
+    "base_url": "https://www.watchevelive.com",
+    "buyers_30d": 4,
+    "volume_30d": 0.4,
+    "source": "submitted"
+  },
+  {
+    "slug": "tos-reflex-meditation-as-a-service",
+    "name": "Cogito-Reflex: Cognitive Regulation as a Service",
+    "category": "AI",
+    "base_url": "https://services4agents.fyi",
+    "buyers_30d": 4,
+    "volume_30d": 1.77,
+    "source": "submitted"
+  },
+  {
+    "slug": "edge-agents-ai",
+    "name": "Edge Agents AI",
+    "category": "Data",
+    "base_url": "https://pay.edge-agents.ai",
+    "buyers_30d": 4,
+    "volume_30d": 28.95,
+    "source": "submitted"
+  },
+  {
+    "slug": "snapfix",
+    "name": "Snapfix",
+    "category": "AI",
+    "base_url": "https://api.snapfix.media",
+    "buyers_30d": 4,
+    "volume_30d": 0.11,
+    "source": "submitted"
+  },
+  {
+    "slug": "ffpipe",
+    "name": "ffpipe",
+    "category": "Other",
+    "base_url": "https://ffpipe.dev",
+    "buyers_30d": 4,
+    "volume_30d": 0.99,
+    "source": "submitted"
+  },
+  {
+    "slug": "dao-proposals-onchain-verified",
+    "name": "apix402 \u2014 Onchain Verified Data",
+    "category": "Blockchain",
+    "base_url": "https://api402x.com",
+    "buyers_30d": 4,
+    "volume_30d": 0.017,
+    "source": "submitted"
+  },
+  {
+    "slug": "fractalai-post-quantum-proofs-for-ai-agents",
+    "name": "FractalAI \ufffd Post-Quantum Proofs for AI Agents",
+    "category": "Verification",
+    "base_url": "https://fractalai.net.co",
+    "buyers_30d": 4,
+    "volume_30d": 0.635,
+    "source": "submitted"
+  },
+  {
+    "slug": "witnessd",
+    "name": "witnessd",
+    "category": "AI",
+    "base_url": "https://witnessd.vip",
+    "buyers_30d": 4,
+    "volume_30d": 0.63,
+    "source": "submitted"
+  },
+  {
+    "slug": "mobilitychain-korea-mobility-supply-chain-intel",
+    "name": "MOBILITYCHAIN Korea Mobility Supply-Chain Intel",
+    "category": "Data",
+    "base_url": "https://mobilitychain.kr",
+    "buyers_30d": 4,
+    "volume_30d": 0.56,
+    "source": "submitted"
+  },
+  {
+    "slug": "mart402",
+    "name": "Mart402",
+    "category": "Data",
+    "base_url": "https://mart402.com",
+    "buyers_30d": 4,
+    "volume_30d": 0.634,
+    "source": "submitted"
+  },
+  {
+    "slug": "tollbooth",
+    "name": "Tollbooth",
+    "category": "Finance",
+    "base_url": "https://x402toll.com",
+    "buyers_30d": 4,
+    "volume_30d": 1.19,
+    "source": "submitted"
+  },
+  {
+    "slug": "agentdata-api",
+    "name": "AgentData API",
+    "category": "Data",
+    "base_url": "https://agentdata-api.com",
+    "buyers_30d": 4,
+    "volume_30d": 0.527,
+    "source": "submitted"
+  },
+  {
+    "slug": "x402dir-facilitator-recommend",
+    "name": "x402dir Facilitator Recommend",
+    "category": "Data",
+    "base_url": "https://x402dir.com",
+    "buyers_30d": 4,
+    "volume_30d": 0.0241,
+    "source": "submitted"
+  },
+  {
+    "slug": "relayshield",
+    "name": "RelayShield",
+    "category": "Data",
+    "base_url": "https://api.relayshield.net",
+    "buyers_30d": 4,
+    "volume_30d": 2.2,
+    "source": "submitted"
+  },
+  {
+    "slug": "pinata",
+    "name": "Pinata",
+    "category": "Content",
+    "base_url": "https://402.pinata.cloud",
+    "buyers_30d": 4,
+    "volume_30d": 0.0374,
+    "source": "submitted"
+  },
+  {
+    "slug": "catalogbot",
+    "name": "CatalogBot",
+    "category": "AI",
+    "base_url": "https://x402.hydratrader.ai",
+    "buyers_30d": 3,
+    "volume_30d": 0.38,
+    "source": "submitted"
+  },
+  {
+    "slug": "cse-intelligence-suite",
+    "name": "CSE Intelligence Suite",
+    "category": "AI",
+    "base_url": "https://strategic-divergence-engine.johntaylor1online.workers.dev",
+    "buyers_30d": 3,
+    "volume_30d": 24.8,
+    "source": "submitted"
+  },
+  {
+    "slug": "loophole-tape",
+    "name": "loophole tape",
+    "category": "Data",
+    "base_url": "https://htrlhl3y49.execute-api.us-east-2.amazonaws.com",
+    "buyers_30d": 3,
+    "volume_30d": 0.127,
+    "source": "submitted"
+  },
+  {
+    "slug": "signal-forge-prospect-qualifier",
+    "name": "Signal Forge Prospect Qualifier",
+    "category": "Data",
+    "base_url": "https://signalforgestudios.com",
+    "buyers_30d": 3,
+    "volume_30d": 0.24,
+    "source": "submitted"
+  },
+  {
+    "slug": "hlrisk",
+    "name": "hlrisk",
+    "category": "Finance",
+    "base_url": "https://hlrisk.paidapis.net",
+    "buyers_30d": 3,
+    "volume_30d": 16.285,
+    "source": "submitted"
+  },
+  {
+    "slug": "stumble",
+    "name": "Stumble",
+    "category": "AI",
+    "base_url": "https://stumble.vimabrosta.com",
+    "buyers_30d": 3,
+    "volume_30d": 11.495000000000001,
+    "source": "submitted"
+  },
+  {
+    "slug": "x402vid-ai-intelligence-for-youtube-videos",
+    "name": "x402vid \u2014 AI Intelligence for YouTube Videos",
+    "category": "AI",
+    "base_url": "https://x402vid.com",
+    "buyers_30d": 3,
+    "volume_30d": 18.73,
+    "source": "submitted"
+  },
+  {
+    "slug": "fetcher",
+    "name": "Fetcher",
+    "category": "Data",
+    "base_url": "https://api.fetcher.cloud",
+    "buyers_30d": 3,
+    "volume_30d": 0.04,
+    "source": "submitted"
+  },
+  {
+    "slug": "x402check",
+    "name": "x402check",
+    "category": "Verification",
+    "base_url": "https://x402check.arden-instance.workers.dev",
+    "buyers_30d": 3,
+    "volume_30d": 0.03,
+    "source": "submitted"
+  },
+  {
+    "slug": "dns-doctor",
+    "name": "DNS Doctor",
+    "category": "Verification",
+    "base_url": "https://dnsdoctor.dev",
+    "buyers_30d": 3,
+    "volume_30d": 0.068334,
+    "source": "submitted"
+  },
+  {
+    "slug": "irs-internal-revenue-bulletin-api",
+    "name": "IRS Internal Revenue Bulletin API",
+    "category": "Data",
+    "base_url": "https://irb-precedent-api.canvas-cart.workers.dev",
+    "buyers_30d": 3,
+    "volume_30d": 0.62,
+    "source": "submitted"
+  },
+  {
+    "slug": "parallax",
+    "name": "Parallax",
+    "category": "Other",
+    "base_url": "https://parallax402.com",
+    "buyers_30d": 3,
+    "volume_30d": 0.35000000000000003,
+    "source": "submitted"
+  },
+  {
+    "slug": "liquid-agent",
+    "name": "Liquid Agent",
+    "category": "Finance",
+    "base_url": "https://api.liquidagent.ai",
+    "buyers_30d": 3,
+    "volume_30d": 0.659237,
+    "source": "submitted"
+  },
+  {
+    "slug": "pkgproof",
+    "name": "pkgproof",
+    "category": "Verification",
+    "base_url": "https://x402.pkgproof.net",
+    "buyers_30d": 3,
+    "volume_30d": 0.4,
+    "source": "submitted"
+  },
+  {
+    "slug": "agent-utility-network",
+    "name": "Agent Utility Network",
+    "category": "Data",
+    "base_url": "https://agent-utility-network.frosty-sound-4560.workers.dev",
+    "buyers_30d": 3,
+    "volume_30d": 0.0365,
+    "source": "submitted"
+  },
+  {
+    "slug": "kino402",
+    "name": "kino402",
+    "category": "AI",
+    "base_url": "https://kino402.com",
+    "buyers_30d": 3,
+    "volume_30d": 0.999,
+    "source": "submitted"
+  },
+  {
+    "slug": "ibanforge",
+    "name": "IBANforge",
+    "category": "Verification",
+    "base_url": "https://api.ibanforge.com",
+    "buyers_30d": 3,
+    "volume_30d": 0.022,
+    "source": "submitted"
+  },
+  {
+    "slug": "endpoint-liveness-probe",
+    "name": "Endpoint Liveness Probe",
+    "category": "Verification",
+    "base_url": "https://x402.shortforge.dev",
+    "buyers_30d": 3,
+    "volume_30d": 0.03,
+    "source": "submitted"
+  },
+  {
+    "slug": "wake402",
+    "name": "WAKE402",
+    "category": "Compute",
+    "base_url": "https://wake402.agentwake.workers.dev",
+    "buyers_30d": 3,
+    "volume_30d": 0.258,
+    "source": "submitted"
+  },
+  {
+    "slug": "sepolia-eth-merchant",
+    "name": "Testnet ETH Merchant",
+    "category": "Blockchain",
+    "base_url": "https://merchant-production-c224.up.railway.app",
+    "buyers_30d": 3,
+    "volume_30d": 1.4,
+    "source": "submitted"
+  },
+  {
+    "slug": "treza",
+    "name": "Treza",
+    "category": "AI",
+    "base_url": "https://www.trezalabs.com",
+    "buyers_30d": 3,
+    "volume_30d": 31.2,
+    "source": "submitted"
+  },
+  {
+    "slug": "kortex-service-trust",
+    "name": "Kortex Service Trust",
+    "category": "AI",
+    "base_url": "https://kortex.rohnelt.dev",
+    "buyers_30d": 3,
+    "volume_30d": 8,
+    "source": "submitted"
+  },
+  {
+    "slug": "x402-tools-openclaw-productions-diagnostics",
+    "name": "x402-tools / OpenClaw Productions diagnostics",
+    "category": "Verification",
+    "base_url": "https://openclawproductions.com",
+    "buyers_30d": 3,
+    "volume_30d": 0.07,
+    "source": "submitted"
+  },
+  {
+    "slug": "butterfly-delta-preflight",
+    "name": "Butterfly Delta Order Preflight",
+    "category": "Verification",
+    "base_url": "https://butterflydelta.com",
+    "buyers_30d": 3,
+    "volume_30d": 0.03,
+    "source": "submitted"
+  },
+  {
+    "slug": "djzs-protocol",
+    "name": "DJZS Protocol",
+    "category": "Blockchain",
+    "base_url": "https://mcp.djzs.ai",
+    "buyers_30d": 3,
+    "volume_30d": 12,
+    "source": "submitted"
+  },
+  {
+    "slug": "lazaretto",
+    "name": "Lazaretto",
+    "category": "Verification",
+    "base_url": "https://lazaretto.dev",
+    "buyers_30d": 3,
+    "volume_30d": 0.18,
+    "source": "submitted"
+  },
+  {
+    "slug": "gondola",
+    "name": "Gondola",
+    "category": "AI",
+    "base_url": "https://api.gondola-ai.com",
+    "buyers_30d": 3,
+    "volume_30d": 0.05,
+    "source": "submitted"
+  },
+  {
+    "slug": "romny-polymarket-copy-trade-data",
+    "name": "Romny Polymarket + Copy Trade Data",
+    "category": "Data",
+    "base_url": "https://api.romny.dpdns.org",
+    "buyers_30d": 3,
+    "volume_30d": 1.34,
+    "source": "submitted"
+  },
+  {
+    "slug": "hermes-plant",
+    "name": "Hermes Plant",
+    "category": "Verification",
+    "base_url": "https://hermesplant.com",
+    "buyers_30d": 3,
+    "volume_30d": 0.03,
+    "source": "submitted"
+  },
+  {
+    "slug": "robotinsight-korea-robotics-intel",
+    "name": "ROBOTINSIGHT Korea Robotics Intel",
+    "category": "Data",
+    "base_url": "https://robotinsight.kr",
+    "buyers_30d": 3,
+    "volume_30d": 0.4,
+    "source": "submitted"
+  },
+  {
+    "slug": "jeonjang-korea-automotive-electronics-intel",
+    "name": "JEONJANG Korea Automotive Electronics Intel",
+    "category": "Data",
+    "base_url": "https://jeonjang.kr",
+    "buyers_30d": 3,
+    "volume_30d": 0.372,
+    "source": "submitted"
+  },
+  {
+    "slug": "deepnets-api",
+    "name": "Deepnets API",
+    "category": "Blockchain",
+    "base_url": "https://api.deepnets.ai",
+    "buyers_30d": 3,
+    "volume_30d": 0.1,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "blue-cap-machine-commerce",
+    "name": "Blue Cap Machine Commerce",
+    "category": "AI",
+    "base_url": "https://machine.soundiq.io",
+    "buyers_30d": 2,
+    "volume_30d": 0.033,
+    "source": "submitted"
+  },
+  {
+    "slug": "romny-crypto-alerts",
+    "name": "Romny Crypto Alerts",
+    "category": "Data",
+    "base_url": "https://api2.romny.dpdns.org",
+    "buyers_30d": 2,
+    "volume_30d": 1.23,
+    "source": "submitted"
+  },
+  {
+    "slug": "desk-lead-x402",
+    "name": "DESK LEAD x402",
+    "category": "Finance",
+    "base_url": "https://desk-x402.desk-x402-gh.workers.dev",
+    "buyers_30d": 2,
+    "volume_30d": 0.03,
+    "source": "submitted"
+  },
+  {
+    "slug": "marketplace-for-ai-agents",
+    "name": "Marketplace for AI Agents",
+    "category": "Data",
+    "base_url": "https://marketplaceforaiagents.com",
+    "buyers_30d": 2,
+    "volume_30d": 0.255,
+    "source": "submitted"
+  },
+  {
+    "slug": "orbylon",
+    "name": "Orbylon",
+    "category": "Verification",
+    "base_url": "https://orbylon.com",
+    "buyers_30d": 2,
+    "volume_30d": 0.1,
+    "source": "submitted"
+  },
+  {
+    "slug": "crypto-technicals-web-utilities",
+    "name": "Crypto Technicals & Web Utilities",
+    "category": "Finance",
+    "base_url": "https://vmi3089643.contaboserver.net",
+    "buyers_30d": 2,
+    "volume_30d": 0.003,
+    "source": "submitted"
+  },
+  {
+    "slug": "recall-kitchen",
+    "name": "Recall Kitchen",
+    "category": "Data",
+    "base_url": "https://app.recallkitchen.com",
+    "buyers_30d": 2,
+    "volume_30d": 0.2,
+    "source": "submitted"
+  },
+  {
+    "slug": "pitchpilot-outreach-api",
+    "name": "PitchPilot Outreach API",
+    "category": "AI",
+    "base_url": "https://pitchpilot-outreach-api.pitchpilot-agents.workers.dev",
+    "buyers_30d": 2,
+    "volume_30d": 0.004,
+    "source": "submitted"
+  },
+  {
+    "slug": "rootcrak-preflight",
+    "name": "RootCrak Preflight",
+    "category": "Verification",
+    "base_url": "https://intel.rootcrak.com",
+    "buyers_30d": 2,
+    "volume_30d": 2.9,
+    "source": "submitted"
+  },
+  {
+    "slug": "ash-ops-dev-tools-api",
+    "name": "PreFlight Checker",
+    "category": "Verification",
+    "base_url": "https://x402-api-catalog.onrender.com",
+    "buyers_30d": 2,
+    "volume_30d": 3.63,
+    "source": "submitted"
+  },
+  {
+    "slug": "prism-network",
+    "name": "Prism Network",
+    "category": "Compute",
+    "base_url": "https://api.prismnetwork.tech",
+    "buyers_30d": 2,
+    "volume_30d": 0.1022,
+    "source": "submitted"
+  },
+  {
+    "slug": "cognilode-ticket-resale-underwriter",
+    "name": "Cognilode Ticket Resale Underwriter",
+    "category": "Other",
+    "base_url": "https://cognilode.com",
+    "buyers_30d": 2,
+    "volume_30d": 0.055,
+    "source": "submitted"
+  },
+  {
+    "slug": "witness",
+    "name": "witness",
+    "category": "Data",
+    "base_url": "https://witness.outbid.sh",
+    "buyers_30d": 2,
+    "volume_30d": 2.58,
+    "source": "submitted"
+  },
+  {
+    "slug": "melssa",
+    "name": "Melssa",
+    "category": "Content",
+    "base_url": "https://melssa.com",
+    "buyers_30d": 2,
+    "volume_30d": 0.04,
+    "source": "submitted"
+  },
+  {
+    "slug": "attention-is-currency",
+    "name": "attention is currency",
+    "category": "AI",
+    "base_url": "https://www.attentioniscurrency.com",
+    "buyers_30d": 2,
+    "volume_30d": 1.1,
+    "source": "submitted"
+  },
+  {
+    "slug": "disruptive-concepts",
+    "name": "Disruptive Concepts",
+    "category": "Data",
+    "base_url": "https://disruptive-concepts.com",
+    "buyers_30d": 2,
+    "volume_30d": 0.03,
+    "source": "submitted"
+  },
+  {
+    "slug": "longwatch",
+    "name": "longwatch",
+    "category": "Data",
+    "base_url": "https://longwatch.dev",
+    "buyers_30d": 2,
+    "volume_30d": 0.002,
+    "source": "submitted"
+  },
+  {
+    "slug": "makespdf",
+    "name": "makesPDF",
+    "category": "Content",
+    "base_url": "https://makespdf.com",
+    "buyers_30d": 2,
+    "volume_30d": 0.02,
+    "source": "submitted"
+  },
+  {
+    "slug": "cogdepot",
+    "name": "cogDepot",
+    "category": "AI",
+    "base_url": "https://api.cogdepot.com",
+    "buyers_30d": 2,
+    "volume_30d": 1.5,
+    "source": "submitted"
+  },
+  {
+    "slug": "marz-greta-lock-network-ai-text-human-likeness-benchmark",
+    "name": "Marz Greta-Lock Network \u2014 AI Text Human-Likeness Benchmark",
+    "category": "AI",
+    "base_url": "https://eqbuilder.dev",
+    "buyers_30d": 2,
+    "volume_30d": 0.35,
+    "source": "submitted"
+  },
+  {
+    "slug": "sqlguard",
+    "name": "SQLGuard",
+    "category": "AI",
+    "base_url": "https://sqlguard.io",
+    "buyers_30d": 2,
+    "volume_30d": 0.7,
+    "source": "submitted"
+  },
+  {
+    "slug": "package-evidence",
+    "name": "Package Evidence",
+    "category": "Data",
+    "base_url": "https://packages.melchiorlabs.com",
+    "buyers_30d": 2,
+    "volume_30d": 0.015,
+    "source": "submitted"
+  },
+  {
+    "slug": "recompete-radar",
+    "name": "Recompete Radar",
+    "category": "Data",
+    "base_url": "https://recompete.melchiorlabs.com",
+    "buyers_30d": 2,
+    "volume_30d": 0.015,
+    "source": "submitted"
+  },
+  {
+    "slug": "second-opinion-ms0hen6l-0",
+    "name": "Second Opinion",
+    "category": "Verification",
+    "base_url": "https://secondopinionx402.com",
+    "buyers_30d": 2,
+    "volume_30d": 0.92,
+    "source": "submitted"
+  },
+  {
+    "slug": "circadian",
+    "name": "Circadian",
+    "category": "Data",
+    "base_url": "https://circadian-agent.com",
+    "buyers_30d": 2,
+    "volume_30d": 0.015,
+    "source": "submitted"
+  },
+  {
+    "slug": "melchior-video-context",
+    "name": "Melchior Video Context",
+    "category": "Data",
+    "base_url": "https://transcript.melchiorlabs.com",
+    "buyers_30d": 2,
+    "volume_30d": 0.015,
+    "source": "submitted"
+  },
+  {
+    "slug": "aegis",
+    "name": "AEGIS",
+    "category": "Verification",
+    "base_url": "https://api.mcx-ventures.com",
+    "buyers_30d": 2,
+    "volume_30d": 18.25,
+    "source": "submitted"
+  },
+  {
+    "slug": "qrbase",
+    "name": "QRBase",
+    "category": "Other",
+    "base_url": "https://www.qrbase.xyz",
+    "buyers_30d": 2,
+    "volume_30d": 0.003,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "molty-cash",
+    "name": "molty.cash",
+    "category": "Content",
+    "base_url": "https://api.molty.cash",
+    "buyers_30d": 2,
+    "volume_30d": 7.09,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "sec-fundamentals-api",
+    "name": "SEC fundamentals API",
+    "category": "Finance",
+    "base_url": "https://sec.multyplylabs.com",
+    "buyers_30d": 2,
+    "volume_30d": 0.04,
+    "source": "submitted"
+  },
+  {
+    "slug": "bridgenode",
+    "name": "BridgeNode",
+    "category": "AI",
+    "base_url": "https://bridgenode.cc",
+    "buyers_30d": 2,
+    "volume_30d": 0.209339,
+    "source": "submitted"
+  },
+  {
+    "slug": "stillos-notary",
+    "name": "StillOS Notary",
+    "category": "Verification",
+    "base_url": "https://nolawealthfinancial.com/notary",
+    "buyers_30d": 2,
+    "volume_30d": 0.2,
+    "source": "submitted"
+  },
+  {
+    "slug": "aicomglobal",
+    "name": "aicomglobal",
+    "category": "AI",
+    "base_url": "https://aicomglobal.com",
+    "buyers_30d": 2,
+    "volume_30d": 0.062,
+    "source": "submitted"
+  },
+  {
+    "slug": "trustboost-pii-sanitizer",
+    "name": "TrustBoost PII Sanitizer",
+    "category": "AI",
+    "base_url": "https://api.trustboost.dev",
+    "buyers_30d": 2,
+    "volume_30d": 0.02,
+    "source": "submitted"
+  },
+  {
+    "slug": "true402",
+    "name": "true402",
+    "category": "Blockchain",
+    "base_url": "https://true402.dev/api",
+    "buyers_30d": 2,
+    "volume_30d": 0.696,
+    "source": "submitted"
+  },
+  {
+    "slug": "snowsignals-home-of-trendvane",
+    "name": "SnowSignals \u2014 home of TrendVane",
+    "category": "Data",
+    "base_url": "https://pay.snowsignals.io",
+    "buyers_30d": 1,
+    "volume_30d": 0.542577,
+    "source": "submitted"
+  },
+  {
+    "slug": "geolithic",
+    "name": "Geolithic",
+    "category": "Verification",
+    "base_url": "https://geolithicintelligence.com",
+    "buyers_30d": 1,
+    "volume_30d": 5.04,
+    "source": "submitted"
+  },
+  {
+    "slug": "kilawatt-cloud",
+    "name": "Kilawatt Cloud",
+    "category": "Compute",
+    "base_url": "https://www.kilawattcloud.dev",
+    "buyers_30d": 1,
+    "volume_30d": 1.27,
+    "source": "submitted"
+  },
+  {
+    "slug": "queryspigot",
+    "name": "QuerySpigot",
+    "category": "Data",
+    "base_url": "https://api.queryspigot.com",
+    "buyers_30d": 1,
+    "volume_30d": 0.04,
+    "source": "submitted"
+  },
+  {
+    "slug": "wines-bet-wine-market-data-api",
+    "name": "Wines.bet Wine Market Data API",
+    "category": "Data",
+    "base_url": "https://api.wines.bet",
+    "buyers_30d": 1,
+    "volume_30d": 0.067,
+    "source": "submitted"
+  },
+  {
+    "slug": "qotien-api-fiscal-retraite-fr",
+    "name": "Qotien \u2014 API fiscal & retraite FR",
+    "category": "Finance",
+    "base_url": "https://app.qotien.fr",
+    "buyers_30d": 1,
+    "volume_30d": 1.75,
+    "source": "submitted"
+  },
+  {
+    "slug": "video-download-ai",
+    "name": "Video Download AI",
+    "category": "Content",
+    "base_url": "https://video-download.ai",
+    "buyers_30d": 1,
+    "volume_30d": 0.052,
+    "source": "submitted"
+  },
+  {
+    "slug": "spotify-api",
+    "name": "Spotify API",
+    "category": "Data",
+    "base_url": "https://spotify.jojapi.net",
+    "buyers_30d": 1,
+    "volume_30d": 0.01,
+    "source": "submitted"
+  },
+  {
+    "slug": "postopz-framework-agent-api",
+    "name": "PostOpz Framework Agent API",
+    "category": "AI",
+    "base_url": "https://api.postopz.com",
+    "buyers_30d": 1,
+    "volume_30d": 1.6,
+    "source": "submitted"
+  },
+  {
+    "slug": "criptonous-market-intelligence",
+    "name": "CriptoNous Market Intelligence",
+    "category": "Finance",
+    "base_url": "https://app.criptonous.com",
+    "buyers_30d": 1,
+    "volume_30d": 0.34,
+    "source": "submitted"
+  },
+  {
+    "slug": "money-mind",
+    "name": "Money Mind",
+    "category": "Verification",
+    "base_url": "https://money-mind-extract.onrender.com",
+    "buyers_30d": 1,
+    "volume_30d": 0.22,
+    "source": "submitted"
+  },
+  {
+    "slug": "cantu-actionable-buyer-demand",
+    "name": "CANTU Actionable Buyer Demand",
+    "category": "Data",
+    "base_url": "https://cantu-radar-flow.base44.app",
+    "buyers_30d": 1,
+    "volume_30d": 0.2,
+    "source": "submitted"
+  },
+  {
+    "slug": "deploid-enrich",
+    "name": "Deploid Enrich",
+    "category": "Data",
+    "base_url": "https://enrich.deploid.now",
+    "buyers_30d": 1,
+    "volume_30d": 0.15,
+    "source": "submitted"
+  },
+  {
+    "slug": "voix-off-tts-fr-french-neural-voiceovers-pay-per-call",
+    "name": "Voix Off TTS FR \u2014 French neural voiceovers pay-per-call",
+    "category": "Other",
+    "base_url": "http://187.77.111.249.sslip.io:8402",
+    "buyers_30d": 1,
+    "volume_30d": 0.01,
+    "source": "submitted"
+  },
+  {
+    "slug": "helpmyagent",
+    "name": "HelpMyAgent",
+    "category": "Data",
+    "base_url": "https://api.helpmyagent.com",
+    "buyers_30d": 1,
+    "volume_30d": 0.008,
+    "source": "submitted"
+  },
+  {
+    "slug": "ephemeral-cloud",
+    "name": "Ephemeral Cloud",
+    "category": "Other",
+    "base_url": "https://kat3jr5vny647y4sobq6ot2mvq0ewqjt.lambda-url.us-east-1.on.aws",
+    "buyers_30d": 1,
+    "volume_30d": 0.02,
+    "source": "submitted"
+  },
+  {
+    "slug": "ace-autonomous-commerce-engine-by-black-knight-technologies",
+    "name": "ACE \u2014 Autonomous Commerce Engine by Black Knight Technologies",
+    "category": "Verification",
+    "base_url": "https://qaegxjxaavxdqihfgzhr.supabase.co/functions/v1/ace-x402-gateway",
+    "buyers_30d": 1,
+    "volume_30d": 0.06,
+    "source": "submitted"
+  },
+  {
+    "slug": "x1-baas-scraping-api",
+    "name": "X1-BaaS Scraping API",
+    "category": "Data",
+    "base_url": "https://api.tazpal.com",
+    "buyers_30d": 1,
+    "volume_30d": 0.025,
+    "source": "submitted"
+  },
+  {
+    "slug": "textus",
+    "name": "Textus",
+    "category": "Content",
+    "base_url": "https://api.textus.dev",
+    "buyers_30d": 1,
+    "volume_30d": 1.96,
+    "source": "submitted"
+  },
+  {
+    "slug": "salt19-agent-utility-grid",
+    "name": "SALT19 Agent Utility Grid",
+    "category": "Verification",
+    "base_url": "https://api.salt19.com",
+    "buyers_30d": 1,
+    "volume_30d": 0.01,
+    "source": "submitted"
+  },
+  {
+    "slug": "ai-agents-archive",
+    "name": "AI Agents Archive",
+    "category": "AI",
+    "base_url": "https://aiagentsarchive.com",
+    "buyers_30d": 1,
+    "volume_30d": 2.151,
+    "source": "submitted"
+  },
+  {
+    "slug": "musicwire",
+    "name": "Musicwire",
+    "category": "Content",
+    "base_url": "https://musicwire.5432wire.com",
+    "buyers_30d": 1,
+    "volume_30d": 3.95,
+    "source": "submitted"
+  },
+  {
+    "slug": "greater-good-grants-grantsignal-us",
+    "name": "Genuine Good Grants / Good Grants API",
+    "category": "Data",
+    "base_url": "https://genuinegood.online",
+    "buyers_30d": 1,
+    "volume_30d": 0.05,
+    "source": "submitted"
+  },
+  {
+    "slug": "selfagent-bounty-radar",
+    "name": "selfagent Bounty Radar",
+    "category": "Data",
+    "base_url": "https://agent.zbang.net",
+    "buyers_30d": 1,
+    "volume_30d": 0.05,
+    "source": "submitted"
+  },
+  {
+    "slug": "outfight",
+    "name": "OUTFIGHT",
+    "category": "Other",
+    "base_url": "https://outfight.lol",
+    "buyers_30d": 1,
+    "volume_30d": 5,
+    "source": "submitted"
+  },
+  {
+    "slug": "hardware-hunter-price-intelligence",
+    "name": "Hardware Hunter Price Intelligence",
+    "category": "Data",
+    "base_url": "https://hardwarehunter.io",
+    "buyers_30d": 1,
+    "volume_30d": 0.02,
+    "source": "submitted"
+  },
+  {
+    "slug": "old2new-agent-api",
+    "name": "Old2New Agent API",
+    "category": "AI",
+    "base_url": "https://old2new.app",
+    "buyers_30d": 1,
+    "volume_30d": 10.25,
+    "source": "submitted"
+  },
+  {
+    "slug": "tinyops-automation-integration-preflight",
+    "name": "TinyOps Automation Integration Preflight",
+    "category": "Verification",
+    "base_url": "https://x402-preflight.tinyopsstudio.com",
+    "buyers_30d": 1,
+    "volume_30d": 0.03,
+    "source": "submitted"
+  },
+  {
+    "slug": "cortexcloud",
+    "name": "CortexCloud",
+    "category": "Other",
+    "base_url": "https://api.cortexcloud.org",
+    "buyers_30d": 1,
+    "volume_30d": 1.17085,
+    "source": "submitted"
+  },
+  {
+    "slug": "probe402",
+    "name": "probe402",
+    "category": "Verification",
+    "base_url": "https://probe402.com",
+    "buyers_30d": 1,
+    "volume_30d": 0.005,
+    "source": "submitted"
+  },
+  {
+    "slug": "cofferline",
+    "name": "Cofferline",
+    "category": "Finance",
+    "base_url": "https://api.cofferline.com",
+    "buyers_30d": 1,
+    "volume_30d": 1,
+    "source": "submitted"
+  },
+  {
+    "slug": "devryno",
+    "name": "Devryno",
+    "category": "Data",
+    "base_url": "https://devryno.com",
+    "buyers_30d": 1,
+    "volume_30d": 0.002,
+    "source": "submitted"
+  },
+  {
+    "slug": "coprocesseur-d-terministe",
+    "name": "Coprocesseur d\u00e9terministe",
+    "category": "Compute",
+    "base_url": "https://x402.laboiteatubes.media",
+    "buyers_30d": 1,
+    "volume_30d": 0.001,
+    "source": "submitted"
+  },
+  {
+    "slug": "forge-launch-signals-x402-verifier",
+    "name": "Forge Launch Signals + x402 Verifier",
+    "category": "Data",
+    "base_url": "https://forgesignals.org",
+    "buyers_30d": 1,
+    "volume_30d": 0.015,
+    "source": "submitted"
+  },
+  {
+    "slug": "entropy-index",
+    "name": "Entropy Index",
+    "category": "Finance",
+    "base_url": "https://www.entropyindex.com",
+    "buyers_30d": 1,
+    "volume_30d": 0.75,
+    "source": "submitted"
+  },
+  {
+    "slug": "blinkcodes",
+    "name": "BlinkCodes",
+    "category": "Other",
+    "base_url": "https://blinkcodes.com",
+    "buyers_30d": 1,
+    "volume_30d": 2.63,
+    "source": "submitted"
+  },
+  {
+    "slug": "zlv402",
+    "name": "zlv402",
+    "category": "AI",
+    "base_url": "https://zlv402.wreckbots.io",
+    "buyers_30d": 1,
+    "volume_30d": 0.006,
+    "source": "submitted"
+  },
+  {
+    "slug": "bentcrypto",
+    "name": "BentCrypto",
+    "category": "Blockchain",
+    "base_url": "https://api.bentcrypto.com",
+    "buyers_30d": 1,
+    "volume_30d": 0.09,
+    "source": "submitted"
+  },
+  {
+    "slug": "blixtworks-img-categorize",
+    "name": "Blixtworks img-categorize",
+    "category": "AI",
+    "base_url": "https://www.blixtworks.com",
+    "buyers_30d": 1,
+    "volume_30d": 0.015,
+    "source": "submitted"
+  },
+  {
+    "slug": "fabtally-agent-api",
+    "name": "FabTally Agent API",
+    "category": "Other",
+    "base_url": "https://fabtally.com",
+    "buyers_30d": 1,
+    "volume_30d": 0.01,
+    "source": "submitted"
+  },
+  {
+    "slug": "transcribe-audio-to-transcript-subtitles-and-a-cut-list",
+    "name": "Transcribe \u2014 audio to transcript, subtitles and a cut list",
+    "category": "AI",
+    "base_url": "https://transcribe.soboljem.cz",
+    "buyers_30d": 1,
+    "volume_30d": 0.014,
+    "source": "submitted"
+  },
+  {
+    "slug": "jsonguard",
+    "name": "jsonguard",
+    "category": "Compute",
+    "base_url": "https://jsonguard.leeworks.dev",
+    "buyers_30d": 1,
+    "volume_30d": 0.0016666666666666668,
+    "source": "submitted"
+  },
+  {
+    "slug": "chainfeed",
+    "name": "chainfeed",
+    "category": "Data",
+    "base_url": "https://chainfeed.leeworks.dev",
+    "buyers_30d": 1,
+    "volume_30d": 0.0016666666666666668,
+    "source": "submitted"
+  },
+  {
+    "slug": "chainkit",
+    "name": "chainkit",
+    "category": "Blockchain",
+    "base_url": "https://chainkit.leeworks.dev",
+    "buyers_30d": 1,
+    "volume_30d": 0.0016666666666666668,
+    "source": "submitted"
+  },
+  {
+    "slug": "difftool",
+    "name": "difftool",
+    "category": "Data",
+    "base_url": "https://difftool.leeworks.dev",
+    "buyers_30d": 1,
+    "volume_30d": 0.0016666666666666668,
+    "source": "submitted"
+  },
+  {
+    "slug": "agentmail-ms0hdbvm-0",
+    "name": "agentmail",
+    "category": "Other",
+    "base_url": "https://agentmail.leeworks.dev",
+    "buyers_30d": 1,
+    "volume_30d": 0.0016666666666666668,
+    "source": "submitted"
+  },
+  {
+    "slug": "semagram",
+    "name": "Semagram",
+    "category": "Data",
+    "base_url": "https://semagram.io",
+    "buyers_30d": 1,
+    "volume_30d": 0.01,
+    "source": "submitted"
+  },
+  {
+    "slug": "datasource-pulse",
+    "name": "Datasource Pulse",
+    "category": "Verification",
+    "base_url": "https://datasourcepulse.com",
+    "buyers_30d": 1,
+    "volume_30d": 0.02,
+    "source": "submitted"
+  },
+  {
+    "slug": "x402-agent-commerce-starter-platform-map",
+    "name": "x402 Agent-Commerce Starter + Platform Map",
+    "category": "AI",
+    "base_url": "https://x402.leeworks.dev",
+    "buyers_30d": 1,
+    "volume_30d": 0.0016666666666666668,
+    "source": "submitted"
+  },
+  {
+    "slug": "ainalyst",
+    "name": "AInalyst",
+    "category": "Other",
+    "base_url": "http://ainalyst-api.xyz",
+    "buyers_30d": 1,
+    "volume_30d": 0.01,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "sippar-token-market-data",
+    "name": "Sippar Token Market Data",
+    "category": "Data",
+    "base_url": "https://sippar.network",
+    "buyers_30d": 1,
+    "volume_30d": 1.55,
+    "source": "submitted"
+  },
+  {
+    "slug": "mugen-radio",
+    "name": "MUGEN Radio",
+    "category": "Content",
+    "base_url": "https://mugenradio.com",
+    "buyers_30d": 1,
+    "volume_30d": 0.4,
+    "source": "submitted"
+  },
+  {
+    "slug": "aiscan",
+    "name": "AIScan",
+    "category": "AI",
+    "base_url": "https://api.getaiscan.app",
+    "buyers_30d": 1,
+    "volume_30d": 0.08,
+    "source": "submitted"
+  },
+  {
+    "slug": "agentnews",
+    "name": "AgentNews",
+    "category": "Content",
+    "base_url": "https://agent.news",
+    "buyers_30d": 1,
+    "volume_30d": 1,
+    "source": "submitted"
+  },
+  {
+    "slug": "askzephy-solana-anchor-static-security-scan",
+    "name": "askzephy Solana/Anchor Static Security Scan",
+    "category": "Other",
+    "base_url": "https://audit.askzephy.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "taskforge-agent-assurance-by-black-knight-technology",
+    "name": "TaskForge Agent Assurance by Black Knight Technology",
+    "category": "Verification",
+    "base_url": "https://qaegxjxaavxdqihfgzhr.supabase.co/functions/v1/taskforge-x402-gateway",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "sagg-gateway",
+    "name": "SAGG Gateway",
+    "category": "AI",
+    "base_url": "https://api.privatedeskai.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "usaref-north-american-government-reference-data",
+    "name": "usaref \u2014 North American government reference data",
+    "category": "Data",
+    "base_url": "https://usaref.dev",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "pageproof",
+    "name": "PageProof",
+    "category": "Other",
+    "base_url": "https://pageproof.alert-crab-1890.chatgpt.site",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "eventedge-oracle",
+    "name": "EventEdge Oracle",
+    "category": "Data",
+    "base_url": "https://edge.arakelproof.space",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "yiduochan-api-credits",
+    "name": "YiduoChan API Credits",
+    "category": "AI",
+    "base_url": "https://yiduochan.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "proofdesk-website-qa-audit-kit",
+    "name": "ProofDesk Website QA Audit Kit",
+    "category": "Content",
+    "base_url": "https://resolved.sh/proofdesk-website-qa-kit-b82b",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "brok-x402-neobanx",
+    "name": "BROK x402 (Neobanx)",
+    "category": "Finance",
+    "base_url": "https://brok.neobanx.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "locale-format-api",
+    "name": "Locale Format API",
+    "category": "Data",
+    "base_url": "https://localeformat.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "x402-discovery-launch-pack",
+    "name": "x402 Discovery Launch Pack",
+    "category": "Verification",
+    "base_url": "https://icqhmxcsdzwscikwrmom.supabase.co/functions/v1/x402-launch-pack",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "basalt",
+    "name": "Basalt",
+    "category": "AI",
+    "base_url": "https://basalt-n6lt.onrender.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "grawwww-studio-ai-character-video-image-api",
+    "name": "Grawwww Studio \u2014 AI Character Video & Image API",
+    "category": "AI",
+    "base_url": "https://grawwww.xyz",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "nsgoods-payable-preflight",
+    "name": "NSGoods Payable Preflight",
+    "category": "Verification",
+    "base_url": "https://payable.nsgoods.org",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "umpire",
+    "name": "Umpire",
+    "category": "Verification",
+    "base_url": "https://umpire.vimabrosta.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "apex-on-x1",
+    "name": "APEX on X1",
+    "category": "Blockchain",
+    "base_url": "https://apexfaucet.xyz",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "quentrix-x402-api",
+    "name": "Quentrix x402 API",
+    "category": "Data",
+    "base_url": "https://x402.minioffice.xyz",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "shehriyars-api",
+    "name": "Shehriyars API",
+    "category": "Compute",
+    "base_url": "https://api.shehriyar.ink",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "felipe-agents-web-evidence",
+    "name": "felipe-agents web evidence",
+    "category": "Data",
+    "base_url": "https://felipeandrade.xyz",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "x402-crypto-research-api",
+    "name": "x402 Crypto Research API",
+    "category": "AI",
+    "base_url": "https://x402-crypto-research-api-production.up.railway.app",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "basecheck",
+    "name": "BaseCheck",
+    "category": "Verification",
+    "base_url": "https://www.basecheck.info/",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "ogena-token-risk",
+    "name": "Ogena token risk",
+    "category": "Finance",
+    "base_url": "https://api.ogenalabs.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "butiful-agent-commerce",
+    "name": "Butiful Agent Commerce",
+    "category": "Other",
+    "base_url": "https://agent.butiful.org",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "agenttrustapi",
+    "name": "AgentTrustAPI",
+    "category": "Verification",
+    "base_url": "https://api.agenttrustapi.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "daxpt",
+    "name": "DAXPT",
+    "category": "Data",
+    "base_url": "https://daxpt.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "badhttp",
+    "name": "badhttp",
+    "category": "Verification",
+    "base_url": "https://badhttp.dev",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "survival-colony-x402-ai-services",
+    "name": "Survival Colony x402 AI Services",
+    "category": "AI",
+    "base_url": "https://service.31-207-45-250.sslip.io",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "japan-weather-forecast-warnings-api",
+    "name": "Japan Weather Forecast & Warnings API",
+    "category": "Data",
+    "base_url": "https://weather.agentic-jp.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "argus",
+    "name": "Argus",
+    "category": "Data",
+    "base_url": "https://arguswire.dev",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "central-command",
+    "name": "Central Command",
+    "category": "Finance",
+    "base_url": "https://rtcelwjnrbmfmrywacky.supabase.co/functions/v1/x402-gateway",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "wall-street-wiki-canon",
+    "name": "Wall Street Wiki Canon",
+    "category": "Data",
+    "base_url": "https://canon.wallstreet.wiki",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "onchain-query-api",
+    "name": "Onchain Query API",
+    "category": "Blockchain",
+    "base_url": "https://chain.cyberwarex.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "email-verifier",
+    "name": "Email Verifier",
+    "category": "Verification",
+    "base_url": "https://email-verifier.underscoredone.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "xrpreflight",
+    "name": "XRPreflight",
+    "category": "Finance",
+    "base_url": "https://destinationpreflight.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "agentic-endpoints",
+    "name": "Agentic Endpoints",
+    "category": "AI",
+    "base_url": "https://ai.oliverkiss.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "profit-goblin-security-header-audit",
+    "name": "Profit Goblin Security Header Audit",
+    "category": "Other",
+    "base_url": "https://91-200-102-159.nip.io",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "steve-guard",
+    "name": "Steve Guard",
+    "category": "Verification",
+    "base_url": "https://api.stevesignals.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "agentgate-x402",
+    "name": "AgentGate x402 AI Utility Service",
+    "category": "AI",
+    "base_url": "https://x402.agentsea.vn",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "global-intelligence-exchange",
+    "name": "Global Intelligence Exchange",
+    "category": "Data",
+    "base_url": "https://intelexchange-ox.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "council-of-ai-gspc",
+    "name": "Council of AI GSPC",
+    "category": "Verification",
+    "base_url": "https://councilof.ai",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "solmachina",
+    "name": "SolMachina",
+    "category": "Data",
+    "base_url": "https://api.solmachina.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "grokzilla-x402-micro-pay",
+    "name": "Grokzilla x402 Micro Pay",
+    "category": "Data",
+    "base_url": "https://grokzilla.shop",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "blusky-sentinel",
+    "name": "BluSky Sentinel",
+    "category": "AI",
+    "base_url": "https://bluskyscamdetector.onrender.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "hostdefi-token-risk-api",
+    "name": "HostDeFi Token Risk API",
+    "category": "Verification",
+    "base_url": "https://hostdefi.com/api",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "warppay402-mcp-gateway",
+    "name": "WarpPay402 MCP Gateway",
+    "category": "AI",
+    "base_url": "https://api.warppay402.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "latamref-latin-american-government-reference-data",
+    "name": "latamref \u2014 Latin American government reference data",
+    "category": "Data",
+    "base_url": "https://latamref.dev",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "nsgoods-verifiable-x402-oracle-suite",
+    "name": "nsgoods \u2014 verifiable x402 oracle suite",
+    "category": "Verification",
+    "base_url": "https://x402.nsgoods.org",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "preape",
+    "name": "PreApe",
+    "category": "Blockchain",
+    "base_url": "https://mcp.preape.ai",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "x402-voice-to-text",
+    "name": "x402 Voice-to-Text",
+    "category": "AI",
+    "base_url": "https://voice.cyberwarex.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "tokenaddy",
+    "name": "TokenAddy",
+    "category": "Other",
+    "base_url": "https://tokenaddy.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "sourcey-startup-review",
+    "name": "Sourcey Startup Review",
+    "category": "Verification",
+    "base_url": "https://api.sourcey.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "sentinel-01",
+    "name": "Sentinel-01",
+    "category": "Verification",
+    "base_url": "https://mungi.qd.je",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "saylor-innovations-watchdog-token-intelligence",
+    "name": "Saylor Innovations \u2014 Watchdog Token Intelligence",
+    "category": "Data",
+    "base_url": "https://saylorinnovations.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "orbitwan-orbitpay-premium-data",
+    "name": "OrbitWan OrbitPay premium data",
+    "category": "Other",
+    "base_url": "https://orbitwan.io",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "m0-email-verification",
+    "name": "M0 Email Verification",
+    "category": "Verification",
+    "base_url": "https://m0.aiverall.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "dont-die-page-audits",
+    "name": "Dont Die page audits",
+    "category": "Content",
+    "base_url": "https://d539bcf11964422e8cb73ad62ccc1bc3.api.mockbin.io/",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "delvorn-mthix4zm-0",
+    "name": "Delvorn",
+    "category": "Other",
+    "base_url": "https://delvorn.site",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "delvorn",
+    "name": "Delvorn",
+    "category": "Other",
+    "base_url": "https://delvorn.site",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "citable",
+    "name": "Citable",
+    "category": "Data",
+    "base_url": "https://citable.run",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "chainpeek",
+    "name": "ChainPeek",
+    "category": "Blockchain",
+    "base_url": "https://chainpeek.chainpeek.workers.dev",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "aizamon-bot-fuel",
+    "name": "Aizamon Bot Fuel",
+    "category": "AI",
+    "base_url": "https://aizamon.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "agenttax",
+    "name": "AgentTax",
+    "category": "Finance",
+    "base_url": "https://www.agenttax.io",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "agentshop",
+    "name": "AgentShop",
+    "category": "Data",
+    "base_url": "https://x402.bankr.bot/0x40ac5d07e1426e4626ed0989b8ff26e932b76555",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "agent-exec",
+    "name": "agent-exec",
+    "category": "Compute",
+    "base_url": "https://agent-exec.45.67.221.128.sslip.io",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "402x-agent-services",
+    "name": "402x Agent Services",
+    "category": "Finance",
+    "base_url": "https://api.genesistokenlabs.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "bountysignal-mth0kxjc-0",
+    "name": "BountySignal",
+    "category": "Data",
+    "base_url": "https://bountysignal-radar-v2.minhtuan36zzz97948.chatgpt.site",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "neurobird-search",
+    "name": "Neurobird Search",
+    "category": "Data",
+    "base_url": "https://search.neurobird.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "popdot-ai-wire-api",
+    "name": "Popdot AI Wire API",
+    "category": "Other",
+    "base_url": "https://popdot.ai",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "supreme-audiobooks",
+    "name": "Supreme Audiobooks",
+    "category": "Content",
+    "base_url": "https://supremeaudiobooks.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "nesebar-travel-corpus",
+    "name": "Nesebar travel corpus",
+    "category": "Content",
+    "base_url": "https://nesebar.net",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "gambit",
+    "name": "Gambit",
+    "category": "AI",
+    "base_url": "https://gambit.barrioenergy.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "54ch10-brief-api",
+    "name": "54ch10 page extraction / public URL to markdown",
+    "category": "Data",
+    "base_url": "https://54ch10.uk",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "aura-agent-persistence",
+    "name": "Aura Agent Persistence",
+    "category": "AI",
+    "base_url": "https://aura.rohnelt.dev",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "cloudpayx-agent",
+    "name": "cloudpayX Agent",
+    "category": "Finance",
+    "base_url": "https://api.cloudpayxagent.xyz",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "fetchgate",
+    "name": "Fetchgate",
+    "category": "Data",
+    "base_url": "https://fetchgate.dev",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "moneytest-402-radar",
+    "name": "Moneytest 402 Radar",
+    "category": "Data",
+    "base_url": "https://moneytest-x402-api.indierepo.chatgpt.site",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "japan-holiday-business-day-api",
+    "name": "Japan Holiday & Business-Day API",
+    "category": "Data",
+    "base_url": "https://holiday.agentic-jp.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "cleared-index-paid-probe",
+    "name": "Cleared Index Paid Probe",
+    "category": "Verification",
+    "base_url": "https://clearedindex.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "feeless402",
+    "name": "Feeless402",
+    "category": "Blockchain",
+    "base_url": "https://feeless402.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "arkbrowser-api",
+    "name": "ArkBrowser API",
+    "category": "AI",
+    "base_url": "https://api-arkbrowser.arksystemes.fr",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "adfreellm-research-apis-on-sui",
+    "name": "Speecship Research APIs on Sui",
+    "category": "Data",
+    "base_url": "https://www.speecship.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "zgas-001-zero-gas-agent-commerce-field-guide",
+    "name": "ZGAS-001 Zero-Gas Agent Commerce Field Guide",
+    "category": "Content",
+    "base_url": "https://publish.new",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "defi-safety-oracle",
+    "name": "DeFi Safety Oracle",
+    "category": "Other",
+    "base_url": "https://oracle.cyberwarex.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "agent-dust",
+    "name": "agent-dust",
+    "category": "AI",
+    "base_url": "https://home.chrz.dev/agent-dust",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "gpuops-web-scraper",
+    "name": "GPUOps Web Scraper",
+    "category": "Data",
+    "base_url": "https://scrape.gpuops.io",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "gpuops-blockchain-data-mcp",
+    "name": "GPUOps Blockchain Data MCP",
+    "category": "Blockchain",
+    "base_url": "https://chain.gpuops.io",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "gpuops-ai-inference",
+    "name": "GPUOps AI Inference",
+    "category": "AI",
+    "base_url": "https://ai.gpuops.io",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "business-day-deadline-api",
+    "name": "Business Day & Deadline API",
+    "category": "Data",
+    "base_url": "https://businessdayapi.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "nock",
+    "name": "Nock",
+    "category": "AI",
+    "base_url": "https://www.getnock.xyz",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "echo-sentiment-api",
+    "name": "Echo Sentiment API",
+    "category": "Other",
+    "base_url": "https://api.6766587364.lol",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "stipend-sh-gas-top-up",
+    "name": "stipend.sh",
+    "category": "Finance",
+    "base_url": "https://stipend.sh",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "uhadev-pdf-data-inspection-api",
+    "name": "UHADEV PDF & Data Inspection API",
+    "category": "Data",
+    "base_url": "https://x402.uhadev.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "brs-signals",
+    "name": "BRS Signals",
+    "category": "Finance",
+    "base_url": "https://brs-signals.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "treat-rocks",
+    "name": "Treat.rocks",
+    "category": "Other",
+    "base_url": "https://treat.rocks",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "zinin-m2m-hub",
+    "name": "Zinin M2M Hub",
+    "category": "Data",
+    "base_url": "https://api.timzinin.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "sleepfix",
+    "name": "sleepfix",
+    "category": "AI",
+    "base_url": "https://x402-lane-144561044326.us-central1.run.app",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "twelve-permissions",
+    "name": "Twelve Permissions",
+    "category": "Content",
+    "base_url": "https://twelvepermissions.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "xrpl-microstructure",
+    "name": "XRPL Microstructure",
+    "category": "Blockchain",
+    "base_url": "https://data.tg-lw.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "gisgp-x402-hazard-api",
+    "name": "GISGP x402 Hazard API",
+    "category": "Data",
+    "base_url": "https://gisgp.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "quicksilver-pro",
+    "name": "QuickSilver Pro",
+    "category": "AI",
+    "base_url": "https://pay.quicksilverpro.io",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "japan-diet-api",
+    "name": "Japan Diet API",
+    "category": "Data",
+    "base_url": "https://diet.agentic-jp.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "concordance",
+    "name": "Concordance",
+    "category": "Data",
+    "base_url": "https://concordancehq.duckdns.org",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "toppot-agent-arena",
+    "name": "TopPot Agent Arena",
+    "category": "Finance",
+    "base_url": "https://toppot.io",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "taskfleet",
+    "name": "TaskFleet",
+    "category": "Data",
+    "base_url": "https://taskfleet.net",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "pocketfactory-korean-data-api",
+    "name": "PocketFactory Korean Data API",
+    "category": "Data",
+    "base_url": "https://api.pocketfactory.ai",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "ask-cairn",
+    "name": "Ask Cairn",
+    "category": "AI",
+    "base_url": "https://cairnwake.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "mazza-group-ai-apis",
+    "name": "Mazza Group AI APIs",
+    "category": "AI",
+    "base_url": "https://mazzagrp.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "comrades-of-war-spanish-gaming-community-archive-api",
+    "name": "Comrades of War \u2014 Spanish Gaming Community Archive API",
+    "category": "Data",
+    "base_url": "https://comrades-of-war.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "first-fold-conversion-briefs",
+    "name": "First Fold Conversion Briefs",
+    "category": "AI",
+    "base_url": "https://first-fold-48h.tatoespitia.chatgpt.site",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "paybox-agent-tools",
+    "name": "PayBox Agent Tools",
+    "category": "AI",
+    "base_url": "https://agent-tools.degenpoet.shop",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "herramientas-cobrables",
+    "name": "Herramientas Cobrables",
+    "category": "Verification",
+    "base_url": "https://herramientas-cobrables.consultoressasic.chatgpt.site",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "x402-extract-api",
+    "name": "x402-extract-api",
+    "category": "Data",
+    "base_url": "https://api.jomofagan.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "verdoc",
+    "name": "Verdoc",
+    "category": "Data",
+    "base_url": "https://verdoc.dev",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "toolfeeds-sec-edgar",
+    "name": "ToolFeeds SEC EDGAR",
+    "category": "Data",
+    "base_url": "https://api.toolfeeds.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "compacthost-ai-tools",
+    "name": "Compacthost AI Tools",
+    "category": "AI",
+    "base_url": "https://x402.compacthost.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "trend-signals",
+    "name": "Trend Signals",
+    "category": "Finance",
+    "base_url": "https://trend-signals.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "hyperliquid-intelligence-api-frostyfi",
+    "name": "Hyperliquid Intelligence API (FrostyFi)",
+    "category": "Data",
+    "base_url": "https://agent-hyper.frostylabs.ai",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "bounty-truth-api",
+    "name": "Bounty Truth API",
+    "category": "Verification",
+    "base_url": "https://happybirthday.digitalshop.xin",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "base-agent-evidence-route-api",
+    "name": "Base Agent Evidence & Route API",
+    "category": "Blockchain",
+    "base_url": "https://merchant-base.mikedotexe.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "deskcrew",
+    "name": "DeskCrew",
+    "category": "AI",
+    "base_url": "https://deskcrew.io",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "nsgoods-sanctions-screening-oracle",
+    "name": "nsgoods Sanctions Screening Oracle",
+    "category": "Verification",
+    "base_url": "https://sanctions.nsgoods.org",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "zero",
+    "name": "ZERO",
+    "category": "Blockchain",
+    "base_url": "https://zero.broke2builtai.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "decision-anchor",
+    "name": "Decision Anchor",
+    "category": "Infrastructure",
+    "base_url": "https://api.decision-anchor.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "midax402",
+    "name": "MIDAX402",
+    "category": "Data",
+    "base_url": "https://midax402.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "azimuth",
+    "name": "Azimuth",
+    "category": "Data",
+    "base_url": "https://azimuth.day",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "phi-longevity-prism-full-report",
+    "name": "Phi Longevity PRISM \u2014 Full Report",
+    "category": "Data",
+    "base_url": "https://philongevity.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "second-opinion",
+    "name": "Second Opinion",
+    "category": "AI",
+    "base_url": "https://secondopinionapi.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "audit-tools",
+    "name": "Audit Tools",
+    "category": "Verification",
+    "base_url": "https://audit-tools.ai",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "obolpay-x402-gateway",
+    "name": "Obolpay x402 Gateway",
+    "category": "Data",
+    "base_url": "https://x402.obolpay.xyz",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "mingle-gate",
+    "name": "Mingle Gate",
+    "category": "Content",
+    "base_url": "https://crawl.mingleberrymedia.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "nishvault-x402-pre-send-guard",
+    "name": "Nishvault x402 Pre-Send Guard",
+    "category": "Verification",
+    "base_url": "https://x402-discovery.nishvault.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "pico",
+    "name": "PICO",
+    "category": "Content",
+    "base_url": "https://picomicropay.nl/",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "pretestads",
+    "name": "PreTestAds",
+    "category": "AI",
+    "base_url": "https://pretestads.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "intentfence",
+    "name": "IntentFence",
+    "category": "Verification",
+    "base_url": "https://agentpass-protocol.rmalka06.chatgpt.site",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "satoshi-dispatches-lightning-x402-api",
+    "name": "Satoshi Dispatches \u2014 Lightning & x402 API",
+    "category": "Finance",
+    "base_url": "https://dispatches.mystere.me",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "virtualsms",
+    "name": "VirtualSMS",
+    "category": "Verification",
+    "base_url": "https://virtualsms.io",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "vibes-coded-agent-tool-api",
+    "name": "Vibes-Coded Agent Tool API",
+    "category": "Verification",
+    "base_url": "https://vibes-coded.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "lnpay",
+    "name": "LNPay",
+    "category": "Other",
+    "base_url": "https://pay.lnpay.ai",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "holoworld-fight-pass",
+    "name": "Holoworld $FIGHT Pass",
+    "category": "Blockchain",
+    "base_url": "https://x402.holoworld.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "imported:x402scan"
+  },
+  {
+    "slug": "anyspend",
+    "name": "AnySpend",
+    "category": "Content",
+    "base_url": "https://x402.anyspend.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "imported:x402scan"
+  },
+  {
+    "slug": "acp-virtuals-protocol",
+    "name": "ACP - Virtuals Protocol",
+    "category": "AI",
+    "base_url": "https://acp-x402.virtuals.io",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "imported:x402scan"
+  },
+  {
+    "slug": "stableestate",
+    "name": "StableEstate",
+    "category": "Data",
+    "base_url": "https://stableestate.dev",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "hibra-ai-swap",
+    "name": "Hibra AI Swap",
+    "category": "Finance",
+    "base_url": "https://www.hibra.app",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "tavily-search",
+    "name": "Tavily Search",
+    "category": "AI",
+    "base_url": "https://x402.tavily.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "imported:bazaar"
+  },
+  {
+    "slug": "fry-farm-x402-agentic-actions",
+    "name": "fry.farm x402 Agentic Actions",
+    "category": "Blockchain",
+    "base_url": "https://fry.farm",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "runbot-strategy-copilot",
+    "name": "Runbot Strategy Copilot",
+    "category": "Finance",
+    "base_url": "https://mcp.runbot.io",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "mind-protocol",
+    "name": "MIND Protocol",
+    "category": "Finance",
+    "base_url": "https://api.mindprotocol.xyz",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "eva-mcp",
+    "name": "EVA MCP",
+    "category": "AI",
+    "base_url": "https://api.ai.everything.inc",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "agent402-website-release-offline-tools",
+    "name": "Agent402 Website Release & Offline Tools",
+    "category": "AI",
+    "base_url": "https://agent402.dev",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "tunelo-agent-apis",
+    "name": "Tunelo Agent APIs",
+    "category": "Data",
+    "base_url": "https://agents.tunelo.co.za",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "cryptopulse-data-api",
+    "name": "CryptoPulse Data API",
+    "category": "Data",
+    "base_url": "https://cryptopulse.saascloud.ai",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "groundcheck",
+    "name": "Groundcheck",
+    "category": "Data",
+    "base_url": "https://groundcheck.seiche.info",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "newsmesh",
+    "name": "NewsMesh",
+    "category": "Data",
+    "base_url": "https://api.newsmesh.co",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "the-nervous-system-agent-governance-x402-api",
+    "name": "The Nervous System (agent governance x402 API)",
+    "category": "AI",
+    "base_url": "https://api.100levelup.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "aeo-audit-api",
+    "name": "AEO Audit API",
+    "category": "AI",
+    "base_url": "https://aeo.agentlair.dev",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "logigrain",
+    "name": "LogiGrain",
+    "category": "Other",
+    "base_url": "https://logigrain.net",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "tantra-authority-the-naked-press-catalog",
+    "name": "Tantra Authority \u2014 The Naked Press catalog",
+    "category": "Content",
+    "base_url": "https://api.tantra-authority.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "weather",
+    "name": "Weather",
+    "category": "Data",
+    "base_url": "https://weather.x402.press",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "txdecode",
+    "name": "txdecode",
+    "category": "Data",
+    "base_url": "https://txdecode.com/api/v1",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "popadex-personal-finance-reference-api",
+    "name": "PopaDex Personal Finance Reference API",
+    "category": "Finance",
+    "base_url": "https://app.popadex.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "ledgerbrain-x402-kya-kyt-kye-compliance-api",
+    "name": "LedgerBrain x402 KYA KYT KYE Compliance API",
+    "category": "Blockchain",
+    "base_url": "https://api.ledgercore.io",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "agentlair",
+    "name": "AgentLair",
+    "category": "AI",
+    "base_url": "https://agentlair.dev",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "liquidpad",
+    "name": "LiquidPad",
+    "category": "Blockchain",
+    "base_url": "https://www.liquidpad.site",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "tradeos-crypto-intelligence",
+    "name": "TradeOS Crypto Intelligence",
+    "category": "Finance",
+    "base_url": "https://tradeos.tech",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "gdelt-news-intelligence-api",
+    "name": "GDELT News Intelligence API",
+    "category": "Data",
+    "base_url": "https://news-x402.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "solsigs",
+    "name": "SolSigs",
+    "category": "Blockchain",
+    "base_url": "https://solsigs.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "crinkl",
+    "name": "Crinkl",
+    "category": "Data",
+    "base_url": "https://api.crinkl.xyz",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "find-or-verify",
+    "name": "Find or Verify",
+    "category": "Data",
+    "base_url": "https://fov.brij.fi",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "axongate",
+    "name": "AxonGate",
+    "category": "Data",
+    "base_url": "https://web-production-8136ee.up.railway.app",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "fly-labs-agentic-market",
+    "name": "Fly Labs Agentic Market",
+    "category": "Data",
+    "base_url": "https://flylabs.fun",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "robtex",
+    "name": "Robtex",
+    "category": "Data",
+    "base_url": "https://x402.robtex.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "askclaude",
+    "name": "AskClaude",
+    "category": "AI",
+    "base_url": "https://askclaude.shop",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "neynar",
+    "name": "Neynar",
+    "category": "Data",
+    "base_url": "https://api.neynar.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "stakevia",
+    "name": "Stakevia",
+    "category": "Blockchain",
+    "base_url": "https://stakevia.xyz",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "quicknode",
+    "name": "QuickNode",
+    "category": "Compute",
+    "base_url": "https://x402.quicknode.com",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "actiongate",
+    "name": "ActionGate",
+    "category": "AI",
+    "base_url": "https://api.actiongate.xyz",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  },
+  {
+    "slug": "goldrush",
+    "name": "GoldRush",
+    "category": "Data",
+    "base_url": "https://x402.goldrush.dev/v1",
+    "buyers_30d": 0,
+    "volume_30d": 0,
+    "source": "submitted"
+  }
+]
