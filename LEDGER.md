@@ -102,7 +102,9 @@ This is the largest verified ecosystem gap yet measured: 614 online, payment-rea
 
 **B4 (test-only): proven.** The in-memory payment map (`paidRequests`) correctly tracks payments by block hash, preventing double-verification. 1 B4 test passes.
 
-All prior block tests pass: 9 (opener) + 9 (openings) + 10 (sender) + 8 (discover) + 6 (bridge) = 42.
+All prior block tests pass: 9 (opener) + 9 (openings) + 10 (sender) + 8 (discover) + 6 (bridge) + 4 (server E2E) = 46.
+
+Server E2E test passes: boots on test port, /health returns 200 with nano_address, /proxy passes through 200 responses, /status reports payment counts correctly.
 
 All prior block tests (test_discover.js, test_opener.js, test_openings.js, test_sender.js) still pass: 8+9+9+10 = 36 tests.
 
