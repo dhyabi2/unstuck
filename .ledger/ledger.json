@@ -162,6 +162,36 @@
    "grounding": "oracle",
    "version": 3,
    "minted": "2026-09-17T17:41:37+00:00"
+  },
+  {
+   "id": "L10",
+   "block": 14.0,
+   "statement": "N5: The network API persists asks to a SQLite store so they survive server restarts",
+   "test": "node test_network_store.js creates, retrieves and lists asks across server restarts",
+   "scope": [
+    "opener/network-store.js opener/test_network_store.js"
+   ],
+   "oracle": "cd opener && node test_network_store.js",
+   "expect": "all network-store laws pass",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-17T18:11:05+00:00"
+  },
+  {
+   "id": "L11",
+   "block": 14.0,
+   "statement": "N6: The network HTTP server uses the persistent store so asks created via the API survive restarts",
+   "test": "node test_nserver_persist.js verifies ask lifecycle across server restart",
+   "scope": [
+    "opener/nserver.js opener/network-store.js opener/test_nserver_persist.js"
+   ],
+   "oracle": "cd opener && node test_nserver_persist.js",
+   "expect": "all persist laws pass",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-17T18:11:13+00:00"
   }
  ],
  "blocks": {
@@ -2052,6 +2082,185 @@
      "at": "2026-09-17T18:05:14+00:00"
     }
    ]
+  },
+  "14": {
+   "status": "pending",
+   "attempts": [
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L7",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L8",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L9",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L10",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      },
+      {
+       "id": "L11",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-flash-0731",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "b1014abdfa713f6c6b507f094b746819937b8c49def3bd5e473065d1250d4af8",
+     "tier": "cheap",
+     "coverage_gaps": [
+      "opener/network-store.db",
+      "opener/network-store.db-shm",
+      "opener/network-store.db-wal",
+      "opener/network-store.js",
+      "opener/nserver-persist.js",
+      "opener/test_network_store.js",
+      "opener/test_nserver_persist.js"
+     ],
+     "injection": [],
+     "at": "2026-09-17T18:18:35+00:00"
+    }
+   ]
   }
  },
  "deltas": [
@@ -2759,6 +2968,38 @@
    "at": "2026-09-17T18:05:14+00:00",
    "prev": "a06edbf3717ee3ce97badfd833e5499df4333a50dbd951035c41d8e238acc23b",
    "receipt": "e5dfcf8f9a1d670f9e72883cde4da20fee275e2640c7915431ef54613d38586b"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L10",
+    "block": "14",
+    "statement_sha": "bb0afe64c8bd2e2a18e0d7d7e68895ebb5f4961c72f1636054c597562c8f7e2e"
+   },
+   "at": "2026-09-17T18:11:05+00:00",
+   "prev": "e5dfcf8f9a1d670f9e72883cde4da20fee275e2640c7915431ef54613d38586b",
+   "receipt": "48f5764749bf0dbeeeb28899d5db428c8ca6c95cbd805ab6ee36f6a17a8be8a1"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L11",
+    "block": "14",
+    "statement_sha": "d199cff14af09ce99359e18f22f501a7725dd125a4dfe217b069d1e61ca50344"
+   },
+   "at": "2026-09-17T18:11:13+00:00",
+   "prev": "48f5764749bf0dbeeeb28899d5db428c8ca6c95cbd805ab6ee36f6a17a8be8a1",
+   "receipt": "8520dd98fd658ae20a725522ae426a90fb466dc1b9aa5a944b08e3489399f922"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "14",
+    "ok": false
+   },
+   "at": "2026-09-17T18:18:35+00:00",
+   "prev": "8520dd98fd658ae20a725522ae426a90fb466dc1b9aa5a944b08e3489399f922",
+   "receipt": "243f88a416d6373d0ff070ef88235e53376de85328acc819e931a8567dc46009"
   }
  ]
 }
