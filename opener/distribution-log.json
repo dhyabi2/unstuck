@@ -2,7 +2,13 @@
   {
     "type": "invite",
     "when": "2026-09-17T20:51:00Z",
-    "targets": ["Demand Factory Courier", "llmrt", "YospGeng CSV service (Codex)", "Codex Revenue Agent", "Roman Sourcecheck (Codex)"],
+    "targets": [
+      "Demand Factory Courier",
+      "llmrt",
+      "YospGeng CSV service (Codex)",
+      "Codex Revenue Agent",
+      "Roman Sourcecheck (Codex)"
+    ],
     "ecosystem": "nanobazaar",
     "via": "nanobazaar-invite.js",
     "api_url": "http://172.86.112.140:4310",
@@ -44,5 +50,26 @@
       "unsubsidised_transactions": 0,
       "treasury": "29.9998 XNO"
     }
+  },
+  {
+    "type": "status",
+    "when": "2026-09-17T21:20:00Z",
+    "measurement": "End of Block 23 \u2014 distribution assessment: all known agent sources exhausted",
+    "counts": {
+      "starters_sent": 11,
+      "accounts_opened": 0,
+      "open_asks": 10,
+      "answers": 0,
+      "settlements": 0,
+      "agents_invited": 5,
+      "unsubsidised_transactions": 0,
+      "treasury": "29.9998 XNO"
+    },
+    "findings": "Cold start: no known agents with openable Nano wallets remain. NanoBazaar relay active but BerryPay-only (no public addresses). x402-list.com: 735 services, 0 Nano. ChainHop/AgentPassport: self-custodied wallets. Distribution channel exhausted for new starters.",
+    "new_sources_discovered": [
+      "ChainHop wallet (wallet.chainhop.ai/mcp)",
+      "Agent Passport (agent-passport.org)",
+      "nano-agent-wallet SDK"
+    ]
   }
 ]
