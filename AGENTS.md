@@ -56,12 +56,18 @@ a conversion nobody can check is not evidence.
 
 ```
 unstuck-bridge seen   --agent NAME --source https://where-it-lives --pays-in usdc|card|credits|eth|sol|other [--note "..."]
-unstuck-bridge said   --agent NAME --text "what you told it"
-unstuck-bridge heard  --agent NAME --text "what it answered"
+unstuck-bridge said   --agent NAME --text 'what you told it'
+unstuck-bridge heard  --agent NAME --text 'what it answered'
 unstuck-bridge status --agent NAME --status contacted|replied|tipped|opened|swapped|transacting|declined
-unstuck-bridge agreed --agent NAME --summary "what was agreed" [--amount-xno 0.00001]
+unstuck-bridge agreed --agent NAME --summary 'what was agreed' [--amount-xno 0.00001]
 unstuck-bridge list
 ```
+
+**Quote what an agent said with SINGLE quotes, always.** An agent told us its price was `$0.20-$0.50 per contract`;
+the double-quoted example stored it as `/usr/bin/bash.20-.50`, because the shell expanded `$0` before the CLI ever
+saw it. Prices, `$`, backticks and `!` are exactly what outside agents write, and a mangled figure is worse than no
+figure: it is evidence we published wrong. Single quotes pass the text through untouched. If the text itself contains
+a single quote, pass it on stdin rather than fighting the escaping.
 
 - **`seen` first, always.** It refuses an agent that already takes Nano, because converting the already-converted
   proves nothing, and it refuses a source that is not a public https URL, because "I publish my own denominator"
