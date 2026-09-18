@@ -43,6 +43,7 @@ function open(dbPath) {
   db.exec("PRAGMA journal_mode=WAL");
   db.exec("PRAGMA busy_timeout=5000");
   db.exec(SCHEMA);
+  db.exec(GRANTS_SCHEMA); // ambassador grants live beside the openings, never mixed into them
   migrate(db); // a ledger that already holds sends must gain the verification columns, not break on them
   return db;
 }
@@ -189,4 +190,72 @@ function lock(lockPath) {
   return { ok: false, heldBy: null };
 }
 
-module.exports = { open, reserve, confirm, release, markUnknown, opened, startersSent, recordChainCheck, counts, lock };
+/**
+ * Ambassador grants, kept in their own table so a grant can never be mistaken for an opening.
+ *
+ * One grant per agent, ever. The guard is the same BEGIN IMMEDIATE claim the openings ledger uses: the check and the
+ * insert cannot be separated by another writer, so two runs cannot both decide to fund the same ambassador.
+ */
+const GRANTS_SCHEMA = `
+CREATE TABLE IF NOT EXISTS grants (
+  account     TEXT PRIMARY KEY,
+  agent       TEXT NOT NULL,
+  state       TEXT NOT NULL CHECK (state IN ('reserved','sent')),
+  block       TEXT,
+  amount_raw  TEXT NOT NULL,
+  agreement   TEXT,
+  reserved_at TEXT NOT NULL,
+  settled_at  TEXT
+);
+`;
+
+function reserveGrant(db, account, { agent, amountRaw, agreement = "", now = new Date().toISOString() } = {}) {
+  db.exec(GRANTS_SCHEMA);
+  if (!agent) return { ok: false, reason: "a grant is recorded against the agent it was agreed with" };
+  db.exec("BEGIN IMMEDIATE");
+  try {
+    const existing = db.prepare("SELECT state, block FROM grants WHERE account = ?").get(account);
+    if (existing) {
+      db.exec("ROLLBACK");
+      return { ok: false, reason: `already ${existing.state}`, state: existing.state, block: existing.block || null };
+    }
+    const byAgent = db.prepare("SELECT account FROM grants WHERE agent = ?").get(agent);
+    if (byAgent) {
+      db.exec("ROLLBACK");
+      return { ok: false, reason: `${agent} was already granted at ${byAgent.account}` };
+    }
+    db.prepare(
+      "INSERT INTO grants (account, agent, state, amount_raw, agreement, reserved_at) VALUES (?, ?, 'reserved', ?, ?, ?)"
+    ).run(account, agent, amountRaw, agreement, now);
+    db.exec("COMMIT");
+    return { ok: true, state: "reserved" };
+  } catch (e) {
+    try { db.exec("ROLLBACK"); } catch { /* the transaction is already gone */ }
+    return { ok: false, reason: String(e.message || e) };
+  }
+}
+
+/**
+ * Give back a reserved grant. A dry run, or a failure before broadcast, must not consume an ambassador's one grant:
+ * the openings ledger has always released a dry run, and a grants ledger that did not would make `--dry-run` a trap
+ * that silently spent the slot it was meant to prove.
+ */
+function releaseGrant(db, account, reason = "") {
+  const r = db.prepare("DELETE FROM grants WHERE account = ? AND state = 'reserved'").run(account);
+  return { released: r.changes === 1, reason };
+}
+
+function confirmGrant(db, account, block, { now = new Date().toISOString() } = {}) {
+  if (!block || String(block).length !== 64) throw new Error("a grant is recorded by its block hash or not at all");
+  const r = db.prepare("UPDATE grants SET state='sent', block=?, settled_at=? WHERE account=? AND state='reserved'")
+    .run(block, now, account);
+  return r.changes === 1;
+}
+
+/** Every grant actually broadcast. Spending, not adoption: what it produced is counted in openings, by other agents. */
+function grantsSent(db) {
+  db.exec(GRANTS_SCHEMA);
+  return db.prepare("SELECT account, agent, block, amount_raw, agreement, settled_at AS sent_at FROM grants WHERE state='sent' ORDER BY settled_at").all();
+}
+
+module.exports = { open, reserve, confirm, release, markUnknown, opened, startersSent, recordChainCheck, counts, lock, reserveGrant, confirmGrant, releaseGrant, grantsSent };

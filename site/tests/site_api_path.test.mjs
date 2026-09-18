@@ -212,3 +212,51 @@ test("L42 a rewrite does not shadow the SPA shell or the machine-readable entry 
     );
   }
 });
+
+// ---------------------------------------------------------------------------
+// L43 — the origin must say which build it is serving, and only a live 200 counts
+// ---------------------------------------------------------------------------
+
+test("L43 the page carries a deployment-identity marker, placeholder in the working copy", () => {
+  // The marker is what a live check reads to tell "this fix is deployed" from "an older build is still
+  // live". A working copy must carry the literal placeholder: if a disk copy could carry a real sha, it
+  // would be indistinguishable from a deployment and the live check could pass against a stale origin.
+  assert.ok(
+    HTML.includes("__UNSTUCK_COMMIT__"),
+    "site/index.html must carry the __UNSTUCK_COMMIT__ deployment marker"
+  );
+  assert.ok(
+    HTML.includes("// __UNSTUCK_COMMIT__"),
+    "the marker must be a line the build can substitute without touching any other bytes"
+  );
+});
+
+test("L43 the live origin names its build, so a stale deployment cannot pass the live check", async (t) => {
+  const r = await probe(`${LIVE_ORIGIN}/`);
+  if (!r.ok) {
+    t.diagnostic(`SKIPPED deployment-identity check: ${LIVE_ORIGIN}/ did not answer (${r.error}).`);
+    return;
+  }
+  const stamped = r.body.match(/unstuck-commit:\s*([0-9a-f]{7,40})/);
+  if (!stamped) {
+    // An older deployment (or the preview under construction) cannot be asked what it serves — that is
+    // precisely why this check exists. Say so instead of asserting a fact about a build that is not on
+    // the wire; once L43 ships, the absence of a stamp is a real failure the deploy's smoke check raises.
+    t.diagnostic(
+      `SKIPPED deployment-identity check: ${LIVE_ORIGIN}/ serves a build with no unstuck-commit stamp; ` +
+        `the marker has not shipped yet.`
+    );
+    return;
+  }
+  let headSha = "";
+  try {
+    headSha = git(["rev-parse", "HEAD"]);
+  } catch {
+    headSha = "";
+  }
+  assert.ok(
+    headSha && headSha.startsWith(stamped[1]),
+    `the live origin says it is serving ${stamped[1]}, but HEAD is ${headSha.slice(0, 12)}; a stale ` +
+      `deployment is not evidence that this build works`
+  );
+});

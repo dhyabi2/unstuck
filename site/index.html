@@ -313,6 +313,17 @@ function resolveApi(win, fallback) {
 }
 const API = resolveApi(window, API_BASE);
 
+// ====== DEPLOYMENT IDENTITY ======
+// The commit this page was built from, published in the page itself. `rai-web`
+// stamps the HEAD sha into an HTML comment at build time; in the working copy the
+// placeholder stays literal, so a disk copy can never be mistaken for a deployment.
+// The law test for the deployed API path reads this to answer one question — is the
+// origin serving the build under test, or an older one? — which is the only way a
+// live check can tell "not shipped yet" from "shipped and still broken".
+// Measuring it any other way (guessing from file bytes) is what let the first
+// attempt at this fix report success against an old deployment.
+// __UNSTUCK_COMMIT__
+
 // ====== VIEWS ======
 const pages = ["asks", "new", "ask", "standing", "bridge", "about", "ledger"];
 let askCache = null;

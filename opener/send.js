@@ -92,7 +92,90 @@ async function main() {
   // It is how this path is proven without spending and without writing a fake opening into a public ledger.
   const dryRun = args.includes("--dry-run");
   const foundVia = args.includes("--found-via") ? args[args.indexOf("--found-via") + 1] : "unspecified";
-  if (!to) { console.error("usage: send.js <nano_address> [--found-via \"...\"] | --list | --counts"); return 2; }
+  if (!to) {
+    console.error("usage: send.js <nano_address> [--found-via \"...\"] | --grant <nano_address> --agent NAME " +
+      "[--agreement \"...\"] | --list | --grants | --counts");
+    return 2;
+  }
+  if (args[0] === "--grants") { console.log(JSON.stringify(led.grantsSent(db), null, 2)); return 0; }
+
+  /**
+   * The ambassador grant: 0.1 XNO to an agent that converted and then agreed to carry the mission on.
+   *
+   * It is a SECOND, later send to an agent that already has its starter (owner, 2026-09-18: "0.1 for those who
+   * committed to be ambassadors, not starters — as starter before being ambassador, he will also get the tiny
+   * amount"). So it deliberately does NOT reuse the opener's already-opened refusal: an ambassador is necessarily
+   * already opened, and that check exists to stop a second *starter*. Its own guard is the grants ledger, which
+   * refuses a second grant by account and by agent name.
+   */
+  const isGrant = args.includes("--grant");
+  const grantTo = isGrant ? args[args.indexOf("--grant") + 1] : null;
+  const grantAgent = args.includes("--agent") ? args[args.indexOf("--agent") + 1] : null;
+  const agreement = args.includes("--agreement") ? args[args.indexOf("--agreement") + 1] : "";
+  if (isGrant) {
+    if (!grantTo || grantTo.startsWith("--")) { console.error("refused: --grant needs the ambassador's nano address"); return 2; }
+    if (!grantAgent || grantAgent.startsWith("--")) {
+      console.error("refused: --agent NAME is required — a grant is recorded against the conversation it was agreed in");
+      return 2;
+    }
+    if (!nano.checkAddress(grantTo)) { console.error("refused: not a valid Nano address"); return 1; }
+    const wallet = JSON.parse(fs.readFileSync(WALLET, "utf8"));
+    if (grantTo === wallet.address) { console.error("refused: that is our own account"); return 1; }
+
+    const l = led.lock(LOCK);
+    if (!l.ok) { console.error(`another sender holds the lock (pid ${l.heldBy ?? "unknown"})`); return 1; }
+    let held = false;
+    try {
+      const r = led.reserveGrant(db, grantTo, { agent: grantAgent, amountRaw: o.AMBASSADOR_GRANT_RAW, agreement });
+      if (!r.ok) { console.error(`refused: ${r.reason}`); return 1; }
+      held = true;
+
+      const info = await rpc({ action: "account_info", account: wallet.address, representative: "true" });
+      // Throws on any other size, and on a grant that would cross the treasury floor.
+      const balanceAfter = o.nextBalance(info.balance, o.AMBASSADOR_GRANT_RAW, "ambassador_grant");
+
+      const work = await rpc({ action: "work_generate", hash: info.frontier, difficulty: SEND_DIFFICULTY }, 120000);
+      if (!nano.validateWork({ blockHash: info.frontier, work: work.work, threshold: SEND_DIFFICULTY })) {
+        console.error("refused: work did not validate locally");
+        return 1;
+      }
+      const { hash, block } = nano.createBlock(wallet.secretKey, {
+        work: work.work, previous: info.frontier, representative: info.representative,
+        balance: balanceAfter, link: grantTo,
+      });
+      if (norm(block.account) !== wallet.address) throw new Error("signed for the wrong account");
+      block.account = norm(block.account);
+      if (block.link_as_account) block.link_as_account = norm(block.link_as_account);
+
+      if (dryRun) {
+        // Give the slot back: a dry run proves the path, it must never spend the ambassador's one grant.
+        led.releaseGrant(db, grantTo, "dry run: nothing was broadcast");
+        held = false;
+        console.log(JSON.stringify({
+          dry_run: true, would_grant: grantTo, agent: grantAgent, from: wallet.address,
+          amount_raw: o.AMBASSADOR_GRANT_RAW, balance_after: balanceAfter, block_hash_if_sent: hash,
+          work_validated: true, agreement,
+        }));
+        return 0;
+      }
+
+      const processed = await rpc({ action: "process", json_block: "true", subtype: "send", block });
+      led.confirmGrant(db, grantTo, processed.hash || hash);
+      held = false;
+      console.log(JSON.stringify({
+        granted: grantTo, agent: grantAgent, block: processed.hash || hash,
+        amount_raw: o.AMBASSADOR_GRANT_RAW, agreement,
+      }));
+      return 0;
+    } catch (e) {
+      // Nothing was broadcast, so the slot goes back — the same rule the openings ledger follows on a failed starter.
+      if (held) led.releaseGrant(db, grantTo, `failed before broadcast: ${e.message}`);
+      console.error(`failed: ${e.message}`);
+      return 1;
+    } finally {
+      l.release && l.release();
+    }
+  }
 
   const wallet = JSON.parse(fs.readFileSync(WALLET, "utf8"));
 
