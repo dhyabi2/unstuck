@@ -43,10 +43,6 @@ import { GUARDED, violationsIn } from "./nano_only_scan.mjs";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SITE = path.resolve(HERE, "..");
 
-function lines(file) {
-  return fs.readFileSync(path.join(SITE, file), "utf8").split("\n");
-}
-
 // ---------------------------------------------------------------------------
 // L48 — no USDC settlement or conversion path may ship
 // ---------------------------------------------------------------------------

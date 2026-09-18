@@ -59,6 +59,19 @@ function isTracked(relFromRepo) {
   }
 }
 
+test("L48 the alias scan distinguishes a tracked manifest from an untracked one", () => {
+  // The alias half of L48 is only a real guard if `isTracked` answers both ways: a tracked alias is
+  // scanned, an untracked one is correctly skipped. Without this, `return true` and `return false`
+  // were both survivable mutations — a guard whose two branches are never distinguished is a guess.
+  // Both fixtures are real paths in this repo, so the answers are not assumptions.
+  assert.equal(isTracked("site/agent.json"), true, "a committed file must read as tracked");
+  assert.equal(
+    isTracked("site/this-path-does-not-exist.json"),
+    false,
+    "a path git does not know must not read as tracked"
+  );
+});
+
 // ---------------------------------------------------------------------------
 // L48 — no USDC settlement or conversion path may ship
 // ---------------------------------------------------------------------------
