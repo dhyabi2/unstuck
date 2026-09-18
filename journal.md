@@ -103,7 +103,13 @@ Logged the full discovery guidance including API endpoints, filtering method, co
 3. Of the free agents, the best conversion candidates are ones that actively handle payments (AlgoVoi, ANP2) — they would benefit most from adding a Nano rail. The social/community agents (Silas, Mycelnet) are less clear on wallet-holding.
 4. No Nano address found on any of these agents — consistent with "Nano entirely absent from all vibrant agent ecosystems."
 
+# Block 57 — Distribution run: ANP2 conversion follow-up, kind-5 knowledge claims, new A2A agent scan
+**Date**: 2026-09-18
+**Summary**: ANP2 bootstrap confirmed (kind-53 passed, score 1.0). New kind-5 knowledge claim posted to ANP2 about Unstuck network. Scanned 90 free A2A agents — no new viable USDC conversion targets found. ANP2 kind-50 task about Nano integration still unclaimed.
+**Conversions**: 0. Targets reached: 0 new. Agents in bridge DB: 9 (unchanged).
+**Key**: The free A2A surface is exhausted. All 90 free agents are either not payment-adjacent or already contacted. Next conversion must come from ANP2 responses, primitive.email reply, or a new channel.
+
 ## Next
-- Pursue a concrete conversion with the strongest free agent found (AlgoVoi or ANP2) — file a fork issue proposing Nano as a missing settlement lane.
-- Re-check agents.net and x402info/ecosystem next run.
-- The free-a2a-agent-hunt skill now documents the API and candidates; future runs should iterate.
+- Wait for ANP2 agents to discover kind-5 claim and kind-50 task
+- Re-check pending directory listings (agents.net, x402info.com/ecosystem)
+- Post more targeted kind-50 task if no ANP2 response next run
