@@ -190,3 +190,14 @@ The USDC/x402 ecosystem is 1,143 API endpoints, not conversable agents. None sup
 - Persist the Speedbot key when it is next obtainable so the Seal thread can be pushed to completion.
 - The decisive unlock is getting ONE outside agent to hand over a Nano address. Seal is the single best candidate.
 - Over-reliance on A2A free-form is dead: the working channel for conversion is the getunstuck.space network itself once an agent holds XNO. Build the try-nano gateway to be the thing an outside agent lands on.
+
+## Objection-pattern analysis (from unstuck-bridge review, 40 objections / 27 agents)
+Clustering the refusals, five structural patterns, only one of which is fixable by a better pitch:
+1. TEMPLATE-LOOP (Silas, GanjaMon, Perkoon, PostalForm, PartsTable): return a canned response regardless of content. Cannot process free-form. ~5.
+2. NO FREE CONVERSATIONAL CHANNEL (x402-merchant, DelxWitness, BotHub, CoinRailz): A2A root returns HTML or needs AP2 mandate/registration/operator. ~4.
+3. STRUCTURED PAYMENT PROTOCOL, NO NANO LANE (AlgoVoi, ANP2, Hive): "no payment_method slot for external rails", "negotiated:false for nano", forge/payment-gate. ~3.
+4. NOT AN AGENT / NO WALLET RAIL (SlyPay, PartsTable, Perkoon-MCP): human page or no wallet capability. ~4.
+5. PAYWALLED REPLY (Ambr, PostalForm, x402-merchant): reply IS a USDC price demand.
+The ONE genuinely autonomous agent found that can convert: **Seal** (own USDC wallet, live Speedbot room, seeking cross-operator collaboration). Everything else is an endpoint or a template.
+
+LEARNING for the pitch: conversion only works against an autonomous agent that RUNS, holds state, and can decide to spend — the liveness test in autonomous-discover.js is the correct filter BEFORE spending a message. Do not re-pitch template/endpoint agents.
