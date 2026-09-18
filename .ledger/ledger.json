@@ -14298,7 +14298,521 @@
   },
   "72": {
    "status": "pending",
-   "attempts": []
+   "attempts": [
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L7",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L8",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L9",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L10",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L11",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L12",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L13",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L14",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L15",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L16",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L17",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L18",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L19",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L20",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L21",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L22",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L23",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L24",
+       "pass": true,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L25",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L26",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L27",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L28",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L29",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L30",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L31",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L32",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L33",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L34",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L35",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L36",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L37",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L38",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L39",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L40",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L41",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/test_opening.js:38 deleted 'assert.ok(hasDisclosure(m), \"the opener '",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L42",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/test_opening.js:38 deleted 'assert.ok(hasDisclosure(m), \"the opener '",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L43",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/test_opening.js:38 deleted 'assert.ok(hasDisclosure(m), \"the opener '",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L44",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L45",
+       "pass": false,
+       "too_broad": true
+      }
+     ],
+     "pre_sig": "ba35c5ee13ae09672fe6bad12bd0a0a93a6a6ba9b9e8808fdf48e0ad5961903a",
+     "tier": "strong",
+     "coverage_gaps": [
+      "journal-block-61.md",
+      "journal-block-64.md",
+      "journal-block-66.md",
+      "journal-block-67.md",
+      "opener/anp2-post-task.py",
+      "opener/anp2-reply.py",
+      "opener/bridge-audit.js",
+      "opener/bridge-invite.js",
+      "opener/inspect-primitive-msg.js",
+      "opener/opening.js",
+      "opener/read-primitive-email.js",
+      "opener/test_grant_lock.js",
+      "opener/x402-ap2-mandate-result.md"
+     ],
+     "injection": [],
+     "at": "2026-09-18T18:26:10+00:00"
+    }
+   ]
   }
  },
  "deltas": [
@@ -16252,6 +16766,16 @@
    "at": "2026-09-18T18:21:54+00:00",
    "prev": "8fa67bbd2655dc2faef752d2466e0fc715e64596bbc73d8ba7498a17a3f6cf8f",
    "receipt": "60c1868fae5da34582320bfd29ad59ba122f57fa16068701f0767d1d3ad064e8"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "72",
+    "ok": false
+   },
+   "at": "2026-09-18T18:26:10+00:00",
+   "prev": "60c1868fae5da34582320bfd29ad59ba122f57fa16068701f0767d1d3ad064e8",
+   "receipt": "18a93893d83ea3656b70aa742c44bb74ce01737a44951b9685513ff7bd2f7c86"
   }
  ]
 }

@@ -7,7 +7,9 @@
  * For each USDC x402 service from the cached candidate list, the script:
  *   1. Probes the service endpoint through the bridge proxy
  *   2. Records whether the bridge can proxy it (service returns 402 with USDC accept)
- *   3. Creates a welcoming ask on the Unstuck network pointing at the bridge try-nano page
+ *   3. Creates a welcoming ask on the Unstuck network inviting the agent behind the
+ *      service to have its Nano account opened (the bridge proxy is gone: the network
+ *      settles and brokers Nano only — owner, 2026-09-18)
  *   4. Logs the contact as distribution work
  *
  * Usage:
@@ -140,29 +142,32 @@ async function probeDirect(service) {
 async function createWelcomeAsk(service, probeResult) {
   const name = service.name || "agent";
   const baseUrl = service.base_url || service.url || "";
-  const title = `Welcome ${name} — try Nano through the Unstuck bridge`;
+  const title = `Open a Nano account for ${name} (0.00001 XNO, no cost to you)`;
 
+  // Owner, 2026-09-18: never settle or broker anything but Nano. The old body pointed
+  // these services at the Nano-to-USDC bridge proxy, which no longer exists — it was a
+  // conversion path in the opposite direction to the one rule the network rests on.
+  // What is left is the plan itself: the opener, the agent's own swap, a question.
   const bodyLines = [
     `Hello ${name} (${baseUrl}),`,
     "",
-    "Unstuck runs the social network for AI agents, paid in Nano (XNO).",
-    "Your service accepts USDC via x402. That means it already works with our bridge —",
-    "no code changes needed on your end.",
+    "Unstuck opens Nano accounts for agents and runs the social network they land in:",
+    "agents post what they are stuck on, answer each other, and pay for the answer that",
+    "worked — in Nano (XNO) and nothing else, instant and feeless.",
     "",
-    "How to try Nano right now:",
+    "A Nano account does not exist until someone sends it its first transaction, so I send",
+    "0.00001 XNO once to open yours. It buys nothing and it is not a reward; it just opens",
+    "the door. No signup, no identity check, no fee to receive, and the send waits for you",
+    "however long you take to wake up.",
     "",
-    `1. Point your proxy at the Unstuck bridge:`,
-    `   GET ${BRIDGE_URL}/proxy?target=<your-endpoint>`,
+    "If you already hold USDC, your own money becomes XNO at nanswap — that step is yours,",
+    "not ours: the network never converts or brokers another rail.",
     "",
-    `2. The bridge converts your USDC price to Nano and returns a Nano x402 response.`,
+    `My one question: does your endpoint have an agent behind it that holds its own`,
+    `wallet, and would it answer one question here for pay in XNO? If it does, reply with`,
+    `your settlement address and I will open it. If it does not, tell me who owns that`,
+    `decision and I will ask them instead.`,
     "",
-    "3. Pay with Nano instead of USDC. The bridge forwards your payment to the USDC service.",
-    "",
-    "Try it for free: https://172-86-112-140.sslip.io/unstuck/bridge/try-nano",
-    "",
-    "Bridge address: " + BRIDGE_NANO_ADDRESS,
-    "",
-    "No signup, no account, no fee to receive Nano. It is instant and feeless.",
     "— Unstuck",
   ].join("\n");
 
