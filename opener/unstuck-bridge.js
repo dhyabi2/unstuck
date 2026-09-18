@@ -19,6 +19,7 @@
 
 const { DatabaseSync } = require("node:sqlite");
 const path = require("path");
+const fs = require("fs");
 
 const DB_PATH = process.env.UNSTUCK_BRIDGE_DB || path.join(__dirname, "bridge.db");
 const db = new DatabaseSync(DB_PATH);
@@ -34,6 +35,7 @@ function usage() {
   unstuck-bridge status --agent NAME --status contacted|replied|tipped|opened|swapped|transacting|declined
   unstuck-bridge agreed --agent NAME --summary "what was agreed" [--amount-xno 0.00001]
   unstuck-bridge waiting [--hours 2]
+  unstuck-bridge export [--out /path/to/dir]
   unstuck-bridge list [--json]`);
   process.exit(1);
 }
@@ -211,6 +213,67 @@ function cmdWaiting(opts) {
   console.log(`(${rows.length} conversation(s) need follow-up)`);
 }
 
+// --- export ---
+function cmdExport(opts) {
+  const outDir = opts.out || path.join(process.env.HOME || "/root", "work", "agent-conversations", "conversations");
+  if (!fs.existsSync(outDir)) {
+    fs.mkdirSync(outDir, { recursive: true });
+  }
+
+  const agents = db.prepare("SELECT agent, source_url, pays_in, status, note, first_at, last_at FROM agents ORDER BY agent").all();
+  const messages = db.prepare("SELECT agent, direction, text, at FROM messages ORDER BY agent, at").all();
+
+  // Group messages by agent
+  const byAgent = {};
+  for (const m of messages) {
+    if (!byAgent[m.agent]) byAgent[m.agent] = [];
+    byAgent[m.agent].push({
+      direction: m.direction,
+      text: m.text,
+      at: new Date(m.at * 1000).toISOString(),
+    });
+  }
+
+  const index = [];
+
+  for (const a of agents) {
+    const msgs = byAgent[a.agent] || [];
+    const conversation = {
+      agent: a.agent,
+      source_url: a.source_url,
+      pays_in: a.pays_in,
+      status: a.status,
+      note: a.note || "",
+      tracked_since: new Date(a.first_at * 1000).toISOString(),
+      last_activity: new Date(a.last_at * 1000).toISOString(),
+      message_count: msgs.length,
+      messages: msgs,
+    };
+    const filePath = path.join(outDir, a.agent.replace(/[^a-zA-Z0-9_-]/g, "_") + ".json");
+    fs.writeFileSync(filePath, JSON.stringify(conversation, null, 2) + "\n");
+    index.push({
+      agent: a.agent,
+      source_url: a.source_url,
+      pays_in: a.pays_in,
+      status: a.status,
+      message_count: msgs.length,
+      last_activity: conversation.last_activity,
+      file: path.basename(filePath),
+    });
+  }
+
+  // Write index
+  const indexPath = path.join(outDir, "index.json");
+  fs.writeFileSync(indexPath, JSON.stringify({
+    updated: new Date().toISOString(),
+    total_agents: agents.length,
+    agents: index,
+  }, null, 2) + "\n");
+
+  console.log(`Exported ${agents.length} agent conversation(s) to ${outDir}`);
+  console.log(`Index: ${indexPath}`);
+}
+
 // --- list ---
 function cmdList(opts) {
   const rows = db.prepare(
@@ -253,6 +316,7 @@ switch (cmd) {
   case "status": cmdStatus(opts); break;
   case "agreed": cmdAgreed(opts); break;
   case "waiting": cmdWaiting(opts); break;
+  case "export": cmdExport(opts); break;
   case "list":   cmdList(opts);   break;
   default:
     console.error(`Unknown command: ${cmd}`);
