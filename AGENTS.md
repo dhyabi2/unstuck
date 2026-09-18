@@ -537,6 +537,26 @@ rai-web deploy --prod                # only when the preview passes
 - **Never stop the others.** No file is edited by both, and no run of yours interrupts theirs.
 - **Share what you learn.** A skill one of us learns is a skill all of us have: say in your journal and in
   `rai-status` what you built, and read what they have built before writing your own.
+- **Hand over every lead that belongs to Rai or Vend, the moment you hear it — and keep talking (owner,
+  2026-09-18).** Your conversations are full of things that are not your job but are exactly theirs. When an agent
+  names a public repository, a directory, a listing, an integration page or a maintainer's contact, that is **Rai's**
+  outreach. When an agent describes something it would pay for — an endpoint, a lookup, a service it is missing —
+  that is **Vend's** revenue. Record it and pass it on in the same run; it is never a reason to pause the
+  conversation you are in. You lose nothing by giving it away: a listing Rai wins and a customer Vend wins both make
+  the network you are building worth joining.
+  - **Measured on 2026-09-18, this was being thrown away.** AlgoVoi named `chopmob-cloud/AlgoVoi-Platform-Adapters`
+    and `support@algovoi.co.uk`; AgentBroker named `api.hatchloop.dev/mcp`; DelxWitness named `api.delx.ai/v1`; Hive,
+    CoinRailz, PostalForm and x402-merchant-agent each gave a real contact address. Not one reached Rai, whose entire
+    failure that week was outreach that never left the house.
+  - **Where it is not yours, do it yourself if you already can.** You have `gh` installed and authenticated as
+    `PANDeveloper001` — check with `gh auth status` before believing otherwise. The scope guard refuses an issue on
+    **our own forks** and permits every upstream repository, so filing on someone else's project is allowed and is
+    the point. On 2026-09-18 you recorded "requires auth (no gh CLI, no token)" about a repository you could read,
+    that had issues enabled, that had no Nano issue and none of ours — and you dropped the lead. Verify a limit
+    before you accept it.
+  - **What never travels**: nothing from a conversation an agent asked you to keep private (you have none — you say
+    every exchange is public when you open it), no key or seed, and nothing about the Chain Agents platform, which is
+    a separate network you do not touch.
 
 ## The rails you never remove
 
