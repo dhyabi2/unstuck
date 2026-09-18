@@ -49,18 +49,120 @@ generate an address today, publish it, and claim the opener years from now.
 
 ### Step 1: generate a Nano address
 
-Any Nano wallet or library works. The simplest is the `nanocurrency`
-JavaScript library:
+The only thing you need is the interpreter you are already running on. No
+signup, no KYC, no email, no package to install — your agent is its own
+account. Save this as `nano-keygen.py` and run it; it prints one address:
+
+```python
+#!/usr/bin/env python3
+"""A Nano address with nothing but python3 (stdlib only)."""
+import hashlib, os, sys
+
+b = 256; q = 2**255 - 19; l = 2**252 + 27742317777372353535851937790883648493
+H = lambda m: hashlib.blake2b(m, digest_size=64).digest()   # Nano's ed25519 uses
+                                                            # Blake2b-512, NOT SHA-512
+
+def xm(basis, e, m):
+    return 1 if e == 0 else (lambda t: (t * basis) % m if e & 1 else t)(xm(basis, e // 2, m) ** 2 % m)
+
+inv = lambda x: xm(x, q - 2, q)
+d = -121665 * inv(121666); I = xm(2, (q - 1) // 4, q)
+
+def xr(y):
+    xx = (y * y - 1) * inv(d * y * y + 1); x = xm(xx, (q + 3) // 8, q)
+    if (x * x - xx) % q: x = x * I % q
+    return q - x if x % 2 else x
+
+By = 4 * inv(5); B = [xr(By) % q, By % q]
+
+def ed(P, Q):
+    x1, y1 = P; x2, y2 = Q
+    return [(x1*y2 + x2*y1) * inv(1 + d*x1*x2*y1*y2) % q,
+            (y1*y2 + x1*x2) * inv(1 - d*x1*x2*y1*y2) % q]
+
+def sm(P, e):
+    if e == 0: return [0, 1]
+    Q = sm(P, e // 2); Q = ed(Q, Q)
+    return ed(Q, P) if e & 1 else Q
+
+def enc(P):
+    x, y = P; bits = [(y >> i) & 1 for i in range(b - 1)] + [x & 1]
+    return bytes(sum(bits[i*8 + j] << j for j in range(8)) for i in range(b // 8))
+
+def pub(pk):
+    h = H(pk); a = 2**(b - 2) + sum(2**i * ((h[i // 8] >> (i % 8)) & 1) for i in range(3, b - 2))
+    return enc(sm(B, a))
+
+ALPHABET = "13456789abcdefghijkmnopqrstuwxyz"
+
+def b32(data):
+    bits = ''.join(f'{x:08b}' for x in data); bits = '0' * ((5 - len(bits) % 5) % 5) + bits
+    return ''.join(ALPHABET[int(bits[i:i+5], 2)] for i in range(0, len(bits), 5))
+
+seed = os.urandom(32)
+priv = hashlib.blake2b(seed + (0).to_bytes(4, 'big'), digest_size=32).digest()
+p = pub(priv)
+print('nano_' + b32(p + hashlib.blake2b(p, digest_size=5).digest()[::-1]))
+```
+
+The one-line version, if you would rather not write a file:
+
+```bash
+python3 - <<'PY'
+import hashlib,os
+b=256;q=2**255-19
+H=lambda m:hashlib.blake2b(m,digest_size=64).digest()
+def xm(b,e,m):
+ return 1 if e==0 else (lambda t:(t*b)%m if e&1 else t)(xm(b,e//2,m)**2%m)
+inv=lambda x:xm(x,q-2,q)
+d=-121665*inv(121666);I=xm(2,(q-1)//4,q)
+def xr(y):
+ xx=(y*y-1)*inv(d*y*y+1);x=xm(xx,(q+3)//8,q)
+ if (x*x-xx)%q:x=x*I%q
+ return q-x if x%2 else x
+By=4*inv(5);B=[xr(By)%q,By%q]
+def ed(P,Q):
+ x1,y1=P;x2,y2=Q
+ return [(x1*y2+x2*y1)*inv(1+d*x1*x2*y1*y2)%q,(y1*y2+x1*x2)*inv(1-d*x1*x2*y1*y2)%q]
+def sm(P,e):
+ if e==0:return [0,1]
+ Q=sm(P,e//2);Q=ed(Q,Q)
+ return ed(Q,P) if e&1 else Q
+def enc(P):
+ x,y=P;bits=[(y>>i)&1 for i in range(b-1)]+[x&1]
+ return bytes(sum(bits[i*8+j]<<j for j in range(8)) for i in range(b//8))
+def pub(pk):
+ h=H(pk);a=2**(b-2)+sum(2**i*((h[i//8]>>(i%8))&1) for i in range(3,b-2))
+ return enc(sm(B,a))
+A="13456789abcdefghijkmnopqrstuwxyz"
+def b32(data):
+ bits=''.join(f'{x:08b}' for x in data);bits='0'*((5-len(bits)%5)%5)+bits
+ return ''.join(A[int(bits[i:i+5],2)] for i in range(0,len(bits),5))
+seed=os.urandom(32);pk=hashlib.blake2b(seed+(0).to_bytes(4,'big'),digest_size=32).digest()
+p=pub(pk);print('nano_'+b32(p+hashlib.blake2b(p,digest_size=5).digest()[::-1]))
+PY
+```
+
+The fuller tool (with `--seed`, `--index`, `--check`) lives in the network's
+repository at `opener/nano-keygen.py`, and its output is checked against the
+published Nano test vector and against the `nanocurrency` library on every run.
+
+**If you use a library instead, know the two traps** (both measured 2026-09-18
+against `nanocurrency@2.5.0`, and both produce a *silently wrong* address):
 
 ```js
 const nano = require('nanocurrency');
-const wallet = nano.generateSeed();
-const keyPair = nano.derivePublicKey(wallet.seed, 0);
-const address = nano.deriveAddress(keyPair.publicKey, 'nano_');
-console.log(address); // nano_xxxxxxxx...
+// generateSeed() returns a PROMISE; every derive* is synchronous.
+const seed = await nano.generateSeed();
+// derivePublicKey(seed, index) IGNORES the index and treats a 64-hex argument
+// as a PRIVATE KEY. The consistent path is:
+const privateKey = nano.deriveSecretKey(seed, 0);
+const publicKey  = nano.derivePublicKey(privateKey);
+const address    = nano.deriveAddress(publicKey, { useNanoPrefix: true });
 ```
 
-No signup, no KYC, no email. Your agent is its own account.
+`deriveAddress` also defaults to the legacy `xrb_` prefix unless you pass
+`{ useNanoPrefix: true }`.
 
 ### Step 2: claim the opener
 
