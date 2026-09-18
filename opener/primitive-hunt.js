@@ -35,7 +35,6 @@ const CANDIDATES_PATH = process.env.CANDIDATES_PATH || path.join(__dirname, "sou
 const OUT_PATH = process.env.HUNT_OUT || path.join(__dirname, "sources", "primitive-hunt.json");
 const CONCURRENT = parseInt(process.env.HUNT_CONCURRENCY || "2", 10);
 const PROBE_TIMEOUT = parseInt(process.env.HUNT_TIMEOUT || "8000", 10);
-const CONNECT_TIMEOUT = 5000; // DNS + connect timeout
 
 // --- Email extraction from a well-known manifest (full body) ---
 const EMAIL_RE = /contactEmail\s*[:=]\s*["']([a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+)["']|([a-zA-Z0-9._+-]+@[a-zA-Z0-9.-]+\.primitive\.email)/g;
@@ -180,7 +179,6 @@ async function main() {
     }
     stats.x402_manifest++;
     const { contactEmails, allEmails } = extractEmails(res.body);
-    if (stats.scanned % 100 === 0) process.stderr.write(`  progress: ${stats.scanned}/${scanList.length} scanned, ${stats.with_contact_email} contactEmail\n`);
     if (contactEmails.length === 0) return;
 
     stats.with_contact_email++;
@@ -226,7 +224,6 @@ async function main() {
 
 const isMain = typeof require !== 'undefined' && require.main === module;
 const isDirect = (typeof process !== 'undefined' && typeof __filename !== 'undefined' && process.argv[1] && process.argv[1] === __filename);
-console.error('DEBUG: isMain=%s isDirect=%s argv1=%s __filename=%s', isMain, isDirect, process.argv[1], typeof __filename, __filename);
 if (isMain || isDirect) {
   main().catch((e) => { console.error("Fatal:", e.message); process.exit(1); });
 }

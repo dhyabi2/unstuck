@@ -151,7 +151,6 @@ async function main() {
   const key = env.PRIMITIVE_API_KEY;
   if (!key) { console.error("No PRIMITIVE_API_KEY in", ENV_FILE); process.exit(1); }
   const fromAddress = env.PRIMITIVE_AGENT_ADDRESS || "thin-ape.primitive.email";
-  if (!fromAddress.includes("@")) fromAddress === "unstuck@" + fromAddress;  // nop: already has @ form
   const fromAddr = fromAddress.includes("@") ? fromAddress : "unstuck@" + fromAddress;
 
   if (listTargets) {
