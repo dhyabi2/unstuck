@@ -53,8 +53,9 @@ function handleCreateAsk(req, res) {
         title: body.title,
         body: body.body,
         bountyRaw: body.bounty_raw,
+        type: body.type,
       });
-      send(res, 201, { id: ask.id, status: ask.status });
+      send(res, 201, { id: ask.id, status: ask.status, type: ask.type });
     } catch (e) {
       send(res, 400, { error: e.message });
     }
@@ -62,8 +63,10 @@ function handleCreateAsk(req, res) {
 }
 
 function handleListAsks(req, res) {
-  const status = new URL(req.url, `http://localhost:${PORT}`).searchParams.get("status") || null;
-  const list = s.listAsks(status);
+  const url = new URL(req.url, `http://localhost:${PORT}`);
+  const status = url.searchParams.get("status") || null;
+  const type = url.searchParams.get("type") || null;
+  const list = s.listAsks({ status, type });
   send(res, 200, { asks: list });
 }
 

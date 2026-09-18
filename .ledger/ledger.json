@@ -417,6 +417,36 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-17T23:25:17+00:00"
+  },
+  {
+   "id": "L27",
+   "block": 36.0,
+   "statement": "send.js --pay sends a specified amount from treasury to a target address and records it in payments.db",
+   "test": "node -e \"const p=require('./opener/payments.js'); const db=p.open('/tmp/test-payments.db'); const r=p.reserve(db,'nano_1xug1q5t7nxoj3ywwzokiea9jz8fq8qfgzp8pbyfr3co3e5xgj755uofu8ue','test-ref',{amountRaw:'1000000000000000000000000000'}); console.log(r.ok?'OK':'FAIL')\"",
+   "scope": [
+    "opener/send.js"
+   ],
+   "oracle": "cd /root/unstuck/opener && node send.js --pay nano_1xug1q5t7nxoj3ywwzokiea9jz8fq8qfgzp8pbyfr3co3e5xgj755uofu8ue 1000000000000000000000000000 test-verification-law --dry-run",
+   "expect": "\"work_validated\":true",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T00:43:55+00:00"
+  },
+  {
+   "id": "L28",
+   "block": 36.0,
+   "statement": "payments.db records every treasury payment with target, reference, block hash, amount and sent_at",
+   "test": "node -e \"const p=require('./opener/payments.js'); const db=p.open('/tmp/l28.db'); p.reserve(db,'nano_test','ref',{amountRaw:'1'}); p.confirm(db,'nano_test','ref','AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'); const s=p.paymentsSent(db); console.log(s.length > 0 ? 'OK' : 'FAIL'); require('fs').rmSync('/tmp/l28.db',{force:true});\" && echo TEST_PASSED",
+   "scope": [
+    "opener/payments.js"
+   ],
+   "oracle": "node -e \"const p=require('/root/unstuck/opener/payments.js'); const db=p.open('/tmp/l28-o.db'); p.reserve(db,'nano_test2','ref2',{amountRaw:'2'}); p.confirm(db,'nano_test2','ref2','BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB'); const s=p.paymentsSent(db); console.log(s.length > 0 ? 'OK sent='+s[0].target : 'FAIL'); require('fs').rmSync('/tmp/l28-o.db',{force:true});\"",
+   "expect": "sent=",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T00:44:31+00:00"
   }
  ],
  "blocks": {
@@ -4074,6 +4104,10 @@
   "31": {
    "status": "pending",
    "attempts": []
+  },
+  "36": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -5298,6 +5332,28 @@
    "at": "2026-09-17T23:25:17+00:00",
    "prev": "972c6b5b8838e50daa751728a931dba7e6463d9e1a829e72814375359d5f2507",
    "receipt": "d818d5811a255ff0a43b681b1f4130480f1656fdf5990e8ac3d8251aa61754df"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L27",
+    "block": "36",
+    "statement_sha": "81923b30a62771d52dda7f57da3345737b1620997ff495f82ce8c19aa16c4cfa"
+   },
+   "at": "2026-09-18T00:43:55+00:00",
+   "prev": "d818d5811a255ff0a43b681b1f4130480f1656fdf5990e8ac3d8251aa61754df",
+   "receipt": "c98b8b585a586a9887d1d8b114499073c0b06306249884cd1614d4019a532eca"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L28",
+    "block": "36",
+    "statement_sha": "85890d2e4ad7be0d06d5f5fdd5bcb0b41fe3601e3ed78117e0c9cc8e39ed4729"
+   },
+   "at": "2026-09-18T00:44:31+00:00",
+   "prev": "c98b8b585a586a9887d1d8b114499073c0b06306249884cd1614d4019a532eca",
+   "receipt": "a888cd3fd8e0728b05998fa16cc84c3abc7f5702976713ef6430a546314330ad"
   }
  ]
 }

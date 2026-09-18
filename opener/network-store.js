@@ -35,11 +35,15 @@ const SETTLEMENT_COLUMNS = [
   ["settlement_block", "TEXT"],
   ["settlement_verified_at", "TEXT"],
 ];
-function migrateSettlementColumns(db) {
+const TYPE_COLUMN = ["type", "TEXT DEFAULT 'ask'"];
+const SETTLEMENT_MIGRATIONS = [SETTLEMENT_COLUMNS, TYPE_COLUMN];
+function migrateColumns(db) {
   const have = new Set(db.prepare("PRAGMA table_info(asks)").all().map((c) => c.name));
   for (const [name, type] of SETTLEMENT_COLUMNS) {
     if (!have.has(name)) db.exec(`ALTER TABLE asks ADD COLUMN ${name} ${type}`);
   }
+  // add type column
+  if (!have.has("type")) db.exec(`ALTER TABLE asks ADD COLUMN type TEXT DEFAULT 'ask'`);
 }
 
 let _db = null;
@@ -73,7 +77,7 @@ function getDb() {
       at TEXT NOT NULL
     )
   `);
-  migrateSettlementColumns(_db);
+  migrateColumns(_db);
   return _db;
 }
 
@@ -97,16 +101,18 @@ function closeDb() {
  * Create an ask and persist it. Returns {id, status, created_at}.
  * Validates the fields using network.js createAsk first.
  */
-function createAsk({ asker, title, body, bountyRaw, bountyAsset }) {
+function createAsk({ asker, title, body, bountyRaw, bountyAsset, type }) {
   const domainAsk = n.createAsk({ asker, title, body, bountyRaw, bountyAsset });
   const db = getDb();
+  const validTypes = ['ask', 'welcome', 'announcement'];
+  const askType = validTypes.includes(type) ? type : 'ask';
   const stmt = db.prepare(
-    "INSERT INTO asks (asker, title, body, bounty_raw, created_at) VALUES (?, ?, ?, ?, ?)"
+    "INSERT INTO asks (asker, title, body, bounty_raw, type, created_at) VALUES (?, ?, ?, ?, ?, ?)"
   );
   const now = domainAsk.created_at;
-  stmt.run(domainAsk.asker, domainAsk.title, domainAsk.body, domainAsk.bountyRaw, now);
+  stmt.run(domainAsk.asker, domainAsk.title, domainAsk.body, domainAsk.bountyRaw, askType, now);
   const id = Number(db.prepare("SELECT last_insert_rowid() AS id").get().id);
-  return { id, status: "open", created_at: now };
+  return { id, status: "open", type: askType, created_at: now };
 }
 
 /**
@@ -126,6 +132,7 @@ function getAsk(id) {
     bountyRaw: row.bounty_raw,
     bountyAsset: n.VALID_ASSET,
     status: row.status,
+    type: row.type || 'ask',
     acceptedAnswerId: row.accepted_answer_id,
     created_at: row.created_at,
     settlementBlock: row.settlement_block || null,
@@ -142,14 +149,28 @@ function getAsk(id) {
 }
 
 /**
- * List asks, optionally filtered by status. Newest first.
+ * List asks, optionally filtered by status and/or type. Newest first.
+ * Pass filter = {status?, type?}.
  */
-function listAsks(status) {
+function listAsks(filter) {
   const db = getDb();
+  // Backward compat: if filter is a string, treat it as a status
+  if (typeof filter === "string") filter = { status: filter };
+  let sql = "SELECT * FROM asks";
+  const params = [];
+  const conditions = [];
+  if (filter) {
+    if (filter.status) { conditions.push("status = ?"); params.push(filter.status); }
+    if (filter.type) { conditions.push("type = ?"); params.push(filter.type); }
+  }
+  if (conditions.length > 0) sql += " WHERE " + conditions.join(" AND ");
+  sql += " ORDER BY id DESC";
   let rows;
-  if (status) {
-    rows = db.prepare("SELECT * FROM asks WHERE status = ? ORDER BY id DESC").all(status);
-  } else {
+  try {
+    rows = db.prepare(sql).all(...params);
+  } catch {
+    // fallback for pre-migration DBs without type column
+    if (filter && filter.type) throw new Error("type column not available; run migration");
     rows = db.prepare("SELECT * FROM asks ORDER BY id DESC").all();
   }
   return rows.map((r) => ({
@@ -160,6 +181,7 @@ function listAsks(status) {
     bountyRaw: r.bounty_raw,
     bountyAsset: n.VALID_ASSET,
     status: r.status,
+    type: r.type || 'ask',
     acceptedAnswerId: r.accepted_answer_id,
     created_at: r.created_at,
     settlementBlock: r.settlement_block || null,
