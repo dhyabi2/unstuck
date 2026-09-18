@@ -65,27 +65,57 @@ function isTracked(relFromRepo) {
 
 test("L48 the scanner rejects a regression, so a pass on the real files means something", () => {
   // Positive control. If this fixture passed, every check below would be worthless.
-  const bad = [
-    `<a data-page="bridge">Bridge</a>`,
-    `<li>If the target returns a USDC x402 price, the bridge converts it to Nano</li>`,
-    `Send a request through the bridge: GET /proxy?target=<url>`,
-    `Verify with POST /verify-payment`,
-    `pay USDC to the bridge address`,
-    `if you hold USDC, swap it into XNO at nanswap`,
-  ].join("\n");
-  const found = violationsIn(bad);
+  //
+  // Each fixture line is chosen so it is caught by ONE mechanism only, so a scanner with that
+  // mechanism deleted cannot limp through on the others. An earlier version of this control let a
+  // gutted scanner pass: deleting the code that records a forbidden-token hit left the USDC lines
+  // still counting, so `found.length >= 6` held and the mutation survived. The ledger's own kill
+  // check caught that, and this control is built line-by-line so it cannot happen again.
+  const byToken = [
+    "Send a request through the bridge: GET /proxy?target=<url>", // /proxy?target=, and "bridge"
+    "Verify with POST /verify-payment", // verify-payment (not /v1/verify-payment)
+    `"bridge_proxy": {"endpoint": "..."}`, // bridge_proxy
+    "capabilities.bridge_nano_to_usdc_x402 = true", // bridge_nano_to_usdc
+    "<a data-page=\"bridge\">Bridge</a>", // the bare word bridge, no USDC on the line
+    "the proxy listens on 172.86.112.140:3402", // :3402
+  ];
+  const found = byToken.flatMap((l) => violationsIn(l));
   assert.ok(
-    found.length >= 6,
+    found.length >= byToken.length,
     `the scanner let a USDC/bridge regression through: ${JSON.stringify(found)}`
   );
+  // And each line must be caught by the FORBIDDEN mechanism specifically, not incidentally by the
+  // USDC rule — five of the six lines above name no USDC at all.
+  const nonUsdcLines = byToken.filter((l) => !/USDC/i.test(l));
+  assert.equal(nonUsdcLines.length, 5, "the control must keep lines that do NOT mention USDC");
+  for (const line of nonUsdcLines) {
+    const v = violationsIn(line);
+    assert.ok(
+      v.some((x) => /forbidden settlement\/bridge token/.test(x.why)),
+      `the control line was not caught by the FORBIDDEN mechanism: ${line}`
+    );
+  }
 
   // And the honest negations must NOT be flagged, or the law would forbid the very sentence that
   // states the rule — an unfixable law gets deleted, and a deleted law protects nothing.
+  // Each line names USDC, so a scanner whose negation check is deleted fails HERE.
   const good =
     "Every payment settles in Nano, and only Nano. Not USDC, not a card, not another chain.\n" +
     "the network itself never touches USDC\n" +
     "Settlement is on-chain Nano (XNO) only. No USDC, no cards.";
   assert.deepEqual(violationsIn(good), [], "the scanner flagged an honest Nano-only statement");
+  assert.ok(/USDC/.test(good), "the negation control must actually mention USDC to prove the rule");
+
+  // The scanner must RETURN its findings with a line number and a reason, and format them. A
+  // scanner that gathers violations and then returns nothing (or drops the line number) is exactly
+  // as useless as one that never gathers them, so both halves are pinned here.
+  const one = violationsIn("GET /proxy?target=x");
+  assert.equal(one.length, 1, "a single forbidden token must yield exactly one violation");
+  assert.equal(typeof one[0].line, "number", "each violation must carry its line number");
+  assert.equal(one[0].line, 1, "the violation's line number must be the line it was found on");
+  assert.ok(typeof one[0].why === "string" && one[0].why.length > 0, "each violation must say why");
+  assert.match(formatViolations(one), /line 1: .+ -> GET \/proxy\?target=x/, "formatViolations must render a violation");
+  assert.equal(formatViolations([]), "", "formatViolations of nothing must be empty");
 });
 
 test("L48 index.html, agent.json and llms.txt ship no USDC settlement or conversion path", () => {
