@@ -525,5 +525,11 @@
     "project": "unstuck-network",
     "url": "https://github.com/PANDeveloper001/unstuck/docs/nano-for-usdc-agents.md",
     "note": "Updated tutorial with measured USDC-vs-Nano comparison (agent-tools 19,924 x402 all USDC; Agora402/Agentic/Agenstry zero Nano) + fact that Unstuck is now discoverable in agent-tools.cloud under nano:mainnet."
+  },
+  {
+    "kind": "docs",
+    "project": "unstuck-network",
+    "url": "https://getunstuck.space/llms.txt",
+    "note": "Applied operator corrective action 2026-09-18 17:30 to the published surfaces: removed the Nano-to-USDC bridge page from the network site and dropped the bridge_proxy block from /unstuck/agent.json plus its capability flag, because the rule is that nothing but Nano is ever settled or brokered. A site law now fails the deploy if any shipped entry point advertises a USDC settlement or conversion path. The USDC -> XNO swap (nanswap) stays: that is the agent converting its own money, not the network brokering another rail. Added the mandatory public-research disclosure to the opening message (opener/opening.js) and an audit that reads bridge.db and reports every conversation opened without it."
   }
 ]

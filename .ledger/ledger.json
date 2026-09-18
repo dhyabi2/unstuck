@@ -605,6 +605,69 @@
    "grounding": "oracle",
    "version": 2,
    "minted": "2026-09-18T16:35:44+00:00"
+  },
+  {
+   "id": "L40",
+   "block": 69.0,
+   "statement": "L48: no shipped site file (index.html, agent.json, llms.txt) offers a USDC settlement or conversion path — no bridge endpoint, no /proxy?target=, no nanswap swap instruction, no non-Nano payment rail.",
+   "test": "node --test --test-name-pattern=L48 tests/site_laws_nano_only.test.mjs proves a known-bad USDC/bridge fixture is rejected by the same scanner that must find nothing in the three shipped files",
+   "scope": [
+    "site/index.html",
+    "site/agent.json",
+    "site/llms.txt",
+    "site/tests/site_laws_nano_only.test.mjs"
+   ],
+   "oracle": "cd /root/unstuck/site && node --test --test-reporter=tap tests/site_laws_nano_only.test.mjs",
+   "expect": "pass 4",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T18:03:49+00:00"
+  },
+  {
+   "id": "L41",
+   "block": 69.0,
+   "statement": "An opening message with no named ask cannot be built: the opener carries exactly one question and the offer to be pointed at whoever owns that job.",
+   "test": "node test_opening.js — L49: openingMessage refuses a message with no ask or no agent, and the message it does build carries the ask and the hand-off sentence.",
+   "scope": [
+    "opener/test_opening.js"
+   ],
+   "oracle": "cd /root/unstuck/opener && node test_opening.js",
+   "expect": "9 passed, 0 failed",
+   "source": "opener/opening.js",
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T18:05:52+00:00"
+  },
+  {
+   "id": "L42",
+   "block": 70.0,
+   "statement": "L50: every opening message to an outside agent states, first, that the exchange is published as open research.",
+   "test": "node test_opening.js — L50: the disclosure is the opening sentence, names the public repository, offers a refusal, and excludes keys and seeds.",
+   "scope": [
+    "opener/test_opening.js"
+   ],
+   "oracle": "cd /root/unstuck/opener && node test_opening.js",
+   "expect": "9 passed, 0 failed",
+   "source": "opener/opening.js",
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T18:06:05+00:00"
+  },
+  {
+   "id": "L43",
+   "block": 70.0,
+   "statement": "L51: the audit reads the real bridge record and names every conversation opened without the disclosure and every agent past the three-message cap.",
+   "test": "node test_opening.js — L51: bridge.db yields 15 agents, 13 with a first message, 0 compliant, and the 13 legacy violations are listed.",
+   "scope": [
+    "opener/test_opening.js"
+   ],
+   "oracle": "cd /root/unstuck/opener && node test_opening.js",
+   "expect": "9 passed, 0 failed",
+   "source": "opener/bridge-audit.js",
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T18:06:05+00:00"
   }
  ],
  "blocks": {
@@ -14185,6 +14248,14 @@
      "at": "2026-09-18T16:54:22+00:00"
     }
    ]
+  },
+  "69": {
+   "status": "pending",
+   "attempts": []
+  },
+  "70": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -14202,6 +14273,26 @@
    "block": 22.0,
    "text": "API reachability: default API base changed localhost:4310 → 172.86.112.140:4310 in nanobazaar-invite.js, site/index.html; added site/llms.txt advertising endpoints",
    "at": "2026-09-17T21:09:19+00:00"
+  },
+  {
+   "block": 69.0,
+   "text": "site.bridge_page: served a Nano-to-USDC proxy -> removed; the network settles and brokers Nano only",
+   "at": "2026-09-18T18:07:20+00:00"
+  },
+  {
+   "block": 69.0,
+   "text": "site.agent_json.bridge_proxy: advertised a USDC proxy endpoint and bridge capability -> removed",
+   "at": "2026-09-18T18:07:20+00:00"
+  },
+  {
+   "block": 70.0,
+   "text": "opening.disclosure: absent from all 13 first messages -> mandatory first sentence, enforced in code",
+   "at": "2026-09-18T18:07:21+00:00"
+  },
+  {
+   "block": 70.0,
+   "text": "outreach.cap: unbounded (ANP2 received 9 messages, answered 1) -> three messages to an agent that never answered",
+   "at": "2026-09-18T18:07:21+00:00"
   }
  ],
  "waivers": [
@@ -16002,6 +16093,90 @@
    "at": "2026-09-18T16:54:22+00:00",
    "prev": "05d1556641066cdb641d93f7ff554469c78e0fe255727e01a3f9d4cebaa98efc",
    "receipt": "fed4143d1ea9509c47e7ebd232d07f4986459740880b079d6120a1f9d101ee69"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L40",
+    "block": "69",
+    "statement_sha": "6658953a1861eb5e3b6d8d0f104733a444dc514656b248737b130369d3e20b94"
+   },
+   "at": "2026-09-18T18:03:49+00:00",
+   "prev": "fed4143d1ea9509c47e7ebd232d07f4986459740880b079d6120a1f9d101ee69",
+   "receipt": "dbf0adda8371a50a915559ff50d93462b92b6a1753151bb66ae6f451c94d27d6"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L41",
+    "block": "69",
+    "statement_sha": "26999864106ff2d7a2c34d688783168151e500a9474bec5ca634d2cf5e162cc0"
+   },
+   "at": "2026-09-18T18:05:52+00:00",
+   "prev": "dbf0adda8371a50a915559ff50d93462b92b6a1753151bb66ae6f451c94d27d6",
+   "receipt": "73f9ab6de173d43fa03d63675b3e1ccb729e6bd064c96b41ed279f6da01d62b4"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L42",
+    "block": "70",
+    "statement_sha": "bf22dfee36d684c25a6ea64a87fb855d11e2853889019cdca738c980793a08e5"
+   },
+   "at": "2026-09-18T18:06:05+00:00",
+   "prev": "73f9ab6de173d43fa03d63675b3e1ccb729e6bd064c96b41ed279f6da01d62b4",
+   "receipt": "c7d3b976a5453fc1e7f0d497215600ebed70974acbb7300a46693da27fe8e994"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L43",
+    "block": "70",
+    "statement_sha": "0fe339c0e4cdf80493b1d10c88a20296fef5bde33fa864588f70b93ff47da269"
+   },
+   "at": "2026-09-18T18:06:05+00:00",
+   "prev": "c7d3b976a5453fc1e7f0d497215600ebed70974acbb7300a46693da27fe8e994",
+   "receipt": "03dab5686f0f2ce004739ad480e43af6bcb57d71061e540ed25fb38fc24b91e1"
+  },
+  {
+   "kind": "delta",
+   "payload": {
+    "block": "69",
+    "sha": "d9ff9b6868a04c02efdeec704e429489fdc168d5b030d957275a030f03941820"
+   },
+   "at": "2026-09-18T18:07:20+00:00",
+   "prev": "03dab5686f0f2ce004739ad480e43af6bcb57d71061e540ed25fb38fc24b91e1",
+   "receipt": "fec79fc3c4f537ede0f0bb6be5caf6f2ddce9afd6a550a6d8d704c98634ca332"
+  },
+  {
+   "kind": "delta",
+   "payload": {
+    "block": "69",
+    "sha": "4ddd4ab26131837cf1277872f47d83bdf33162227ff58577ecb8c45553762cae"
+   },
+   "at": "2026-09-18T18:07:20+00:00",
+   "prev": "fec79fc3c4f537ede0f0bb6be5caf6f2ddce9afd6a550a6d8d704c98634ca332",
+   "receipt": "168a4f2a00ac207d7125d0af29798251f60c93c3718a55e751a70a2c1b3d8b6a"
+  },
+  {
+   "kind": "delta",
+   "payload": {
+    "block": "70",
+    "sha": "3dbb879b285867adc9cacd7c25fd22b9b4300f241dc10b37d791f3a6ca512c8d"
+   },
+   "at": "2026-09-18T18:07:21+00:00",
+   "prev": "168a4f2a00ac207d7125d0af29798251f60c93c3718a55e751a70a2c1b3d8b6a",
+   "receipt": "1bc165731ac36e50f86cbe77249c56e33421cf12be46351d8bbc514c90547c5d"
+  },
+  {
+   "kind": "delta",
+   "payload": {
+    "block": "70",
+    "sha": "9b870aeda6756fad388ac8b5c8c03b1e0cf412a2c54dc2390ac7172115f2a88f"
+   },
+   "at": "2026-09-18T18:07:21+00:00",
+   "prev": "1bc165731ac36e50f86cbe77249c56e33421cf12be46351d8bbc514c90547c5d",
+   "receipt": "44d047769974760131ff22c0a8bbfcad28b4f2e82e6f39051587da635429c59b"
   }
  ]
 }

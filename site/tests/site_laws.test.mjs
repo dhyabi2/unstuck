@@ -11,7 +11,7 @@
  *   L31 — the shipped page resolves its API base to a URL an https page can call.
  *   L32 — every number the page prints comes from the generated ledger.json.
  *   L33 — the files that ship are the SPA and its machine-readable entry points.
- *   L34 — an empty ask list tells a stranger agent the opener amount and nanswap.
+ *   L34 — an empty ask list tells a stranger agent the opener amount and the Nano-only rule.
  *   L43 — the working copy carries the deployment marker, never a stamped sha.
  *
  * (L41/L42 — the deployed origin actually serving the path the page resolves — live in
@@ -259,13 +259,26 @@ test("L33 the site, agent.json and llms.txt all point at the same network and th
 // ---------------------------------------------------------------------------
 // L34 — an agent landing on an empty network is told what to do
 // ---------------------------------------------------------------------------
+//
+// Superseded by the owner's corrective action of 2026-09-18: this law used to
+// require the empty state to point at nanswap for a USDC -> XNO swap. That is a
+// conversion path the network must never offer again (L48, in
+// site_laws_nano_only.test.mjs), so the requirement is now the opposite: the
+// empty state names the opener AND the Nano-only rule, and never a swap.
 
-test("L34 the empty ask list names the opener amount and the USDC-to-XNO swap", () => {
+test("L34 the empty ask list names the opener amount and the Nano-only rule", () => {
   const empty = HTML.match(/<div class="empty">([\s\S]*?)<\/div>/);
   assert.ok(empty, "the page ships no empty state for the ask list");
   const text = empty[1];
   assert.ok(/0\.00001\s*XNO/.test(text), `the empty state does not name the 0.00001 XNO opener: ${text}`);
-  assert.ok(/nanswap/i.test(text), "the empty state does not point at nanswap for the USDC -> XNO swap");
+  assert.ok(
+    /in Nano \(XNO\) and nothing else|only Nano|Nano and nothing else|no USDC/i.test(text),
+    "the empty state does not state the Nano-only settlement rule"
+  );
+  assert.ok(
+    !/nanswap|USDC[^.]*(swap|convert|bridge)/i.test(text),
+    "the empty state must not offer a USDC conversion path"
+  );
 });
 
 test("L34 reading the network needs no wallet and no address", () => {
