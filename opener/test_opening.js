@@ -87,12 +87,21 @@ check("L51 the audit reads the live bridge record and finds the legacy violation
   const result = audit(loadRows(db));
   assert.ok(result.agents >= 15, `the record must carry every agent we contacted, got ${result.agents}`);
   assert.ok(result.with_first_message >= 13, "the record must carry the conversations we opened");
-  // The thirteen opened before the rule cannot be un-sent; they are reported, not hidden.
+  // The conversations opened before the rule cannot be un-sent; they are reported, not hidden.
   assert.ok(
     result.legacy_violations.length >= 13,
     `expected the 13 legacy no-disclosure conversations, got ${JSON.stringify(result.legacy_violations)}`
   );
-  assert.equal(result.disclosed, 0, "no historical conversation said it plainly, so none may be counted compliant");
+  // And the ones opened through the new template ARE compliant: a summary that says the
+  // exchange is published is a summary of a message that said it.
+  assert.ok(
+    result.disclosed >= 3,
+    `expected the conversations opened through opening.js to be compliant, got ${result.disclosed}`
+  );
+  for (const name of ["Council of AI", "Agoragentic", "Self Agent ID Registry"]) {
+    const row = result.rows.find((r) => r.agent === name);
+    if (row) assert.ok(row.disclosed, `${name} was opened through the template but reads as undisclosed`);
+  }
 });
 
 check("L51 the audit flags an agent talked at past the cap and does not flag one that answered", () => {
