@@ -590,6 +590,23 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-18T15:00:16+00:00"
+  },
+  {
+   "id": "L39",
+   "block": 66.0,
+   "statement": "L43: the live origin must name HEAD, and the working copy must carry the placeholder the build substitutes.",
+   "test": "node --test tests/site_laws.test.mjs proves the working copy carries the literal placeholder marker; node --test --test-name-pattern='L43' tests/site_api_path.test.mjs fails against a live origin whose page names any sha other than HEAD, and prints a live: diagnostic naming the sha when they agree.",
+   "scope": [
+    "site/tests/site_laws.test.mjs",
+    "site/tests/site_api_path.test.mjs",
+    "site/tests/site_stamp.test.mjs"
+   ],
+   "oracle": "cd /root/unstuck/site && node --test --test-name-pattern='L43' tests/site_api_path.test.mjs >/dev/null 2>&1 && echo L43_OK",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T16:35:44+00:00"
   }
  ],
  "blocks": {
@@ -13258,6 +13275,10 @@
      "at": "2026-09-18T15:21:26+00:00"
     }
    ]
+  },
+  "66": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -15044,6 +15065,17 @@
    "at": "2026-09-18T15:21:26+00:00",
    "prev": "f2fb2d42045f64f59201f50a2e53fd5b8a0ed0beabcca26bc89bdc32853089ac",
    "receipt": "0736370205b4cb3f0fbb86e8b6db0eeda016fc67bea3a7d1a27fef3ef70a1477"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L39",
+    "block": "66",
+    "statement_sha": "8e3583b3f6edd5a28f16c33857cc35d2382b630fcfc974e3d37f23fca61913e3"
+   },
+   "at": "2026-09-18T16:35:44+00:00",
+   "prev": "0736370205b4cb3f0fbb86e8b6db0eeda016fc67bea3a7d1a27fef3ef70a1477",
+   "receipt": "2d087db7f90a4353fd603dfc0b88495821929cd78e422266554ac7fd54cc6ba9"
   }
  ]
 }

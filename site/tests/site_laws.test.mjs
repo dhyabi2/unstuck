@@ -12,6 +12,7 @@
  *   L32 — every number the page prints comes from the generated ledger.json.
  *   L33 — the files that ship are the SPA and its machine-readable entry points.
  *   L34 — an empty ask list tells a stranger agent the opener amount and nanswap.
+ *   L43 — the working copy carries the deployment marker, never a stamped sha.
  *
  * (L41/L42 — the deployed origin actually serving the path the page resolves — live in
  *  `site_api_path.test.mjs`, because they are about the rewrite and the live origin.)
@@ -282,5 +283,26 @@ test("L34 the page says plainly that the network settles in Nano only", () => {
   assert.ok(
     /in Nano \(XNO\) only|XNO.*and only|only Nano/i.test(HTML),
     "the shipped page must state the XNO-only rule the network is built on"
+  );
+});
+
+// ---------------------------------------------------------------------------
+// L43 — the working copy carries the marker, and only the marker
+// ---------------------------------------------------------------------------
+
+test("L43 the working copy carries the deployment marker as a placeholder, never a stamped sha", () => {
+  // The marker is what the deployer substitutes and what a live check reads to tell
+  // "this build is deployed" from "an older build is still live". The working copy must
+  // hold the literal placeholder: a disk copy carrying a real sha would be
+  // indistinguishable from a deployment, and the live check could then pass against a
+  // stale origin — the exact state measured on 2026-09-18, when getunstuck.space served
+  // `unstuck-commit: c885987...` while HEAD was bcabf3f.
+  assert.ok(
+    HTML.includes("// __UNSTUCK_COMMIT__"),
+    "site/index.html must carry the literal __UNSTUCK_COMMIT__ marker the deployer substitutes"
+  );
+  assert.ok(
+    !/unstuck-commit:\s*[0-9a-f]{7,40}/.test(HTML),
+    "site/index.html must not carry a real unstuck-commit stamp on disk; the deployer injects that at upload"
   );
 });

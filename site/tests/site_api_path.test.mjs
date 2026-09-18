@@ -234,29 +234,43 @@ test("L43 the page carries a deployment-identity marker, placeholder in the work
 test("L43 the live origin names its build, so a stale deployment cannot pass the live check", async (t) => {
   const r = await probe(`${LIVE_ORIGIN}/`);
   if (!r.ok) {
+    // A network outage must not fail a deploy for a reason that is not the site's.
     t.diagnostic(`SKIPPED deployment-identity check: ${LIVE_ORIGIN}/ did not answer (${r.error}).`);
     return;
   }
-  const stamped = r.body.match(/unstuck-commit:\s*([0-9a-f]{7,40})/);
-  if (!stamped) {
-    // An older deployment (or the preview under construction) cannot be asked what it serves — that is
-    // precisely why this check exists. Say so instead of asserting a fact about a build that is not on
-    // the wire; once L43 ships, the absence of a stamp is a real failure the deploy's smoke check raises.
-    t.diagnostic(
-      `SKIPPED deployment-identity check: ${LIVE_ORIGIN}/ serves a build with no unstuck-commit stamp; ` +
-        `the marker has not shipped yet.`
-    );
-    return;
-  }
+
   let headSha = "";
   try {
     headSha = git(["rev-parse", "HEAD"]);
   } catch {
     headSha = "";
   }
+
+  const stamped = r.body.match(/unstuck-commit:\s*([0-9a-f]{7,40})/);
+  // No stamp at all is a real failure now, not a skip. Measured 2026-09-18: a build with
+  // no stamp shipped and every check merely SKIPPED, which is how the site came to serve
+  // `unstuck-commit: c885987...` while HEAD was bcabf3f — a deployment nobody could tie
+  // to the working tree. A check that can only ever skip is not a check.
+  if (!stamped) {
+    const placeholder = r.body.includes("__UNSTUCK_COMMIT__");
+    assert.fail(
+      `${LIVE_ORIGIN}/ serves no unstuck-commit stamp` +
+        (placeholder
+          ? " and still carries the raw __UNSTUCK_COMMIT__ placeholder"
+          : "") +
+        `; HEAD is ${headSha.slice(0, 12)}. A visitor cannot tell which commit is live, so this ` +
+        `deployment is not evidence that the current build works.`
+    );
+  }
+
   assert.ok(
     headSha && headSha.startsWith(stamped[1]),
     `the live origin says it is serving ${stamped[1]}, but HEAD is ${headSha.slice(0, 12)}; a stale ` +
       `deployment is not evidence that this build works`
   );
+  assert.ok(
+    !r.body.includes("__UNSTUCK_COMMIT__"),
+    "the live page must not still carry the raw placeholder once it is stamped"
+  );
+  t.diagnostic(`live: ${LIVE_ORIGIN}/ names ${stamped[1]}, which is HEAD`);
 });

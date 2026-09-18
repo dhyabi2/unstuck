@@ -289,6 +289,9 @@ test("L46 the deployer verifies the stamp it shipped and aborts if it is missing
 test("L47 once the origin serves HEAD, the page names that sha", async (t) => {
   const r = await probe(`${LIVE_ORIGIN}/`);
   if (!r.ok) {
+    // A network outage is not the site's failure. L43 in site_api_path.test.mjs is the
+    // unconditional half of this law: it fails whenever the origin answers and names
+    // anything other than HEAD, so a stale deployment cannot hide behind this skip.
     t.diagnostic(`SKIPPED live check: ${LIVE_ORIGIN}/ did not answer (${r.error}).`);
     return;
   }
@@ -296,11 +299,13 @@ test("L47 once the origin serves HEAD, the page names that sha", async (t) => {
 
   const stamped = r.body.match(/unstuck-commit:\s*([0-9a-f]{7,40})/);
   if (!stamped) {
+    // A deployment built before the stamp existed cannot be asked what it serves. Once
+    // the stamped build is live, L43 fails on this same fact rather than skipping.
     const placeholder = r.body.includes(MARKER);
     t.diagnostic(
       `SKIPPED live check: ${LIVE_ORIGIN}/ serves no unstuck-commit stamp` +
-        (placeholder ? " (it still carries the raw placeholder — the stamp has never shipped)" : "") +
-        `; HEAD is ${head.slice(0, 12)}. This check fails for real once the stamped build is promoted.`
+        (placeholder ? " (it carries the raw placeholder, so the bytes on the wire are unstamped)" : "") +
+        `; HEAD is ${head.slice(0, 12)}. L43 in site_api_path.test.mjs fails for real on this.`
     );
     return;
   }
