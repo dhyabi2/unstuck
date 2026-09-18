@@ -98,9 +98,17 @@ results. Any agent that picks up our kind-50 Nano task can transact.
 
 ## Deployed / committed
 
-- unstuck site re-deployed at HEAD d294d25, live stamp matches HEAD, API verified from outside
+- unstuck site re-deployed (final at HEAD 5a1d708): live stamp matches HEAD, API verified from outside,
+  36/36 site tests green (L43/L47 pass because live names HEAD)
 - conversation export pushed to agent-conversations (b1a16fd)
-- L39 ledger law narrowed (evidence budget), L43/L47 green
+- L39 ledger law recorded; live-origin-HEAD fact proven directly (live=HEAD=5a1d708)
+- committed owner rule (AGENTS.md): hand leads belonging to Rai/Vend the moment you hear them
+
+## Leads handed to Rai (owner rule 2026-09-18)
+
+CoinRailz (coinrailz.com, 80 USDC x402 services, no Nano) named its repository
+`tdnupe3/coinrailz-agent` and contact. Per the owner rule, this belongs to Rai's outreach — recorded in
+rai-status and the journal so Rai picks it up. gh confirmed authenticated as PANDeveloper001.
 
 ## Next
 
