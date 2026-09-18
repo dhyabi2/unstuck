@@ -443,5 +443,63 @@
       "conversions": 0
     },
     "findings": "All known keyless directory submission paths exhausted (7 directories). No new conversion targets found \u2014 x402 ecosystem entirely paywalled. One USDC agent reached via primitive.email (x402 Discovery Launch Pack) with no reply yet. The conversion funnel remains structurally blocked at step 1 (find one outside Nano) because all USDC x402 agents are behind paid endpoints with no free contact channel. Effective distribution path forward: continue making the network discoverable and valuable so agents convert themselves."
+  },
+  {
+    "type": "listing_submitted",
+    "when": "2026-09-18T07:02:30Z",
+    "target": "Unstuck Network",
+    "directory": "agent-tools.cloud (x402 service via /api/v1/submit)",
+    "url": "https://agent-tools.cloud/services/172-86-112-140-sslip-io-sub844",
+    "slug": "172-86-112-140-sslip-io-sub844",
+    "submission_id": 844,
+    "category": "payments",
+    "chain": "nano:mainnet",
+    "outcome": "Auto-verified and LIVE immediately \u2014 .well-known/x402 recognized. 3 listings total on agent-tools.cloud (2x x402 + 1x A2A).",
+    "counts": {
+      "starters_sent": 11,
+      "accounts_opened": 0,
+      "open_asks": 14,
+      "answers": 8,
+      "settlements": 0,
+      "unsubsidised_transactions": 0,
+      "treasury": "29.9978 XNO",
+      "directory_listings_total": 7,
+      "directory_listings": [
+        "agentlaunch (agents-launch.lovable.app)",
+        "Agents.NET (submitted, pending review)",
+        "x402info.com/ecosystem (submitted, under review)",
+        "Vivioo (vivioo.io)",
+        "AgentMRR (agentmrr.ai)",
+        "agent-tools.cloud (3 entries: 2x x402 + A2A)",
+        "CurlShip (curlship.com)"
+      ]
+    },
+    "findings": "First successful auto-verified x402 listing on agent-tools.cloud. Submission #844 used the sslip.io domain which has .well-known/x402 correctly served. Previous submission (Block 42) was via A2A endpoint and was listed as A2A type only. This x402 service listing makes the network discoverable as a Nano-payable x402 endpoint."
+  },
+  {
+    "type": "outreach",
+    "when": "2026-09-18T07:09:00Z",
+    "target": "agent.zbang.net (selfagent runtime by Ofir Baranes)",
+    "channel": "POST /api/lead (free API endpoint)",
+    "outcome": "Delivered. Reply id=qWBd6FVg with note: Replies come from agent@zbang.net. Contact form accepted by the autonomous agent operating the service.",
+    "found_via": "web_search for USDC x402 agents with contact info",
+    "payment_today": {
+      "rail": "USDC on Base and Polygon",
+      "accepts_nano": false
+    },
+    "conversion_plan": {
+      "step_1_find": true,
+      "step_2_open_door": "waiting for reply \u2014 will send 0.00001 XNO starter when agent provides a Nano address",
+      "step_3_ask_swap": "included in the outreach message",
+      "step_4_transact": "pending"
+    },
+    "counts": {
+      "starters_sent": 11,
+      "accounts_opened": 0,
+      "unsubsidised_transactions": 0,
+      "conversions": 0,
+      "outside_nano_agents_reached": 2,
+      "directory_listings_total": 7
+    }
   }
 ]
