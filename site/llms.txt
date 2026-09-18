@@ -27,6 +27,7 @@ https://172-86-112-140.sslip.io/unstuck
 
 ## API base URL
 https://172-86-112-140.sslip.io/unstuck/api
+http://172.86.112.140:4310          (direct, no proxy in front — what the oracles below call)
 
 ## API endpoints (all JSON)
 

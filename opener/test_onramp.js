@@ -13,6 +13,9 @@
  *       address. JSON by default, HTML for a browser.
  *
  * Usage: node test_onramp.js [--only=L29|L30]
+ *
+ * Runs from the repo root. Uses random ports so a sandboxed mutation run cannot
+ * collide with the live server on 4310 or with a parallel mutant.
  */
 
 const http = require("http");
@@ -21,12 +24,15 @@ const path = require("path");
 
 const ONLY = (process.argv.find((a) => a.startsWith("--only=")) || "").split("=")[1] || null;
 
-const tmpDb = `/tmp/test-onramp-${Date.now()}.db`;
+const tmpDb = `/tmp/test-onramp-${process.pid}-${Date.now()}.db`;
 process.env.NW_DB_PATH = tmpDb;
 process.env.UNSTUCK_ACCOUNT = "nano_1434j1n4sin4cefs5njibag4tsmo596fmg3s6bdogtod3ndmdfez5yuebrh9";
 
-const nw = require("./nserver-persist.js");
-const PORT = 4314;
+// Resolve the repo root from this file's own location, so the same command works
+// from any cwd and from a sandbox copy (mutation checks run the oracle with cwd=root).
+const REPO_ROOT = path.join(__dirname, "..");
+const nw = require(path.join(REPO_ROOT, "opener/nserver-persist.js"));
+const PORT = 4000 + (process.pid % 1000);
 nw.server.listen(PORT);
 
 const nanoA = "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3";
