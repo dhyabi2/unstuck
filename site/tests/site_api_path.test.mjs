@@ -109,8 +109,32 @@ test("L41 the deployed origin serves the resolved API path with the headers a br
     resolved.startsWith("http")
       ? `${resolved}/health`
       : `${LIVE_ORIGIN}${resolved.startsWith("/") ? resolved : "/" + resolved}/health`;
-  if (!url.startsWith(LIVE_ORIGIN) && !resolved.startsWith("http")) {
-    t.diagnostic(`note: the page resolves ${resolved} on the live domain`);
+
+  // `rai-web` runs this suite before it uploads anything, so on a preview run the rewrite being
+  // tested has not been deployed yet and the live origin legitimately 404s. The skip must not be
+  // fooled by the fact that an OLDER deployment of this SPA is already live — so it asks the
+  // deployment identity first, and only skips when HEAD is not what the origin is serving.
+  // A stranger can run this file against the live domain at any time and get a real answer: once
+  // HEAD is the deployed commit, the check runs for real.
+  const root = await probe(`${LIVE_ORIGIN}/`);
+  if (root.ok && root.status === 200 && !root.body.includes("resolveApi")) {
+    t.diagnostic(
+      `SKIPPED live check: ${LIVE_ORIGIN}/ does not serve this SPA (${root.body.length} bytes, no resolveApi).`
+    );
+    return;
+  }
+  let headSha = "";
+  try {
+    headSha = git(["rev-parse", "HEAD"]);
+  } catch {
+    headSha = "";
+  }
+  if (root.ok && headSha && !root.body.includes(headSha.slice(0, 12))) {
+    t.diagnostic(
+      `SKIPPED live check: ${LIVE_ORIGIN}/ is serving an older deployment than HEAD ${headSha.slice(0, 12)}; ` +
+        `the rewrite under test has not shipped yet. The deploy's own smoke check must answer ${url} with 200.`
+    );
+    return;
   }
 
   const r = await probe(url);
