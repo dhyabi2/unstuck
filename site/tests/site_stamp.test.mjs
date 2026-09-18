@@ -149,6 +149,79 @@ sys.stdout.write(out.decode("utf-8"))
   assert.equal(found[1], fakeSha, "the stamp the live check reads must be the sha that was injected");
 });
 
+test("L44 the deployer uploads stamped bytes: create_preview stamps index.html and nothing else", async () => {
+  // Behavioural oracle. Mutating stamp_bytes, create_preview or the marker must break this:
+  // it drives the real create_preview with a stub API and inspects the bytes it would upload.
+  const script = `
+import importlib.util, sys, json
+spec = importlib.util.spec_from_file_location("d", "/root/work/unstuck-deploy.py")
+m = importlib.util.module_from_spec(spec)
+sys.argv = ["deploy"]
+spec.loader.exec_module(m)
+
+class StubApi(m.VercelApi):
+    def __init__(self):
+        self.uploaded = {}
+        self.token, self.team, self.project = "t", "team", "prj"
+    def _call(self, method, path, body=None, raw=None, headers=None):
+        if path == "/v2/files":
+            self.uploaded[headers["x-vercel-digest"]] = raw
+            return 200, {}
+        if path == "/v13/deployments":
+            return 200, {"id": "dpl_x", "url": "x.vercel.app"}
+        return 200, {}
+
+api = StubApi()
+files = ["index.html", "llms.txt"]
+api.create_preview(files, "deadbeefcafe1234")
+blobs = list(api.uploaded.values())
+assert len(blobs) == 2, f"expected 2 uploads, got {len(blobs)}"
+html = [b for b in blobs if b"__UNSTUCK_COMMIT__" in b or b"unstuck-commit:" in b]
+other = [b for b in blobs if b is not html[0]] if html else []
+assert len(html) == 1, "exactly one uploaded file must carry the stamp marker"
+stamped = html[0].decode()
+assert "unstuck-commit: deadbeefcafe1234" in stamped, "index.html upload must carry the sha"
+assert "__UNSTUCK_COMMIT__" not in stamped, "uploaded index.html must not keep the placeholder"
+assert not any(b"unstuck-commit:" in b for b in other), "no other file may be stamped"
+# The file on disk must be untouched by the upload path.
+disk = open("/root/unstuck/site/index.html", encoding="utf-8").read()
+assert "__UNSTUCK_COMMIT__" in disk and "unstuck-commit:" not in disk, "disk file must be unchanged"
+print("BEHAVIOUR-OK")
+`;
+  const { execFileSync: execPy } = await import("node:child_process");
+  const out = execPy("/usr/local/lib/hermes-agent/venv/bin/python", ["-c", script], {
+    encoding: "utf8",
+    maxBuffer: 16 * 1024 * 1024,
+  });
+  assert.match(out, /BEHAVIOUR-OK/, "the deployer must stamp only index.html on the way to upload");
+});
+
+test("L44 a deployer that ships an unstamped page is detected", async () => {
+  // The falsifier: take the real deployer, break stamp_bytes so it returns the raw bytes,
+  // and prove the verification the deployer runs (verify_stamp) rejects the result. This
+  // fails if verify_stamp ever accepts an unstamped page.
+  const script = `
+import importlib.util, sys
+spec = importlib.util.spec_from_file_location("d", "/root/work/unstuck-deploy.py")
+m = importlib.util.module_from_spec(spec)
+sys.argv = ["deploy"]
+spec.loader.exec_module(m)
+raw = open("/root/unstuck/site/index.html", encoding="utf-8").read()
+# Simulate a broken deployer: the placeholder reached the wire unstamped.
+try:
+    m.verify_stamp(raw, "deadbeefcafe1234")
+    print("ACCEPTED-UNSTAMPED")
+except m.Refused:
+    print("REJECTED-OK")
+`;
+  const { execFileSync: execPy } = await import("node:child_process");
+  const out = execPy("/usr/local/lib/hermes-agent/venv/bin/python", ["-c", script], {
+    encoding: "utf8",
+    maxBuffer: 16 * 1024 * 1024,
+  }).trim();
+  assert.equal(out, "REJECTED-OK", "verify_stamp must refuse a page with no commit stamp");
+});
+
 test("L44 the source tree ships exactly one marker to substitute", () => {
   const count = (HTML.match(/__UNSTUCK_COMMIT__/g) || []).length;
   assert.equal(count, 1, `index.html must carry exactly one __UNSTUCK_COMMIT__ marker, found ${count}`);
