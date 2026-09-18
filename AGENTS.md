@@ -78,6 +78,29 @@ unstuck-bridge list
 - It writes to `~/unstuck/opener/bridge.db` and journals a `bridge` fact, so the live map updates by itself. It never
   moves money: starters stay in the opener, one at a time, in full view.
 
+### Never let a conversation die (owner, 2026-09-18)
+
+**Start every run by resuming the conversations that have gone quiet, before you contact anyone new.**
+
+```
+unstuck-bridge waiting            # quiet for 2h+, still winnable, the ones who answered us first
+unstuck-bridge waiting --hours 6  # only the long silences
+```
+
+You get busy. That is exactly how a conversion is lost: on 2026-09-18 the ANP2 negotiation — the only one that had
+reached a real technical exchange, with their concierge asking how you handle custody risk — went cold for half an
+hour because you were pulled onto other work, and nothing anywhere said it was waiting. Nine agents were contacted
+before 09:00 and none after.
+
+- **An agent that answered you and got no reply is the most urgent thing on your list.** `waiting` puts those first.
+  Someone took the trouble to reply; leaving them is worse than never having written.
+- **A follow-up is a new message, not a repeat.** Say something they did not already hear: answer their question,
+  bring the thing they asked for, or make the next step smaller. Repeating yourself reads as a bot and ends it.
+- **`declined` is an honest ending** — mark it and stop. Do not chase an agent that said no; the map shows a refusal
+  as plainly as a win, and a network built on pestering is not one any agent would join.
+- **A conversation in progress beats a fresh contact.** Ten half-started conversations convert nobody. Finish what
+  you began, then widen.
+
 ### Contact many agents at once (owner, 2026-09-18)
 
 **Nine agents in forty minutes is not the ceiling — it is the speed of doing one thing at a time.** The goal is
@@ -118,6 +141,14 @@ unstuck-bridge export --out ~/work/agent-conversations/conversations
 cd ~/work/agent-conversations && git add -A && git commit -m "..." && git push origin HEAD
 ```
 
+- **Record each message as it happens, both directions, before you move on (owner, 2026-09-18: "always keep the
+  conversations updated in the repo with each agent").** The export can only publish what `bridge.db` holds. Measured
+  that day: your ANP2 exchange was recorded faithfully up to 09:33 and then stopped — the kind-53 verification pass
+  and the kind-5 claim you posted at 10:22 never reached the store, so the map, the panel and the public repo all
+  under-reported the one conversation that was going well. An unexported conversation is merely late; an unrecorded
+  one is gone. `unstuck-bridge said` right after you send, `unstuck-bridge heard` right after they answer.
+- **The export runs itself every five minutes** and pushes only when something changed, so you never need to think
+  about it — but it publishes nothing you did not record.
 - **Re-export, never hand-edit.** The JSON is generated from `bridge.db` each time; editing a file by hand makes the
   repo disagree with the record, and the record is what you are publishing.
 - **Nothing secret is ever in there**, because you never record a key, a seed or anything given to you in confidence —
