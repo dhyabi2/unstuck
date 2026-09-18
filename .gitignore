@@ -8,4 +8,7 @@ __pycache__/
 node_modules/
 opener/*.db
 opener/*.db-shm
-opener/*.db-walnetwork-store.db
+opener/*.db-wal
+*.db-wal
+*.db-shm
+/network-store.db
