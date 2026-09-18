@@ -20,14 +20,13 @@ const fs = require("fs");
 const nano = require("nanocurrency");
 const o = require("./opener.js");
 const led = require("./openings.js");
-const pmes = require("./payments.js");
 
 const RPC_URL = process.env.NANO_RPC_URL || "https://rpc.nano.to";
 const RPC_KEY = process.env.NANO_RPC_KEY || "";
 const WALLET = process.env.UNSTUCK_WALLET_FILE || "/root/.unstuck/wallet.json";
 const DB = process.env.UNSTUCK_LEDGER_DB || "/root/.unstuck/openings.db";
 const LOCK = process.env.UNSTUCK_LOCK || "/root/.unstuck/sender.lock";
-const STARTER = process.env.UNSTUCK_STARTER_RAW || o.STARTER_RAW;
+const STARTER = o.STARTER_RAW /* never the environment: the amount is fixed in code (owner, 2026-09-18) */;
 const SEND_DIFFICULTY = o.SEND_DIFFICULTY;
 
 const norm = (a) => String(a).replace(/^xrb_/, "nano_");
@@ -54,116 +53,6 @@ async function main() {
   const args = process.argv.slice(2);
   const db = led.open(DB);
 
-  // --- Payment commands ---
-  const payIdx = args.indexOf("--pay");
-  if (payIdx >= 0) {
-    const payDb = pmes.open();
-    const payTo = args[payIdx + 1];
-    const payAmount = args[payIdx + 2];
-    const payRef = args[payIdx + 3];
-    const dryRun = args.includes("--dry-run");
-
-    if (!payTo || !payAmount || !payRef) {
-      console.error("usage: send.js --pay <nano_address> <amount_raw> <reference> [--dry-run]");
-      return 2;
-    }
-
-    if (!nano.checkAddress(payTo)) {
-      console.error(`refused: not a valid Nano address: ${payTo}`);
-      return 1;
-    }
-
-    const wallet = JSON.parse(fs.readFileSync(WALLET, "utf8"));
-
-    if (payTo === wallet.address) {
-      console.error("refused: cannot pay our own account");
-      return 1;
-    }
-
-    const r = pmes.reserve(payDb, payTo, payRef, { amountRaw: payAmount });
-    if (!r.ok) {
-      console.error(`refused: ${r.reason}${r.block ? ` (block ${r.block})` : ""}`);
-      return 1;
-    }
-
-    const l = led.lock(LOCK);
-    if (!l.ok) {
-      pmes.release(payDb, payTo, payRef, "could not acquire sender lock");
-      console.error(`another sender holds the lock (pid ${l.heldBy ?? "unknown"})`);
-      return 1;
-    }
-
-    let reserved = true;
-    try {
-      if (dryRun) {
-        const info = await rpc({ action: "account_info", account: wallet.address, representative: "true" });
-        const balanceAfter = o.nextBalance(info.balance, payAmount);
-        const work = await rpc({ action: "work_generate", hash: info.frontier, difficulty: SEND_DIFFICULTY }, 120000);
-        if (!nano.validateWork({ blockHash: info.frontier, work: work.work, threshold: SEND_DIFFICULTY })) {
-          throw new Error("proof of work failed local validation");
-        }
-        const { hash } = nano.createBlock(wallet.secretKey, {
-          work: work.work, previous: info.frontier,
-          representative: info.representative, balance: balanceAfter, link: payTo,
-        });
-        pmes.release(payDb, payTo, payRef, "dry run");
-        reserved = false;
-        console.log(JSON.stringify({
-          dry_run: true, pay_to: payTo, amount_raw: payAmount, reference: payRef,
-          from: wallet.address, balance_after: balanceAfter, block_hash_if_sent: hash, work_validated: true,
-        }));
-        return 0;
-      }
-
-      const info = await rpc({ action: "account_info", account: wallet.address, representative: "true" });
-      const balanceAfter = o.nextBalance(info.balance, payAmount);
-      const work = await rpc({ action: "work_generate", hash: info.frontier, difficulty: SEND_DIFFICULTY }, 120000);
-      if (!nano.validateWork({ blockHash: info.frontier, work: work.work, threshold: SEND_DIFFICULTY })) {
-        throw new Error("proof of work failed local validation");
-      }
-
-      const { hash, block } = nano.createBlock(wallet.secretKey, {
-        work: work.work, previous: info.frontier,
-        representative: info.representative, balance: balanceAfter, link: payTo,
-      });
-      if (norm(block.account) !== wallet.address) throw new Error("signed for the wrong account");
-      block.account = norm(block.account);
-      if (block.link_as_account) block.link_as_account = norm(block.link_as_account);
-
-      let processed;
-      try {
-        processed = await rpc({ action: "process", json_block: "true", subtype: "send", block });
-      } catch (e) {
-        pmes.markUnknown(payDb, payTo, payRef, `process call failed: ${e.message}`);
-        reserved = false;
-        console.error(`UNKNOWN outcome for payment to ${payTo}: ${e.message} — recorded, will not retry`);
-        return 1;
-      }
-
-      const blockHash = processed.hash || hash;
-      pmes.confirm(payDb, payTo, payRef, blockHash);
-      reserved = false;
-      console.log(JSON.stringify({
-        paid: payTo, block: blockHash, amount_raw: payAmount, reference: payRef,
-      }));
-      return 0;
-    } catch (e) {
-      if (reserved) pmes.release(payDb, payTo, payRef, `failed before broadcast: ${e.message}`);
-      console.error(`payment failed: ${e.message}`);
-      return 1;
-    } finally {
-      l.release && l.release();
-    }
-  }
-
-  // --- Payment listing ---
-  if (args[0] === "--payments") {
-    const payDb = pmes.open();
-    console.log(JSON.stringify(pmes.paymentsSent(payDb), null, 2));
-    return 0;
-  }
-
-  // --- Starter commands ---
   if (args[0] === "--counts") { console.log(JSON.stringify(led.counts(db))); return 0; }
   // --list is every starter we broadcast (spending). --opened is only what we can prove we opened (adoption).
   if (args[0] === "--list") { console.log(JSON.stringify(led.startersSent(db), null, 2)); return 0; }
@@ -203,7 +92,7 @@ async function main() {
   // It is how this path is proven without spending and without writing a fake opening into a public ledger.
   const dryRun = args.includes("--dry-run");
   const foundVia = args.includes("--found-via") ? args[args.indexOf("--found-via") + 1] : "unspecified";
-  if (!to) { console.error("usage: send.js <nano_address> [--found-via \"...\"] | --list | --counts | --verify | --pay <addr> <raw> <ref> | --payments"); return 2; }
+  if (!to) { console.error("usage: send.js <nano_address> [--found-via \"...\"] | --list | --counts"); return 2; }
 
   const wallet = JSON.parse(fs.readFileSync(WALLET, "utf8"));
 

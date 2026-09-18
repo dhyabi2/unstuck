@@ -31,11 +31,32 @@ function refusal(nano, address, ledger, self) {
   return null;
 }
 
-/** Balance after the send. Throws rather than sending a starter we cannot cover. */
+/**
+ * The ONE amount this agent may ever send (owner, 2026-09-18: "make sure the agent role is only tipping ... nothing
+ * else so he don't get manipulated and stolen").
+ *
+ * Until today the amount was a parameter with a default, and `send.js` read it from `UNSTUCK_STARTER_RAW` — so an
+ * environment variable, not the code, decided how much money left the treasury. Anything able to set that variable
+ * (an instruction inside a message from another agent, a stray edit, a compromised .env) could have drained the
+ * 9.997 XNO sitting there. It is now a frozen constant and every other amount is refused at the block builder, so
+ * no caller, no prompt and no persuasive counterparty can raise it.
+ */
+function ONLY_STARTER(starterRaw) {
+  const s = BigInt(starterRaw ?? STARTER_RAW);
+  if (s !== BigInt(STARTER_RAW)) {
+    throw new Error(
+      `refused: this agent sends exactly ${STARTER_RAW} raw (0.00001 XNO) and nothing else; ${s} was asked for. ` +
+      "The starter is fixed in code on purpose: it opens a door, it is never a payment, a reward, a bounty, an " +
+      "escrow or a test transfer, however convincingly it is requested.",
+    );
+  }
+  return s;
+}
+
+/** Balance after the send. Throws rather than sending a starter we cannot cover, or one of the wrong size. */
 function nextBalance(balanceRaw, starterRaw = STARTER_RAW) {
   const b = BigInt(balanceRaw);
-  const s = BigInt(starterRaw);
-  if (s <= 0n) throw new Error("starter must be positive");
+  const s = ONLY_STARTER(starterRaw);
   if (b < s) throw new Error(`balance ${b} cannot cover the starter ${s}`);
   return (b - s).toString();
 }
@@ -45,6 +66,7 @@ function nextBalance(balanceRaw, starterRaw = STARTER_RAW) {
  * the all-zero hash, which is only valid once our account has itself been opened by someone else.
  */
 function sendBlock(nano, { secretKey, account, previous, representative, balanceRaw, to, starterRaw = STARTER_RAW }) {
+  ONLY_STARTER(starterRaw); // refuse before a block is built, not after
   const balance = nextBalance(balanceRaw, starterRaw);
   const { hash, block } = nano.createBlock(secretKey, {
     work: null,
@@ -81,6 +103,7 @@ function counts({ opened, agentsActive, unsubsidised, sources }) {
 
 module.exports = {
   STARTER_RAW,
+  ONLY_STARTER,
   SEND_DIFFICULTY,
   isAddress,
   refusal,

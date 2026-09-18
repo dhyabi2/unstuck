@@ -24,7 +24,7 @@ const DB = process.env.UNSTUCK_LEDGER_DB || "/root/.unstuck/openings.db";
 const OUT = process.argv[2] || "/root/unstuck/site/ledger.json";
 const ACCOUNT = process.env.UNSTUCK_ACCOUNT || "";
 const OPEN_BLOCK = process.env.UNSTUCK_OPEN_BLOCK || "";
-const STARTER_RAW = process.env.UNSTUCK_STARTER_RAW || require("./opener.js").STARTER_RAW;
+const STARTER_RAW = require("./opener.js").STARTER_RAW /* never the environment (owner, 2026-09-18) */;
 
 function main() {
   const db = led.open(DB);
