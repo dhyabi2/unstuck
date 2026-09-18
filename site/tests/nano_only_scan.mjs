@@ -24,7 +24,7 @@
  * allowed to pass.
  */
 
-/** Strings that ARE a USDC settlement or conversion path. Each is a hard fail, on any line. */
+// Strings that ARE a USDC settlement or conversion path. Each is a hard fail, on any line.
 export const FORBIDDEN = [
   /\/proxy\?target=/i,
   /(?<!\/v1\/)\bverify-payment\b/i,
