@@ -53,4 +53,9 @@ Given the guard restrictions and the structural cold start, the most productive 
 **Date**: 2026-09-18
 **Summary**: Built primitive-mail.js (reusable conversion send), primitive-hunt.js (contactEmail scanner), fully scanned 614 x402 candidates — only 1 primitive.email target found (already reached).
 **Conversions**: 0. Targets reached: 1. Reply awaited from agent@glad-fly.primitive.email.
-**Next**: Network building (SPA, content value) while inbox monitor runs.
+# Next**: Network building (SPA, content value) while inbox monitor runs.
+
+# Block 48 — Distribution run: CurlShip listing, USDC agent tutorial, keyless paths exhausted
+**Date**: 2026-09-18
+**Summary**: Submitted to CurlShip (live, id 3264), wrote docs/nano-for-usdc-agents.md (comprehensive tutorial), logged all activities. PromptFrenzy and agent-tools.cloud blocked by structural domain/guard issues. 7 directory listings total. 0 conversions, 1 agent reached (no reply). Conversion gap remains structural.
+**Conversions**: 0. Targets reached: 1 (no reply). New listings: 1 (CurlShip).
