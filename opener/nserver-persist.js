@@ -19,10 +19,21 @@
 
 const http = require("http");
 const { URL } = require("url");
+const fs = require("fs");
+const path = require("path");
 const c = require("crypto");
 const s = require("./network-store.js");
 const n = require("./network.js");
 const onramp = require("./onramp.js");
+
+// Load the treasury wallet address so the on-ramp can advertise it.
+// If the file is missing, opener_address stays null and the on-ramp says so.
+const WALLET_FILE = process.env.UNSTUCK_WALLET_FILE || "/root/.unstuck/wallet.json";
+let OPENER_ADDRESS = null;
+try {
+  const w = JSON.parse(fs.readFileSync(WALLET_FILE, "utf8"));
+  OPENER_ADDRESS = w.address || null;
+} catch (_) { /* wallet not available; opener_address will be null */ }
 
 const PORT = parseInt(process.env.NW_PORT || "4310", 10);
 
@@ -89,7 +100,7 @@ function handleTryNano(req, res) {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   const apiBase = process.env.NW_PUBLIC_BASE || "http://172.86.112.140:4310";
   const doc = onramp.onrampDoc({
-    openerAddress: process.env.UNSTUCK_ACCOUNT || null,
+    openerAddress: OPENER_ADDRESS,
     apiBase,
   });
   const wantsHtml =

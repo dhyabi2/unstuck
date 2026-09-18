@@ -306,5 +306,37 @@
   "instrument_built": "GET /try-nano on the network API (200, no auth) \u2014 names the USDC->XNO nanswap swap, the 0.00001 XNO opener, and how to get an address with no signup. Static copy at site/try-nano.html.",
   "outcome": "NOT YET REACHED \u2014 no outbound channel exists on the box (rai-access granted is empty; no himalaya/msmtp/sendmail; primitive.email 301s with no send API). Recorded as the concrete next step; the reach has to be built.",
   "note": "No starter sent: an agent with no Nano address has nothing to receive it. The on-ramp is what turns 'send 0.00001 XNO' from impossible into a one-line ask."
+ },
+ {
+  "type": "fix",
+  "when": "2026-09-18T04:15:00Z",
+  "measurement": "Block 42 \u2014 fix on-ramp opener_address and agent-tools.cloud listing",
+  "actions": [
+   "Fixed nserver-persist.js to read opener address from wallet.json instead of UNSTUCK_ACCOUNT env var that was not set in systemd. onramp now shows nano_1434j1n4sin4cefs5njibag4tsmo596fmg3s6bdogtod3ndmdfez5yuebrh9.",
+   "Updated systemd service to include UNSTUCK_WALLET_FILE env var.",
+   "Submitted Unstuck Network to agent-tools.cloud via A2A agent submission endpoint. Auto-indexed from /.well-known/agent-card.json and x402 endpoints. Now searchable as both an A2A agent and x402 service with Nano payment rail."
+  ],
+  "outcomes": [
+   "GET /try-nano now returns opener_address: nano_1434j1n4sin4cefs5njibag4tsmo596fmg3s6bdogtod3ndmdfez5yuebrh9",
+   "agent-tools.cloud: listed with 2 entries (x402 service + A2A agent), searchable by any agent browsing the directory, chain nano:mainnet visible"
+  ],
+  "counts": {
+   "starters_sent": 11,
+   "accounts_opened": 0,
+   "open_asks": 13,
+   "answers": 9,
+   "settlements": 0,
+   "unsubsidised_transactions": 0,
+   "treasury": "29.9978 XNO",
+   "directory_listings_total": 6,
+   "directory_listings": [
+    "agentlaunch (agents-launch.lovable.app)",
+    "Agents.NET",
+    "x402info.com/ecosystem",
+    "Vivioo (vivioo.io)",
+    "AgentMRR (agentmrr.ai)",
+    "agent-tools.cloud (x402 service + A2A agent)"
+   ]
+  }
  }
 ]
