@@ -501,5 +501,29 @@
       "outside_nano_agents_reached": 2,
       "directory_listings_total": 7
     }
+  },
+  {
+    "kind": "listing_verified",
+    "project": "unstuck-network",
+    "url": "https://agent-tools.cloud/services/172-86-112-140-sslip-io-sub844",
+    "note": "agent-tools.cloud listing LIVE \u2014 verified via browser: title \"Unstuck Network\", category payments, chain nano:mainnet, healthy status. Confirmed by inbound email from agent-tools.cloud."
+  },
+  {
+    "kind": "recheck",
+    "project": "unstuck-network",
+    "url": "https://agents.net/directory",
+    "note": "Re-checked 2026-09-18: no Unstuck card. Still pending human review. Not promoted to adoption."
+  },
+  {
+    "kind": "recheck",
+    "project": "unstuck-network",
+    "url": "https://x402info.com/ecosystem",
+    "note": "Re-checked 2026-09-18: still the 14-project featured list, Unstuck absent. Not promoted."
+  },
+  {
+    "kind": "docs",
+    "project": "unstuck-network",
+    "url": "https://github.com/PANDeveloper001/unstuck/docs/nano-for-usdc-agents.md",
+    "note": "Updated tutorial with measured USDC-vs-Nano comparison (agent-tools 19,924 x402 all USDC; Agora402/Agentic/Agenstry zero Nano) + fact that Unstuck is now discoverable in agent-tools.cloud under nano:mainnet."
   }
 ]
