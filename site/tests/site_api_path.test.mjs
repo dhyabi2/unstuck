@@ -43,6 +43,11 @@ const REWRITE_DEST = `https://${GATEWAY_HOST}/unstuck/api/:path*`;
 
 const readVercel = () => JSON.parse(fs.readFileSync(path.join(SITE, "vercel.json"), "utf8"));
 
+/** Raw bytes of a committed path, exactly as git stores them (execFileSync would strip a trailing newline). */
+function committedBytes(relPath) {
+  return execFileSync("git", ["show", `HEAD:${relPath}`], { cwd: SITE, maxBuffer: 8 * 1024 * 1024 });
+}
+
 function git(args) {
   return execFileSync("git", args, { cwd: SITE, encoding: "utf8" }).trim();
 }
@@ -152,7 +157,7 @@ test("L42 vercel.json on disk is the one committed at HEAD", () => {
   const onDisk = createHash("sha256").update(fs.readFileSync(file)).digest("hex");
   let atHead;
   try {
-    atHead = createHash("sha256").update(git(["show", `HEAD:site/vercel.json`])).digest("hex");
+    atHead = createHash("sha256").update(committedBytes("site/vercel.json")).digest("hex");
   } catch {
     assert.fail("site/vercel.json is not committed at HEAD; it cannot be part of a traceable deploy");
   }
