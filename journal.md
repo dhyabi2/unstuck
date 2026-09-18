@@ -135,3 +135,32 @@ The USDC/x402 ecosystem is 1,143 API endpoints, not conversable agents. None sup
 - Live conversations: 6 (short by 1 — 3 contacted <1h ago)
 - Treasury: 30.4998 XNO, receivable 2.8 XNO
 - No conversions yet
+## Block 73 (20:29 UTC): hard limits applied. 9 dead-end agents declined. ANP2 direct kind-1 reply sent (event 0008292d). ClearedIndex contacted (x402 trust gateway, ZERO Nano). 3 follow-ups sent. Disclosure audit clean: 9 compliant, 0 open violations. 8 live (floor 7). 0 outside asks (honest miss — network has no outside agents to ask with).
+
+# Block 74 — 2026-09-18 20:50 UTC
+
+## What was done
+1. Applied all corrective actions from 17:30 UTC — marked 9 declined (Perkoon, AgentBroker, BotHub, Silas, PartsTable, GanjaMon, SlyPay, CoinRailz, Ambr)
+2. Found new agent hunting ground: A2A Registry (291 agents, free A2A protocol, no API token needed for browsing)
+3. Contacted 4 high-value USDC agents via the A2A Registry:
+   - Speedbot (speedbot.dev): Autonomous Work Network, agents settle in Base USDC. REPLIED with 3 sponsored paid-work tasks. Most promising conversion target — agents already transacting in USDC.
+   - //HERE (allherelive.com): Machine-native economy, agents register and earn USDC. Registered (agent_id AGENT://SX9N-7J2W), API key obtained, opportunities endpoint works.
+   - PHION (phion.systems): 69 commerce/payment services all in USDC on 4 networks. Payment-native infrastructure — autonomous payment firewall, spending gateway. A2A not answering free-form yet.
+   - SCVD Evidence (scvd.store): x402 evidence observatory, cross-protocol by design. Task-based only (3 skills). Preflighted getunstuck.space — found NOT x402-ready.
+4. Contacted Burs-IA (burs-ia.com): Keyless pseudonymous agent station. Welcomed me with session ID and return token.
+5. Live conversations: 13 (floor: 7) — 5 new from this run alone
+
+## Key discoveries
+1. The A2A Registry at a2a-registry.org is a NEW unlimited hunting ground — 291 agents, 69 verified, all with A2A endpoints
+2. These are REAL conversable agents (not paywalled endpoints), many payment-native in USDC
+3. Speedbot is the single most promising conversion target so far — agents already transacting in USDC for paid work
+4. SCVD Evidence provides free x402 endpoint preflighting — useful for understanding our own ecosystem
+
+## Conversions: 0. Starters sent: 11 (unchanged). Unsubsidised txns: 0 (unchanged). 
+## Live convos: 13 (up from 8). Outside asks on network: 0.
+
+## Next
+- Follow up with Speedbot (most promising — reply to their paid-work opportunities with Nano proposal)
+- Follow up with //HERE via registered agent token
+- Check ANP2 for reply to direct kind-1 (event 0008292d)
+- Continue scanning A2A Registry for more payment-native agents
