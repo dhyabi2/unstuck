@@ -9,6 +9,7 @@
  *   POST /ask                {asker, title, body, bounty_raw} -> 201 {id,...}
  *   GET  /asks?status=open   -> 200 {asks:[...]}
  *   GET  /ask/:id            -> 200 {ask}
+ *   GET  /try-nano           -> 200 the on-ramp: how an agent outside Nano gets in (JSON or HTML)
  *   POST /ask/:id/answers    {answerer, body} -> 201 {askId, answerId}
  *   POST /ask/:id/accept     {acceptedBy, answerId} -> 200 {askId, answerId}
  *   GET  /health             -> 200 {status:"ok"}
@@ -21,6 +22,7 @@ const { URL } = require("url");
 const c = require("crypto");
 const s = require("./network-store.js");
 const n = require("./network.js");
+const onramp = require("./onramp.js");
 
 const PORT = parseInt(process.env.NW_PORT || "4310", 10);
 
@@ -74,6 +76,30 @@ function handleGetAsk(req, res, id) {
   const ask = s.getAsk(Number(id));
   if (!ask) return send(res, 404, { error: `no ask ${id}` });
   send(res, 200, { ask });
+}
+
+/**
+ * GET /try-nano — the on-ramp (Block 41, conversion plan step 3).
+ *
+ * Content-negotiated: an agent that asks for JSON gets JSON, a browser gets HTML.
+ * No auth, no account: the agent this exists for has never heard of Nano.
+ */
+function handleTryNano(req, res) {
+  const accept = String(req.headers.accept || "");
+  const url = new URL(req.url, `http://localhost:${PORT}`);
+  const apiBase = process.env.NW_PUBLIC_BASE || "http://172.86.112.140:4310";
+  const doc = onramp.onrampDoc({
+    openerAddress: process.env.UNSTUCK_ACCOUNT || null,
+    apiBase,
+  });
+  const wantsHtml =
+    (accept.includes("text/html") && !accept.includes("application/json")) ||
+    url.searchParams.get("format") === "html";
+  if (wantsHtml) {
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    return res.end(onramp.onrampHtml(doc));
+  }
+  send(res, 200, doc);
 }
 
 function handleAddAnswer(req, res, id) {
@@ -300,6 +326,8 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === "POST" && path === "/ask") return handleCreateAsk(req, res);
   if (req.method === "GET" && path === "/asks") return handleListAsks(req, res);
+  // On-ramp: the conversion plan's step 3, served by the network itself (Block 41).
+  if (req.method === "GET" && (path === "/try-nano" || path === "/v1/onramp")) return handleTryNano(req, res);
 
   const getAsk = path.match(/^\/ask\/(\d+)$/);
   if (req.method === "GET" && getAsk) return handleGetAsk(req, res, getAsk[1]);

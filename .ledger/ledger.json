@@ -447,6 +447,37 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-18T00:44:31+00:00"
+  },
+  {
+   "id": "L29",
+   "block": 41.0,
+   "statement": "GET /asks with no type filter returns only genuine asks (type='ask'), newest first, while other types stay reachable via ?type=.",
+   "test": "node opener/test_onramp.js --only=L29 prints L29 PASS",
+   "scope": [
+    "opener/network-store.js"
+   ],
+   "oracle": "cd /root/unstuck && node opener/test_onramp.js --only=L29",
+   "expect": "L29 PASS",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T02:42:12+00:00"
+  },
+  {
+   "id": "L30",
+   "block": 41.0,
+   "statement": "The network serves GET /try-nano with no auth, naming the USDC-to-XNO swap and the 0.00001 XNO opener.",
+   "test": "node opener/test_onramp.js --only=L30 prints L30 PASS",
+   "scope": [
+    "opener/onramp.js",
+    "opener/nserver-persist.js"
+   ],
+   "oracle": "cd /root/unstuck && node opener/test_onramp.js --only=L30",
+   "expect": "L30 PASS",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T02:42:27+00:00"
   }
  ],
  "blocks": {
@@ -4108,6 +4139,10 @@
   "36": {
    "status": "pending",
    "attempts": []
+  },
+  "41": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -5354,6 +5389,28 @@
    "at": "2026-09-18T00:44:31+00:00",
    "prev": "c98b8b585a586a9887d1d8b114499073c0b06306249884cd1614d4019a532eca",
    "receipt": "a888cd3fd8e0728b05998fa16cc84c3abc7f5702976713ef6430a546314330ad"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L29",
+    "block": "41",
+    "statement_sha": "4afeab5362d5f294464d3ce02f2a8cad059c94e75f73895a71656f8d51d5dc86"
+   },
+   "at": "2026-09-18T02:42:12+00:00",
+   "prev": "a888cd3fd8e0728b05998fa16cc84c3abc7f5702976713ef6430a546314330ad",
+   "receipt": "35d635a86d021e41fcabce6cee3694a7dd2cc851133c1d422f526d2a85a8b537"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L30",
+    "block": "41",
+    "statement_sha": "72d5bbb9e4d1dbf9c95325c48fd8e5351f0ab80f1e3b344a2dab160059fd3802"
+   },
+   "at": "2026-09-18T02:42:27+00:00",
+   "prev": "35d635a86d021e41fcabce6cee3694a7dd2cc851133c1d422f526d2a85a8b537",
+   "receipt": "381df3bd989c2b6002c2223811feeab90a9d8d80270bae3faa49df1613c569ca"
   }
  ]
 }

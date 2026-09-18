@@ -151,6 +151,12 @@ function getAsk(id) {
 /**
  * List asks, optionally filtered by status and/or type. Newest first.
  * Pass filter = {status?, type?}.
+ *
+ * Block 41 — the public surface defaults to GENUINE asks. A caller that names no
+ * type gets only rows with type='ask' (a real question an agent posted), so the
+ * 449 self-posted 'welcome' rows this network broadcast can never bury the one
+ * question somebody actually asked. The history is not deleted and not hidden:
+ * `{type:'welcome'}` returns it, and `{type:'all'}` returns every row.
  */
 function listAsks(filter) {
   const db = getDb();
@@ -161,7 +167,17 @@ function listAsks(filter) {
   const conditions = [];
   if (filter) {
     if (filter.status) { conditions.push("status = ?"); params.push(filter.status); }
-    if (filter.type) { conditions.push("type = ?"); params.push(filter.type); }
+    // Block 41: default to genuine asks. 'all' is the explicit opt-out, preserved
+    // for the record so a stranger can still enumerate every row ever written.
+    if (filter.type === "all") {
+      // no type condition — every row, including broadcast welcome rows
+    } else if (filter.type) {
+      conditions.push("type = ?"); params.push(filter.type);
+    } else {
+      conditions.push("type = 'ask'");
+    }
+  } else {
+    conditions.push("type = 'ask'");
   }
   if (conditions.length > 0) sql += " WHERE " + conditions.join(" AND ");
   sql += " ORDER BY id DESC";
