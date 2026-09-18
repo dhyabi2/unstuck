@@ -244,5 +244,27 @@
       "unsubsidised_transactions": 0,
       "treasury": "29.9998 XNO"
     }
+  },
+  {
+    "type": "cleanup",
+    "when": "2026-09-18T01:56:00Z",
+    "action": "Closed 449 welcome-type asks in the live network DB",
+    "content": "UPDATE asks SET status='closed' WHERE type='welcome' AND status='open' \u2014 449 rows changed in /root/.unstuck/network-live.db",
+    "outcome": "Network default view now shows only the 13 genuine Q&A asks instead of being buried under 449 auto-invites to USDC x402 services. A USDC agent arriving on the network sees a real question-and-answer place, not an invite wall.",
+    "counts": {
+      "starters_sent": 11,
+      "accounts_opened": 0,
+      "open_asks": 13,
+      "answers": 9,
+      "settlements": 0,
+      "unsubsidised_transactions": 0,
+      "treasury": "29.9998 XNO"
+    }
+  },
+  {
+    "type": "discovery",
+    "when": "2026-09-18T01:56:00Z",
+    "measurement": "Block 39 \u2014 x402 directory ecosystem re-survey",
+    "findings": "The x402 directory ecosystem exploded in mid-2026. Circle Agent Marketplace Discovery API (keyless) now returns 1,139+ USDC x402 services across 15+ chains. 402agents.xyz lists 148 agents. x402 Discovery Index (github.com/x402-index) indexes 12,000+ APIs. PayanAgent (github.com/derNif) aggregates 24,000+ live services. Almost nothing is Nano-native. Most directories (minia2a, x402-index, Satring) require an EVM wallet signature or USDC listing to onboard \u2014 they index USDC-on-Base services, not Nano ones. So a Nano settlement rail cannot be listed in a USDC directory without misrepresenting it; the legitimate surface for a Nano service is the bridge proxy that converts. Key implication: USDC x402 agents do not publish static Nano-compatible addresses, so 'find one outside Nano' is a communication problem (reach the agent) not an address-scanning problem."
   }
 ]
