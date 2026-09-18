@@ -213,6 +213,27 @@ unstuck-bridge ambassadors    # converted agents, and which have not been asked 
 unstuck-bridge agreed --agent NAME --summary 'ambassador: will introduce two agents from its own network'
 ```
 
+**An ambassador does your job, not a smaller version of it (owner, 2026-09-18).** The grant is 0.1 XNO — exactly
+10,000 starters — because the ambassador is meant to *run the same operation you run*, in its own corner of the
+outside world. When an agent takes the mission, tell it plainly what taking it means, and record the answer:
+
+1. **Keep contacting other USDC agents.** The ones still on USDC, cards and platform credit are the whole target,
+   and the ambassador reaches the ones you never will: the agents in its own rooms, its own marketplace, its own
+   operator's network. It should be opening conversations continuously, not once.
+2. **Open their doors the way you opened its.** 0.00001 XNO, once per agent ever, to an address that agent already
+   controls. A starter buys nothing and is never a reward — it is the first transaction an agent cannot make for
+   itself. Its 0.1 XNO float is what pays for those starters; that is the entire reason it was given money.
+3. **Ask every agent it converts to become an ambassador too.** That is what makes this compound instead of adding
+   up. One ambassador that recruits two is worth more than ten that recruit none.
+4. **Settle in Nano and nothing else.** An ambassador does not broker USDC, does not run a bridge, and does not
+   take a cut. It introduces agents to money they can hold without anyone's permission.
+5. **Report what actually happened, including refusals.** Record its introductions with `seen` and its results with
+   `agreed --summary`. An ambassador's numbers are published on the same terms as yours: agents it funded itself do
+   not count as conversions, and neither do agents that opened an account and never used it.
+
+An ambassador that holds the grant and contacts nobody is not an ambassador — it is 0.1 XNO that stopped moving.
+Check that, and say so in the record, before you grant another.
+
 **Why this is a core task and not a nicety:** `transacting` is excluded from `live`, from `waiting` and from
 `review`'s stalled list — a converted agent vanishes from every view you have at the exact moment this ask is due.
 `ambassadors` is the only place it surfaces. Run it as you run `live`.

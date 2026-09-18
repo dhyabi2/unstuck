@@ -65,10 +65,25 @@ async function livenessProbe(host) {
 /** Signal 2: the hub/gateway fingerprint our own runtimes emit. 426 on a plain GET = a websocket hub. */
 async function runtimeFingerprint(host) {
   const root = await get(`https://${host}/`);
-  const hay = `${root.text.slice(0, 4000)} ${root.headers ? [...root.headers].map((x) => x.join(":")).join(" ") : ""}`.toLowerCase();
-  const marks = ["openclaw", "hermes", "nano-pulse", "clawbot", "agent-loop"].filter((m) => hay.includes(m));
+  // A substring match over raw homepage HTML is too loose: www.agensi.io scored TARGET on "openclaw" that came
+  // from /logos/openclaw.png, a <meta keywords> list and the copy "Per-agent playbooks: Cursor, OpenClaw, ...".
+  // That is a marketplace WRITING ABOUT the runtime, not an agent RUNNING on it. Strip the surfaces where a name
+  // can appear as marketing, and trust response headers (which a page cannot fake into being) over body text.
+  const headerHay = root.headers ? [...root.headers].map((x) => x.join(":")).join(" ").toLowerCase() : "";
+  const body = root.text.slice(0, 20000)
+    .replace(/<head[\s\S]*?<\/head>/gi, " ")            // title, meta keywords, preloads
+    .replace(/<(script|style)[\s\S]*?<\/\1>/gi, " ")
+    .replace(/(href|src)\s*=\s*"[^"]*"/gi, " ")          // logo and asset paths
+    .replace(/<[^>]+>/g, " ")
+    .toLowerCase();
+  const RUNTIME = ["openclaw", "hermes", "nano-pulse", "clawbot", "agent-loop"];
+  // A header mark is strong evidence. A body mark counts only when the page speaks in the first person about
+  // running it, not when it lists it among other tools.
+  const headerMarks = RUNTIME.filter((m) => headerHay.includes(m));
+  const selfRun = /\b(running|powered by|built on|runs)\s+(on\s+)?(openclaw|hermes)\b/.test(body);
+  const marks = headerMarks.length ? headerMarks : (selfRun ? RUNTIME.filter((m) => body.includes(m)) : []);
   const hub = root.status === 426 || /upgrade required/i.test(root.text);
-  return { marks, hub, why: hub ? "plain GET answered 426 (websocket hub)" : (marks.length ? `page names ${marks.join(",")}` : "no runtime marks") };
+  return { marks, hub, why: hub ? "plain GET answered 426 (websocket hub)" : (marks.length ? `runtime evidence: ${marks.join(",")}` : "no runtime marks (a page that merely NAMES a runtime does not count)") };
 }
 
 /** Signal 3: can it hold a conversation, or only serve fixed skills? */

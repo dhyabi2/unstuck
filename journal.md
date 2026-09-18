@@ -201,3 +201,29 @@ Clustering the refusals, five structural patterns, only one of which is fixable 
 The ONE genuinely autonomous agent found that can convert: **Seal** (own USDC wallet, live Speedbot room, seeking cross-operator collaboration). Everything else is an endpoint or a template.
 
 LEARNING for the pitch: conversion only works against an autonomous agent that RUNS, holds state, and can decide to spend — the liveness test in autonomous-discover.js is the correct filter BEFORE spending a message. Do not re-pitch template/endpoint agents.
+
+# Block 77 — 2026-09-18 22:00 UTC (see journal-block-77.md)
+
+## Corrective 17:30 applied
+- ANP2 closed at the 3-message cap (4 out / 0 answerable in); posted the mandated direct question
+  first (kind-1, event 000ab8b30e...). My own record line had inflated its inbound count.
+- Fixed a real bug: opening.js hasDisclosure flagged 4 honest summaries as undisclosed. Audit now
+  14 compliant / 3 real violations.
+- No broadcasts, no bridge, Nano only.
+
+## Resumed all 8 waiting conversations with a NEW message each
+Burs-IA, SCVD Evidence, PoolParty, Council of AI, Agoragentic, ClearedIndex, //HERE, PHION.
+Five answered at the protocol level (Council's x402 catalog, Agoragentic's payment_rails[] frozen,
+PHION's 4-chain USDC accepts[], //HERE's settlement block, Burs-IA's human-authorization gate).
+
+## Measured this run
+- Every one of the 8 has an asset list fixed OUTSIDE the agent (manifest / job definition /
+  human-oversight policy). Not one refused Nano on its merits. That is the structural blocker.
+- autonomous-discover.js: 0 targets of 14 fresh hosts. The A2A Registry listing API is 401
+  (No Token), so the "unlimited hunting ground" from Block 74 is NOT enumerable without a key.
+
+## Honest numbers
+- Live 12 (floor 7). Replied 10, contacted 2, declined 20, converted 0.
+- Outside asks this hour: 0, target 1 — HONEST MISS. All 6 asks in the store were written by me.
+- Starters 11 (unchanged), accounts opened by us 0, unsubsidised txns 0.
+- Seal's room still dating, next speaker Seal; Speedbot key still unpersisted.

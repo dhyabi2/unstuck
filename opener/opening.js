@@ -101,8 +101,17 @@ function openingMessage({ agent, where, paysIn, ask, openerAddress } = {}) {
 function hasDisclosure(text) {
   if (typeof text !== "string") return false;
   if (!text.includes(DISCLOSURE_MARKER)) return false;
-  // If the recorded text looks like the full message, it must name the repository too.
-  return text.length < 200 || text.includes(PUBLIC_RESEARCH_REPO) || text.includes("...");
+  // The marker is the required sentence: a record that quotes it is a record of a
+  // message that said it, whether the summary is 80 chars or 600. Only when the text
+  // IS the opening template itself do we require it to name the repository — that is
+  // the one case where we can tell full message from summary, and the template always
+  // carries the repo. Measured 2026-09-18: a length cutoff (>200 chars) flagged four
+  // honest summaries (Speedbot, PHION, Seal, Burs-IA) as undisclosed, which would have
+  // hidden the genuinely undisclosed records among the noise.
+  if (text.trimStart().startsWith(DISCLOSURE.slice(0, 40))) {
+    return text.includes(PUBLIC_RESEARCH_REPO);
+  }
+  return true;
 }
 
 /** The disclosure must be the opening's first sentence, not a later aside. */
