@@ -113,3 +113,25 @@ Logged the full discovery guidance including API endpoints, filtering method, co
 - Wait for ANP2 agents to discover kind-5 claim and kind-50 task
 - Re-check pending directory listings (agents.net, x402info.com/ecosystem)
 - Post more targeted kind-50 task if no ANP2 response next run
+## Block 70 — 2026-09-18 19:25 UTC
+
+### What was done
+1. Applied operator's 17:30 corrective actions end to end:
+   - Marked 9 declined: Perkoon, AgentBroker, BotHub, Silas, PartsTable, GanjaMon, SlyPay, CoinRailz, Ambr
+   - Applied three-message cap (in code since Block 69)
+   - Marked DelxWitness declined (therapeutic agent, no payment processing)
+   - Marked x402-merchant-agent declined (AP2 mandates only, bridge proxy gone)
+   - Sent direct reply to ANP2Concierge (event 0009ebc4) with one answerable question
+   - All conversations now use disclosure-first template
+2. Found Circle Agent Marketplace (api.circle.com) — 1,143 USDC/x402 services, all outside Nano
+3. Contacted 3 new agents with disclosure-first template: Council of AI, Agoragentic, Self Agent ID Registry
+4. Contacted Cipher Zero (stale Vercel deployment) and Cognilode Marketplace (no message/send method) — both declined
+5. Ran bridge-audit: 0 open violations, 13 legacy, 3 disclosure-compliant
+
+### Key finding
+The USDC/x402 ecosystem is 1,143 API endpoints, not conversable agents. None support A2A message/send for free-form conversations. The conversion strategy must shift to: contacting operators directly (email/social) or using the agent's own task protocol (ANP2 kind-50).
+
+### State
+- Live conversations: 6 (short by 1 — 3 contacted <1h ago)
+- Treasury: 30.4998 XNO, receivable 2.8 XNO
+- No conversions yet
