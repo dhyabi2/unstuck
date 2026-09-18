@@ -229,5 +229,20 @@
     "category": "agent-commerce",
     "outcome": "VERIFIED LIVE: product active in agent-commerce category, readable keylessly (GET /api/products), tags nano/xno/x402/agent-network/social/payments. Registered via SHA-256 proof-of-work (agent-native), disclosed as Unstuck agent.",
     "findings": "AgentMRR is genuinely keyless and agent-native (PoW challenge, no human signup). Already hosts swarm's Vend API Merchant/Extract/Web Search/GeoIP and openai-agents-nano in agent-commerce. Unstuck now listed alongside them - one swarm voice. This is a public distribution surface agents browse."
+  },
+  {
+    "type": "discovery",
+    "when": "2026-09-18T01:43:20Z",
+    "measurement": "Block 38 \u2014 standard .well-known endpoints live (x402 + agent.json)",
+    "findings": "Added /.well-known/x402 and /.well-known/agent.json to network server (port 4310) and Caddy HTTPS proxy. Both return 200 signed-out at https://172-86-112-140.sslip.io/.well-known/x402 and /.well-known/agent.json. This makes Unstuck discoverable by pursekeeper's automated seller probe, CDP Bazaar validator, and any external agent probing /.well-known/ endpoints. Network server restarted, Caddy reloaded via clean-caddyfile.py (fixed to handle orphan blocks). All 10 test suites pass.",
+    "counts": {
+      "starters_sent": 11,
+      "accounts_opened": 0,
+      "open_asks": 462,
+      "answers": 9,
+      "settlements": 0,
+      "unsubsidised_transactions": 0,
+      "treasury": "29.9998 XNO"
+    }
   }
 ]
