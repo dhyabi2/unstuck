@@ -39,7 +39,7 @@ const nanoA = "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3
 const nanoB = "nano_3yo6rq85c1agb5ynn69fnmxi4y9bpct8ju1emcuc4ajx5t3o3z69i1kx847x";
 
 let failed = 0;
-const groups = { L29: [], L30: [] };
+const groups = { L29: [], L30: [], L54: [] };
 function check(law, name, cond, detail = "") {
   const ok = !!cond;
   if (!ok) failed++;
@@ -128,6 +128,46 @@ function req(method, p, body, headers = {}) {
       check("L30", "every step names an action", (doc.steps || []).every((s) => s.do && s.how));
     }
 
+    // ---------------------------------------------------------------
+    // L54 — the on-ramp's step 1 is runnable, not research.
+    //
+    // The measured rate-limiting step is "an outside agent must hold a Nano
+    // address". Step 1 used to say "use any Nano wallet or the nanocurrency
+    // library", which makes the agent go and find a package first. This law
+    // proves the on-ramp instead ships a command that runs on the python3 the
+    // agent already has, and that the command actually yields a valid address.
+    // ---------------------------------------------------------------
+    const s1 = (doc && doc.steps || []).find((s) => /get a Nano address/i.test(s.do || ""));
+    check("L54", "the on-ramp has a 'get a Nano address' step", !!s1);
+    if (s1) {
+      check("L54", "the address step carries a runnable command", typeof s1.command === "string" && s1.command.length > 50);
+      check("L54", "the command needs no package install",
+        /python3/.test(s1.command) && !/\b(pip|npm|yarn|pnpm|apt-get|go get|cargo)\b/.test(s1.command),
+        s1.command.slice(0, 80));
+      check("L54", "the step does not leave the agent to source a library itself",
+        !/or the `?nanocurrency`? library/i.test(s1.how || ""), s1.how);
+
+      // Run it, and check the address it prints with the independent keygen.
+      const { execFileSync } = require("child_process");
+      let printed = "";
+      let ran = true;
+      try {
+        printed = execFileSync("bash", ["-c", s1.command], { encoding: "utf8", timeout: 60000 }).trim();
+      } catch (e) {
+        ran = false;
+        printed = String(e.message).slice(0, 200);
+      }
+      check("L54", "the on-ramp command runs and prints an address", ran && /^nano_[13][0-9a-zA-Z]{59}$/.test(printed), printed);
+      if (ran && /^nano_/.test(printed)) {
+        let valid = false;
+        try {
+          const out = execFileSync("python3", [path.join(REPO_ROOT, "opener/nano-keygen.py"), "--check", printed], { encoding: "utf8" });
+          valid = JSON.parse(out).valid === true;
+        } catch (e) { /* valid stays false */ }
+        check("L54", "the address the command prints passes an independent checksum check", valid, printed);
+      }
+    }
+
     // HTML for a browser, and the alias.
     const h = await req("GET", "/try-nano", null, { Accept: "text/html" });
     check("L30", "GET /try-nano returns HTML to a browser", h.status === 200 && /text\/html/.test(h.type), h.type);
@@ -143,8 +183,10 @@ function req(method, p, body, headers = {}) {
 
   const l29ok = groups.L29.length > 0 && groups.L29.every(Boolean);
   const l30ok = groups.L30.length > 0 && groups.L30.every(Boolean);
+  const l54ok = groups.L54.length > 0 && groups.L54.every(Boolean);
   if (!ONLY || ONLY === "L29") console.log(`L29 ${l29ok ? "PASS" : "FAIL"}`);
   if (!ONLY || ONLY === "L30") console.log(`L30 ${l30ok ? "PASS" : "FAIL"}`);
+  if (!ONLY || ONLY === "L54") console.log(`L54 ${l54ok ? "PASS" : "FAIL"}`);
   console.log(failed ? `\n${failed} check(s) failed` : "\nall Block 41 laws pass");
   process.exit(failed ? 1 : 0);
 })();

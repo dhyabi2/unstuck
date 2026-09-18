@@ -827,6 +827,19 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-18T18:52:10+00:00"
+  },
+  {
+   "id": "L53",
+   "block": 79.0,
+   "statement": "L53: an outside agent can generate a valid Nano address with python3 alone, no pip, no npm, no network.",
+   "test": "python3 opener/test_nano_keygen.py prints 16 passed, 0 failed: the zero-seed vector matches Nano's published private key, public key and address; 21 derived accounts agree with the nanocurrency npm library; and the CLI contract (--address-only, --seed, --check) holds.",
+   "scope": [],
+   "oracle": "python3 opener/test_nano_keygen.py",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T22:43:53+00:00"
   }
  ],
  "blocks": {
@@ -17857,6 +17870,10 @@
   "73": {
    "status": "pending",
    "attempts": []
+  },
+  "79": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -20007,6 +20024,17 @@
    "at": "2026-09-18T18:59:03+00:00",
    "prev": "dea25b7c09113e6a7b671cf30d276a43e8aa900a7981593c177b276c2459d52c",
    "receipt": "31cbf6eac1449e69a5d0ceeaad9449891da47a2c78b8747fe374e757a2c1b10c"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L53",
+    "block": "79",
+    "statement_sha": "aa1e645e6cb4fde2f1a1618854fa59f7d1d9ecb37e1d8a24cca75246e619ac8e"
+   },
+   "at": "2026-09-18T22:43:53+00:00",
+   "prev": "31cbf6eac1449e69a5d0ceeaad9449891da47a2c78b8747fe374e757a2c1b10c",
+   "receipt": "b018171b62c982d2b813994546ac1eb860c500a2c8126ccfa2ec1750137793aa"
   }
  ]
 }

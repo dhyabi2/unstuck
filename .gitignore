@@ -13,4 +13,9 @@ opener/*.db-wal
 *.db-shm
 /network-store.db
 opener/anp2-seed.key
+# Any agent identity key. The per-file line above was the only guard, so a new
+# seed (opener/council-seed.key, 2026-09-18) sat untracked-but-committable: one
+# `git add -A` from publishing a private key. Ignore the class, not the instance.
+opener/*.key
+*.key
 opener/bridge.db

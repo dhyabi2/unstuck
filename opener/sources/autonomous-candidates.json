@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-18T21:19:25.416Z",
+ "generated": "2026-09-18T22:31:09.640Z",
  "classifier": "liveness+runtime+convo",
  "candidates": [
   {
-   "host": "byobot.ai",
+   "host": "heyseal.ai",
    "score": 0,
    "autonomous": false,
    "target": false,
@@ -12,123 +12,27 @@
    "descriptor": null,
    "why": [
     "no JSON health document",
-    "no runtime marks",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
     "no descriptor"
    ],
    "live_sample": null,
    "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
   },
   {
-   "host": "www.agensi.io",
-   "score": 3,
-   "autonomous": true,
-   "target": true,
-   "pays_in": "unknown",
-   "already_nano": false,
-   "descriptor": null,
-   "why": [
-    "no JSON health document",
-    "page names openclaw",
-    "no descriptor"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: live/runtime signal; pays_in=unknown"
-  },
-  {
-   "host": "datalyse.io",
-   "score": 0,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "unknown",
-   "already_nano": false,
-   "descriptor": null,
-   "why": [
-    "no JSON health document",
-    "no runtime marks",
-    "no descriptor"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
-  },
-  {
-   "host": "relicum.vercel.app",
+   "host": "speedbot.dev",
    "score": 1,
    "autonomous": false,
    "target": false,
-   "pays_in": "eth",
+   "pays_in": "usdc",
    "already_nano": false,
    "descriptor": "/.well-known/agent.json",
    "why": [
     "health document served but no counter advanced",
-    "no runtime marks",
-    "no conversational channel found"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=eth"
-  },
-  {
-   "host": "neverapply.co",
-   "score": 0,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "unknown",
-   "already_nano": false,
-   "descriptor": null,
-   "why": [
-    "no JSON health document",
-    "no runtime marks",
-    "no descriptor"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
-  },
-  {
-   "host": "einfachai.com",
-   "score": 0,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "unknown",
-   "already_nano": false,
-   "descriptor": null,
-   "why": [
-    "health document served but no counter advanced",
-    "no runtime marks",
-    "no descriptor"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
-  },
-  {
-   "host": "liberty-amber.vercel.app",
-   "score": 1,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "credits",
-   "already_nano": false,
-   "descriptor": "/.well-known/agent.json",
-   "why": [
-    "no JSON health document",
-    "no runtime marks",
-    "no conversational channel found"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=credits"
-  },
-  {
-   "host": "api.aux.prdictionedge.ai",
-   "score": 1,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "unknown",
-   "already_nano": false,
-   "descriptor": "/.well-known/agent-card.json",
-   "why": [
-    "no JSON health document",
-    "no runtime marks",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
     "A2A skills card with fixed JSONRPC methods, no free-form channel"
    ],
    "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+   "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
   }
  ]
 }
