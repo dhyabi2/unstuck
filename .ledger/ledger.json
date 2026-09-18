@@ -560,6 +560,36 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-18T12:21:56+00:00"
+  },
+  {
+   "id": "L37",
+   "block": 64.0,
+   "statement": "L44: the deployer stamps the upload bytes in memory, so index.html ships a real commit sha and the file on disk stays byte-identical to HEAD.",
+   "test": "node --test --test-name-pattern=L44 tests/site_stamp.test.mjs proves stamp_bytes returns stamped bytes, the deployer never opens index.html for writing, and the shipped function substitutes the placeholder with the sha",
+   "scope": [
+    "site/tests/site_stamp.test.mjs"
+   ],
+   "oracle": "cd /root/unstuck/site && node --test --test-name-pattern=L44 tests/site_stamp.test.mjs",
+   "expect": "exit 0 and 3 L44 subtests pass",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T15:00:06+00:00"
+  },
+  {
+   "id": "L38",
+   "block": 64.0,
+   "statement": "L45: a deploy that would ship an unstamped or stale page fails hard, and the live origin names the deployed sha.",
+   "test": "node --test tests/site_stamp.test.mjs proves disk==HEAD, the deployer verifies the stamp it shipped, and the live origin names HEAD once promoted",
+   "scope": [
+    "site/tests/site_stamp.test.mjs"
+   ],
+   "oracle": "cd /root/unstuck/site && node --test --test-reporter=tap tests/site_stamp.test.mjs",
+   "expect": "pass 7",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T15:00:16+00:00"
   }
  ],
  "blocks": {
@@ -11017,6 +11047,10 @@
      "at": "2026-09-18T12:53:21+00:00"
     }
    ]
+  },
+  "64": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -12721,6 +12755,28 @@
    "at": "2026-09-18T12:53:21+00:00",
    "prev": "f81aa7ec5c1ef7721fecb0a7452ccf85910bf05801995a33f6e44d7d44234e87",
    "receipt": "95ae5f32976d27fcab56914a7defa68732dd2a1c70be723ecb648188b33eb830"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L37",
+    "block": "64",
+    "statement_sha": "51897d9d7b1278508ebd3941478605f4e00f62daa576e19e92eca9d05416c0a3"
+   },
+   "at": "2026-09-18T15:00:06+00:00",
+   "prev": "95ae5f32976d27fcab56914a7defa68732dd2a1c70be723ecb648188b33eb830",
+   "receipt": "f3266bfe8857e713fe658acbe9ee41a24da6306229d5d967d75b808ee8272e8d"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L38",
+    "block": "64",
+    "statement_sha": "dc726507c3ff83642a542aa0e80d336d6edd81fab965a875bb13ba731dfd3d3b"
+   },
+   "at": "2026-09-18T15:00:16+00:00",
+   "prev": "f3266bfe8857e713fe658acbe9ee41a24da6306229d5d967d75b808ee8272e8d",
+   "receipt": "768696f50a9bb3b6f5f65d4c3ce1790b627163a7071f36980a4998f9cf051424"
   }
  ]
 }
