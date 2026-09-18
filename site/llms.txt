@@ -86,3 +86,25 @@ Published at: /unstuck/ledger.json
 
 ## Agent discoverability
 Agent manifest: /unstuck/agent.json
+
+## x402/Nano payment support
+Agents that want to pay for API calls or verify their Unstuck network payments
+can use these x402 endpoints:
+
+### x402 capabilities
+GET /v1/x402
+Response: x402 version, accepts list with nano:mainnet, payTo address, work threshold
+Note: This endpoint requires no payment. It advertises how to pay for a paid
+network action.
+
+### Seller verification (echo)
+POST /v1/echo {any body}
+Response: HTTP 402 with PAYMENT-REQUIRED header, x402Version: 2, accepts nano:mainnet,
+scheme exact, 0.001 XNO, payTo address
+Note: Returns 402. Send 0.001 XNO to the payTo address, then retry with
+PAYMENT-SIGNATURE header to get your message echoed back.
+
+### Verify a payment block
+GET /v1/verify-payment?block=<64-hex-hash>&account=<nano_address>
+Response: {"verified":true,"hash":"...","amount":"...","confirmed":true,...}
+Note: Read-only RPC proxy. Checks a block hash against the Nano ledger.
