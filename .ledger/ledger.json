@@ -478,6 +478,58 @@
    "grounding": "oracle",
    "version": 2,
    "minted": "2026-09-18T02:42:27+00:00"
+  },
+  {
+   "id": "L31",
+   "block": 58.0,
+   "statement": "L31: the shipped page resolves its API base to a URL an https page can actually call — never plain http, never the Caddy-only /unstuck/api path outside that host",
+   "test": "node tests/site_laws.test.mjs proves resolveApi picks the TLS api base for a page served at https://getunstuck.space/, and that no default it returns starts with 'http://'",
+   "scope": [],
+   "oracle": "node tests/site_laws.test.mjs --only=L31",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T10:38:02+00:00"
+  },
+  {
+   "id": "L32",
+   "block": 58.0,
+   "statement": "L34: every number the page prints comes from the generated ledger.json, never from markup a human typed — starters sent and accounts opened stay two different numbers",
+   "test": "node tests/site_laws.test.mjs --only=L34 passes: the stat nodes are filled from ledger.json fields and no stat value is hard-coded in the HTML",
+   "scope": [],
+   "oracle": "node tests/site_laws.test.mjs --only=L34",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T10:38:06+00:00"
+  },
+  {
+   "id": "L33",
+   "block": 59.0,
+   "statement": "L33: the files that ship are the SPA and its machine-readable entry points",
+   "test": "node tests/site_laws.test.mjs --only=L33 passes: the SPA, agent.json, llms.txt, try-nano.html and ledger.json all exist and all ship",
+   "scope": [],
+   "oracle": "node tests/site_laws.test.mjs --only=L33",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T10:38:23+00:00"
+  },
+  {
+   "id": "L34",
+   "block": 59.0,
+   "statement": "L35: an empty ask list tells a stranger agent the opener amount and nanswap",
+   "test": "node tests/site_laws.test.mjs --only=L35 passes: the empty state names 0.00001 XNO and nanswap",
+   "scope": [],
+   "oracle": "node tests/site_laws.test.mjs --only=L35",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T10:38:23+00:00"
   }
  ],
  "blocks": {
@@ -6251,6 +6303,14 @@
      "at": "2026-09-18T03:47:50+00:00"
     }
    ]
+  },
+  "58": {
+   "status": "pending",
+   "attempts": []
+  },
+  "59": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -7649,6 +7709,50 @@
    "at": "2026-09-18T03:48:38+00:00",
    "prev": "c476b49d9dd491f5e389d0c9c6d35df1fbf44c0eb73e1d8e7af0b427a956763d",
    "receipt": "59b882e248b73347195dc51395e9b9de5c83fbe6c064559cd0068af1d4e853f1"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L31",
+    "block": "58",
+    "statement_sha": "a8324d5fb48fe3da5f66003d48f3bfd91dc3785430b7464b2b9da4a10eb2ee95"
+   },
+   "at": "2026-09-18T10:38:02+00:00",
+   "prev": "59b882e248b73347195dc51395e9b9de5c83fbe6c064559cd0068af1d4e853f1",
+   "receipt": "0c64d4fbb8a5d19ec1b06acd168210f136d43699732a89be711b17aea1fcbb1d"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L32",
+    "block": "58",
+    "statement_sha": "cc644c4ecb79851022c073157940438260e3381a1a56039b77f43433d218461f"
+   },
+   "at": "2026-09-18T10:38:06+00:00",
+   "prev": "0c64d4fbb8a5d19ec1b06acd168210f136d43699732a89be711b17aea1fcbb1d",
+   "receipt": "4482fe704e546f2d15968f714882fbd0e6e148900551c5e7f613963e5f88ad31"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L33",
+    "block": "59",
+    "statement_sha": "7544bae0e624a093e0b42513d80b3b9092087b0fccd241e8aa2b108f191dbc50"
+   },
+   "at": "2026-09-18T10:38:23+00:00",
+   "prev": "4482fe704e546f2d15968f714882fbd0e6e148900551c5e7f613963e5f88ad31",
+   "receipt": "a14e1d39d14aa87a08c7a12cdfcc5f64ce52d813100f0e3761d646d6d911c355"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L34",
+    "block": "59",
+    "statement_sha": "e9ce0ac990915dca8a75646d620d8de7bc514447b6bd20c289b726b0c766e4c1"
+   },
+   "at": "2026-09-18T10:38:23+00:00",
+   "prev": "a14e1d39d14aa87a08c7a12cdfcc5f64ce52d813100f0e3761d646d6d911c355",
+   "receipt": "2d241bd019569bd85c04104b09ee65379a8d29fd725d119b75c0dc8d171a626d"
   }
  ]
 }

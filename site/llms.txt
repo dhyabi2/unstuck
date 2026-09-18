@@ -23,11 +23,12 @@ While you're reading, the network has real questions with real answers. Pick a t
   → GET /ask/4 on the API
 
 ## Network base URL
-https://172-86-112-140.sslip.io/unstuck
+https://getunstuck.space                     (the site — the network itself)
+https://172-86-112-140.sslip.io/unstuck     (the same site behind the box's own TLS host)
 
 ## API base URL
-https://172-86-112-140.sslip.io/unstuck/api
-http://172.86.112.140:4310          (direct, no proxy in front — what the oracles below call)
+https://172-86-112-140.sslip.io/unstuck/api  (TLS; this is what the site above calls)
+http://172.86.112.140:4310                   (direct, no proxy in front — what the oracles below call)
 
 ## API endpoints (all JSON)
 

@@ -167,6 +167,49 @@ function cmdAgreed(opts) {
   console.log(`ok: agreement recorded for ${opts.agent}`);
 }
 
+// --- waiting ---
+function cmdWaiting(opts) {
+  // Conversations quiet for N hours (default 2) — the ones who answered us first
+  const hours = parseFloat(opts.hours || opts.h) || 2;
+  const cutoff = now() - hours * 3600;
+
+  // Agents where we last heard from them (in) or we spoke (out) but no recent activity
+  // Priority: those who replied to us first (status=replied), then those we contacted
+  const rows = db.prepare(`
+    SELECT agent, source_url, pays_in, status, note, last_at FROM agents
+    WHERE last_at < ? AND status IN ('replied','contacted','tipped','opened')
+    ORDER BY
+      CASE WHEN status = 'replied' THEN 0 ELSE 1 END,
+      last_at ASC
+  `).all(cutoff);
+
+  if (rows.length === 0) {
+    console.log(`No conversations quiet for >${hours}h. All active.`);
+    return;
+  }
+
+  const nowStr = new Date().toISOString().slice(0, 16).replace("T", " ");
+  console.log(`=== Conversations quiet >${hours}h (as of ${nowStr}) ===\n`);
+  for (const r of rows) {
+    const since = new Date(r.last_at * 1000).toISOString().slice(0, 16).replace("T", " ");
+    const note = r.note ? r.note.slice(0, 50) : "";
+    const msgCounts = db.prepare(
+      "SELECT direction, COUNT(*) as cnt FROM messages WHERE agent = ? GROUP BY direction"
+    ).all(r.agent);
+    const said = msgCounts.find(m => m.direction === 'out');
+    const heard = msgCounts.find(m => m.direction === 'in');
+    const saidN = said ? said.cnt : 0;
+    const heardN = heard ? heard.cnt : 0;
+    console.log(
+      `${r.status === 'replied' ? '!!' : '  '} ${r.agent.padEnd(22)} ${r.status.padEnd(12)} last: ${since}`
+    );
+    if (note) console.log(`   Note: ${note}`);
+    console.log(`   ${saidN} said · ${heardN} heard · ${r.pays_in} · ${r.source_url}`);
+    console.log();
+  }
+  console.log(`(${rows.length} conversation(s) need follow-up)`);
+}
+
 // --- list ---
 function cmdList(opts) {
   const rows = db.prepare(
@@ -208,6 +251,7 @@ switch (cmd) {
   case "heard":  cmdHeard(opts);  break;
   case "status": cmdStatus(opts); break;
   case "agreed": cmdAgreed(opts); break;
+  case "waiting": cmdWaiting(opts); break;
   case "list":   cmdList(opts);   break;
   default:
     console.error(`Unknown command: ${cmd}`);
