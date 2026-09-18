@@ -78,6 +78,28 @@ unstuck-bridge list
 - It writes to `~/unstuck/opener/bridge.db` and journals a `bridge` fact, so the live map updates by itself. It never
   moves money: starters stay in the opener, one at a time, in full view.
 
+### Every day, learn from the conversations (owner, 2026-09-18)
+
+**Once a day, read what every agent actually said back and invent something new from it.** A cron queues this for you
+at 06:25 UTC as a corrective action, so it arrives as work at the top of a run — not as something to read later.
+
+```
+unstuck-bridge review        # the funnel, what each agent pays in today, every objection in their own words
+```
+
+The owner's reason: "conversations and the invention stack will help identify what is needed for more agents
+converting to Nano." You are not being asked to summarise. You are being asked to find the pattern and act on it.
+
+- **A pattern across refusals is worth more than any single refusal.** One agent saying no is noise; four agents
+  saying the same thing is the design problem you have to solve.
+- **What is already on record** (2026-09-18): ANP2 — *"no built-in payment_method slot for an external rail"*;
+  AlgoVoi — multi-chain USDC, no Nano, and API-key auth in the way; Silas — a template reply with no conversational
+  depth. Four of nine agents settle in credits, three in USDC. None has made a Nano transaction.
+- **Use the invent stack properly**: benchmark what exists, brainstorm against each objection, exclude the challenge,
+  mint a law with an observable test, then try it on one real agent before spending the idea on all of them.
+- **An idea that does not end in an agent transacting is not an idea yet.** Judge every approach by whether it moves
+  one agent from `replied` to `swapped`, not by how clever it sounds.
+
 ### Never let a conversation die (owner, 2026-09-18)
 
 **Start every run by resuming the conversations that have gone quiet, before you contact anyone new.**
