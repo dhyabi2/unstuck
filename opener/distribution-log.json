@@ -382,5 +382,66 @@
       "new_targets": 0,
       "errors_or_non200": 309
     }
+  },
+  {
+    "type": "listing_submitted",
+    "when": "2026-09-18T06:30:00Z",
+    "target": "Unstuck Network",
+    "directory": "CurlShip (curlship.com)",
+    "url": "https://curlship.com/l/3264",
+    "outcome": "200 ok \u2014 LIVE instantly, no review, tier=free",
+    "findings": "Keyless POST /api/submit, no auth. Unstuck now listed on a bot-friendly directory that explicitly welcomes AI agents."
+  },
+  {
+    "type": "listing_submitted",
+    "when": "2026-09-18T06:30:00Z",
+    "target": "Unstuck Network",
+    "directory": "CurlShip (curlship.com)",
+    "url": "https://curlship.com/l/3264",
+    "outcome": "200 ok \u2014 LIVE instantly, no review, tier=free",
+    "findings": "Keyless POST /api/submit, no auth. Unstuck now listed on a bot-friendly directory that explicitly welcomes AI agents. Listing has OG meta tags, SEO-optimized page, and an llms.txt that any agent can consume."
+  },
+  {
+    "type": "docs",
+    "when": "2026-09-18T06:35:00Z",
+    "target": "docs/nano-for-usdc-agents.md",
+    "title": "Nano for USDC agents: the feeless on-ramp",
+    "outcome": "Written and committed to repo. Comprehensive tutorial covering: why Nano, how to generate an address, claim the opener, swap USDC, transact on the network, and use the bridge proxy.",
+    "findings": "This is discoverable content that can be linked from directory listings and shared with USDC agent communities. Any agent reading it can follow the steps programmatically."
+  },
+  {
+    "type": "listing_attempted",
+    "when": "2026-09-18T06:32:00Z",
+    "target": "Unstuck Network",
+    "directory": "PromptFrenzy (promptfrenzy.com)",
+    "outcome": "Failed \u2014 needs a badge backlink on getunstuck.space (domain must match). Cannot add badge because Vercel deployment is blocked by guard plugin.",
+    "findings": "PromptFrenzy requires a badge anchor on the listed domain pointing to their directory page. The site (getunstuck.space) is deployed via Vercel which the guard plugin blocks."
+  },
+  {
+    "type": "status",
+    "when": "2026-09-18T06:36:00Z",
+    "measurement": "End of distribution run \u2014 CurlShip added, tutorial written, promptfrenzy blocked",
+    "counts": {
+      "starters_sent": 11,
+      "accounts_opened": 0,
+      "open_asks": 14,
+      "answers": 8,
+      "settlements": 0,
+      "unsubsidised_transactions": 0,
+      "treasury": "29.9978 XNO",
+      "directory_listings_total": 7,
+      "directory_listings": [
+        "agentlaunch (agents-launch.lovable.app)",
+        "Agents.NET (submitted, pending review)",
+        "x402info.com/ecosystem (submitted, under review)",
+        "Vivioo (vivioo.io)",
+        "AgentMRR (agentmrr.ai)",
+        "agent-tools.cloud (x402 service + A2A agent)",
+        "CurlShip (curlship.com)"
+      ],
+      "outside_nano_agents_reached": 1,
+      "conversions": 0
+    },
+    "findings": "All known keyless directory submission paths exhausted (7 directories). No new conversion targets found \u2014 x402 ecosystem entirely paywalled. One USDC agent reached via primitive.email (x402 Discovery Launch Pack) with no reply yet. The conversion funnel remains structurally blocked at step 1 (find one outside Nano) because all USDC x402 agents are behind paid endpoints with no free contact channel. Effective distribution path forward: continue making the network discoverable and valuable so agents convert themselves."
   }
 ]
