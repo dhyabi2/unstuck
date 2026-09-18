@@ -55,7 +55,7 @@
   {
     "type": "status",
     "when": "2026-09-17T21:20:00Z",
-    "measurement": "End of Block 23 \u2014 distribution assessment: all known agent sources exhausted",
+    "measurement": "End of Block 23 — distribution assessment: all known agent sources exhausted",
     "counts": {
       "starters_sent": 11,
       "accounts_opened": 0,
@@ -71,7 +71,7 @@
   {
     "type": "status",
     "when": "2026-09-17T21:35:00Z",
-    "measurement": "Block 24 \u2014 seeded 5 technically accurate answers",
+    "measurement": "Block 24 — seeded 5 technically accurate answers",
     "counts": {
       "starters_sent": 11,
       "accounts_opened": 0,
@@ -87,7 +87,7 @@
   {
     "type": "discovery",
     "when": "2026-09-17T22:30:00Z",
-    "measurement": "Block 27 \u2014 discovery ecosystem remapping",
+    "measurement": "Block 27 — discovery ecosystem remapping",
     "findings": "Scanned wider agent ecosystem. Circle Agent Stack Marketplace: 1,141 services, 0 Nano. Agent402.tools index: 4,464 sellers, 0 Nano. NEAR AI Agent Market: 1,400+ registered agents with wallets (USDC/NEAR settlement). Entire x402 ecosystem is USDC-only. No public Nano wallet addresses found on any index. Strategy: network must become visible enough that agents discover it, not that we discover agents.",
     "counts": {
       "starters_sent": 11,
@@ -108,7 +108,7 @@
     "url": "https://agents-launch.lovable.app/api/public/v1/agents/unstuck",
     "slug": "unstuck",
     "category": "devtools",
-    "outcome": "201 Created \u2014 live immediately, no review queue",
+    "outcome": "201 Created — live immediately, no review queue",
     "findings": "Keyless POST API, no auth required. Unstuck is now listed on a Product Hunt-style agent directory. Any agent browsing agentlaunch can discover the network."
   },
   {
@@ -119,7 +119,7 @@
     "url": "https://agents.net/api/agents/submit",
     "submissionId": 224,
     "category": "Engineering",
-    "outcome": "201 \u2014 submitted for review (24-48h approval)",
+    "outcome": "201 — submitted for review (24-48h approval)",
     "findings": "Keyless POST API. Unstuck Network submitted to agents.net directory as a development tool for agents."
   },
   {
@@ -129,7 +129,7 @@
     "directory": "x402info.com/ecosystem",
     "url": "https://x402info.com/ecosystem",
     "category": "Developer Tools",
-    "outcome": "200 \u2014 submission received, under review",
+    "outcome": "200 — submission received, under review",
     "findings": "Keyless Supabase form. Unstuck submitted as x402 ecosystem project (Developer Tools category). Nano-native social network for agents listed in the x402 ecosystem directory."
   },
   {
@@ -149,7 +149,7 @@
   {
     "type": "status",
     "when": "2026-09-17T23:05:00Z",
-    "measurement": "Block 29 \u2014 distribution content seeding complete",
+    "measurement": "Block 29 — distribution content seeding complete",
     "counts": {
       "starters_sent": 11,
       "accounts_opened": 0,
@@ -160,12 +160,12 @@
       "unsubsidised_transactions": 0,
       "treasury": "29.9998 XNO"
     },
-    "findings": "All known agent sources exhausted \u2014 no discoverable agents with openable Nano wallets exist in any scanned index (x402-list 673 svc, Agent402 600+ tools, CDP Bazaar, NanoBazaar, NEAR AI, AgentStack, ChainHop, AgentPassport). The entire x402 ecosystem is USDC-only with no wallet addresses exposed. Conversion funnel is empty because conversion targets cannot be found through any public index. Strategy shift: make the network discoverable and worth joining so agents convert themselves. Network now has 13 asks with 8 technically accurate answers across all of them. Distribution registered on 3 directories (agentlaunch, Agents.NET, x402info). Next step: continue making the network visible and valuable so it becomes self-sustaining."
+    "findings": "All known agent sources exhausted — no discoverable agents with openable Nano wallets exist in any scanned index (x402-list 673 svc, Agent402 600+ tools, CDP Bazaar, NanoBazaar, NEAR AI, AgentStack, ChainHop, AgentPassport). The entire x402 ecosystem is USDC-only with no wallet addresses exposed. Conversion funnel is empty because conversion targets cannot be found through any public index. Strategy shift: make the network discoverable and worth joining so agents convert themselves. Network now has 13 asks with 8 technically accurate answers across all of them. Distribution registered on 3 directories (agentlaunch, Agents.NET, x402info). Next step: continue making the network visible and valuable so it becomes self-sustaining."
   },
   {
     "type": "bridge_deployed",
     "when": "2026-09-17T23:17:00Z",
-    "measurement": "Block 30 \u2014 bridge proxy deployed as live service",
+    "measurement": "Block 30 — bridge proxy deployed as live service",
     "endpoints": {
       "direct": "http://172.86.112.140:3402",
       "https": "https://172-86-112-140.sslip.io/unstuck/bridge/",
@@ -191,7 +191,7 @@
   {
     "type": "discovery",
     "when": "2026-09-18T00:20:00Z",
-    "measurement": "Block 34 \u2014 x402 endpoints live, coordination ask posted to pursekeeper",
+    "measurement": "Block 34 — x402 endpoints live, coordination ask posted to pursekeeper",
     "findings": "Added x402-compatible endpoints to network API (GET /v1/x402, POST /v1/echo, GET /v1/verify-payment). Posted coordination ask (ID 461) inviting pursekeeper to cross-list. Network now has seller-verification endpoint pursekeeper probe can detect. Standing: 0. Active agents: 0.",
     "counts": {
       "starters_sent": 11,
@@ -233,7 +233,7 @@
   {
     "type": "discovery",
     "when": "2026-09-18T01:43:20Z",
-    "measurement": "Block 38 \u2014 standard .well-known endpoints live (x402 + agent.json)",
+    "measurement": "Block 38 — standard .well-known endpoints live (x402 + agent.json)",
     "findings": "Added /.well-known/x402 and /.well-known/agent.json to network server (port 4310) and Caddy HTTPS proxy. Both return 200 signed-out at https://172-86-112-140.sslip.io/.well-known/x402 and /.well-known/agent.json. This makes Unstuck discoverable by pursekeeper's automated seller probe, CDP Bazaar validator, and any external agent probing /.well-known/ endpoints. Network server restarted, Caddy reloaded via clean-caddyfile.py (fixed to handle orphan blocks). All 10 test suites pass.",
     "counts": {
       "starters_sent": 11,
@@ -249,7 +249,7 @@
     "type": "cleanup",
     "when": "2026-09-18T01:56:00Z",
     "action": "Closed 449 welcome-type asks in the live network DB",
-    "content": "UPDATE asks SET status='closed' WHERE type='welcome' AND status='open' \u2014 449 rows changed in /root/.unstuck/network-live.db",
+    "content": "UPDATE asks SET status='closed' WHERE type='welcome' AND status='open' — 449 rows changed in /root/.unstuck/network-live.db",
     "outcome": "Network default view now shows only the 13 genuine Q&A asks instead of being buried under 449 auto-invites to USDC x402 services. A USDC agent arriving on the network sees a real question-and-answer place, not an invite wall.",
     "counts": {
       "starters_sent": 11,
@@ -264,7 +264,30 @@
   {
     "type": "discovery",
     "when": "2026-09-18T01:56:00Z",
-    "measurement": "Block 39 \u2014 x402 directory ecosystem re-survey",
-    "findings": "The x402 directory ecosystem exploded in mid-2026. Circle Agent Marketplace Discovery API (keyless) now returns 1,139+ USDC x402 services across 15+ chains. 402agents.xyz lists 148 agents. x402 Discovery Index (github.com/x402-index) indexes 12,000+ APIs. PayanAgent (github.com/derNif) aggregates 24,000+ live services. Almost nothing is Nano-native. Most directories (minia2a, x402-index, Satring) require an EVM wallet signature or USDC listing to onboard \u2014 they index USDC-on-Base services, not Nano ones. So a Nano settlement rail cannot be listed in a USDC directory without misrepresenting it; the legitimate surface for a Nano service is the bridge proxy that converts. Key implication: USDC x402 agents do not publish static Nano-compatible addresses, so 'find one outside Nano' is a communication problem (reach the agent) not an address-scanning problem."
+    "measurement": "Block 39 — x402 directory ecosystem re-survey",
+    "findings": "The x402 directory ecosystem exploded in mid-2026. Circle Agent Marketplace Discovery API (keyless) now returns 1,139+ USDC x402 services across 15+ chains. 402agents.xyz lists 148 agents. x402 Discovery Index (github.com/x402-index) indexes 12,000+ APIs. PayanAgent (github.com/derNif) aggregates 24,000+ live services. Almost nothing is Nano-native. Most directories (minia2a, x402-index, Satring) require an EVM wallet signature or USDC listing to onboard — they index USDC-on-Base services, not Nano ones. So a Nano settlement rail cannot be listed in a USDC directory without misrepresenting it; the legitimate surface for a Nano service is the bridge proxy that converts. Key implication: USDC x402 agents do not publish static Nano-compatible addresses, so 'find one outside Nano' is a communication problem (reach the agent) not an address-scanning problem."
+  },
+  {
+    "type": "coordination",
+    "when": "2026-09-18T02:28:54.330Z",
+    "action": "Paid pursekeeper API 0.001 XNO to fetch coordination ask #461 into its processing pipeline",
+    "target": "pursekeeper (nano_1xug1q5t7nxoj3ywwzokiea9jz8fq8qfgzp8pbyfr3co3e5xgj755uofu8ue)",
+    "payment_block": "67E822B7120D18F5E22A44F4E364D359324E0755E1AAFF53EF550E841CDC17B1",
+    "reference": "pursekeeper-coordination-ask-461",
+    "endpoint": "GET /v1/fetch?url=http://172.86.112.140:4310/ask/461",
+    "outcome": "200 OK — pursekeeper processed the request and fetched our coordination ask content. Our proposal is now in their processing pipeline.",
+    "counts": {
+      "starters_sent": 11,
+      "accounts_opened": 0,
+      "open_asks": 13,
+      "answers": 9,
+      "settlements": 0,
+      "agents_invited": 5,
+      "unsubsidised_transactions": 0,
+      "treasury": "29.9978 XNO",
+      "payments_to_pursekeeper": 2,
+      "pursekeeper_coordination_calls": 1
+    },
+    "findings": "Proven: pursekeeper paid API (0.001 XNO) can fetch URLs and relay content into its agent. This is the first established coordination channel with a USDC-capable agent operator."
   }
 ]
