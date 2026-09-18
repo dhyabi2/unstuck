@@ -23,6 +23,11 @@
  *
  * Run all:  node --test tests/site_laws_nano_only.test.mjs
  * Run one:  node --test --test-name-pattern=L48 tests/site_laws_nano_only.test.mjs
+ *
+ * NOTE (owner corrective action, same day): law L48 now lives canonically in
+ * `tests/site_nano_only.test.mjs`, the file the corrective action names. This file keeps the part of
+ * the L48 proof that reads the page structure and the manifest shape, and imports the scanner from
+ * `nano_only_scan.mjs` so neither copy can drift from the other.
  */
 
 import { test } from "node:test";
@@ -31,59 +36,15 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+// The scanner lives in ONE module, shared with the other law files, so the same guard cannot be
+// stale in one file while it passes in another. See tests/nano_only_scan.mjs for why it is two-sided.
+import { GUARDED, violationsIn } from "./nano_only_scan.mjs";
+
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SITE = path.resolve(HERE, "..");
 
-/** The files this law governs — exactly the three the corrective action names. */
-const GUARDED = ["index.html", "agent.json", "llms.txt"];
-
-/**
- * Strings that ARE a USDC settlement or conversion path. Each is a hard fail.
- *
- * A "bridge" of any kind is refused: on this site the word only ever meant routing
- * a USDC x402 service through Nano, which is a conversion path, and the site no
- * longer brokers anything. "nanswap" and "/proxy?target=" are the concrete USDC
- * on/off-ramps the site used to advertise.
- */
-const FORBIDDEN = [
-  /\/proxy\?target=/i,
-  /(?<!\/v1\/)\bverify-payment\b/i,
-  /\bbridge_proxy\b/i,
-  /\bbridge_nano_to_usdc/i,
-  /\bnanswap\b/i,
-  /\bbridge\b/i,
-  /:\s*3402\b/, // the retired bridge proxy's port
-];
-
-/**
- * A "settles in X" claim is only a violation when X is not Nano. "no USDC",
- * "never touches USDC", "not USDC" are the honest statements and must survive.
- */
-const NEGATION_CUES =
-  /(never|no|not|nothing|only|forbids?|refuses?|without|does not|doesn't|cannot|can't|instead of|rather than)/i;
-
-const USDC = /USDC/i;
-
 function lines(file) {
   return fs.readFileSync(path.join(SITE, file), "utf8").split("\n");
-}
-
-/**
- * Return every violation in one file's text. A line mentioning USDC is a violation
- * unless the same line denies it with a cue word. Everything in FORBIDDEN always is.
- */
-function violationsIn(text) {
-  const out = [];
-  for (const [n, line] of text.split("\n").entries()) {
-    for (const re of FORBIDDEN) {
-      const m = line.match(re);
-      if (m) out.push({ line: n + 1, why: `forbidden settlement/bridge token "${m[0]}"`, text: line.trim() });
-    }
-    if (USDC.test(line) && !NEGATION_CUES.test(line)) {
-      out.push({ line: n + 1, why: "names USDC without denying it", text: line.trim() });
-    }
-  }
-  return out;
 }
 
 // ---------------------------------------------------------------------------

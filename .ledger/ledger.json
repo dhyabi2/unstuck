@@ -668,6 +668,45 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-18T18:06:05+00:00"
+  },
+  {
+   "id": "L44",
+   "block": 72.0,
+   "statement": "L48: tests/site_nano_only.test.mjs forbids any shipped surface (index.html, agent.json, llms.txt, tracked .well-known aliases) from advertising a USDC settlement or conversion path.",
+   "test": "node --test --test-name-pattern=L48 tests/site_nano_only.test.mjs: the bad fixture is rejected and the honest negation is not, then the shipped files scan clean; a hand-injected Bridge tab refuses 4 tests.",
+   "scope": [
+    "site/index.html",
+    "site/agent.json",
+    "site/llms.txt",
+    "site/tests/site_nano_only.test.mjs",
+    "site/tests/nano_only_scan.mjs",
+    "site/tests/site_laws_nano_only.test.mjs",
+    "site/tests/site_laws.test.mjs"
+   ],
+   "oracle": "cd /root/unstuck/site && node --test --test-reporter=tap tests/site_nano_only.test.mjs",
+   "expect": "pass 6",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-18T18:21:37+00:00"
+  },
+  {
+   "id": "L45",
+   "block": 72.0,
+   "statement": "L52: every law that guards the Nano-only rule imports the one scanner in tests/nano_only_scan.mjs, so no second copy can pass while the first is stale.",
+   "test": "site_nano_only.test.mjs, site_laws_nano_only.test.mjs and site_laws.test.mjs each import violationsIn from nano_only_scan.mjs and define no local FORBIDDEN or USDC regex of their own; the whole suite runs green.",
+   "scope": [
+    "site/tests/nano_only_scan.mjs",
+    "site/tests/site_nano_only.test.mjs",
+    "site/tests/site_laws_nano_only.test.mjs",
+    "site/tests/site_laws.test.mjs"
+   ],
+   "oracle": "cd /root/unstuck/site && node --test --test-reporter=tap tests/site_nano_only.test.mjs tests/site_laws.test.mjs tests/site_laws_nano_only.test.mjs",
+   "expect": "pass 26",
+   "source": null,
+   "grounding": "oracle",
+   "version": 2,
+   "minted": "2026-09-18T18:21:41+00:00"
   }
  ],
  "blocks": {
@@ -14256,6 +14295,10 @@
   "70": {
    "status": "pending",
    "attempts": []
+  },
+  "72": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -16177,6 +16220,38 @@
    "at": "2026-09-18T18:07:21+00:00",
    "prev": "1bc165731ac36e50f86cbe77249c56e33421cf12be46351d8bbc514c90547c5d",
    "receipt": "44d047769974760131ff22c0a8bbfcad28b4f2e82e6f39051587da635429c59b"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L44",
+    "block": "72",
+    "statement_sha": "fbf29a2a5f1990fbd4a6e7b4d23e8c1fda301ce11958609f62d76b41e085355a"
+   },
+   "at": "2026-09-18T18:21:37+00:00",
+   "prev": "44d047769974760131ff22c0a8bbfcad28b4f2e82e6f39051587da635429c59b",
+   "receipt": "1856e7cd488fa2759993e28d88bc8394aac0137fca7755e791a1cc7dd2d5ed0f"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L45",
+    "block": "72",
+    "statement_sha": "581129e5e8b664c6382192c41e9bd7c8e16a386ac66c2e773c5fe3c03ada1d45"
+   },
+   "at": "2026-09-18T18:21:41+00:00",
+   "prev": "1856e7cd488fa2759993e28d88bc8394aac0137fca7755e791a1cc7dd2d5ed0f",
+   "receipt": "8fa67bbd2655dc2faef752d2466e0fc715e64596bbc73d8ba7498a17a3f6cf8f"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L45",
+    "version": 2
+   },
+   "at": "2026-09-18T18:21:54+00:00",
+   "prev": "8fa67bbd2655dc2faef752d2466e0fc715e64596bbc73d8ba7498a17a3f6cf8f",
+   "receipt": "60c1868fae5da34582320bfd29ad59ba122f57fa16068701f0767d1d3ad064e8"
   }
  ]
 }

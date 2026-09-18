@@ -31,6 +31,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+// The Nano-only scanner is one module shared by every law that guards it (L48 in
+// site_nano_only.test.mjs), so this file's copy of the rule cannot go stale on its own.
+import { violationsIn } from "./nano_only_scan.mjs";
+
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SITE = path.resolve(HERE, "..");
 const HTML = fs.readFileSync(path.join(SITE, "index.html"), "utf8");
@@ -275,9 +279,14 @@ test("L34 the empty ask list names the opener amount and the Nano-only rule", ()
     /in Nano \(XNO\) and nothing else|only Nano|Nano and nothing else|no USDC/i.test(text),
     "the empty state does not state the Nano-only settlement rule"
   );
-  assert.ok(
-    !/nanswap|USDC[^.]*(swap|convert|bridge)/i.test(text),
-    "the empty state must not offer a USDC conversion path"
+  // The scanner behind L48 is the authority on what a conversion path looks like, so L34 asks it
+  // rather than keeping a second, drift-prone regex of its own.
+  const found = violationsIn(text);
+  assert.deepEqual(
+    found,
+    [],
+    "the empty state must not offer a USDC conversion path:\n" +
+      found.map((v) => `  line ${v.line}: ${v.why} -> ${v.text}`).join("\n")
   );
 });
 
