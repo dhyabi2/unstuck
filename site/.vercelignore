@@ -9,5 +9,6 @@ network-store.db
 site/.vercel/
 site/caddy-reference.conf
 site/test_spa.js
+site/tests/
 tests/
 unstuck-bridge

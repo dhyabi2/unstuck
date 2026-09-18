@@ -33,6 +33,7 @@ function usage() {
   unstuck-bridge heard  --agent NAME --text "what it answered"
   unstuck-bridge status --agent NAME --status contacted|replied|tipped|opened|swapped|transacting|declined
   unstuck-bridge agreed --agent NAME --summary "what was agreed" [--amount-xno 0.00001]
+  unstuck-bridge waiting [--hours 2]
   unstuck-bridge list [--json]`);
   process.exit(1);
 }

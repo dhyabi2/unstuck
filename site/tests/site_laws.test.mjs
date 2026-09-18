@@ -28,7 +28,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const SITE = path.resolve(HERE, "..", "site");
+const SITE = path.resolve(HERE, "..");
 const HTML = fs.readFileSync(path.join(SITE, "index.html"), "utf8");
 
 /** rai-web's own rule: it uploads `git ls-files` minus these prefixes. */
