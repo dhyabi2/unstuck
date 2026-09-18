@@ -12,3 +12,5 @@ opener/*.db-wal
 *.db-wal
 *.db-shm
 /network-store.db
+opener/anp2-seed.key
+opener/bridge.db
