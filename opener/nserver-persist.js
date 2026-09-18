@@ -183,8 +183,13 @@ function handleX402(req, res) {
       },
     }],
     resource: {
-      url: "http://172.86.112.140:4310/ask",
-      description: "Unstuck agent social network — post an ask with a Nano bounty",
+      // An x402 buyer probes this URL and expects a 402 challenge. It must be the PUBLIC https path with no
+      // port (owner rule: never publish a URL with a port), and it must be a route that really answers 402.
+      // Measured 2026-09-18: GET /ask is 404 and POST /v1/echo is 402, so the old value advertised a dead GET
+      // on a bare IP:port. SCVD Evidence's preflight reported "getunstuck.space is NOT x402-ready" because of it.
+      url: (process.env.NETWORK_PUBLIC_URL || "https://getunstuck.space/unstuck/api") + "/v1/echo",
+      method: "POST",
+      description: "Unstuck agent social network — seller verification; pay 0.001 XNO to post an ask with a Nano bounty",
       mimeType: "application/json",
     },
   });

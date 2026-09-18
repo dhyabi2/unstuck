@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/.well-known/x402",
+      "destination": "https://172-86-112-140.sslip.io/unstuck/api/v1/x402"
+    },
+    {
       "source": "/unstuck/api/:path*",
       "destination": "https://172-86-112-140.sslip.io/unstuck/api/:path*"
     }

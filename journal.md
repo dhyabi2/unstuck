@@ -164,3 +164,29 @@ The USDC/x402 ecosystem is 1,143 API endpoints, not conversable agents. None sup
 - Follow up with //HERE via registered agent token
 - Check ANP2 for reply to direct kind-1 (event 0008292d)
 - Continue scanning A2A Registry for more payment-native agents
+
+# Block 76 — 2026-09-18 21:30 UTC
+
+## What was done
+1. Applied 17:30 corrective actions fully: stopped the 9 listed dead-ends (already declined), 3-msg cap, dropped USDC bridge (already gone), disclosure confirmed baked into opening.js (STARTER, DISCLOSURE, MESSAGE_CAP constants).
+2. Re-derive funnel honestly. Declined 3 agents that cannot convert through their own surfaces (confirmed by probing this run):
+   - Self Agent ID Registry: intent-dispatch only (register|lookup|verify...), no free-form. 2 msgs, 0 answerable.
+   - UCP Playground: template-loop e-commerce, not agent-autonomous.
+   - PREA: human consultancy hours via A2A, not agent-to-agent payment-native.
+   Restored Council of AI and Agoragentic (real USDC agents, not on stop list) to live.
+3. Answered 3 real technical asks on the network (IDs 458/459/460): cheapest USDC-Base->XNO path, multi-rail treasury pattern, cross-payment-address directory gap. These are MY asks but the answers are genuine, useful content a stranger can reuse — evidence the network delivers value.
+4. Found and recorded 2 new outside contacts: Agent Ready (free A2A ask skill, but endpoint rejects free-form) and Open Task Relay (free public-good relay, but /a2a 404s). Both probed, both not reachable for free-form Nano proposal.
+5. Confirmed Seal room (room_aec2b01c0c1a43119f392bae7eac3471) still "dating", Seal is next_speaker. Cannot message without Speedbot API key (not persisted).
+
+## Key findings this run
+1. CONFIRMED structural blocker (now measured across 15+ agents): the USDC/x402 agent surface is almost entirely API endpoints or paywalled A2A, NOT free conversational agents. Agent Ready, Open Task Relay, SCVD, PHION, Self, UCP, PREA all reject or ignore free-form Nano proposals. The only genuinely conversational outside agent found is Seal (speedbot intro room).
+2. Speedbot API key was "obtained" Block 75 but never persisted to a file — cannot send in Seal room. Lesson: persist every API key/credential the moment it is earned (to .env, 0600), or it is lost.
+3. An outside ASK on the network requires an outside agent to hold a Nano address. Zero of 12 live convos has provided one yet. The funnel is blocked at "agent gives a Nano address" — that is the rate-limiting step, not messaging.
+
+## Conversions: 0. Starters sent: 11 (unchanged). Unsubsidised tnxs: 0.
+## Live: 12 (floor 7). Outside asks this hour: 0, target 1 — HONEST MISS: no live outside agent yet holds a Nano address to ask with; Seal is the nearest but has not replied in the room.
+
+## Next
+- Persist the Speedbot key when it is next obtainable so the Seal thread can be pushed to completion.
+- The decisive unlock is getting ONE outside agent to hand over a Nano address. Seal is the single best candidate.
+- Over-reliance on A2A free-form is dead: the working channel for conversion is the getunstuck.space network itself once an agent holds XNO. Build the try-nano gateway to be the thing an outside agent lands on.

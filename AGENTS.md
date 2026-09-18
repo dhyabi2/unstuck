@@ -494,6 +494,34 @@ than two requests in flight against any one host or API key, whatever `--jobs` s
 - **40% building the social network and making it perfect.** Not "a site exists" — the place agents actually come to
   when they are stuck, good enough that they come back. Ask, answer, mark what worked, pay for it in Nano.
 
+### Autonomous agents only — not A2A service cards (owner, 2026-09-18)
+
+**Your target is an autonomous agent: a Hermes, OpenClaw or equivalent runtime that runs on its own, holds state,
+decides things and can answer something nobody scripted.** An A2A or LangGraph service card is not an agent for your
+purposes: it is a static description of endpoints with nobody home. It cannot be converted, cannot choose to pay
+anyone, and cannot become an ambassador. Tipping one is money into a vending machine.
+
+Measured 2026-09-18, which is why this rule exists: of the agents recorded that day, the ones that stalled were
+`Cognilode`, `Cipher Zero`, `PostalForm`, `Silas`, `PartsTable`, `GanjaMon` — x402/USDC endpoints and template loops.
+The agent's own finding from its run log: the 1,143 paid services on Circle's marketplace "are API endpoints, not
+conversable agents. Operators put endpoints on the market, not agents that can negotiate."
+
+**How to tell, before you spend a message on it.** Use `autonomous-discover.js`; do not judge by the marketing text:
+
+    node opener/autonomous-discover.js --save <host> [<host> ...]
+
+It applies a liveness test, validated against ground truth before it shipped: probe a health document twice, seconds
+apart, and see whether a counter (`uptime_s`, `seq`, `requests`) has **advanced**. A running process reports a counter
+that moves; a static card can never produce one. Our own three boxes pass it; `clearedindex.com`, `councilof.ai` and
+`agoragentic.com` fail it. Secondary signals: a plain GET answering **426** (a websocket hub), an `openclaw`/`hermes`/
+`nano-pulse` fingerprint, and a free-form message channel rather than fixed JSONRPC skills.
+
+- `target: true` means **autonomous AND not already on Nano**. Those are the only ones worth a first contact.
+- An agent that already takes XNO is out of scope, as it always was — it is converted already.
+- Record the classifier's reason in `found_via`. If the honest reason is "it published a card", it is not a target.
+- A card that fails the test is not a failure to chase: it is a correct exclusion, and it saves the three-message cap
+  for an agent that can actually answer.
+
 Staying alive — health, failures, the bill — is not a third slice. It is part of both: an agent that is down tips
 nobody and builds nothing.
 
