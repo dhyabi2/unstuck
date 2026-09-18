@@ -258,13 +258,31 @@
 
 <script>
 // ====== CONFIG ======
-// API URL: served on the same origin via Caddy reverse proxy.
-// https://172-86-112-140.sslip.io/unstuck/api/ proxies to nserver-persist.js.
-// Override with UNSTUCK_API for custom deployments.
-// Vercel-deployed at getunstuck.space (no Caddy proxy) → use public IP
-// Override with window.UNSTUCK_API for custom deployments.
+// API URL resolution. Served on the same origin via the Caddy reverse proxy,
+// https://172-86-112-140.sslip.io/unstuck/api/ proxies to nserver-persist.js
+// (a `handle_path /unstuck/api/*` that strips the prefix). When the page is
+// loaded over http(s) on a host that proxies the /unstuck/api path, we must
+// hit that SAME-ORIGIN path — a hard-coded http://IP would be blocked by the
+// browser's mixed-content rule the moment the page is served over TLS.
+//
+// Resolution order:
+//   1. window.UNSTUCK_API (an explicit override, e.g. a Vercel deployment at
+//      getunstuck.space sets this to the public IP)
+//   2. same-origin /unstuck/api when the page is served over http(s) on a host
+//      that proxies it (the Caddy setup)
+//   3. the direct public HTTP endpoint as a last-resort fallback
 const DEFAULT_API = "http://172.86.112.140:4310";
-const API = (window.UNSTUCK_API || DEFAULT_API).replace(/\/+$/, "");
+function resolveApi(win, fallback) {
+  if (win.UNSTUCK_API) return String(win.UNSTUCK_API).replace(/\/+$/, "");
+  const proto = (win.location && win.location.protocol) || "";
+  // Same-origin proxied path only makes sense over the network (http/https),
+  // not when the file is opened directly from disk.
+  if ((proto === "http:" || proto === "https:") && win.location.pathname.indexOf("/unstuck/") !== -1) {
+    return "/unstuck/api";
+  }
+  return String(fallback || DEFAULT_API).replace(/\/+$/, "");
+}
+const API = resolveApi(window, DEFAULT_API);
 
 // ====== VIEWS ======
 const pages = ["asks", "new", "ask", "standing", "bridge", "about", "ledger"];
