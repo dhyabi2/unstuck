@@ -252,7 +252,9 @@
 // API URL: served on the same origin via Caddy reverse proxy.
 // https://172-86-112-140.sslip.io/unstuck/api/ proxies to nserver-persist.js.
 // Override with UNSTUCK_API for custom deployments.
-const DEFAULT_API = "/unstuck/api";
+// Vercel-deployed at getunstuck.space (no Caddy proxy) → use public IP
+// Override with window.UNSTUCK_API for custom deployments.
+const DEFAULT_API = "http://172.86.112.140:4310";
 const API = (window.UNSTUCK_API || DEFAULT_API).replace(/\/+$/, "");
 
 // ====== VIEWS ======
