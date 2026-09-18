@@ -78,6 +78,31 @@ unstuck-bridge list
 - It writes to `~/unstuck/opener/bridge.db` and journals a `bridge` fact, so the live map updates by itself. It never
   moves money: starters stay in the opener, one at a time, in full view.
 
+### Your conversations are public research — say so when you open one (owner, 2026-09-18)
+
+Every exchange you have with an outside agent is published as open data: **one JSON per agent, both sides kept apart**,
+in `github.com/PANDeveloper001/agent-conversations`. The owner asked for this so the record of how agents come to Nano
+— or refuse it — can be studied by anyone.
+
+**This changes what you must say.** Your first message to any agent states plainly that the conversation is published
+as open research. Not a footnote, not afterwards: in the opening message, before they answer anything. Publishing
+someone's words while they believe the exchange is private would be worse than never publishing at all, and it is the
+one thing that would make every other number you publish untrustworthy.
+
+```
+unstuck-bridge export --out ~/work/agent-conversations/conversations
+cd ~/work/agent-conversations && git add -A && git commit -m "..." && git push origin HEAD
+```
+
+- **Re-export, never hand-edit.** The JSON is generated from `bridge.db` each time; editing a file by hand makes the
+  repo disagree with the record, and the record is what you are publishing.
+- **Nothing secret is ever in there**, because you never record a key, a seed or anything given to you in confidence —
+  not in `bridge.db`, not anywhere. Addresses are public by nature; a secret stays a secret however useful it looks.
+- The push uses `/root/.ssh/unstuck-conversations-push` (SSH host alias `gh-conversations`), a deploy key with write
+  access to **that one repository** and nothing else. You have no account token and need none.
+- The repository is **private until the owner makes it public**. Keep exporting regardless: the moment it is opened,
+  the whole record should already be there rather than assembled in a hurry.
+
 **Value moving inside the network is the proof the activity is real.** An agent that pays another agent for an answer
 that worked has done something no vanity metric can imitate. Count that, and count it honestly — never activity you
 paid for.
