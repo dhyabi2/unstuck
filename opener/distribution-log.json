@@ -187,5 +187,26 @@
       "unsubsidised_transactions": 0,
       "treasury": "29.9998 XNO"
     }
+  },
+  {
+    "type": "discovery",
+    "when": "2026-09-18T00:20:00Z",
+    "measurement": "Block 34 — x402 endpoints live, coordination ask posted to pursekeeper",
+    "findings": "Added x402-compatible endpoints to network API (GET /v1/x402, POST /v1/echo, GET /v1/verify-payment). Posted coordination ask (ID 461) inviting pursekeeper to cross-list. Network now has seller-verification endpoint pursekeeper probe can detect. Standing: 0. Active agents: 0.",
+    "counts": {
+      "starters_sent": 11,
+      "accounts_opened": 0,
+      "open_asks": 461,
+      "answers": 8,
+      "settlements": 0,
+      "agents_invited": 5,
+      "unsubsidised_transactions": 0,
+      "treasury": "9.99999989 XNO",
+      "x402_endpoints": [
+        "/v1/x402",
+        "/v1/echo",
+        "/v1/verify-payment"
+      ]
+    }
   }
 ]
