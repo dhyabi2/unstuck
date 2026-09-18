@@ -6,7 +6,10 @@
  * Served over the Caddy HTTPS proxy at https://172-86-112-140.sslip.io/unstuck/,
  * the page must call the SAME-ORIGIN proxied API path (/unstuck/api) — a
  * hard-coded http://IP base would be a mixed-content violation and silently
- * break every fetch once the page is loaded over TLS. This test extracts the
+ * break every fetch once the page is loaded over TLS. The deployed site at
+ * https://getunstuck.space reaches that same path through the vercel.json
+ * rewrite (Block 61), so both origins use their own origin, never a third.
+ * This test extracts the
  * live `resolveApi` function straight from site/index.html and runs it against
  * several simulated window environments, so the code under test is the shipped
  * page, never a reimplementation.
@@ -58,6 +61,16 @@ check("file:// (opened from disk) falls back to direct API", r === "http://172.8
 
 r = resolveApi({ location: { protocol: "https:", pathname: "/" } }, "http://172.86.112.140:4310");
 check("https root (not /unstuck/) falls back to direct API", r === "http://172.86.112.140:4310", `got ${r}`);
+
+// --- Case 5: the deployed origin serves the same path through its rewrite ---
+// Block 61: Vercel rewrites /unstuck/api/* to the Caddy gateway, so a visitor at
+// https://getunstuck.space must call its OWN origin, exactly as test_spa.js's
+// /unstuck/api expectation below. Same path, no third-party host in the browser.
+r = resolveApi({ location: { protocol: "https:", hostname: "getunstuck.space", pathname: "/" } }, "https://172-86-112-140.sslip.io/unstuck/api");
+check("https://getunstuck.space/ -> same-origin /unstuck/api", r === "/unstuck/api", `got ${r}`);
+
+r = resolveApi({ location: { protocol: "https:", hostname: "getunstuck.space", pathname: "/ledger" } }, "https://172-86-112-140.sslip.io/unstuck/api");
+check("a deep link on the deployed domain still resolves /unstuck/api", r === "/unstuck/api", `got ${r}`);
 
 // --- Case 4: the resolved API is actually used by every fetch (path joining) ---
 // The page's api() helper must join a resolved absolute path cleanly.

@@ -13,6 +13,9 @@
  *   L33 — the files that ship are the SPA and its machine-readable entry points.
  *   L34 — an empty ask list tells a stranger agent the opener amount and nanswap.
  *
+ * (L41/L42 — the deployed origin actually serving the path the page resolves — live in
+ *  `site_api_path.test.mjs`, because they are about the rewrite and the live origin.)
+ *
  * Everything is read out of the real shipped files, never a reimplementation: the
  * `resolveApi` function is extracted from site/index.html and executed, the file list
  * is the one rai-web itself computes, and the markup is the bytes that go to Vercel.
@@ -71,17 +74,38 @@ test("L31 the page served at https://getunstuck.space/ resolves an API an https 
   const resolved = resolveApi(visitorWindow(), defaultApiConstant());
 
   assert.ok(resolved, "resolveApi returned nothing for the live domain");
+  // Since Block 61 the deployed origin serves /unstuck/api itself through the vercel.json
+  // rewrite, so the page may use its own origin — and that is what it must do: no
+  // third-party host and no cross-origin hop in a visitor's path. What may never happen
+  // is a plain-http base, which an https page blocks as mixed content.
   assert.ok(
-    resolved.startsWith("https://"),
-    `the resolved base must be https or the browser blocks it as mixed content, got ${resolved}`
+    !resolved.startsWith("http://"),
+    `the resolved base must never be plain http, got ${resolved}`
   );
-  // It must not be the Caddy-only same-origin path: on Vercel nothing serves /unstuck/api.
-  assert.notEqual(
-    resolved,
-    "/unstuck/api",
-    "the same-origin /unstuck/api path only exists on the Caddy host, not on the deployed site"
+  assert.ok(
+    resolved === "/unstuck/api" || resolved.startsWith("https://"),
+    `the resolved base must be the same-origin proxied path or an https one, got ${resolved}`
   );
-  assert.equal(resolved, TLS_API_BASE, `expected the TLS api base, got ${resolved}`);
+  // Whichever it is, the path the page calls is the path the rewrite forwards.
+  assert.ok(
+    resolved.endsWith("/unstuck/api"),
+    `the page must resolve the path the rewrite forwards, got ${resolved}`
+  );
+});
+
+test("L31 the deployed origin's same-origin path is the one the rewrite forwards", () => {
+  // The page and the deploy config must agree on one path, or the rewrite forwards a path
+  // nobody calls (the state the live site was in: 404 at the domain on 2026-09-18).
+  const resolveApi = loadResolveApi();
+  const resolved = resolveApi(visitorWindow(), defaultApiConstant());
+  const cfg = JSON.parse(fs.readFileSync(path.join(SITE, "vercel.json"), "utf8"));
+  const rw = (cfg.rewrites || []).find((r) => r.source === "/unstuck/api/:path*");
+  assert.ok(rw, "vercel.json must forward /unstuck/api/:path*");
+  const prefix = rw.source.replace(/\/:path\*$/, "");
+  assert.ok(
+    resolved.endsWith(prefix),
+    `the page resolves ${resolved} but the rewrite forwards ${prefix}`
+  );
 });
 
 test("L31 no API base the page can return is plain http", () => {
@@ -112,6 +136,14 @@ test("L31 an explicit UNSTUCK_API override still wins over the baked default", (
     defaultApiConstant()
   );
   assert.equal(r, "https://api.example.test", "an operator override must still take precedence");
+});
+
+test("L31 a host that does not forward /unstuck/api still falls back to an https base", () => {
+  // The fallback is what saves a page served from anywhere else: it must be the TLS base,
+  // never the same-origin path (which 404s on a host with no rewrite) and never plain http.
+  const resolveApi = loadResolveApi();
+  const r = resolveApi({ location: { protocol: "https:", hostname: "example.test", pathname: "/" } }, defaultApiConstant());
+  assert.equal(r, TLS_API_BASE, `an unproxied host must fall back to the TLS base, got ${r}`);
 });
 
 test("L31 on the Caddy host the page still prefers its own same-origin proxy", () => {

@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/unstuck/api/:path*",
+      "destination": "https://172-86-112-140.sslip.io/unstuck/api/:path*"
+    }
+  ]
+}

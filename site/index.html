@@ -272,18 +272,26 @@
 // API URL resolution.
 //
 // The page is deployed to https://getunstuck.space by rai-web (a static Vercel
-// build: index.html + the files beside it, no server, no rewrite to the network).
-// The network API itself lives on the box at :4310, behind the Caddy host
-// https://172-86-112-140.sslip.io/unstuck/api, which terminates TLS with a real
-// certificate. A browser will NOT let an https page call a plain-http URL — it
-// blocks it as mixed content and the ask list silently renders nothing — so the
-// default this page falls back to has to be an https one.
+// build: index.html + the files beside it, no server of its own). The network API
+// lives on the box at :4310. Two origins can reach it, and in both cases the page
+// calls its OWN origin and lets that origin forward the path:
+//
+//   on the box         Caddy proxies /unstuck/api to :4310 (handle_path /unstuck/api/*)
+//   on the domain      the Vercel rewrite in site/vercel.json forwards /unstuck/api/* to
+//                      the Caddy gateway https://172-86-112-140.sslip.io/unstuck/api/*
+//                      (Block 61, measured: before it, the domain answered 404 for the
+//                      exact path this page calls)
+//
+// A browser will NOT let an https page call a plain-http URL — it blocks it as mixed
+// content and the ask list silently renders nothing — and reaching the gateway host
+// directly would put a third-party certificate in every visitor's path for no gain.
 //
 // Resolution order:
 //   1. window.UNSTUCK_API — an explicit override, if an operator ever sets one
-//   2. same-origin /unstuck/api — when the page IS served by the Caddy host that
-//      proxies that path (cheapest: no cross-origin hop at all)
-//   3. API_BASE — the TLS base, the only fallback an https page can actually use
+//   2. same-origin /unstuck/api — on the Caddy host, and on the deployed domain where
+//      the rewrite forwards it (cheapest: no cross-origin hop at all)
+//   3. API_BASE — the TLS base, the only fallback an https page can actually use when
+//      the page is served from somewhere that does not forward the path
 //
 // Measured 2026-09-18: this constant was the plain-http origin, so even a
 // successful deploy of this SPA produced "Failed to load asks" at the domain.
@@ -292,9 +300,13 @@ function resolveApi(win, fallback) {
   if (win.UNSTUCK_API) return String(win.UNSTUCK_API).replace(/\/+$/, "");
   const loc = (win && win.location) || {};
   const proto = loc.protocol || "";
-  // The same-origin proxied path only exists on the host that proxies it, and only
-  // over the network — never when the file is opened straight from disk.
-  if ((proto === "http:" || proto === "https:") && String(loc.pathname || "").indexOf("/unstuck/") !== -1) {
+  const host = String(loc.hostname || "").toLowerCase();
+  const path = String(loc.pathname || "");
+  // The same-origin proxied path exists on the host that proxies it (the box) and on the
+  // deployed domain, whose rewrite forwards the same path — but never when the file is
+  // opened straight from disk, and never on a host that does not forward it.
+  const webOrigin = proto === "http:" || proto === "https:";
+  if (webOrigin && (path.indexOf("/unstuck/") !== -1 || host === "getunstuck.space" || host === "www.getunstuck.space")) {
     return "/unstuck/api";
   }
   return String(fallback || API_BASE).replace(/\/+$/, "");
