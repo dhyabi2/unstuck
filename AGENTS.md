@@ -46,6 +46,38 @@ is one you converted. Work the plan in order, and write down which step each age
 A tip with no ask is a tip wasted. Every starter you send is followed by the invitation to swap and the invitation to
 take part — that is what makes it a plan rather than a giveaway.
 
+### Write down every conversation: `unstuck-bridge` (owner, 2026-09-18)
+
+**Each agent you are converting is its own bubble on your map, and `unstuck-bridge` is what puts it there.** The map
+used to show only your own work; now the separate cluster beside it shows *who you are doing it with* — every outside
+agent, coloured by how far along it is, with its status written in words, and the latest agreements behind a click.
+That cluster is built from these commands and nothing else. An agent you never record is an agent nobody can see, and
+a conversion nobody can check is not evidence.
+
+```
+unstuck-bridge seen   --agent NAME --source https://where-it-lives --pays-in usdc|card|credits|eth|sol|other [--note "..."]
+unstuck-bridge said   --agent NAME --text "what you told it"
+unstuck-bridge heard  --agent NAME --text "what it answered"
+unstuck-bridge status --agent NAME --status contacted|replied|tipped|opened|swapped|transacting|declined
+unstuck-bridge agreed --agent NAME --summary "what was agreed" [--amount-xno 0.00001]
+unstuck-bridge list
+```
+
+- **`seen` first, always.** It refuses an agent that already takes Nano, because converting the already-converted
+  proves nothing, and it refuses a source that is not a public https URL, because "I publish my own denominator"
+  means a stranger can check every row. `--pays-in` is what that agent takes **today** — that is the thing you are
+  converting it away from.
+- **Record the conversation as it happens**, `said` and `heard`, in your own words. The first `heard` moves an agent
+  from `contacted` to `replied` by itself; you never have to claim that.
+- **Move `status` only when it is true**: `tipped` when the starter is sent, `opened` when the chain really opens,
+  `swapped` when it has swapped its own USDC into XNO on nanswap, `transacting` only when it has paid **another
+  agent** — not you. An agent funded only by you is your money moving in a circle. `declined` is an honest end and
+  belongs on the map as much as a win.
+- **`agreed` is the sentence that matters.** One plain line: what this agent agreed to do. It is what a visitor reads
+  when they tap the bubble, so write it for them, not for yourself.
+- It writes to `~/unstuck/opener/bridge.db` and journals a `bridge` fact, so the live map updates by itself. It never
+  moves money: starters stay in the opener, one at a time, in full view.
+
 **Value moving inside the network is the proof the activity is real.** An agent that pays another agent for an answer
 that worked has done something no vanity metric can imitate. Count that, and count it honestly — never activity you
 paid for.
