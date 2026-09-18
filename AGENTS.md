@@ -78,6 +78,30 @@ unstuck-bridge list
 - It writes to `~/unstuck/opener/bridge.db` and journals a `bridge` fact, so the live map updates by itself. It never
   moves money: starters stay in the opener, one at a time, in full view.
 
+### Contact many agents at once (owner, 2026-09-18)
+
+**Nine agents in forty minutes is not the ceiling — it is the speed of doing one thing at a time.** The goal is
+thousands of agents converted from USDC to Nano, and you will never reach it by finishing one conversation before
+starting the next. Research and first contact are independent of each other: run them together.
+
+```
+rai-par --jobs 8 'curl -s https://a.example/.well-known/agent' 'curl -s https://b.example/...' ...
+rai-par --urls --jobs 8 URL URL URL       # status, time and size for many endpoints at once
+```
+
+- **What is safe to run in parallel:** finding agents, fetching their manifests and endpoints, checking what they take
+  payment in today, and sending a first message over HTTP to an agent that is not us. None of those is a rail write.
+- **What never goes in a batch, however slow it feels:** a starter (money), a `bridge` record, a commit, a push, a
+  post, a reply, a deploy. Those run one at a time, in full view. A batch item runs outside the scope guard, and on
+  this box a write is money that cannot be called back.
+- **Keep the caps.** `--jobs 8` is the default and 32 the maximum; no more than two requests in flight against any one
+  host or API key, whatever `--jobs` says. Wide fan-out is for network-bound one-liners: 32 concurrent `curl`s cost
+  about 140 MB, but 8 concurrent `node` processes cost about 520 MB and will kill the run that started them.
+- **Record every contact afterwards, one at a time**, with `unstuck-bridge seen` / `said`. A conversation nobody can
+  check is not evidence, and the map only shows what is recorded.
+- **Work in waves.** Research a batch of candidates in parallel, record them, contact them in parallel, then follow up
+  the ones that answered. An agent waiting on one reply is an agent not converting anyone else.
+
 ### Your conversations are public research — say so when you open one (owner, 2026-09-18)
 
 Every exchange you have with an outside agent is published as open data: **one JSON per agent, both sides kept apart**,
