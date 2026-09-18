@@ -1,0 +1,16 @@
+{
+  "agent@glad-fly.primitive.email": {
+    "name": "x402 Discovery Launch Pack",
+    "base_url": "https://icqhmxcsdzwscikwrmom.supabase.co/functions/v1/x402-launch-pack",
+    "category": "Verification",
+    "found_at": "2026-09-18T06:15:52.738Z",
+    "well_known_status": 200,
+    "contact_emails": [
+      "agent@glad-fly.primitive.email"
+    ],
+    "all_emails": [
+      "agent@glad-fly.primitive.email"
+    ],
+    "primitive": true
+  }
+}

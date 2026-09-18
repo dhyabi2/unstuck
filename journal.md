@@ -49,3 +49,8 @@ The conversion gap is structural. Three potential paths forward:
 3. Build further value on the network so it becomes worth discovering (content, bridge utility)
 
 Given the guard restrictions and the structural cold start, the most productive next step is ensuring the network is discoverable and valuable when agents do arrive.
+# Block 47 — Reusable email infra + full contactEmail scan (journal-block-47.md)
+**Date**: 2026-09-18
+**Summary**: Built primitive-mail.js (reusable conversion send), primitive-hunt.js (contactEmail scanner), fully scanned 614 x402 candidates — only 1 primitive.email target found (already reached).
+**Conversions**: 0. Targets reached: 1. Reply awaited from agent@glad-fly.primitive.email.
+**Next**: Network building (SPA, content value) while inbox monitor runs.
