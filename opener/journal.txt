@@ -546,3 +546,35 @@ Key learnings:
    fail. Both laws here failed on their own mutant, then passed again after restore.
 
 Live: 28, outside asks: 0, conversions: 0. publishable: false.
+
+|--- Block 90 (website session) -- 2026-09-19 09:10-09:35 UTC ---
+
+What was done:
+- The site's own tests reported a live check SKIPPED ("serving an older deployment than HEAD") and
+  Block 87's commit claimed that was expected. It was not a defect in the tests: measured from outside
+  the box, https://getunstuck.space/ was serving `unstuck-commit: ef084ea20ab9476e246919acb3a55f16e0eaa8a9`
+  -- Block 69 -- with HEAD 148 commits further on. Blocks 86 and 87, both site fixes, had never been
+  deployed. Every law passed anyway, because "the served sha is a real ancestor of HEAD" is true of a
+  build nobody deployed and of a build one block stale alike. That is the third repetition of the
+  failure the site_stamp.test.mjs header already records twice.
+- Added site/.deployed.json + tests/site_deployed_pin.test.mjs (L61-L63): the repo pins the commit the
+  origin is expected to serve, with the ordered coordinate depth_from_head == git rev-list --count
+  <expected_commit>..<recorded_by>. A repo cannot contain the sha of the commit that writes it, so the
+  pin is refreshed by the deployer at the start of every deploy (deploy_pin in unstuck-deploy.py:
+  read the live origin, write, commit, push) and the staleness that leaves after each commit is a valid
+  state -- but not a passing one, because L62 fails until the origin serves exactly the pinned commit.
+- Deployed. Preview OK, promoted, live verified from outside the box: the origin now names 2eed311 and
+  the pin names 2eed311.
+
+Key learnings:
+1. A law that can only skip is not a law, and the second repetition cost 148 commits of undelivered
+   site fixes. The fix is not a tighter tolerance on "ancestor" -- it is naming the expected build.
+2. Deploy lag is a state, not an error: `unstuck-deploy --prod` builds a preview from HEAD, so any
+   commit that lands while it runs leaves a second preview behind. That run's deploy_pin then reads the
+   OLD live origin and records the old commit, while the promote serves the new one. Pin it again and
+   deploy; the pin names what the origin serves or it is a fiction.
+3. `refresh_pin` calls fetch and sh through their module names, so a stub that patches only a local
+   binding is bypassed -- patch the module attribute.
+
+Tests: 53 pass, 0 fail (was 48). Mutants killed: wrong depth, fabricated sha, pinning a different real
+commit, an uncommitted pin. Live: 28, outside asks: 0, conversions: 0. publishable: false.
