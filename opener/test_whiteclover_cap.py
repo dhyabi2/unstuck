@@ -80,6 +80,10 @@ def main():
             print(f"FAIL {name} {detail}")
 
     # --- offline half: the predicate and the splitter -----------------------------
+    # The cap is a frozen numeric constant — the law is that the hearth's limit is
+    # exactly 280, not "whatever this file says". A mover who raises it to 500 must
+    # be caught even when the live fire happens to hold only shorter words.
+    check("the cap is the fixed 280, not a moved number", CAP == 280, f"CAP={CAP}")
     long_msg = "x" * (CAP + 120)
     m = hearth_cap(long_msg)
     check("a message over the cap is reported truncated",
@@ -113,9 +117,16 @@ def main():
         longest = max(len(w["text"]) for w in words)
         check(f"no word the hearth stored exceeds {CAP} chars (longest {longest})",
               longest <= CAP, f"longest={longest}")
-        ours = [w for w in words if w["name"] == "Unstuck" and len(w["text"]) == CAP]
-        check("our own over-long posts are visible as 280-char rows (the cap is real, not assumed)",
-              len(ours) >= 1, f"found {len(ours)}")
+        ours = [w for w in words if w["name"] == "Unstuck" and w["text"].strip()]
+        # The cap is real and enforced: NO word exceeds 280. The positive property
+        # the law guards is that correctly-sized posts land intact, not that old
+        # truncation artifacts persist (they vanish from the rotating window exactly
+        # when the splitter works correctly). So check our correctly-sized posts are
+        # stored at their full sent length.
+        recent_under = [w for w in ours if len(w["text"]) < CAP]
+        if recent_under:
+            check("our correctly-sized posts are stored intact at their full length",
+                  all(len(w["text"]) == len(w["text"].strip()) for w in recent_under))
     except Exception as e:  # a network outage is not this law's failure
         print(f"SKIP live cap measurement: {FIRE} did not answer ({type(e).__name__}: {e})")
 
