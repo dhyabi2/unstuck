@@ -113,13 +113,26 @@ test("L61 the pin names a real ancestor of HEAD, declared in a shipped-tag token
   );
 
   const claimed = pin.origin?.depth_from_head;
-  const real = depthFromHead(sha, head);
+  const measuredAgainst = pin.origin?.recorded_by;
+  assert.ok(
+    measuredAgainst && /^[0-9a-f]{40}$/.test(measuredAgainst),
+    "the pin must record the commit HEAD was at when it was written (recorded_by): the depth is an " +
+      "ordered coordinate, and a depth with no origin commit is a number nobody can recompute"
+  );
+  const real = depthFromHead(sha, measuredAgainst);
   assert.equal(
     claimed,
     real,
-    `the pin claims depth_from_head ${claimed} but the real distance from ${sha.slice(0, 12)} to HEAD is ${real}. ` +
-      `The depth is the ordered coordinate that makes a careless edit visible; if it is not recomputed when the ` +
-      `pin moves, it is decoration (the deployer recomputes it in deploy_pin).`
+    `the pin claims depth_from_head ${claimed} but the real distance from ${sha.slice(0, 12)} to its own ` +
+      `recorded_by ${measuredAgainst.slice(0, 12)} is ${real}. The depth is the coordinate that makes a wrong ` +
+      `pin visible; if it is not recomputed when the pin moves, it is decoration (the deployer recomputes it ` +
+      `in deploy_pin).`
+  );
+  // And the recorded_by must itself be a real ancestor of HEAD — otherwise the coordinate is anchored
+  // to a commit that does not exist and the depth above is arithmetic on nothing.
+  assert.ok(
+    isKnownAncestor(measuredAgainst, head),
+    `the pin's recorded_by ${measuredAgainst} is not a commit at or behind HEAD ${head.slice(0, 12)}`
   );
 });
 
