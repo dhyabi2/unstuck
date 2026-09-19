@@ -7,7 +7,8 @@
 // was unusable. site_stamp.test.mjs checked the stamp was PRESENT; nothing checked the page still ran.
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+
 import vm from "node:vm";
 
 const HTML = readFileSync(new URL("../index.html", import.meta.url), "utf8");
@@ -35,6 +36,18 @@ test("L: the build stamp is never a bare statement", () => {
     HTML,
     /^\s*[a-z][a-z0-9-]*-commit\s*:/im,
     'a bare "<name>-commit:" line is present — substitution dropped its comment marker',
+  );
+});
+
+test("L: the retired ad-hoc checker test_spa_parse.js is gone", () => {
+  // Retired 2026-09-19: it was a one-off script written during the outage and its three laws now
+  // live here, inside the qualified suite. An untracked script that still runs green invites a
+  // future run to believe coverage it no longer has. Assert its absence so the deletion cannot
+  // be mistaken for lost coverage, and so a resurrected copy fails loudly instead of silently.
+  assert.equal(
+    existsSync(new URL("../test_spa_parse.js", import.meta.url)),
+    false,
+    "site/test_spa_parse.js is back — its laws live in tests/site_parse.test.mjs; delete it, do not re-run it",
   );
 });
 

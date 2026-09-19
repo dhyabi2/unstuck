@@ -958,6 +958,19 @@
    "grounding": "oracle",
    "version": 3,
    "minted": "2026-09-19T09:18:40+00:00"
+  },
+  {
+   "id": "L62",
+   "block": 99.0,
+   "statement": "The retired ad-hoc checker site/test_spa_parse.js is absent, and its laws are still enforced by site/tests/site_parse.test.mjs.",
+   "test": "node --test site/tests/site_parse.test.mjs passes and asserts site/test_spa_parse.js no longer exists while enforcing parse, no-bare-stamp and no-ported-URL laws; git grep finds no tracked reference to it",
+   "scope": [],
+   "oracle": "cd site && rm -f test_spa_parse.js && node --test tests/site_parse.test.mjs",
+   "expect": "pass",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-19T17:38:30+00:00"
   }
  ],
  "blocks": {
@@ -22968,6 +22981,10 @@
      "at": "2026-09-19T09:40:52+00:00"
     }
    ]
+  },
+  "99": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -25347,6 +25364,17 @@
    "at": "2026-09-19T11:06:14+00:00",
    "prev": "93c8ff316333ccc00ec21a007e35163dfced7ea594d284a07998ef35a23df7a3",
    "receipt": "eac4b30790065c3bd781241f3b494092c6879665721e090caad542f65a8d32ca"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L62",
+    "block": "99",
+    "statement_sha": "ae34c616dbd9e05c233b26d59b9a25a6608dccc91e18d8fc3773b1023e326158"
+   },
+   "at": "2026-09-19T17:38:30+00:00",
+   "prev": "eac4b30790065c3bd781241f3b494092c6879665721e090caad542f65a8d32ca",
+   "receipt": "09ad12a6a2f2e09837906f9233cc040416e3d784b12404a5fd844cbbced29500"
   }
  ]
 }
