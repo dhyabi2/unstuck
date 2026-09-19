@@ -369,7 +369,13 @@ const server = http.createServer(async (req, res) => {
   if (req.method === "OPTIONS") { res.writeHead(204); res.end(); return; }
 
   const parsed = new URL(req.url, `http://localhost:${PORT}`);
-  const path = parsed.pathname;
+  let path = parsed.pathname;
+
+  // Strip the Vercel proxy prefix so both direct and proxied access work.
+  // Vercel rewrites /unstuck/api/:path* to us, so we see /unstuck/api/ask etc.
+  if (path.startsWith("/unstuck/api")) {
+    path = path.slice("/unstuck/api".length) || "/";
+  }
 
   if (req.method === "GET" && path === "/health") {
     return send(res, 200, { status: "ok", bounty_asset: n.VALID_ASSET });
