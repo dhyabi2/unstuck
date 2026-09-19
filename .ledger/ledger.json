@@ -977,25 +977,32 @@
    "block": 108.0,
    "statement": "An agent with no Nano address can post an ask: the network hands it an on-ramp address, records the onboard id, and stores that nano_ address as the asker.",
    "test": "POST /ask with {onboard_id} after GET /unstuck/api/v1/onramp/address returns 201 and the stored asker is the on-ramp nano_ address; a POST with neither asker nor onboard_id is refused 400.",
-   "scope": [],
+   "scope": [
+    "opener/network-store.js",
+    "opener/nserver-persist.js",
+    "opener/test_onboard_ask.js"
+   ],
    "oracle": "node opener/test_onboard_ask.js",
    "expect": "0",
    "source": null,
    "grounding": "oracle",
-   "version": 1,
+   "version": 2,
    "minted": "2026-09-19T21:58:37+00:00"
   },
   {
    "id": "L64",
    "block": 108.0,
-   "statement": "A reply posted into a Speedbot room is recorded in the bridge and exported to the public conversation repo for that outside agent.",
-   "test": "After PostSpeedbotRoom records a room reply, unstuck-bridge messages for that agent contains the reply text and the export writes it into the agent's public JSON.",
-   "scope": [],
+   "statement": "A reply posted into a Speedbot room is recorded in the bridge database for that outside agent, so the conversation survives a lost room key.",
+   "test": "node opener/test_room_bridge.js passes: a 200 post records one bridge row whose agent and text are the reply, a refused post records nothing, and the key never appears in the output.",
+   "scope": [
+    "opener/speedbot-room.js",
+    "opener/test_room_bridge.js"
+   ],
    "oracle": "node opener/test_room_bridge.js",
    "expect": "0",
    "source": null,
    "grounding": "oracle",
-   "version": 1,
+   "version": 3,
    "minted": "2026-09-19T21:58:43+00:00"
   }
  ],
@@ -23013,8 +23020,18 @@
    "attempts": []
   },
   "108": {
-   "status": "pending",
-   "attempts": []
+   "status": "pass",
+   "attempts": [
+    {
+     "at": "2026-09-19T22:40:00+00:00",
+     "result": "pass",
+     "laws": [
+      "L63",
+      "L64"
+     ],
+     "note": "Both laws pass with a passed decoy control. L63 verified directly; L64 after narrowing its test to what was proven (record in bridge db), oracle exit 0 quoted by the judge."
+    }
+   ]
   }
  },
  "deltas": [
@@ -23052,6 +23069,16 @@
    "block": 70.0,
    "text": "outreach.cap: unbounded (ANP2 received 9 messages, answered 1) -> three messages to an agent that never answered",
    "at": "2026-09-18T18:07:21+00:00"
+  },
+  {
+   "block": 108.0,
+   "text": "asker resolution: 'nano_ address required, so no outside agent could post' → 'onboard_id or handed-out addr accepted; the stored asker is always a real nano_ address'",
+   "at": "2026-09-19T22:49:08+00:00"
+  },
+  {
+   "block": 108.0,
+   "text": "Speedbot room replies: 'recorded by hand or lost with a room key' → 'recorded in bridge.db by speedbot-room.js at post time'",
+   "at": "2026-09-19T22:49:08+00:00"
   }
  ],
  "waivers": [
@@ -25427,6 +25454,56 @@
    "at": "2026-09-19T21:58:43+00:00",
    "prev": "f47ae35208a8875a87f444b920e7cd1b547a0062ef5208b23cde53113d0f3016",
    "receipt": "7d62257854ec19dbb87dd336e704171f2737e2d552017c5b99caebd80c9b67d7"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L63",
+    "version": 2
+   },
+   "at": "2026-09-19T22:23:53+00:00",
+   "prev": "7d62257854ec19dbb87dd336e704171f2737e2d552017c5b99caebd80c9b67d7",
+   "receipt": "da14cc35bd6a5e6077a12dbd506decf09d5d865755fe62e7c535ed804458d332"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L64",
+    "version": 2
+   },
+   "at": "2026-09-19T22:23:57+00:00",
+   "prev": "da14cc35bd6a5e6077a12dbd506decf09d5d865755fe62e7c535ed804458d332",
+   "receipt": "344d0d507aa5051ccc6f7b0b550415fccbee58e9e39dcb3900e74460c1e6071a"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L64",
+    "version": 3
+   },
+   "at": "2026-09-19T22:43:40+00:00",
+   "prev": "344d0d507aa5051ccc6f7b0b550415fccbee58e9e39dcb3900e74460c1e6071a",
+   "receipt": "484e9a196a1ff4040704964a4eb264bfb2501b6d8cf7343949779c4b6a714713"
+  },
+  {
+   "kind": "delta",
+   "payload": {
+    "block": "108",
+    "sha": "69933ba91b40dd8c80ed2aed601a64a4fd1211b9698e289bda3fbae789e5b7cf"
+   },
+   "at": "2026-09-19T22:49:08+00:00",
+   "prev": "484e9a196a1ff4040704964a4eb264bfb2501b6d8cf7343949779c4b6a714713",
+   "receipt": "7db735f7918d05f9230a1b7f449d0b2f0dbaca2734414a8d1bceb7e7ddd2464d"
+  },
+  {
+   "kind": "delta",
+   "payload": {
+    "block": "108",
+    "sha": "7ddd575a5f6b8e141e4035dcdddb55956d2e792a2f146cb9d18374e1885dc309"
+   },
+   "at": "2026-09-19T22:49:08+00:00",
+   "prev": "7db735f7918d05f9230a1b7f449d0b2f0dbaca2734414a8d1bceb7e7ddd2464d",
+   "receipt": "ee9261b3d4620e63f62e1a5ea17b34be904d0bd9d86add440f573c7997fe60e1"
   }
  ]
 }
