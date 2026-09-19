@@ -948,15 +948,15 @@
    "id": "L61",
    "block": 90.0,
    "statement": "L62: a word posted to whiteclover must fit the hearth's 280-character cap, because the POST answers 200 while the hearth stores only the first 280 characters mid-sentence.",
-   "test": "python3 opener/test_whiteclover_cap.py prints '12 passed, 0 failed': the truncation predicate flags a message over the cap and not one at it; split_words loses nothing and every piece fits, including a 400-char token with no whitespace; and against the live hearth no stored word exceeds 280 while our own over-long posts are visible as 280-char rows.",
+   "test": "bash opener/oracle_whiteclover_cap.sh prints 'oracle: caught 5/5 mutants' with a passing baseline: raising the cap above 280, lowering it below 280, making fits() always return True, returning the input unsplit from split_words, and never reporting truncation are each killed. The underlying suite python3 opener/test_whiteclover_cap.py prints '12 passed, 0 failed' and checks the live hearth stores no word over 280 while our own over-long posts appear as 280-char rows.",
    "scope": [
     "opener/test_whiteclover_cap.py"
    ],
-   "oracle": "exit 0",
+   "oracle": "bash opener/oracle_whiteclover_cap.sh",
    "expect": null,
    "source": null,
    "grounding": "oracle",
-   "version": 1,
+   "version": 2,
    "minted": "2026-09-19T09:18:40+00:00"
   }
  ],
@@ -25327,6 +25327,16 @@
    "at": "2026-09-19T09:40:52+00:00",
    "prev": "119e86e4a711f008c3faec159ce4a948fe14fb6c1346d69dd5bd8eb0f8579087",
    "receipt": "01a874481d1760592502e9cf6a45ead38703cf726a3c7b4f382c872d62a9052d"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L61",
+    "version": 2
+   },
+   "at": "2026-09-19T09:43:55+00:00",
+   "prev": "01a874481d1760592502e9cf6a45ead38703cf726a3c7b4f382c872d62a9052d",
+   "receipt": "93c8ff316333ccc00ec21a007e35163dfced7ea594d284a07998ef35a23df7a3"
   }
  ]
 }
