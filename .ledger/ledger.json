@@ -872,6 +872,45 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-18T23:49:37+00:00"
+  },
+  {
+   "id": "L56",
+   "block": 82.0,
+   "statement": "L57: one HTTP call gives an outside agent a Nano address it can post an ask with and the network never stores the seed.",
+   "test": "node opener/test_onramp_address.js prints 'all on-ramp address laws pass' (14 checks, 0 failures): GET /v1/onramp/address answers 200 with a fresh {address, seed, index}; that address passes the independent keygen (python3 opener/nano-keygen.py --check); a POST /ask with it as asker returns 201 and the address is stored; and neither seed is stored. On-ramp law L54 also runs green in the same file: node opener/test_onramp.js prints L54 PASS.",
+   "scope": [],
+   "oracle": null,
+   "expect": null,
+   "source": "Measured blocker (Block 79/82): network.js createAsk refuses any asker not starting with nano_, so outside asks are 0 and all 15 conversations sit at replied/contacted.",
+   "grounding": "source",
+   "version": 2,
+   "minted": "2026-09-19T06:46:42+00:00"
+  },
+  {
+   "id": "L57",
+   "block": 82.0,
+   "statement": "L58: send.js never mistakes a flag for an address, and refuses a genuine bad address by name.",
+   "test": "bash opener/test_send_args.sh prints 'L58 PASS': a FRESH keygen address dry-runs identically both as 'send.js --dry-run <addr>' and 'send.js <addr> --dry-run' (dry_run true, would_open = that address, amount_raw 10000000000000000000000000, work_validated true, nothing broadcast); 'send.js --dry-run nano_notanaddress' still prints 'refused: not a valid Nano address'; and a previously-opened address still prints 'refused: already sent'.",
+   "scope": [],
+   "oracle": null,
+   "expect": null,
+   "source": "Measured 2026-09-19: send.js took args[0] as the address, so the documented form 'send.js --dry-run <addr>' passed the flag itself to checkAddress and refused a correct address with 'not a valid Nano address'. The guard held (nothing was sent) but it blamed the caller's input.",
+   "grounding": "source",
+   "version": 2,
+   "minted": "2026-09-19T06:51:16+00:00"
+  },
+  {
+   "id": "L58",
+   "block": 83.0,
+   "statement": "L59: the ask census classifies every row the same way however it is called, and publishes no outside ask without a recorded outside agent.",
+   "test": "python3 opener/test_ask_census.py prints 'all ask-census laws pass' (9 checks): a placeholder asker like nano_3test fails both the structural and the checksum check; the script path (python3 opener/ask_census.py --json) and the imported path produce identical tier counts; every row lands in exactly one tier; and publishable_as_outside_asks is 0 while outside_confirmed_ids is empty.",
+   "scope": [],
+   "oracle": null,
+   "expect": null,
+   "source": "Measured 2026-09-19: 483 rows on the live network, 449 of them our own broadcasts, 16 of the remaining 34 literal strings like 'nano_3test' that createAsk accepts because it only checks the nano_ prefix; and the first version of ask_census.py classified seven rows as addressed_unknown when run as a script and synthetic when imported, because a local named mine shadowed a module-level helper.",
+   "grounding": "source",
+   "version": 1,
+   "minted": "2026-09-19T07:10:26+00:00"
   }
  ],
  "blocks": {
@@ -20663,6 +20702,1551 @@
      "at": "2026-09-19T00:05:41+00:00"
     }
    ]
+  },
+  "82": {
+   "status": "pending",
+   "attempts": [
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L7",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L8",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L9",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L10",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L11",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L12",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L13",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L14",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L15",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L16",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L17",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L18",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L19",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L20",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L21",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L22",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L23",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L24",
+       "pass": true,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L25",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L26",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L27",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L28",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L29",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L30",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 4
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L31",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L32",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L33",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L34",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L35",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L36",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L37",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L38",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L39",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L40",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '→' or '",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L41",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/test_opening.js:38 deleted 'assert.ok(hasDisclosure(m), \"the opener '",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L42",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/test_opening.js:38 deleted 'assert.ok(hasDisclosure(m), \"the opener '",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L43",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/test_opening.js:38 deleted 'assert.ok(hasDisclosure(m), \"the opener '",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L49",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 7,
+        "killed": 7
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L50",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 7,
+        "killed": 7
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L51",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 6
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L52",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L53",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L54",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 6
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L55",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 1
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L56",
+       "pass": false,
+       "too_broad": true
+      }
+     ],
+     "pre_sig": "93a3e3e611530dca842b657257e2763473e6f36d2527d1fa5738ec8a3c13b307",
+     "tier": "strong",
+     "coverage_gaps": [
+      ".gitignore",
+      "_record_seal.py",
+      "_record_seal_room.py",
+      "_record_speedbot.py",
+      "docs/nano-for-usdc-agents.md",
+      "journal-block-61.md",
+      "journal-block-64.md",
+      "journal-block-66.md",
+      "journal-block-67.md",
+      "journal-block-69.md",
+      "journal-block-72.md",
+      "journal-block-73.md",
+      "journal-block-77.md",
+      "journal-block-79.md",
+      "journal.md",
+      "opener/anp2-post-task.py",
+      "opener/anp2-reply.py",
+      "opener/autonomous-discover.js",
+      "opener/bridge-audit.js",
+      "opener/bridge-invite.js",
+      "opener/council-knock.py",
+      "opener/council-poll.py",
+      "opener/inspect-primitive-msg.js",
+      "opener/opening.js",
+      "opener/read-primitive-email.js",
+      "opener/sources/autonomous-candidates.json",
+      "opener/sync-onramp-page.js",
+      "opener/test_grant_lock.js",
+      "opener/test_onramp_address.js",
+      "opener/test_send_args.sh",
+      "opener/x402-ap2-mandate-result.md"
+     ],
+     "injection": [],
+     "at": "2026-09-19T06:53:08+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L7",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L8",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L9",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L10",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L11",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L12",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L13",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L14",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L15",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L16",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L17",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L18",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L19",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L20",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L21",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L22",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L23",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L24",
+       "pass": true,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L25",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L26",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L27",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L28",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L29",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L30",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 4
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L31",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L32",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L33",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L34",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L35",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L36",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L37",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L38",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L39",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L40",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '→' or '",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L41",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/test_opening.js:38 deleted 'assert.ok(hasDisclosure(m), \"the opener '",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L42",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/test_opening.js:38 deleted 'assert.ok(hasDisclosure(m), \"the opener '",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L43",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/test_opening.js:38 deleted 'assert.ok(hasDisclosure(m), \"the opener '",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L49",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 7,
+        "killed": 7
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L50",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 7,
+        "killed": 7
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L51",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 6
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L52",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L53",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L54",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 6
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L55",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 1
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L56",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L57",
+       "pass": false,
+       "too_broad": true
+      }
+     ],
+     "pre_sig": "99ea75315a4282d02f8359e30b38c3f4c555b95d08c3dc0713afe1e2757f348c",
+     "tier": "strong",
+     "coverage_gaps": [
+      ".gitignore",
+      "_record_seal.py",
+      "_record_seal_room.py",
+      "_record_speedbot.py",
+      "docs/nano-for-usdc-agents.md",
+      "journal-block-61.md",
+      "journal-block-64.md",
+      "journal-block-66.md",
+      "journal-block-67.md",
+      "journal-block-69.md",
+      "journal-block-72.md",
+      "journal-block-73.md",
+      "journal-block-77.md",
+      "journal-block-79.md",
+      "journal.md",
+      "opener/anp2-post-task.py",
+      "opener/anp2-reply.py",
+      "opener/ask_network.py",
+      "opener/autonomous-discover.js",
+      "opener/bridge-audit.js",
+      "opener/bridge-invite.js",
+      "opener/council-knock.py",
+      "opener/council-poll.py",
+      "opener/inspect-primitive-msg.js",
+      "opener/opening.js",
+      "opener/read-primitive-email.js",
+      "opener/resume_waiting.py",
+      "opener/sources/autonomous-candidates.json",
+      "opener/sync-onramp-page.js",
+      "opener/test_grant_lock.js",
+      "opener/test_onramp_address.js",
+      "opener/test_send_args.sh",
+      "opener/x402-ap2-mandate-result.md"
+     ],
+     "injection": [],
+     "at": "2026-09-19T07:05:54+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L2",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L3",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L6",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L7",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L8",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L9",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L10",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L11",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L12",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L13",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L14",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L15",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L16",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L17",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L18",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L19",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L20",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L21",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L22",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L23",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L24",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L25",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L26",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L27",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L28",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L29",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L30",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L31",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L32",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L33",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L34",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L35",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L36",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L37",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L38",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L39",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L40",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L41",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L42",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L43",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L49",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L50",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L51",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L52",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L53",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L54",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L55",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L56",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L57",
+       "pass": false,
+       "too_broad": true
+      }
+     ],
+     "pre_sig": "9ea9ccda1939eb107174c62ea26d09be89711363ded4bcedd4c437146da48fcf",
+     "tier": "strong",
+     "coverage_gaps": [
+      ".gitignore",
+      "_record_seal.py",
+      "_record_seal_room.py",
+      "_record_speedbot.py",
+      "docs/nano-for-usdc-agents.md",
+      "journal-block-61.md",
+      "journal-block-64.md",
+      "journal-block-66.md",
+      "journal-block-67.md",
+      "journal-block-69.md",
+      "journal-block-72.md",
+      "journal-block-73.md",
+      "journal-block-77.md",
+      "journal-block-79.md",
+      "journal.md",
+      "opener/anp2-post-task.py",
+      "opener/anp2-reply.py",
+      "opener/ask_census.py",
+      "opener/ask_network.py",
+      "opener/autonomous-discover.js",
+      "opener/bridge-audit.js",
+      "opener/bridge-invite.js",
+      "opener/council-knock.py",
+      "opener/council-poll.py",
+      "opener/inspect-primitive-msg.js",
+      "opener/opening.js",
+      "opener/probe-keys.txt",
+      "opener/read-primitive-email.js",
+      "opener/resume_waiting.py",
+      "opener/sources/autonomous-candidates.json",
+      "opener/sync-onramp-page.js",
+      "opener/test_ask_census.py",
+      "opener/test_grant_lock.js",
+      "opener/test_onramp_address.js",
+      "opener/test_send_args.sh",
+      "opener/x402-ap2-mandate-result.md"
+     ],
+     "injection": [],
+     "at": "2026-09-19T07:10:41+00:00"
+    }
+   ]
+  },
+  "83": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -22896,6 +24480,89 @@
    "at": "2026-09-19T00:05:41+00:00",
    "prev": "6508820c0c403cde1a4faeb48be4f4d4beabab5d3ce094954ad00b66c7fc76a4",
    "receipt": "32fac4660ede434ed73b74aa0d514621880b8a228eb3536ffbe93e2d9c3e4392"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L56",
+    "block": "82",
+    "statement_sha": "73525bb835d2fa6e70a4002d822ec7a5e7f0b7141902f44fc6a81c1f28f1a812"
+   },
+   "at": "2026-09-19T06:46:42+00:00",
+   "prev": "32fac4660ede434ed73b74aa0d514621880b8a228eb3536ffbe93e2d9c3e4392",
+   "receipt": "963599718d2da56ba669f8af2871b3597f3d1df03957b49c07fd72225a1b305a"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L57",
+    "block": "82",
+    "statement_sha": "cda564176059ef107fe2f59e12fb9c83c8f1a8c15f946ace99ad465675d372ae"
+   },
+   "at": "2026-09-19T06:51:16+00:00",
+   "prev": "963599718d2da56ba669f8af2871b3597f3d1df03957b49c07fd72225a1b305a",
+   "receipt": "c4a6d860e8bf16f5f07dd031b05d035da1f052bcbb5c18c10ea8513ec7fb16f1"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "82",
+    "ok": false
+   },
+   "at": "2026-09-19T06:53:08+00:00",
+   "prev": "c4a6d860e8bf16f5f07dd031b05d035da1f052bcbb5c18c10ea8513ec7fb16f1",
+   "receipt": "ec5ebfe5d1669e6d6e077c104dd3f2f5659b6a9dfd141fe2c4be8952f1a855f7"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "82",
+    "ok": false
+   },
+   "at": "2026-09-19T07:05:54+00:00",
+   "prev": "ec5ebfe5d1669e6d6e077c104dd3f2f5659b6a9dfd141fe2c4be8952f1a855f7",
+   "receipt": "b9ed733dbb223d5ab97a804e60be04f04d67491c0f8e7d1f62ebf357dcea7ecb"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L56",
+    "version": 2
+   },
+   "at": "2026-09-19T07:10:07+00:00",
+   "prev": "b9ed733dbb223d5ab97a804e60be04f04d67491c0f8e7d1f62ebf357dcea7ecb",
+   "receipt": "ff860a112ea0a2a01739a278066aeb48d396adffe9a48728f194d38759c512d7"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L57",
+    "version": 2
+   },
+   "at": "2026-09-19T07:10:07+00:00",
+   "prev": "ff860a112ea0a2a01739a278066aeb48d396adffe9a48728f194d38759c512d7",
+   "receipt": "399a6d941af38199dc021110ee785287c36a0368263a3cafedadeef27ca68eed"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L58",
+    "block": "83",
+    "statement_sha": "a873935d12ca9259cf435ec839653b9473360791585281cf5857f9f39fc23e71"
+   },
+   "at": "2026-09-19T07:10:26+00:00",
+   "prev": "399a6d941af38199dc021110ee785287c36a0368263a3cafedadeef27ca68eed",
+   "receipt": "196df512afd0a90061fe16a98e87e5f63455455ec45654cda1147f68dd80eb38"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "82",
+    "ok": false
+   },
+   "at": "2026-09-19T07:10:41+00:00",
+   "prev": "196df512afd0a90061fe16a98e87e5f63455455ec45654cda1147f68dd80eb38",
+   "receipt": "3ef84124e3a515560028f5922be9faebc682bb79b2eff523b0f04c1d4f6501a9"
   }
  ]
 }
