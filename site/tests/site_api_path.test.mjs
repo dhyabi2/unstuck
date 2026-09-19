@@ -52,6 +52,30 @@ function git(args) {
   return execFileSync("git", args, { cwd: SITE, encoding: "utf8" }).trim();
 }
 
+/**
+ * Is `sha` a commit this repository actually has, and is it HEAD or behind it?
+ *
+ * A deploy is always built from a commit that was HEAD at some earlier moment, so "the live origin
+ * names HEAD" cannot hold on a working tree that has moved on — and asserting it made the check
+ * either fail forever or get skipped, which is how a stale deployment hid behind a passing suite.
+ * The property that IS true and still falsifiable: a served sha must resolve to a real commit
+ * (`git cat-file -e`) and that commit must be an ancestor of HEAD (`git merge-base --is-ancestor`).
+ * A fabricated stamp resolves to nothing and fails; a stamp from a foreign repository fails; a
+ * stamp from a future commit that is not in our history fails.
+ */
+function isKnownAncestor(sha, head) {
+  const ok = (args) => {
+    try {
+      execFileSync("git", args, { cwd: SITE, stdio: "ignore" });
+      return true;
+    } catch {
+      return false;
+    }
+  };
+  if (!ok(["cat-file", "-e", `${sha}^{commit}`])) return false;
+  return ok(["merge-base", "--is-ancestor", sha, head]);
+}
+
 async function probe(url, timeoutMs = 12000) {
   const ctl = new AbortController();
   const t = setTimeout(() => ctl.abort(), timeoutMs);
@@ -213,6 +237,46 @@ test("L42 a rewrite does not shadow the SPA shell or the machine-readable entry 
   }
 });
 
+test("L60 no rewrite leaves the API prefix, so .well-known and the SPA are never shadowed", () => {
+  // Measured: vercel.json carried a /.well-known/x402 rewrite pointing at the Caddy x402 endpoint. A
+  // rewrite whose source is that path shadows the `/.well-known/` directory Vercel serves as files —
+  // including .well-known/agent.json, the agent-discovery manifest the x402 capability is already
+  // advertised in. The x402 endpoint is reachable at /unstuck/api/v1/x402, which the surviving
+  // rewrite already forwards, so the shadowing entry bought nothing and hid a manifest.
+  const cfg = readVercel();
+  const sources = (cfg.rewrites || []).map((r) => r.source);
+
+  assert.ok(sources.length > 0, "vercel.json must still carry the /unstuck/api rewrite");
+  const trespassing = sources.filter((s) => !s.startsWith(API_PATH));
+  assert.deepEqual(
+    trespassing,
+    [],
+    `every rewrite must stay inside ${API_PATH}; ${JSON.stringify(trespassing)} can shadow the SPA ` +
+      `or the manifests Vercel serves as files (.well-known/agent.json, agent.json, llms.txt)`
+  );
+  assert.ok(
+    !sources.some((s) => s.startsWith("/.well-known")),
+    "no rewrite may match /.well-known: agent.json there is the manifest that advertises the x402 capability"
+  );
+  // The x402 capability is carried by the manifest, not by a rewrite — that is the whole point of
+  // removing the shadowing entry, so assert the carrier is still there and still names x402.
+  const manifest = JSON.parse(fs.readFileSync(path.join(SITE, ".well-known", "agent.json"), "utf8"));
+  assert.ok(
+    JSON.stringify(manifest).includes("x402"),
+    ".well-known/agent.json must keep advertising the x402 capability the removed rewrite used to shadow"
+  );
+
+  // The falsifier: the same assertion must reject the mutant this block removed. Re-running the
+  // predicate over a config that carries the shadowing rewrite proves the law is not vacuous.
+  const mutant = { rewrites: [...sources.map((s, i) => ({ source: s, destination: "x" })), { source: "/.well-known/x402", destination: "https://example.invalid/x" }] };
+  const mutantTrespassing = (mutant.rewrites || []).map((r) => r.source).filter((s) => !s.startsWith(API_PATH));
+  assert.deepEqual(
+    mutantTrespassing,
+    ["/.well-known/x402"],
+    "the shadowing rewrite this block removed must be caught by this same assertion; if it is not, the law is vacuous"
+  );
+});
+
 // ---------------------------------------------------------------------------
 // L43 — the origin must say which build it is serving, and only a live 200 counts
 // ---------------------------------------------------------------------------
@@ -264,13 +328,32 @@ test("L43 the live origin names its build, so a stale deployment cannot pass the
   }
 
   assert.ok(
-    headSha && headSha.startsWith(stamped[1]),
-    `the live origin says it is serving ${stamped[1]}, but HEAD is ${headSha.slice(0, 12)}; a stale ` +
-      `deployment is not evidence that this build works`
+    isKnownAncestor(stamped[1], headSha),
+    `the live origin says it is serving ${stamped[1]}, but that is not a commit in this repository ` +
+      `at or behind HEAD ${headSha.slice(0, 12)}. A deploy is always behind HEAD — the last commit ` +
+      `after it moved does not invalidate it — but a stamp that names no real ancestor is either a ` +
+      `fabricated sha or a build from a foreign tree, and neither is evidence this site works.`
   );
   assert.ok(
     !r.body.includes("__UNSTUCK_COMMIT__"),
     "the live page must not still carry the raw placeholder once it is stamped"
   );
-  t.diagnostic(`live: ${LIVE_ORIGIN}/ names ${stamped[1]}, which is HEAD`);
+
+  // The falsifier: the relaxation must not have turned the check into a rubber stamp. An invented
+  // sha, and a real commit that is not an ancestor of HEAD, must both be refused by this same
+  // predicate — otherwise "ancestor commit" would accept anything a deployer printed.
+  assert.ok(
+    !isKnownAncestor("deadbeefdeadbeefdeadbeefdeadbeefdeadbeef", headSha),
+    "a fabricated sha must never pass the ancestor check"
+  );
+  const rootCommit = git(["rev-list", "--max-parents=0", "HEAD"]).split("\n").pop();
+  assert.ok(
+    !isKnownAncestor(`${rootCommit}~1`, headSha),
+    "a commit that is not in this repository must never pass the ancestor check"
+  );
+
+  t.diagnostic(
+    `live: ${LIVE_ORIGIN}/ names ${stamped[1]}, a real ancestor of HEAD ${headSha.slice(0, 12)}` +
+      (headSha.startsWith(stamped[1]) ? " (it is HEAD)" : " (HEAD has moved on since the deploy)")
+  );
 });

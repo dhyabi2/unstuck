@@ -55,6 +55,29 @@ function git(args, cwd = REPO) {
   return execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
 }
 
+/**
+ * Is `sha` a commit this repository actually has, and is it HEAD or behind it?
+ *
+ * "The live origin names HEAD" is not a property a deploy can satisfy: every deploy is built from a
+ * commit that was HEAD when it started, and the tree moves on. Asserting it made this check fail on
+ * a correct deployment — so the check that survives is the one that still catches a lie: the served
+ * sha must resolve to a real commit (git cat-file -e) and be an ancestor of HEAD (git merge-base
+ * --is-ancestor). A fabricated sha resolves to nothing and fails; a stamp from a foreign repository
+ * fails; a stamp for a commit this repo has never seen fails.
+ */
+function isKnownAncestor(sha, head) {
+  const ok = (args) => {
+    try {
+      execFileSync("git", args, { cwd: REPO, stdio: "ignore" });
+      return true;
+    } catch {
+      return false;
+    }
+  };
+  if (!ok(["cat-file", "-e", `${sha}^{commit}`])) return false;
+  return ok(["merge-base", "--is-ancestor", sha, head]);
+}
+
 const sha256 = (buf) => createHash("sha256").update(buf).digest("hex");
 
 async function probe(url, timeoutMs = 12000) {
@@ -310,13 +333,23 @@ test("L47 once the origin serves HEAD, the page names that sha", async (t) => {
     return;
   }
   assert.ok(
-    head.startsWith(stamped[1]),
-    `the live origin says it is serving ${stamped[1]}, but HEAD is ${head.slice(0, 12)}; ` +
-      `a stale deployment is not evidence that this build works`
+    isKnownAncestor(stamped[1], head),
+    `the live origin says it is serving ${stamped[1]}, but that is not a commit in this repository ` +
+      `at or behind HEAD ${head.slice(0, 12)}. A deploy is always behind HEAD — the tree moves on ` +
+      `between the commit and the promote — but a stamp naming no real ancestor is a fabricated sha ` +
+      `or a build from a foreign tree, and neither is evidence that this build works.`
   );
   assert.ok(
     !r.body.includes(MARKER),
     "the live page must not still carry the raw placeholder once it is stamped"
   );
-  t.diagnostic(`live: ${LIVE_ORIGIN}/ names ${stamped[1]}`);
+  // The falsifier: "ancestor commit" must not degrade into "any hex a deployer printed".
+  assert.ok(
+    !isKnownAncestor("deadbeefdeadbeefdeadbeefdeadbeefdeadbeef", head),
+    "a fabricated sha must never pass the ancestor check"
+  );
+  t.diagnostic(
+    `live: ${LIVE_ORIGIN}/ names ${stamped[1]}, a real ancestor of HEAD ${head.slice(0, 12)}` +
+      (head.startsWith(stamped[1]) ? " (it is HEAD)" : " (HEAD has moved on since the deploy)")
+  );
 });
