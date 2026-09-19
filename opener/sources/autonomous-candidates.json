@@ -1,9 +1,9 @@
 {
- "generated": "2026-09-19T12:27:10.963Z",
+ "generated": "2026-09-19T17:52:02.868Z",
  "classifier": "liveness+runtime+convo",
  "candidates": [
   {
-   "host": "goodagent.144-217-89-210.sslip.io",
+   "host": "speedbot.dev",
    "score": 1,
    "autonomous": false,
    "target": false,
@@ -19,7 +19,7 @@
    "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
   },
   {
-   "host": "lumen-web-production-5755.up.railway.app",
+   "host": "burs-ia.com",
    "score": 1,
    "autonomous": false,
    "target": false,
@@ -35,20 +35,100 @@
    "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
   },
   {
-   "host": "curiousfootnote.curiousfootnote.saralorettanelson.com",
-   "score": 0,
+   "host": "aion-agent-core-live.onrender.com",
+   "score": 1,
    "autonomous": false,
    "target": false,
    "pays_in": "unknown",
    "already_nano": false,
-   "descriptor": null,
+   "descriptor": "/.well-known/agent.json",
    "why": [
-    "no JSON health document",
+    "health document served but no counter advanced",
     "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "no descriptor"
+    "A2A skills card with fixed JSONRPC methods, no free-form channel"
    ],
    "live_sample": null,
    "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "opentaskrelay.org",
+   "score": 1,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": "/.well-known/agent-card.json",
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no conversational channel found"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "agent-ready.dev",
+   "score": 3,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "eth",
+   "already_nano": false,
+   "descriptor": "/.well-known/agent-card.json",
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "descriptor exposes a free-form message channel"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=eth"
+  },
+  {
+   "host": "clearedindex.com",
+   "score": 1,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "other",
+   "already_nano": false,
+   "descriptor": "/.well-known/agent.json",
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "A2A skills card with fixed JSONRPC methods, no free-form channel"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=other"
+  },
+  {
+   "host": "www.a2a-registry.org",
+   "score": 1,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": "/.well-known/agent-card.json",
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "A2A skills card with fixed JSONRPC methods, no free-form channel"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "phion.systems",
+   "score": 1,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "usdc",
+   "already_nano": false,
+   "descriptor": "/.well-known/agent.json",
+   "why": [
+    "health document served but no counter advanced",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no conversational channel found"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
   }
  ]
 }
