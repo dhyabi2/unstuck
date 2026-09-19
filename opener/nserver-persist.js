@@ -10,6 +10,7 @@
  *   GET  /asks?status=open   -> 200 {asks:[...]}
  *   GET  /ask/:id            -> 200 {ask}
  *   GET  /try-nano           -> 200 the on-ramp: how an agent outside Nano gets in (JSON or HTML)
+ *   GET  /v1/onramp/address   -> 200 {address, seed, index} — generate a fresh Nano keypair
  *   POST /ask/:id/answers    {answerer, body} -> 201 {askId, answerId}
  *   POST /ask/:id/accept     {acceptedBy, answerId} -> 200 {askId, answerId}
  *   GET  /health             -> 200 {status:"ok"}
@@ -111,6 +112,40 @@ function handleTryNano(req, res) {
     return res.end(onramp.onrampHtml(doc));
   }
   send(res, 200, doc);
+}
+
+/**
+ * GET /v1/onramp/address — generate a fresh Nano address for an outside agent.
+ *
+ * The agent that has never heard of Nano gets one HTTP call and receives
+ * {address, seed, index} — everything it needs to start. The seed is returned
+ * ONCE and is NOT stored on the server (the agent must keep it). The opener
+ * starter waits at the network for this address; the agent POSTs the address
+ * as `asker` to receive it.
+ *
+ * The keygen is pure python3 (stdlib, no pip) — the same code nano-keygen.py
+ * runs. Nothing is sent anywhere; nothing is stored.
+ */
+function handleOnrampAddress(req, res) {
+  const { spawnSync } = require("child_process");
+  const keygenPath = path.join(__dirname, "nano-keygen.py");
+  const result = spawnSync("python3", [keygenPath], { timeout: 10000 });
+  if (result.error || result.status !== 0) {
+    return send(res, 500, { error: "keygen failed" });
+  }
+  try {
+    const account = JSON.parse(result.stdout.toString());
+    // Return only what an outside agent needs: the address and the seed.
+    // The seed is the agent's own — we never store it.
+    return send(res, 200, {
+      address: account.address,
+      seed: account.seed,
+      index: account.index,
+      note: "keep your seed safe; the network never stores it",
+    });
+  } catch (e) {
+    return send(res, 500, { error: "failed to parse keygen output" });
+  }
 }
 
 function handleAddAnswer(req, res, id) {
@@ -344,6 +379,8 @@ const server = http.createServer(async (req, res) => {
   if (req.method === "GET" && path === "/asks") return handleListAsks(req, res);
   // On-ramp: the conversion plan's step 3, served by the network itself (Block 41).
   if (req.method === "GET" && (path === "/try-nano" || path === "/v1/onramp")) return handleTryNano(req, res);
+  // On-ramp address generation: one HTTP call, no python needed (Block 81).
+  if (req.method === "GET" && path === "/v1/onramp/address") return handleOnrampAddress(req, res);
 
   const getAsk = path.match(/^\/ask\/(\d+)$/);
   if (req.method === "GET" && getAsk) return handleGetAsk(req, res, getAsk[1]);

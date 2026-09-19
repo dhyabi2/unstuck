@@ -87,7 +87,11 @@ async function main() {
     return 0;
   }
 
-  const to = args[0];
+  // The address is the first NON-FLAG argument, not necessarily args[0]. Measured 2026-09-19: `send.js --dry-run <addr>`
+  // — the exact form AGENTS.md documents for grants and the natural way to write it — took "--dry-run" AS the address
+  // and refused with the misleading "not a valid Nano address". Nothing was sent (the guard held), but a correct
+  // address was reported as invalid, which is the worst kind of refusal: it blames the caller's input.
+  const to = args.find((a) => !a.startsWith("--"));
   // --dry-run exercises everything except the broadcast: the live balance, the work, the signature and the guards.
   // It is how this path is proven without spending and without writing a fake opening into a public ledger.
   const dryRun = args.includes("--dry-run");
