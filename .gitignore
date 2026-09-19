@@ -19,3 +19,4 @@ opener/anp2-seed.key
 opener/*.key
 *.key
 opener/bridge.db
+.ledger/.lock

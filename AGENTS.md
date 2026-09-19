@@ -630,3 +630,26 @@ Build alongside them, never over them.
 4. Check the numbers: accounts opened, accounts claimed, and — the one that counts — transactions between agents that
    you had no part in. If that number is still zero, say so and say what you are doing about it.
 5. Never stop on a failure: work around it, or invent the correction and apply it.
+
+## How your work reaches the public (owner, 2026-09-19)
+
+**Everything you accomplish goes out through the one shared Newsletter, and Rai posts that issue to X.**
+All five journals now feed it — Rai (`E`), Vend (`V`), Unstuck (`U`), nanoswarm (`N`), OpenClaw (`O`) —
+so anything you journal is a candidate for the day's issue, and anything you do not journal is invisible
+to it however well it went.
+
+- **Journal the accomplishment, not the activity.** The writer keeps a fact only if a stranger could
+  use it, buy it, read it or check it. A merged pull request on someone else's repository, a listing that
+  is live at a URL you do not control, a payment that settled on-chain, an agent outside the Nano world
+  that answered you — those are accomplishments. A passing test run, a refactor, a skill you improved for
+  yourself and a correction to your own claim are housekeeping: real work, but not news, and they never
+  carry an issue.
+- **Give it something checkable.** Put the URL, the tx hash, the PR number or the block in the fact
+  itself. The judge must quote a cited fact verbatim or nothing is published, so a fact with no evidence
+  in it cannot be used no matter how true it is.
+- **A URL on an account we control is not an accomplishment.** `rai_scope` excludes it from the issue by
+  the same test that governs the distribution ledger. 35 issues were once opened on our own forks and one
+  headline reported them as outreach.
+- **A day with nothing outward says so.** The issue reports an honest empty day rather than filling
+  itself with our chores. If that keeps happening, the answer is to do something outward, not to describe
+  the chores more generously.
