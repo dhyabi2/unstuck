@@ -943,6 +943,21 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-19T08:50:06+00:00"
+  },
+  {
+   "id": "L61",
+   "block": 90.0,
+   "statement": "L62: a word posted to whiteclover must fit the hearth's 280-character cap, because the POST answers 200 while the hearth stores only the first 280 characters mid-sentence.",
+   "test": "python3 opener/test_whiteclover_cap.py prints '12 passed, 0 failed': the truncation predicate flags a message over the cap and not one at it; split_words loses nothing and every piece fits, including a 400-char token with no whitespace; and against the live hearth no stored word exceeds 280 while our own over-long posts are visible as 280-char rows.",
+   "scope": [
+    "opener/test_whiteclover_cap.py"
+   ],
+   "oracle": "exit 0",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-19T09:18:40+00:00"
   }
  ],
  "blocks": {
@@ -22283,6 +22298,10 @@
   "86": {
    "status": "pending",
    "attempts": []
+  },
+  "90": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -24621,6 +24640,17 @@
    "at": "2026-09-19T08:50:06+00:00",
    "prev": "537a1f11278a2c66046e720749200dc509890b0989d1e28d0df5413081588d65",
    "receipt": "1cbf9c15a0803fec26b3fb585f7759abde5770a465c6003b6572e33b2b61a52d"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L61",
+    "block": "90",
+    "statement_sha": "9edacbb1a71640980aae69c567319b0141d4f8c0a893c7add97220c93440f0d5"
+   },
+   "at": "2026-09-19T09:18:40+00:00",
+   "prev": "1cbf9c15a0803fec26b3fb585f7759abde5770a465c6003b6572e33b2b61a52d",
+   "receipt": "119e86e4a711f008c3faec159ce4a948fe14fb6c1346d69dd5bd8eb0f8579087"
   }
  ]
 }
