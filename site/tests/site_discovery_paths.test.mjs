@@ -53,7 +53,11 @@ const DOCS = [
 const read = (rel) => fs.readFileSync(path.join(SITE, rel), "utf8");
 
 function committedBytes(relPath) {
-  return execFileSync("git", ["show", `HEAD:${relPath}`], { cwd: SITE, maxBuffer: 8 * 1024 * 1024 });
+  // `cwd` is SITE, but git reports paths relative to the REPOSITORY ROOT (the parent of SITE), so a
+  // file at SITE/llms.txt is "site/llms.txt" to git. Measured: passing "llms.txt" made git answer
+  // "path 'site/llms.txt' exists, but not 'llms.txt'" and the test failed on committed files, which
+  // is exactly the false-negative a drift guard must not have.
+  return execFileSync("git", ["show", `HEAD:site/${relPath}`], { cwd: SITE, maxBuffer: 8 * 1024 * 1024 });
 }
 
 async function probe(url, timeoutMs = 12000) {
