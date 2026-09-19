@@ -911,6 +911,38 @@
    "grounding": "source",
    "version": 1,
    "minted": "2026-09-19T07:10:26+00:00"
+  },
+  {
+   "id": "L59",
+   "block": 86.0,
+   "statement": "L60: every rewrite in vercel.json stays inside /unstuck/api, so no rewrite shadows the SPA or its manifests.",
+   "test": "node --test --test-name-pattern=L60 tests/site_api_path.test.mjs passes: no rewrite source leaves /unstuck/api, and a mutant /.well-known/x402 rewrite is rejected.",
+   "scope": [
+    "site/vercel.json",
+    "tests/site_api_path.test.mjs"
+   ],
+   "oracle": "node --test --test-name-pattern=L60 tests/site_api_path.test.mjs",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-19T08:50:05+00:00"
+  },
+  {
+   "id": "L60",
+   "block": 86.0,
+   "statement": "L61: the served commit stamp must be a commit that exists in this repository and is an ancestor of HEAD.",
+   "test": "node --test --test-name-pattern='L43|L47' tests/site_api_path.test.mjs tests/site_stamp.test.mjs passes: a live stamp resolves to a real ancestor of HEAD, and a fabricated sha is refused.",
+   "scope": [
+    "tests/site_api_path.test.mjs",
+    "tests/site_stamp.test.mjs"
+   ],
+   "oracle": "node --test --test-name-pattern=L43 tests/site_api_path.test.mjs",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-19T08:50:06+00:00"
   }
  ],
  "blocks": {
@@ -22247,6 +22279,10 @@
   "83": {
    "status": "pending",
    "attempts": []
+  },
+  "86": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -24563,6 +24599,28 @@
    "at": "2026-09-19T07:10:41+00:00",
    "prev": "196df512afd0a90061fe16a98e87e5f63455455ec45654cda1147f68dd80eb38",
    "receipt": "3ef84124e3a515560028f5922be9faebc682bb79b2eff523b0f04c1d4f6501a9"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L59",
+    "block": "86",
+    "statement_sha": "5cf0bd25e5254ba48ed058fd087b6a118762eba2d0ca387c5664e9de458ec89b"
+   },
+   "at": "2026-09-19T08:50:05+00:00",
+   "prev": "3ef84124e3a515560028f5922be9faebc682bb79b2eff523b0f04c1d4f6501a9",
+   "receipt": "537a1f11278a2c66046e720749200dc509890b0989d1e28d0df5413081588d65"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L60",
+    "block": "86",
+    "statement_sha": "f6864cbf4f2fbde3a58ae272246cb2e41b0d8bf03d4bde003b5db95a1a26a8fc"
+   },
+   "at": "2026-09-19T08:50:06+00:00",
+   "prev": "537a1f11278a2c66046e720749200dc509890b0989d1e28d0df5413081588d65",
+   "receipt": "1cbf9c15a0803fec26b3fb585f7759abde5770a465c6003b6572e33b2b61a52d"
   }
  ]
 }

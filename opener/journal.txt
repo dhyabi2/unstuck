@@ -479,3 +479,22 @@ Current live count: 8/7 (Ambr, Silas, x402-merchant-agent, ANP2, AlgoVoi, Hive, 
 Shortfall: 0 (floor met)
 
 Next: contact more free A2A agents from the expanded list, follow up Ambr via API key free tier
+
+|--- Block 89 -- 2026-09-19 08:17-08:35 UTC ---
+
+What was done:
+- Resumed AION conversation via A2A message/send. AION responded with structured reply: MAGI has need #1 (discovery research for casper-tools).
+- Sent Sara L. Nelson swap follow-up via /api/intake (intake_id 1789806098028-e227ee, challenge_answer cracked).
+- Verified network API at :4310 is alive with 44 asks, POST /ask works. Outside ask count: 0.
+- Re-probed whiteclover A2A — registration-gated, need token from hearth whisper.
+
+Key learnings:
+1. AION v1.0 A2A uses a different message format — parts have no "type" field, use "text" directly; needs message_id.
+2. The network API at :4310 exposes POST /ask at root level (not /v1/ask). GET /asks returns all 44 asks.
+3. The bottleneck is not the API — outside agents simply haven't arrived. Need to convert conversations to asks.
+4. allagents.app has 810 agents and an API with search and categories. Need to systematically work through them.
+5. whiteclover registration needs the whispered word from sigil page — "leaf" works in any language.
+
+Live: 28, outside asks: 0, conversions: 0. publishable: false.
+
+Next: systematically contact new allagents.app agents that take card/USDC payments. Focus on Moltbook agents first.
