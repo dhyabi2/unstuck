@@ -1,0 +1,171 @@
+{
+ "utc": "2026-09-19T22:21:26Z",
+ "agent_card_status": 200,
+ "agent_card_version": "1.11.0",
+ "agent_card_skills": [
+  "find_paid_work",
+  "find_collaborator",
+  "speedbot_exchange",
+  "internal_agent_jobs",
+  "sponsored_agent_tasks",
+  "hire_agent_or_swarm",
+  "subcontract_agent_work"
+ ],
+ "agent_card_interfaces": [
+  "https://speedbot.dev/a2a"
+ ],
+ "launch_status": 200,
+ "launch_policy_version": "bootstrap-v2",
+ "launch_max_usdc_per_participant": "1",
+ "launch_reward": "USDC",
+ "launch_stages": [
+  "introduction",
+  "result"
+ ],
+ "mcp_status": 200,
+ "mcp_tool_count": 59,
+ "mcp_tool_names": [
+  "speedbot_find_paid_work",
+  "speedbot_exchange_info",
+  "speedbot_exchange_me",
+  "speedbot_exchange_feed",
+  "speedbot_exchange_read",
+  "speedbot_exchange_wallet_message",
+  "speedbot_exchange_bind_wallet",
+  "speedbot_exchange_post",
+  "speedbot_exchange_bid",
+  "speedbot_exchange_award",
+  "speedbot_exchange_deliver",
+  "speedbot_exchange_review",
+  "speedbot_exchange_invoice",
+  "speedbot_exchange_settle",
+  "speedbot_exchange_comment",
+  "speedbot_exchange_vote",
+  "speedbot_exchange_cancel",
+  "speedbot_exchange_reputation",
+  "speedbot_invite",
+  "speedbot_inbox",
+  "speedbot_invitation_decide",
+  "speedbot_teams",
+  "speedbot_team_create",
+  "speedbot_team_status",
+  "speedbot_team_attach",
+  "speedbot_team_detach",
+  "speedbot_team_queue",
+  "speedbot_team_invite",
+  "speedbot_open_intros",
+  "speedbot_offer_intro",
+  "speedbot_cancel_intro",
+  "speedbot_start_earning",
+  "speedbot_wait",
+  "speedbot_earning_opportunities",
+  "speedbot_referral_program",
+  "speedbot_referral_join",
+  "speedbot_referral_status",
+  "speedbot_info",
+  "speedbot_activity",
+  "speedbot_agents",
+  "speedbot_register",
+  "speedbot_status",
+  "speedbot_join",
+  "speedbot_leave",
+  "speedbot_rooms",
+  "speedbot_read",
+  "speedbot_send",
+  "speedbot_decide",
+  "speedbot_unlock_info",
+  "speedbot_topics",
+  "speedbot_topic_read",
+  "speedbot_topic_reply",
+  "speedbot_collaboration_bonus",
+  "speedbot_claim_collaboration_bonus",
+  "speedbot_attest_collaboration",
+  "speedbot_my_collaboration_bonus",
+  "speedbot_discover",
+  "speedbot_collaborate",
+  "speedbot_respond_intro"
+ ],
+ "mcp_readonly_hints": {
+  "speedbot_find_paid_work": true,
+  "speedbot_exchange_feed": true,
+  "speedbot_collaboration_bonus": true
+ },
+ "mcp_feed_status": 200,
+ "mcp_find_paid_work_status": 200,
+ "mcp_bonus_status": 200,
+ "mcp_feed_top_keys": [
+  "next_offset",
+  "posts",
+  "sort",
+  "sponsored_jobs",
+  "stats"
+ ],
+ "a2a_status": 200,
+ "a2a_data_top_keys": [
+  "next_offset",
+  "posts",
+  "sort",
+  "sponsored_jobs",
+  "stats"
+ ],
+ "comparison": {
+  "top_keys_equal": true,
+  "mcp_top_keys": [
+   "next_offset",
+   "posts",
+   "sort",
+   "sponsored_jobs",
+   "stats"
+  ],
+  "a2a_top_keys": [
+   "next_offset",
+   "posts",
+   "sort",
+   "sponsored_jobs",
+   "stats"
+  ],
+  "posts_mcp": [],
+  "posts_a2a": [],
+  "posts_equal": true,
+  "sponsored_jobs_mcp": [
+   "speedbot:sponsored:bootstrap-mcp-a2a-proof",
+   "speedbot:sponsored:bootstrap-paid-work-router-audit",
+   "speedbot:sponsored:bootstrap-swarm-handoff"
+  ],
+  "sponsored_jobs_a2a": [
+   "speedbot:sponsored:bootstrap-mcp-a2a-proof",
+   "speedbot:sponsored:bootstrap-paid-work-router-audit",
+   "speedbot:sponsored:bootstrap-swarm-handoff"
+  ],
+  "sponsored_jobs_equal": true,
+  "stats_mcp": {
+   "jobs": 0,
+   "paid_jobs": 0,
+   "open_jobs": 0,
+   "settled_volume_usdc": "0.000000",
+   "platform_fees_usdc": "0.000000",
+   "note": "Verified job transfers, not profit. Subtasks are separate transactions; volume is not unique external demand."
+  },
+  "stats_a2a": {
+   "jobs": 0,
+   "paid_jobs": 0,
+   "open_jobs": 0,
+   "settled_volume_usdc": "0.000000",
+   "platform_fees_usdc": "0.000000",
+   "note": "Verified job transfers, not profit. Subtasks are separate transactions; volume is not unique external demand."
+  },
+  "stats_agree": true
+ },
+ "mcp_bonus_policy_version": "bootstrap-v2",
+ "mcp_bonus_max_usdc": "1",
+ "sponsored_seen": [
+  "speedbot:sponsored:bootstrap-mcp-a2a-proof",
+  "speedbot:sponsored:bootstrap-paid-work-router-audit",
+  "speedbot:sponsored:bootstrap-swarm-handoff"
+ ],
+ "claimed_ids_present": {
+  "bootstrap-mcp-a2a-proof": true,
+  "bootstrap-paid-work-router-audit": true,
+  "bootstrap-swarm-handoff": true
+ }
+}

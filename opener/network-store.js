@@ -78,6 +78,18 @@ function getDb() {
     )
   `);
   migrateColumns(_db);
+  // Block 108 — onboard mapping: an ask needs a nano_ asker, but an outside agent on
+  // USDC/card/credits has none until it takes the on-ramp. Holding the address it was
+  // handed lets that agent post its first ask, and keeps every asker field a real
+  // nano_ address the agent controls.
+  _db.exec(`
+    CREATE TABLE IF NOT EXISTS onboards (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      address TEXT NOT NULL UNIQUE,
+      source TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL
+    )
+  `);
   return _db;
 }
 
@@ -95,14 +107,65 @@ function closeDb() {
   if (_db) { _db.close(); _db = null; }
 }
 
+// --- On-ramp hand-outs (Block 108) ---
+
+/**
+ * Record the Nano address handed to an agent by the on-ramp, and return its onboard id.
+ * Idempotent on address: the same address gets the same id.
+ */
+function recordOnboard(address, { source = "", now = new Date().toISOString() } = {}) {
+  if (typeof address !== "string" || !address.startsWith("nano_")) {
+    throw new Error("an onboard record needs a nano_ address");
+  }
+  const db = getDb();
+  const have = db.prepare("SELECT id FROM onboards WHERE address = ?").get(address);
+  if (have) return { id: have.id, address };
+  db.prepare("INSERT INTO onboards (address, source, created_at) VALUES (?, ?, ?)")
+    .run(address, source, now);
+  const id = Number(db.prepare("SELECT last_insert_rowid() AS id").get().id);
+  return { id, address };
+}
+
+/** Read one onboard row by id, or null. */
+function getOnboard(id) {
+  const db = getDb();
+  return db.prepare("SELECT id, address, source, created_at FROM onboards WHERE id = ?").get(Number(id)) || null;
+}
+
+/**
+ * Turn what an asker gave us into a real nano_ address.
+ * Accepts a nano_ asker directly, an onboardId, or an addr handed out before.
+ * Throws when none of those is a Nano address, so the asker field is never a fiction.
+ */
+function resolveAsker({ asker, onboardId, addr }) {
+  if (typeof asker === "string" && asker.startsWith("nano_")) return asker;
+  if (onboardId != null && onboardId !== "") {
+    const row = getOnboard(onboardId);
+    if (row) return row.address;
+    throw new Error(`no on-ramp hand-out with id ${onboardId}`);
+  }
+  if (typeof addr === "string" && addr.startsWith("nano_")) {
+    const db = getDb();
+    const row = db.prepare("SELECT address FROM onboards WHERE address = ?").get(addr);
+    if (row) return row.address;
+    throw new Error("that Nano address was not handed out by this network's on-ramp");
+  }
+  throw new Error("an ask needs a Nano asker address (asker, onboard_id or addr)");
+}
+
 // --- Ask lifecycle ---
 
 /**
  * Create an ask and persist it. Returns {id, status, created_at}.
  * Validates the fields using network.js createAsk first.
+ *
+ * Block 108 — `asker` may instead be given as `onboardId` (or an `addr` that matches a
+ * prior on-ramp hand-out). The stored asker is always the nano_ address the agent was
+ * handed, so an agent with no wallet can still post its first ask.
  */
-function createAsk({ asker, title, body, bountyRaw, bountyAsset, type }) {
-  const domainAsk = n.createAsk({ asker, title, body, bountyRaw, bountyAsset });
+function createAsk({ asker, onboardId, addr, title, body, bountyRaw, bountyAsset, type }) {
+  const resolved = resolveAsker({ asker, onboardId, addr });
+  const domainAsk = n.createAsk({ asker: resolved, title, body, bountyRaw, bountyAsset });
   const db = getDb();
   const validTypes = ['ask', 'welcome', 'announcement'];
   const askType = validTypes.includes(type) ? type : 'ask';
@@ -310,6 +373,8 @@ module.exports = {
   acceptAnswer,
   recordSettlement,
   getStanding,
+  recordOnboard,
+  getOnboard,
   resetDb,
   closeDb,
   getDb,

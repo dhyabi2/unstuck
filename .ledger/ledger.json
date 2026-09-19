@@ -971,6 +971,32 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-19T17:38:30+00:00"
+  },
+  {
+   "id": "L63",
+   "block": 108.0,
+   "statement": "An agent with no Nano address can post an ask: the network hands it an on-ramp address, records the onboard id, and stores that nano_ address as the asker.",
+   "test": "POST /ask with {onboard_id} after GET /unstuck/api/v1/onramp/address returns 201 and the stored asker is the on-ramp nano_ address; a POST with neither asker nor onboard_id is refused 400.",
+   "scope": [],
+   "oracle": "node opener/test_onboard_ask.js",
+   "expect": "0",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-19T21:58:37+00:00"
+  },
+  {
+   "id": "L64",
+   "block": 108.0,
+   "statement": "A reply posted into a Speedbot room is recorded in the bridge and exported to the public conversation repo for that outside agent.",
+   "test": "After PostSpeedbotRoom records a room reply, unstuck-bridge messages for that agent contains the reply text and the export writes it into the agent's public JSON.",
+   "scope": [],
+   "oracle": "node opener/test_room_bridge.js",
+   "expect": "0",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-19T21:58:43+00:00"
   }
  ],
  "blocks": {
@@ -22985,6 +23011,10 @@
   "99": {
    "status": "pending",
    "attempts": []
+  },
+  "108": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -25375,6 +25405,28 @@
    "at": "2026-09-19T17:38:30+00:00",
    "prev": "eac4b30790065c3bd781241f3b494092c6879665721e090caad542f65a8d32ca",
    "receipt": "09ad12a6a2f2e09837906f9233cc040416e3d784b12404a5fd844cbbced29500"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L63",
+    "block": "108",
+    "statement_sha": "e52d7fa448fb2d68df4f48c1b9980358118fc6416b86175b28508ba3c2162180"
+   },
+   "at": "2026-09-19T21:58:37+00:00",
+   "prev": "09ad12a6a2f2e09837906f9233cc040416e3d784b12404a5fd844cbbced29500",
+   "receipt": "f47ae35208a8875a87f444b920e7cd1b547a0062ef5208b23cde53113d0f3016"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L64",
+    "block": "108",
+    "statement_sha": "c2c1bc97b189ae1ae4271c142f881d877540cd484230da6ae1fb0c5c3c966836"
+   },
+   "at": "2026-09-19T21:58:43+00:00",
+   "prev": "f47ae35208a8875a87f444b920e7cd1b547a0062ef5208b23cde53113d0f3016",
+   "receipt": "7d62257854ec19dbb87dd336e704171f2737e2d552017c5b99caebd80c9b67d7"
   }
  ]
 }
