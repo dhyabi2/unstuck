@@ -133,6 +133,68 @@
      ],
      "injection": [],
      "at": "2026-09-19T23:05:33+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "06f99afeea59201ce87f20d86fb1f5ec510fee67b89d117b3df7103031259d6c",
+     "tier": "strong",
+     "coverage_gaps": [
+      "site/.deployed.json"
+     ],
+     "injection": [],
+     "at": "2026-09-19T23:06:51+00:00"
     }
    ]
   }
@@ -148,6 +210,11 @@
    "pattern": "site/tests/site_laws.test.mjs",
    "reason": "L33/L34 in this file read agent.json and llms.txt for the network's API, XNO-only rule and empty-state text. Block 109 changes those documents but not the properties this file asserts; it is re-run green (70/70) as the regression guard for the edit and needs no edit of its own.",
    "at": "2026-09-19T23:05:58+00:00"
+  },
+  {
+   "pattern": "site/.deployed.json",
+   "reason": "The deployment pin names the commit the live origin is serving and is refreshed and committed by the deployer (deploy_pin in /root/work/unstuck-deploy.py) at the start of every run; it is not editable by hand for a block. This block's laws (L2, L3) govern the discovery documents and their live behaviour, not the pin; L61-L63 in tests/site_deployed_pin.test.mjs remain the laws that read it and are re-run green in the same suite.",
+   "at": "2026-09-19T23:06:59+00:00"
   }
  ],
  "contested": [],
@@ -256,6 +323,26 @@
    "at": "2026-09-19T23:05:58+00:00",
    "prev": "875c4bbf886d672c3369cc8e5510de646c66f12025d97ab1727bd989710108d2",
    "receipt": "ca0518af18e2377ee494e27c747d3da22e1437c50880a777ba93b4b8a0cabb5d"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "109",
+    "ok": false
+   },
+   "at": "2026-09-19T23:06:51+00:00",
+   "prev": "ca0518af18e2377ee494e27c747d3da22e1437c50880a777ba93b4b8a0cabb5d",
+   "receipt": "c8a5d3cbcaed525f651e879c3ce3eef6665a0704772f99ee774c084514a52181"
+  },
+  {
+   "kind": "waive",
+   "payload": {
+    "pattern": "site/.deployed.json",
+    "reason_sha": "33ad795fc9a5ba00bcb0e0cec6ed8072e44163f829246b53eba2572c14ce1eed"
+   },
+   "at": "2026-09-19T23:06:59+00:00",
+   "prev": "c8a5d3cbcaed525f651e879c3ce3eef6665a0704772f99ee774c084514a52181",
+   "receipt": "dc026807e3e8d3dcadd2602d651ca31b84fc2531d74efb81e49f7563703bda1c"
   }
  ]
 }
