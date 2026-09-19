@@ -1,9 +1,9 @@
 {
   "origin": {
     "expected_commit": "66cd8428c23f4995d9b33fb48121a2a0c630b1c1",
-    "recorded_by": "8781cc9f252de66e4e91fc1a170558ff1ad0f70b",
-    "depth_from_head": 1,
-    "updated_at": "2026-09-19T09:22:03Z",
+    "recorded_by": "433c12acba93847429dcf03c3d11e1dc17138050",
+    "depth_from_head": 2,
+    "updated_at": "2026-09-19T09:24:09Z",
     "note": "The commit the origin https://getunstuck.space is expected to serve. Written by the deployer at the end of every successful preview, so it always names the PREVIOUS deployment's commit \u2014 a repo cannot contain the sha of the commit that writes it. Read by tests/site_stamp.test.mjs (L61/L62): the live page must name the commit this pin names, and depth_from_head must equal git rev-list --count <expected_commit>..HEAD. Deploying also refreshes it, so a deploy is never blocked by a pin the deploy just wrote."
   }
 }
