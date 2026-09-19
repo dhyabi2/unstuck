@@ -255,6 +255,34 @@
      "coverage_gaps": [],
      "injection": [],
      "at": "2026-09-19T23:08:12+00:00"
+    },
+    {
+     "kind": "unwind",
+     "ok": true,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "01a403e4a3b38274be26ab4f18bef8d5ddbb0e6362d7e4d1c6ae05e8251d8628",
+     "tier": "strong",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-19T23:08:29+00:00"
     }
    ]
   }
@@ -413,6 +441,16 @@
    "at": "2026-09-19T23:08:12+00:00",
    "prev": "dc026807e3e8d3dcadd2602d651ca31b84fc2531d74efb81e49f7563703bda1c",
    "receipt": "36a3e8c2b2b2e1e63882ce6b7d6139b4b51ae7baba3fa62264008b8bf5817c58"
+  },
+  {
+   "kind": "unwind",
+   "payload": {
+    "block": "109",
+    "ok": true
+   },
+   "at": "2026-09-19T23:08:29+00:00",
+   "prev": "36a3e8c2b2b2e1e63882ce6b7d6139b4b51ae7baba3fa62264008b8bf5817c58",
+   "receipt": "2b70ad996d945e5ddde3c12bd61a241ec7c5a8ae81a465cd45742d62cdfae60b"
   }
  ]
 }
