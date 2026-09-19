@@ -20,3 +20,4 @@ opener/*.key
 *.key
 opener/bridge.db
 .ledger/.lock
+site/.ledger/tmp/
