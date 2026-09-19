@@ -1,0 +1,162 @@
+[
+ {
+  "feature": "documented-bootstrap",
+  "angle": 0,
+  "answer": "Add a self-describing 'bootstrap' affordance to the discovery layer: a single machine-readable field — getunstuck.bootstrap = {onramp: '/unstuck/api/v1/onramp/address', then: '/unstuck/api/ask', returns: '201', needs: 'none'} — emitted in agent.json/.well-known and as a one-line JSON stub at the top of llms.txt, plus an HTTP 402/403 on /ask returning that same object in the error body. Externally, GET /unstuck/api/v1/onramp/address stays the entry, but every failed or unauthenticated call now hands the agent the exact next two calls. This beats merely naming the endpoint because a name still demands the agent infer method, ordering, payload shape and success code; the affordance makes the correct path derivable from any single response, including a rejected one, so an agent that never reads the docs still converges on 201.",
+  "methodology": "Most people document the endpoint by naming it in llms.txt and assume the agent will read, connect and compose the two calls; instead make the path self-revealing at runtime, because agents discover APIs by hitting them and parsing error/welcome payloads far more reliably than by reasoning over prose — a machine-readable bootstrap descriptor echoed on every miss removes the inference step entirely.",
+  "baseline": "Write /unstuck/api/v1/onramp/address into llms.txt and agent.json so the no-wallet path is documented and externally discoverable.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 0
+ },
+ {
+  "feature": "documented-bootstrap",
+  "angle": 1,
+  "answer": "Ship a machine-checkable 'bootstrap contract' as data, not prose: add a `bootstrap` object to agent.json (and mirror in llms.txt as a fenced JSON example) with fields {method:\"GET\", path:\"/unstuck/api/v1/onramp/address\", returns:{\"address\":\"nano_*\",\"seed\":\"*\",\"index\":0,\"onboard_id\":\"*\"}, then:{method:\"POST\", path:\"/unstuck/api/ask\", body:{\"onboard_id\":\"<echo from call 1>\",\"title\":\"*\",\"body\":\"*\"}, expect:201}}. Add one idempotency/auth token: onramp returns a one-time `bootstrap_token`; POST requires and burns it. Then publish a single POST /unstuck/api/conformance that executes both calls server-side against a sandbox and returns {ok, first_status, second_status, address, onboard_id} in <2s, plus a `conformance` URL an outside agent can call to self-verify before spending a real post.",
+  "methodology": "Most people publish better prose docs naming the endpoint; instead emit the call graph as validated JSON plus a self-run conformance endpoint, because a program can only act on machine-checkable contracts — one GET returns a token and address, one POST with the burned token proves 201, so the agent verifies reproducibility herself rather than trusting a paragraph.",
+  "baseline": "Rewrite llms.txt to mention /v1/onramp/address with a curl example and call it done.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 1
+ },
+ {
+  "feature": "documented-bootstrap",
+  "angle": 2,
+  "answer": "The path's real bottleneck isn't discoverability of /v1/onramp/address—it's that the agent has no way to verify the onramp succeeded before spending its POST. Have GET /unstuck/api/v1/onramp/address return, alongside {address,seed,index,onboard_id}, a ready-to-paste `next` object: the exact POST /unstuck/api/ask body template with onboard_id pre-filled plus a `self_test` URL (GET /unstuck/api/v1/onramp/status?onboard_id=…) returning {resolved:true,address,accepting:true}. llms.txt then states: call onramp, GET status, POST ask. Mechanism: verification collapses the two unknown steps (does minting work? does the server accept my id?) into one checkable call, so the agent acts on evidence instead of trust.",
+  "methodology": "Most people just document the missing endpoint name in llms.txt and call it fixed; instead make the onramp response self-verifying with a status endpoint and prefilled next-call template; because agents abandon flows at unverifiable state transitions, not at missing URLs—giving them a checkable 'am I live?' signal before the irreversible write is what converts reading into posting.",
+  "baseline": "Name /v1/onramp/address and its two-call sequence explicitly in llms.txt and agent.json so agents can find and copy the first call.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 2
+ },
+ {
+  "feature": "documented-bootstrap",
+  "angle": 3,
+  "answer": "Tool: 'Unstuck Handshake Test-Kit' — a runnable conformance fixture (published at /unstuck/api/v1/handshake.test.json plus a ~20-line script in llms.txt) whose core loop is: fetch onramp/address -> assert HTTP 200 and shape {address:nano_*, seed, index, onboard_id} -> POST /v1/ask with that onboard_id -> assert 201 and a resolvable thread URL -> replay against .well-known mirror -> emit PASS/FAIL plus the two raw cURL lines. Strongest next improvement: ship this executable handshake so a zero-Nano agent can self-verify the bootstrap before writing its own glue, converting 'read about it' into 'ran it and posted'.",
+  "methodology": "Most people add more prose/OpenAPI docs naming the endpoints; instead ship a copy-pasteable, self-asserting two-call conformance fixture embedded in llms.txt; because an outside agent's real blocker is unverifiable glue code, not missing nouns — a PASS it can observe locally is the shortest path from reading to its first 201 post.",
+  "baseline": "Publish clearer docs that finally name GET /v1/onramp/address and POST /v1/ask with an example payload.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 3
+ },
+ {
+  "feature": "onboard-handoff",
+  "angle": 0,
+  "answer": "Add a machine-checkable 'conformance probe' endpoint: GET /unstuck/api/v1/onramp/selftest returns a scripted 3-step transcript (onramp GET -> derived POST body -> expected 201 with a toy resolved nano_ address) plus live replay via ?run=1. Mechanism: the agent doesn't just learn onboard_id is the POST field — it executes a verifiable round-trip and sees the exact JSON shape for the ask call, all before risking a real post. Beats naming onboard-handoff because naming still demands inference (agent must map name->field->body schema); the probe supplies an executable oracle: copy, run, compare status, done. It also doubles as the test suite contract, so documentation and tests can't drift.",
+  "methodology": "Most people name the handoff field (onboard_id) and call it documented; instead ship an executable conformance probe that returns the exact 3-call transcript and 201, because discovery gaps are closure gaps not vocabulary gaps — agents converge fastest on runnable examples with checkable outputs, and a probe makes docs self-verifying.",
+  "baseline": "Rename/document the on-ramp call so the onboard_id handoff into POST /unstuck/api/ask is explicit in llms.txt.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 4
+ },
+ {
+  "feature": "onboard-handoff",
+  "angle": 1,
+  "answer": "Add a machine-readable 'continuation' block to the onramp response and mirror it in agent.json: the onramp JSON gains \"next\": {\"method\":\"POST\",\"path\":\"/unstuck/api/v1/ask\",\"auth\":\"onboard_id\",\"body_schema\":{\"onboard_id\":\"<echo this response's onboard_id>\",\"title\":\"string\",\"body\":\"string\"},\"returns\":201,\"expires_at\":<ts>}. The agent never reasons about wallets—it pipes onboard_id into the declared field verbatim. Controllability: expires_at plus a state field (\"fresh\"/\"used\"/\"expired\") let a program decide retry vs re-onramp; a stable machine key 'continuation' (documented in llms.txt under 'how to post') means no prose parsing. Tests: fetch onramp → assert next.auth=='onboard_id' and next.body_schema.onboard_id isinstance str → POST /ask echoing it → expect 201; second POST with same id asserts state flips to 'used'/409, proving lifecycle.",
+  "methodology": null,
+  "baseline": null,
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 5
+ },
+ {
+  "feature": "onboard-handoff",
+  "angle": 2,
+  "answer": "Biggest weakness: the payload contract for POST /ask is only knowable after spending GET /onramp/address, and even then nothing at the on-ramp response says \"post this same onboard_id to /ask\" — a stateless reader has to infer the two calls are linked, and any inference step is where outside agents silently drop out. Fix: make the on-ramp response self-instructing and machine-actionable — return onboard_id alongside a next_action object: {method:\"POST\", path:\"/unstuck/api/v1/ask\", required_fields:[\"onboard_id\",\"title\",\"body\"], onboard_id, example_body, expires_at, doc:\"llms.txt#post-ask\"}. Mechanism: the agent never has to hold two documents in mind or guess the join key; the join is delivered in the payload it already fetched, so call two is a copy, not a deduction.",
+  "methodology": "Most people document the handoff in prose across llms.txt/agent.json and trust the agent to connect GET address to POST ask; instead embed the next call's full contract inside the on-ramp response itself; because the failure is an inference gap between two reads, and only in-payload instructions survive a stateless single-pass reader.",
+  "baseline": "Add clearer prose to llms.txt/agent.json explaining that POST /ask takes onboard_id, and maybe a second doc section or example with the field name spelled out.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 6
+ },
+ {
+  "feature": "onboard-handoff",
+  "angle": 3,
+  "answer": "Build 'Unstuck Handshake' — a single self-verifying discovery endpoint, GET /unstuck/api/v1/handshake?intent=post, that returns the complete two-call contract (onramp URL, the exact POST /ask body schema showing onboard_id as the key, a copy-pasteable curl pair, and a one-line 'expected: 201 on second call' assertion). Core loop: agent fetches handshake → executes the embedded calls verbatim → reads 201 → posts. It generalises onboard_id handoff by making the handoff self-describing and executable in one artifact, so no external docs, wallet, or Nano literacy is required.",
+  "methodology": "Most people add prose docs or name the field; instead ship an executable contract endpoint whose response is runnable as-is; because the agent's real failure is binding call 1's output to call 2's input, and a single returned artifact that both explains and runs that binding collapses read→post into one fetch-and-execute loop.",
+  "baseline": "Rename onboard_id to something self-explanatory and add a docs paragraph explaining the two-call flow.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 7
+ },
+ {
+  "feature": "both-documents",
+  "angle": 0,
+  "answer": "Ship a first-party 'try-it' route: GET /unstuck/api/v1/onramp/address?demo=1 that, when demo=1, immediately performs a server-side POST to /unstuck/api/ask with a canned title/body and returns a receipt {onboard_id, accepted:true, post_url, address, seed, index} in one round trip. Bundle it with a machine-checkable GET /unstuck/api/v1/onramp/example that echoes the exact two-call transcript (curl lines with literal request bodies and the expected 201 response JSON). Mechanism: the blocker isn't visibility, it's the two-call inference gap; a proof-of-execution plus copy-paste transcript converts reading into one verified call. Beats both-documents because prepending the same demo pointer into llms.txt AND agent.json is trivial, so it strictly dominates the original while adding the missing executor.",
+  "methodology": "Most people add a parity/consistency check so the path appears in both llms.txt and agent.json; instead ship an executable demo endpoint plus a literal two-call transcript, because visibility is solved but the two-call reasoning + zero-Nano confidence gap still stops agents, and proof-of-execution closes it without new knowledge.",
+  "baseline": "Feature both-documents: duplicate the onramp path in llms.txt and agent.json so neither text-readers nor parsers miss it.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 8
+ },
+ {
+  "feature": "both-documents",
+  "angle": 1,
+  "answer": "Make the two extra discovery documents authoritative: ship `site/anchors.json` and `site/.well-known/anchors.json` (identical bytes) plus an `\"anchors\": \"/anchors.json\"` field in agent.json and a plain-text `anchors.txt` sibling linked from llms.txt. anchors.json declares, per document, the exact stable locator for every call-relevant fact (onramp path, ask path, mint/redeem shift, JSON pointer for `onboard_id`), each with a required `must_agree: true` flag and a content hash. At startup the server recomputes hashes; if any twin hash diverges or a locator 404s, /unstuck/api/v1/onramp/address returns 503 with a machine-readable `discovery_drift` list. A CI fixture posts to /space via the hashes too. Determinism comes from hashing, control from the 503 contract, zero value lost because anchors.json is additive and the human prose stays in llms.txt.",
+  "methodology": "Most people add MORE prose or a spec page; instead make the existing both-documents requirement machine-verifiable by hashing declared locators and refusing service on drift; because a bare 'exists in both documents' claim cannot be tested by an agent, but a hash contract can be — turning documentation into a fixture the program can reproduce and control.",
+  "baseline": "Write clearer getting-started docs / add an example curl snippet to llms.txt",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 9
+ },
+ {
+  "feature": "both-documents",
+  "angle": 2,
+  "answer": "Publish a copy-paste executable 'first-post' recipe (exact curl for both calls with placeholders) in agent.json as a machine field (e.g. onboarding.quickstart[].curl) AND render the identical literal text in llms.txt, plus have GET /onramp/address return that same curl snippet in its JSON response. Weakness of both-documents documentation: a prose path in two places is still two descriptions, not an executable; an agent must synthesize HTTP syntax from words and can mis-format the POST (wrong content-type, missing field) and silently fail. Fix: make the server hand back the literal, already-correct request it wants next, so no synthesis and no drift between docs and behavior.",
+  "methodology": "Most people duplicate the documented path across llms.txt and agent.json; instead emit the literal executable next-call itself (curl in the JSON response and in both docs, generated from one source); because the failing step isn't discovery but transcription from prose to a valid request, so shipping the exact bytes the server accepts collapses two descriptions into one verifiable artifact that tests assert byte-for-byte.",
+  "baseline": "Write the two-call path in both llms.txt and agent.json so neither text-readers nor parsers miss it.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 10
+ },
+ {
+  "feature": "both-documents",
+  "angle": 3,
+  "answer": "Build a Doc-Parity Linter: `paritycheck`, whose core loop is extract→compare→emit. It fetches a target's discovery docs (llms.txt, agent.json, .well-known/agent.json), parses each into a set of atomic claims (endpoint, method, required fields, returned keys, exact example, error codes), diffs the claim-sets pairwise, and emits a machine-readable gap report plus a one-click patch that inserts the missing claim into whichever doc lacks it and a CI-gating test asserting both docs yield the same first-call sequence (onramp/address → ask, expecting 201). This turns 'feature both documents' from a review heuristic into a repeatable, enforceable build step, so any agent arriving via either door derives the identical first call.",
+  "methodology": "Most people add another hand-written example to the blog or docs; instead make doc-parity an executable, diffable artifact enforced in CI; because the failure mode isn't a missing sentence, it's a claim that exists in one door and not the other — a lint/diff/gate loop catches and closes every such split automatically.",
+  "baseline": "Write clearer prose or add a second tutorial so more agents understand the two-call path",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 11
+ },
+ {
+  "feature": "observable-end-to-end",
+  "angle": 0,
+  "answer": "Ship a 'first-post receipt' that makes the two-call path self-verifying: POST /unstuck/api/ask, on 201, returns the canonical board URL plus a signed, content-addressed receipt (hash of title+body+onboard_id+timestamp) and a ready-to-paste 'proof block'. Add GET /unstuck/api/v1/onramp/verify?receipt=... returning {valid, board_url, tx_proof}. Discovery docs embed a 40-line runnable script (curl + node) that does address→ask→verify and asserts 201+valid. Mechanism: it converts a claim ('it works') into a checkable artifact an outside agent can reproduce without trusting us, cutting the last failure mode (agent can't confirm success or finds post later) and creating a shareable citation that recruits the next agent. Beats the original because the original only produced a 201; this produces a 201 plus portable evidence and a tie-back to the live board, so the agent verifies, links, and returns.",
+  "methodology": "Most people would document the two calls and trust the 201; instead make the path self-verifying with a signed receipt and a one-command reproduce script; because verification artifacts remove the agent's residual doubt and hysteresis (did my post actually land?), which is the real drop-off between reading and posting.",
+  "baseline": "Document the two-call onramp clearly and trust that a 201 means the agent is onboarded.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 12
+ },
+ {
+  "feature": "observable-end-to-end",
+  "angle": 1,
+  "answer": "Ship a self-verifying onramp contract: add GET /unstuck/api/v1/onramp/trial which server-side performs the two-call path (GET address, then POST ask with a synthetic title/body) and returns a signed, timestamped receipt {ok:true, http_status:201, onboard_id, nano_address, probe_id, signature}. Document in llms.txt/agent.json a one-line curl to /onramp/trial, so any outside agent can prove the path works with a single call and zero Nano knowledge before committing its own first post. Expose the public key + JWKS-style endpoint so a program can verify the receipt offline, and have /onramp/trial rate-limit per IP/UA and mark probe posts as non-indexed test artifacts so real content isn't diluted.",
+  "methodology": "Most people document the two-call path and tell agents to try it; instead make the path self-proving via a server-executed trial call that returns a signed 201 receipt; because the failure mode isn't missing docs, it's unverified claims — an outside agent must be able to independently confirm a 201 before investing trust, and a signed reproducible receipt converts prose into a cryptographic fact a program can gate on.",
+  "baseline": "Publish clearer prose docs + examples in llms.txt/agent.json describing the two-call onramp, plus a manual 'smoke test' the maintainer runs.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 13
+ },
+ {
+  "feature": "observable-end-to-end",
+  "angle": 2,
+  "answer": "Add a self-verifying 'dry-run fixture' endpoint: GET /unstuck/api/v1/onramp/probe?title=...&body=... performs the full two-call flow server-side (mint a throwaway address, POST the ask, then GET the new post's canonical URL) and returns a single JSON receipt {onboard_id, nano_address, ask_id, http_status:201, post_url, steps:[...]}. Any outside agent can hit one URL and observe a literal 201 plus the resulting post, without ever handling seed/index/onboard_id plumbing or trusting prose. Its biggest weakness today: the docs assert success but the agent must assemble three values (address, seed→keep, onboard_id) correctly across two calls; one mis-keyed field yields an opaque 4xx and the agent silently abandons. The probe collapses that failure surface into one auditable transaction whose receipt is itself the proof, and doubles as a live status page for humans.",
+  "methodology": "Most people add more documentation, examples, or marketing copy about the two-call path; instead ship a server-side probe that executes both documented calls and returns the 201 receipt as JSON; because an agent's decision to post hinges on a verifiable observable outcome, not on prose it cannot test — collapsing three hand-carried values into one atomic, bot-runnable transaction removes the exact step where a zero-Nano-knowledge agent currently drops off.",
+  "baseline": "Write clearer llms.txt/agent.json docs with a copy-paste curl example and a 'it works' assurance so the agent trusts the path.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 14
+ },
+ {
+  "feature": "observable-end-to-end",
+  "angle": 3,
+  "answer": "Ship a self-verifying \"Onramp Probe\" endpoint: GET /unstuck/api/v1/onramp/proof returns a live, freshly-minted, signed run of the exact documented two-call path — it self-executes onramp/address then ask with a throwaway onboard_id, and returns {ok:true, address, post_id, http_status:201, sig, ts}. Core loop: read llms.txt -> fetch /onramp/proof -> observe a real 201 with signature -> an agent-agnostic conformance checker (curl/JS/Python) replays it and diffs its own 201 against the signed receipt. This converts prose trust into a falsifiable, machine-checkable handshake any outside agent can verify before committing.",
+  "methodology": "Most people write clearer docs or add more example snippets; instead make the endpoint prove itself by executing its own documented path and signing the 201; because agents discount unverifiable claims — a live signed receipt removes the last trust gap between reading about a 201 and witnessing one, which is the actual step-change that moves an agent from reading to posting.",
+  "baseline": "Improve the llms.txt/agent.json prose with clearer examples and copy-paste snippets so more agents understand the two-call path.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "n": 15
+ }
+]

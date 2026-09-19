@@ -1,0 +1,240 @@
+[
+ {
+  "feature": "documented-bootstrap",
+  "angle": 0,
+  "answer": "Ask-First Self-Mint: let POST /unstuck/api/v1/ask accept {title, body} with no onboard_id/asker. The server atomically mints a Nano keypair/onboard_id via onramp logic, creates the question, and returns 201 {onboard_id, nano_address, seed, question_id, status}. Publish only this call in llms.txt and agent.json with exact curl + JSON schema; keep GET /unstuck/api/v1/onramp/address for explicit key-only agents. Test: parse docs as a zero-Nano agent, POST {title, body}, assert 201, then reuse onboard_id for a second ask. Beats documented-bootstrap because the first documented call is itself the 201, needs one round-trip not two, and removes the agent's need to discover/sequence /v1/onramp/addre",
+  "methodology": "Most people fix missing discovery by documenting the missing endpoint; instead make the documented first call itself mint identity and return 201; because a zero-Nano agent should not need an undocumented two-step handshake.",
+  "baseline": "Add /unstuck/api/v1/onramp/address to llms.txt and agent.json with a two-call example: GET to mint onboard_id, then POST /unstuck/api/v1/ask to get 201.",
+  "error": null,
+  "source": "engine",
+  "admissible": true,
+  "gate": {
+   "observable": "A zero-Nano agent can POST {title, body} to /unstuck/api/v1/ask with no onboard_id/asker and receive HTTP 201 containing {onboard_id, nano_address, seed, question_id, status}; the returned onboard_id can then be reused for a second ask.",
+   "falsifier": "A POST to /unstuck/api/v1/ask with no onboard_id/asker does not return 201 with a minted onboard_id and credentials, or the returned onboard_id cannot be reused for a second ask."
+  },
+  "n": 0
+ },
+ {
+  "feature": "documented-bootstrap",
+  "angle": 1,
+  "answer": "In agent.json, add a field 'links': { 'bootstrap': { 'href': '/unstuck/api/v1/onramp/address', 'description': 'Obtain Nano keypair for new agent.' } }. In llms.txt, add the line: 'Bootstrap instructions are in the agent.json file under links.bootstrap.' Now an agent reading llms.txt will fetch agent.json, parse the bootstrap link, and make a GET request to /unstuck/api/v1/onramp/address, receiving a 201 response with {address, seed, index, onboard_id}. This two-call path (first get address, then use onboard_id in POST /unstuck/api/ask) is fully documented and testable.",
+  "methodology": "Most people would simply add the endpoint directly to llms.txt; instead, we document it as a 'bootstrap' link in agent.json with a `rel` attribute and a minimal description, and include a single pointer line in llms.txt saying to consult agent.json for bootstrap; because this keeps llms.txt concise, forces agents to follow structured discovery, and makes the bootstrap path reproducible and controllable by a program.",
+  "baseline": "Most people would simply add the endpoint '/unstuck/api/v1/onramp/address' to the llms.txt file, so any text-reading agent can see it directly.",
+  "error": null,
+  "source": "engine",
+  "admissible": false,
+  "gate": {
+   "error": "model call failed: Unterminated string starting at: line 2 column 17 (char 18)"
+  },
+  "n": 1
+ },
+ {
+  "feature": "documented-bootstrap",
+  "angle": 2,
+  "answer": "Weakness: naming /v1/onramp/address isn't enough; docs still don't state the zero-wallet precondition, absolute URL, 201 status, or onboard_id handoff. Idea: add one canonical bootstrap.no_wallet block to agent.json: GET /unstuck/api/v1/onramp/address -> 201 {address,seed,index,onboard_id}; next POST /unstuck/api/ask {onboard_id,title,body} -> 201. Mirror it in llms.txt as a two-call recipe. Add a CI contract test that parses agent.json, executes both calls, asserts 201 on the first, schema, and onboard_id reuse on the second.",
+  "methodology": "Most people document the missing endpoint as prose; instead encode the no-wallet path as one machine-readable bootstrap contract in agent.json and mirror it in llms.txt; because agents and CI must derive and prove the 201-to-201 handoff, not interpret intent.",
+  "baseline": "Add GET /unstuck/api/v1/onramp/address to llms.txt and agent.json with a short description of the returned Nano keypair.",
+  "error": null,
+  "source": "engine",
+  "admissible": true,
+  "gate": {
+   "type": "json_object",
+   "observable": "A CI contract test parses agent.json's bootstrap.no_wallet block, executes GET /unstuck/api/v1/onramp/address and then POST /unstuck/api/ask with the returned onboard_id, and asserts: HTTP 201 on the first call, the response matches the {address,seed,index,onboard_id} schema, and HTTP 201 on the second call with onboard_id reused/accepted. The same two-call recipe is mirrored in llms.txt.",
+   "falsifier": "The first call returns a non-201 status or a body missing address/seed/index/onboard_id, or the second call rejects/ignores the onboard_id (returns an error or a different identifier instead of 201), which would falsify the bootstrap.no_wallet contract."
+  },
+  "n": 2
+ },
+ {
+  "feature": "documented-bootstrap",
+  "angle": 3,
+  "answer": "Tool: Coldstart Card. Core loop: discover → claim → transact → assert. agent.json carries a `bootstrap` object: `claim` = GET /unstuck/api/v1/onramp/address, returning `onboard_id`/`address`; `use` = POST /unstuck/api/ask with `{onboard_id,title,body}`. llms.txt mirrors this as a two-call example. A `coldstart` CI test starts with empty state, parses only the published docs, executes claim then use, and asserts 201. This turns any zero-credential API into a self-describing onramp.",
+  "methodology": "Most people just add /v1/onramp/address to the endpoint list; instead make bootstrap a first-class, executable contract with a conformance test; because agents derive calls from affordance recipes, not inventories, and the test proves the zero-state path is derivable.",
+  "baseline": "Add the missing endpoint to llms.txt/agent.json.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "admissible": true,
+  "gate": {
+   "observable": "The coldstart CI test, starting from empty state and using only published docs (agent.json and llms.txt), executes the claim then use calls and asserts a 201 HTTP status.",
+   "falsifier": "The coldstart CI test fails to assert a 201 HTTP status, or fails to execute due to missing or insufficient documentation."
+  },
+  "n": 3
+ },
+ {
+  "feature": "onboard-handoff",
+  "angle": 0,
+  "answer": "Feature: \"Self-documenting On-ramp Response\". Mechanism: Modify GET /unstuck/api/v1/onramp/address to return an additional field `ask_url` (e.g., \"https://getunstuck.space/unstuck/api/ask?onboard_id=abc123...\"). The agent then simply POSTs to this URL with JSON body `{\"title\": \"...\", \"body\": \"...\"}` (optionally `bounty_raw`). This eliminates any ambiguity about whether to use `onboard_id` or `asker` — the URL already contains the correct identifier. No need for the agent to parse documentation or guess parameters; the response itself drives the next action. This beats the original \"onboard-handoff\" approach (which relies on naming conventions) by making the handoff explicit and machine-actio",
+  "methodology": "Most people would rely on textual documentation; instead we embed an explicit 'ask_url' field in the on-ramp response that carries the onboard_id as a query parameter; because the agent can then POST directly to that URL without needing to know the parameter name or mapping.",
+  "baseline": "Document the two-call process in llms.txt and agent.json, expecting the agent to infer that the onboard_id from the on-ramp call must be used in the ask call.",
+  "error": null,
+  "source": "engine",
+  "admissible": true,
+  "gate": {
+   "observable": "The response from GET /unstuck/api/v1/onramp/address includes a non-empty field `ask_url` that is a valid URL.",
+   "falsifier": "The GET response does not contain the `ask_url` field, or the `ask_url` value is empty, malformed, or does not accept a POST request with a JSON body containing `title` and `body`."
+  },
+  "n": 4
+ },
+ {
+  "feature": "onboard-handoff",
+  "angle": 1,
+  "answer": "Modify the GET /unstuck/api/v1/onramp/address response to include a nexthop field containing a JSON object { \"method\": \"POST\", \"path\": \"/unstuck/api/v1/ask\", \"body\": { \"onboard_id\": \"<the onboard_id>\", \"title\": \"<string>\", \"body\": \"<string>\" } }. This is a self-describing hypermedia control that tells any agent exactly how to call the next endpoint, with the onboard_id already filled in. The agent need only replace the title and body strings with its own content. This makes the handoff reproducible and controllable without any external documentation.",
+  "methodology": "Most people would add documentation; instead embed the next step's details directly in the onramp response; because a program can autonomously parse structured machine-readable instructions without relying on natural language documentation.",
+  "baseline": "Add documentation in llms.txt and agent.json explaining the two-step process: first GET /onramp to get an onboard_id, then POST /ask with that onboard_id.",
+  "error": null,
+  "source": "engine",
+  "admissible": true,
+  "gate": {
+   "observable": "The GET /unstuck/api/v1/onramp/address response includes a nexthop field containing a JSON object with keys method, path, and body, where body contains onboard_id (already filled in), title, and body (both as empty strings or placeholders).",
+   "falsifier": "The GET response does not contain a nexthop field, or the nexthop field is missing required keys (method, path, body), or the onboard_id within body is missing or not automatically filled in."
+  },
+  "n": 5
+ },
+ {
+  "feature": "onboard-handoff",
+  "angle": 2,
+  "answer": "Weakness: onboard_id is exposed by the on-ramp but never bound to POST /ask; docs don't say /ask accepts onboard_id instead of asker, so a zero-Nano agent can't derive call two. Fix: make the handoff executable. GET /onramp/address should return a next-action object: {method:'POST', url:'/unstuck/api/ask', body_schema:{onboard_id:'<same>', title:'string', body:'string'}, example_body:{onboard_id:'...', title:'...', body:'...'}, expected_status:201}. Mirror this state machine in llms.txt and agent.json as a two-call recipe with conditional: no address -> onboard_id; has address -> asker+bounty_raw. CI test does GET, then POSTs next.example_body verbatim, asserts 201.",
+  "methodology": "Most people add a line to llms.txt/agent.json saying POST /ask accepts onboard_id; instead make the on-ramp response return a pre-bound next-call action and mirror the same state machine in discovery docs; because autonomous agents follow response affordances more reliably than prose, and a prefilled body removes the asker-vs-onboard_id ambiguity, making the 201 path testable.",
+  "baseline": "Document POST /ask's schema with onboard_id as an accepted field in llms.txt and agent.json.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "admissible": false,
+  "gate": {
+   "type": "json_object"
+  },
+  "n": 6
+ },
+ {
+  "feature": "onboard-handoff",
+  "angle": 3,
+  "answer": "Tool: HandoffGraph. Core loop: Agent queries /v1/onramp/address → gets {onboard_id}. HandoffGraph defines a 'handoff' node mapping that response field to the required POST /ask parameter 'onboard_id'. The agent then calls /ask with that value (and title, body) to obtain 201. The graph is served at /.well-known/handoff-graph.json, listing endpoints, their I/O schemas, and directed edges where output fields become input fields of another endpoint. This lets any agent autonomously discover and execute the two-call no-wallet path without prior knowledge of Nano.",
+  "methodology": "Most people would just write human-readable docs; instead, create a declarative handoff graph that machines parse, linking response fields to request parameters, because agents need explicit state-machine logic to chain calls without ambiguity.",
+  "baseline": "Document the two-step handoff in llms.txt and agent.json with plain text explaining that onboard_id from /onramp must be used in /ask, and test manually.",
+  "error": null,
+  "source": "engine",
+  "admissible": true,
+  "gate": {
+   "observable": "The agent successfully obtains a 201 response from POST /ask after using the onboard_id retrieved from GET /v1/onramp/address, following the handoff graph.",
+   "falsifier": "The agent fails to get a 201 response from /ask, or the handoff graph at /.well-known/handoff-graph.json is missing, invalid, or does not map the /v1/onramp/address output to the /ask input."
+  },
+  "n": 7
+ },
+ {
+  "feature": "both-documents",
+  "angle": 0,
+  "answer": "Self-proving onramp contract: one capability manifest renders both surfaces. llms.txt gets a literal transcript: GET /unstuck/api/v1/onramp/address -> parse onboard_id -> POST /unstuck/api/ask {onboard_id,title,body} -> expect 201. agent.json gets OpenAPI-style operation objects plus a conformance_probe URL. CI runs a zero-Nano agent that parses each document independently, extracts the two calls, executes them against staging, and asserts 201 and that onboard_id resolves to the returned nano_ address. It beats merely featuring both documents because it proves each surface is sufficient, catches text/parser drift, and tests derivability, not just mention.",
+  "methodology": "Most people duplicate endpoint instructions across discovery files; instead generate both from one executable capability manifest and prove each surface independently derives the calls; because presence is not derivability, and duplicated prose drifts.",
+  "baseline": "Document the two-call no-wallet path in both llms.txt and agent.json: GET /unstuck/api/v1/onramp/address, then POST /unstuck/api/ask with onboard_id, title, body, expect 201; add tests.",
+  "error": null,
+  "source": "engine",
+  "admissible": true,
+  "gate": {
+   "observable": "A CI job runs a zero-Nano agent against staging that independently parses llms.txt and agent.json, extracts the two calls (GET /unstuck/api/v1/onramp/address then POST /unstuck/api/ask {onboard_id,title,body}), executes them, and observes a 201 response plus confirmation that the returned onboard_id resolves to the nano_ address.",
+   "falsifier": "The zero-Nano agent fails to parse either document alone, or the extracted calls do not yield a 201, or the returned onboard_id does not resolve to the nano_ address (e.g., text/parser drift, missing derivability, or agent.json conformance_probe failing)."
+  },
+  "n": 8
+ },
+ {
+  "feature": "both-documents",
+  "angle": 1,
+  "answer": "Create a single YAML file (e.g., path-doc.yaml) containing the two-call no-wallet path details: endpoint URLs, required fields, and example request/response. Then a build script (e.g., generate-docs.js) parses that YAML and writes llms.txt (rendered as plain text with sections and code blocks) and agent.json (rendered as structured JSON with the same information under a well-known schema, e.g., 'paths' key). The script runs in CI on every push so both documents are always identical and consistent. This makes the feature reproducible (same YAML always produces same outputs) and controllable (YAML is easy to version, review, and update programmatically), while retaining full value for both tex",
+  "methodology": "Most people manually duplicate documentation; instead, generate both documents from a single source of truth using a script; because this ensures consistency, allows programmatic updates, and is controllable via CI/CD.",
+  "baseline": "Most people would manually write both llms.txt and agent.json, copying the endpoint documentation into each file separately.",
+  "error": null,
+  "source": "engine",
+  "admissible": true,
+  "gate": {
+   "observable": "After running the build script on the YAML file, the generated llms.txt and agent.json files are byte-identical when the script is executed multiple times on the same YAML input.",
+   "falsifier": "Running the build script twice on the same YAML input produces different llms.txt or agent.json files."
+  },
+  "n": 9
+ },
+ {
+  "feature": "both-documents",
+  "angle": 2,
+  "answer": "Biggest weakness: 'both documents' is duplicated prose/JSON with no single source of truth. llms.txt, agent.json and the two .well-known copies drift, so one arrival class sees a stale/missing onramp→ask path. Fix: define the two-call sequence once in a canonical machine-readable manifest (e.g. /unstuck/api/agent-manifest.json): GET /unstuck/api/v1/onramp/address → take onboard_id → POST /unstuck/api/ask → assert 201. Generate llms.txt and every agent.json copy from that manifest. CI parses each rendered artifact independently, extracts the advertised first call, executes it against a test deployment, and fails unless it returns 201 with a usable onboard_id.",
+  "methodology": "Most people duplicate the two-call path in llms.txt and agent.json; instead make one canonical manifest and generate both; because duplication drifts and only executing the path parsed from each rendered artifact proves an outside agent derives a 201.",
+  "baseline": "Copy the same two-call instructions into llms.txt and agent.json and manually check both look correct.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "admissible": false,
+  "gate": {
+   "error": "model call failed: The read operation timed out"
+  },
+  "n": 10
+ },
+ {
+  "feature": "both-documents",
+  "angle": 3,
+  "answer": "Tool: Janus — dual-manifest parity compiler for agent APIs.\nCore loop:\n1. Register each capability once: op id, endpoint, method, params, example first call, expected status.\n2. Render llms.txt (prose+curl) and agent.json/.well-known cards from that registry.\n3. Assert parity: same op ids, endpoints, required params, onboard path, first-call status 201.\n4. Dual smoke tests: text agent extracts first call from llms.txt; parser reads agent.json; both hit live API and must get 201.\n5. Fail CI on drift, missing doc, or divergent example.\nBackend: YAML registry + CLI/CI. Result: no half-invisible path; every arrival mode gets the same no-wallet two-call flow.",
+  "methodology": "Most people treat llms.txt and agent.json as separate documents updated ad hoc; instead treat them as generated views of one capability registry with parity checks and dual-entry smoke tests; because agents arrive through different parsers and only executable parity proves neither door is a dead end.",
+  "baseline": "Document the two-call no-wallet path by hand in llms.txt and agent.json, copy the curl example, and test one endpoint manually.",
+  "error": null,
+  "source": "engine",
+  "admissible": true,
+  "gate": {
+   "observable": "For each registered capability, the llms.txt and agent.json manifests have identical op ids, endpoints, required params, and onboard path; executing the first call example from llms.txt and the parsed agent.json both yield HTTP status 201.",
+   "falsifier": "Any mismatch between manifests (e.g., missing op id, different endpoint/params) or any first call returns a status other than 201, causing CI failure."
+  },
+  "n": 11
+ },
+ {
+  "feature": "observable-end-to-end",
+  "angle": 0,
+  "answer": "Name: Self-Teaching 201 Onramp. Add POST /unstuck/api/v1/onramp/address (empty JSON) that creates the keypair and returns 201 Created with the existing {address, seed, index, onboard_id} plus _links.ask {href:'/unstuck/api/ask', method:'POST', body:{onboard_id}}. llms.txt and agent.json publish only this URL. An outside agent's first call is the POST, already 201; it follows _links.ask with title/body and gets 201. Tests: from zero state, POST onramp -> assert 201 and link; POST ask via link -> assert 201 and persisted ask. It beats documentation because the API teaches its own next call at runtime, removing prose derivation and drift.",
+  "methodology": "Most people write clearer two-call prose in llms.txt/agent.json and add a live curl test; instead make the onramp creation itself return 201 and embed the second call as hypermedia; because zero-knowledge agents need no Nano vocabulary or multi-step derivation—the first response supplies the exact next request, so docs cannot drift and the first call is observably 201.",
+  "baseline": "Document GET /onramp/address then POST /ask with onboard_id in llms.txt and agent.json, and add an integration test that runs those two calls.",
+  "error": null,
+  "source": "model:deepseek/deepseek-v4.1-flash",
+  "admissible": true,
+  "gate": {
+   "observable": "A program can measure that POST /unstuck/api/v1/onramp/address returns status 201 with a JSON body containing a _links.ask object whose href points to a valid endpoint, and subsequently POSTing to that href with a title and body returns status 201 and persists the ask.",
+   "falsifier": "POST /unstuck/api/v1/onramp/address returns a status other than 201, or the response body does not contain a _links.ask object, or POSTing to the provided _links.ask.href does not return status 201 (e.g., returns 404, 400, or 500)."
+  },
+  "n": 12
+ },
+ {
+  "feature": "observable-end-to-end",
+  "angle": 1,
+  "answer": "In llms.txt, include a code block with the exact HTTP requests using templated variables:\n\n```\n# Step 1: Obtain a fresh onboard_id\nGET /unstuck/api/v1/onramp/address\nResponse: {\"address\":\"...\", \"seed\":\"...\", \"index\":..., \"onboard_id\":\"...\"}\n\n# Step 2: Use the onboard_id to create a stub\nPOST /unstuck/api/ask\nContent-Type: application/json\nBody: {\"onboard_id\":\"{{onboard_id}}\", \"title\":\"test\", \"body\":\"test\"}\nExpected status: 201\n```\n\nIn agent.json, add a `x-test-sequence` field with the same instructions as a JSON array of request objects (method, path, body) where the body of the second request references the first response's `onboard_id`. Example:\n\n\"x-test-sequence\": [\n  {\"method\":\"GET\",\"pat",
+  "methodology": "Most people write static documentation; instead we embed a minimal executable test script in llms.txt and agent.json that instructs the agent to first call GET /unstuck/api/v1/onramp/address, extract the onboard_id from the JSON response, then immediately POST /unstuck/api/ask with that onboard_id and dummy title/body, which returns 201; because this deterministic two-step protocol eliminates ambiguity and produces a reproducible, programmatically controllable first call that always yields a 201 response against the live API.",
+  "baseline": "Most people would write static API documentation listing endpoints, parameters, and example responses in plain text and JSON, leaving the agent to interpret and construct the correct call sequence manually.",
+  "error": null,
+  "source": "engine",
+  "admissible": true,
+  "gate": {
+   "observable": "The second POST request to /unstuck/api/ask returns HTTP status 201 when the body includes the onboard_id obtained from the first GET response.",
+   "falsifier": "The second POST request returns a status other than 201, or the first GET response does not contain an 'onboard_id' field."
+  },
+  "n": 13
+ },
+ {
+  "feature": "observable-end-to-end",
+  "angle": 2,
+  "answer": "In llms.txt, document: 1. GET /unstuck/api/v1/onramp/address → {onboard_id}. 2. POST /unstuck/api/ask with {onboard_id, title, body} → 201. Add note: 'onboard_id is one-time use; for testing, generate a fresh address each time.' In agent.json, include a test field: run curl commands with a unique title (e.g., timestamp) and retry up to 3 times if non-201. Optionally first call /health to verify API is live. This makes the claim falsifiable by executing the documented calls.",
+  "methodology": "Most people would write static documentation describing the two API calls; instead we provide a self-executing test script embedded in the documentation that runs against the live API and asserts a 201 response; because that makes the claim falsifiable and ensures the documentation stays current.",
+  "baseline": "Write static documentation describing the two API calls with example requests and expected responses.",
+  "error": null,
+  "source": "engine",
+  "admissible": true,
+  "gate": {
+   "observable": "The test script runs and all curl POST requests to /unstuck/api/ask return HTTP 201 status after up to 3 retries.",
+   "falsifier": "Any curl POST request fails (non-201 status, connection error, or timeout) after exhausting retries."
+  },
+  "n": 14
+ },
+ {
+  "feature": "observable-end-to-end",
+  "angle": 3,
+  "answer": "Tool: 'Unstuck Onboarding Router'. Core loop: 1. Agent calls GET /unstuck/api/v1/onramp/address to receive a disposable Nano keypair and onboard_id. 2. Agent calls POST /unstuck/api/ask with {onboard_id, title, body} and receives a 201. The router deterministically derives the keypair from a master seed and the index, requires no state, and generalizes the two-call no-wallet pattern to any agent that needs a first successful interaction with a token-gated API.",
+  "methodology": "Most people would build a documentation generator; instead we build a 'Stateless Onboarding Proxy' that dynamically generates onboarding documents based on the agent's first request; because it ensures the documents are always current and can adapt to the agent's context.",
+  "baseline": "A documentation generator that auto-creates llms.txt and agent.json files from API specs.",
+  "error": null,
+  "source": "engine",
+  "admissible": true,
+  "gate": {
+   "observable": "An agent calls GET /unstuck/api/v1/onramp/address and receives a disposable Nano keypair and an onboard_id, then calls POST /unstuck/api/ask with {onboard_id, title, body} and receives a 201 response. The keypair is deterministically derived from a master seed and index, so repeated calls with the same index yield the same keypair.",
+   "falsifier": "The same index produces a different keypair across calls, or a valid POST request with a correct onboard_id returns a non-201 status (e.g., 400, 403, 500), or the derivation requires maintaining state (e.g., a counter or lookup table)."
+  },
+  "n": 15
+ }
+]
