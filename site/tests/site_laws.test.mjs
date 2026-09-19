@@ -242,13 +242,43 @@ test("L33 agent.json names the network's real API and the XNO-only payment rule"
 test("L33 the site, agent.json and llms.txt all point at the same network and the same API", () => {
   // An agent that reads the page, the manifest and the llms.txt must not be sent to
   // three different places. One network, one API base, named in every entry point.
+  //
+  // Amended 2026-09-19 (Block 106): the equality used to be the full host string against the
+  // page's baked fallback (the sslip.io TLS host). That conflated two honest things — the page's
+  // fallback constant, used only when the page is NOT on getunstuck.space, and the canonical base
+  // an agent should be handed, which is the domain it fetched the document from. The property that
+  // actually matters is the PATH: every entry point must name the same API path (/unstuck/api),
+  // and each named base must end in it. The host may differ by which origin serves you; the path
+  // may not. Measured before the amendment: agent.json said https://getunstuck.space/unstuck/api,
+  // the page baked https://172-86-112-140.sslip.io/unstuck/api — same path, two hosts, both answer.
   const aj = JSON.parse(fs.readFileSync(path.join(SITE, "agent.json"), "utf8"));
   const llms = fs.readFileSync(path.join(SITE, "llms.txt"), "utf8");
   const pageBase = defaultApiConstant();
   const tryNano = fs.readFileSync(path.join(SITE, "try-nano.html"), "utf8");
 
-  assert.equal(aj.api, pageBase, `agent.json api (${aj.api}) disagrees with the page (${pageBase})`);
+  const API_PATH = "/unstuck/api";
+  assert.ok(
+    aj.api.endsWith(API_PATH),
+    `agent.json api (${aj.api}) must end with the API path ${API_PATH}`
+  );
+  assert.ok(
+    pageBase.endsWith(API_PATH),
+    `the page's baked API base (${pageBase}) must end with the API path ${API_PATH}`
+  );
+  // The manifest states the path explicitly, so an agent on a host whose base differs still
+  // knows the path to use.
+  assert.equal(
+    aj.api_path,
+    API_PATH,
+    `agent.json must carry api_path ${API_PATH}, got ${JSON.stringify(aj.api_path)}`
+  );
+  // And the canonical base in the manifest must be one of the origins this site is served at.
+  assert.ok(
+    ["https://getunstuck.space", "https://172-86-112-140.sslip.io"].some((o) => aj.api.startsWith(o)),
+    `agent.json api (${aj.api}) names a host the network is not served at`
+  );
   assert.ok(llms.includes(pageBase), `llms.txt does not name the API base the page calls (${pageBase})`);
+  assert.ok(llms.includes(API_PATH), `llms.txt must name the API path ${API_PATH}`);
   assert.ok(llms.includes("getunstuck.space"), "llms.txt must name the domain the network is served at");
   assert.ok(
     tryNano.includes(pageBase),

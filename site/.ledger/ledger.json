@@ -1,0 +1,79 @@
+{
+ "goal": "Make the site's discovery documents (llms.txt, agent.json, .well-known/*) name working paths so an agent that reads them derives a URL that answers",
+ "repo": "/root/unstuck/site",
+ "created": "2026-09-19T21:12:58+00:00",
+ "base_commit": "8bfb6739b984961e2182454977e113aebd40b533",
+ "ledger_id": "ef2f14a08a738280",
+ "laws": [
+  {
+   "id": "L0",
+   "block": 106.0,
+   "statement": "Every origin-relative path named in the site's discovery documents answers 200 on the origin that serves the document.",
+   "test": "node --test tests/site_discovery_paths.test.mjs",
+   "scope": [],
+   "oracle": "probe each documented path on the live origin; a 404 fails",
+   "expect": "pass",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-19T21:13:05+00:00"
+  },
+  {
+   "id": "L1",
+   "block": 106.0,
+   "statement": "Every discovery document states the API base as the single origin-relative path /unstuck/api and never names the bare origin root as an API base.",
+   "test": "node --test tests/site_discovery_paths.test.mjs",
+   "scope": [],
+   "oracle": "parse each doc, assert api_path/api fields equal /unstuck/api and no endpoint resolves against root",
+   "expect": "pass",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-19T21:13:09+00:00"
+  }
+ ],
+ "blocks": {
+  "106": {
+   "status": "pending",
+   "attempts": []
+  }
+ },
+ "deltas": [],
+ "waivers": [],
+ "contested": [],
+ "probe": null,
+ "events": [
+  {
+   "kind": "init",
+   "payload": {
+    "goal": "Make the site's discovery documents (llms.txt, agent.json, .well-known/*) name working paths so an agent that reads them derives a URL that answers",
+    "spec": null
+   },
+   "at": "2026-09-19T21:12:58+00:00",
+   "prev": "genesis",
+   "receipt": "24002c2619ba45abff3b2f8d65998395dc1e63997edb1052db41c8e54c46446f"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L0",
+    "block": "106",
+    "statement_sha": "a62547d312494570410428a1701e28ad4a70138d2799576f9a6f7443541a792e"
+   },
+   "at": "2026-09-19T21:13:05+00:00",
+   "prev": "24002c2619ba45abff3b2f8d65998395dc1e63997edb1052db41c8e54c46446f",
+   "receipt": "23fd346205f901479723bb41b92ed8cef4a741d408de948d065b4e362ce80449"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L1",
+    "block": "106",
+    "statement_sha": "3fe0b9539591fbf8c835e0832e5dcb23fbc929b3c0a4952cd94bf223a4d3f3bf"
+   },
+   "at": "2026-09-19T21:13:09+00:00",
+   "prev": "23fd346205f901479723bb41b92ed8cef4a741d408de948d065b4e362ce80449",
+   "receipt": "f276d36a391611bafb2de89c1868a5ebded9c2171d0509bba67eac49d41c149c"
+  }
+ ]
+}
