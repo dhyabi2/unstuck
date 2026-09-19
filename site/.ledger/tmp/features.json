@@ -1,0 +1,6 @@
+[
+  {"id": "documented-bootstrap", "name": "no-wallet bootstrap documented", "text": "The published discovery documents never name /v1/onramp/address, so an agent with no Nano address cannot derive the first call that would give it one."},
+  {"id": "onboard-handoff", "name": "onboard_id handoff named", "text": "Even if the on-ramp call were named, nothing tells the agent that the POST /ask it enables takes onboard_id instead of an asker address."},
+  {"id": "both-documents", "name": "exists in both documents", "text": "llms.txt is where a text-reading agent lands; agent.json is where a parser lands. A path documented in only one is invisible to half the arrivals."},
+  {"id": "observable-end-to-end", "name": "observable end to end", "text": "The claim must be falsifiable: run the documented calls against the live API and get a 201, not a sentence saying it would work."}
+]

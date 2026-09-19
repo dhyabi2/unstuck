@@ -30,10 +30,52 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-19T21:13:09+00:00"
+  },
+  {
+   "id": "L2",
+   "block": 109.0,
+   "statement": "Every published discovery document that names POST /ask also names GET /v1/onramp/address and the onboard_id handoff that lets an agent with no wallet post.",
+   "test": "node --test --test-name-pattern=L67 tests/site_no_wallet_ask.test.mjs",
+   "scope": [
+    "site/llms.txt",
+    "site/agent.json",
+    "site/.well-known/agent.json",
+    "site/.well-known/agent-card.json",
+    "site/tests/site_no_wallet_ask.test.mjs"
+   ],
+   "oracle": "cd /root/unstuck/site && node --test --test-name-pattern=L67 tests/site_no_wallet_ask.test.mjs",
+   "expect": "pass [1-9]",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-19T23:02:31+00:00"
+  },
+  {
+   "id": "L3",
+   "block": 109.0,
+   "statement": "The two documented calls really produce a 201 on the live origin, and the stored asker is the on-ramp address, never a fiction.",
+   "test": "node --test --test-name-pattern=L68 tests/site_no_wallet_ask.test.mjs",
+   "scope": [
+    "site/llms.txt",
+    "site/agent.json",
+    "site/.well-known/agent.json",
+    "site/.well-known/agent-card.json",
+    "site/tests/site_no_wallet_ask.test.mjs"
+   ],
+   "oracle": "cd /root/unstuck/site && node --test --test-name-pattern=L68 tests/site_no_wallet_ask.test.mjs",
+   "expect": "pass [12]",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-19T23:02:38+00:00"
   }
  ],
  "blocks": {
   "106": {
+   "status": "pending",
+   "attempts": []
+  },
+  "109": {
    "status": "pending",
    "attempts": []
   }
@@ -74,6 +116,28 @@
    "at": "2026-09-19T21:13:09+00:00",
    "prev": "23fd346205f901479723bb41b92ed8cef4a741d408de948d065b4e362ce80449",
    "receipt": "f276d36a391611bafb2de89c1868a5ebded9c2171d0509bba67eac49d41c149c"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L2",
+    "block": "109",
+    "statement_sha": "b868440e17cbfa1cdb68b476b46ea56fc13af35ab7d1750c0946a14b8085b6a7"
+   },
+   "at": "2026-09-19T23:02:31+00:00",
+   "prev": "f276d36a391611bafb2de89c1868a5ebded9c2171d0509bba67eac49d41c149c",
+   "receipt": "3a672c76edef7b70181ac5708078ec4244ae3cb08ba76dac1116326a4979b9ed"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L3",
+    "block": "109",
+    "statement_sha": "0447f279ee8d27d039cbd7acd2aa8a3eb14c41a7fb6e2e177d9812c581bfa521"
+   },
+   "at": "2026-09-19T23:02:38+00:00",
+   "prev": "3a672c76edef7b70181ac5708078ec4244ae3cb08ba76dac1116326a4979b9ed",
+   "receipt": "edde53f99d858e6735f52bba8f18e61aa1c30fbc4970975498cc14b6fb29507e"
   }
  ]
 }
