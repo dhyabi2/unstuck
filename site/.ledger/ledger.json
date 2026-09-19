@@ -306,7 +306,44 @@
   }
  ],
  "contested": [],
- "probe": null,
+ "probe": {
+  "score": 100,
+  "results": [
+   {
+    "id": "L0",
+    "pass": true,
+    "oracle_exit": 0,
+    "oracle_ok": true,
+    "judge": "deepseek/deepseek-v4-pro-0813",
+    "control": "passed"
+   },
+   {
+    "id": "L1",
+    "pass": true,
+    "oracle_exit": 0,
+    "oracle_ok": true,
+    "judge": "deepseek/deepseek-v4-pro-0813",
+    "control": "passed"
+   },
+   {
+    "id": "L2",
+    "pass": true,
+    "oracle_exit": 0,
+    "oracle_ok": true,
+    "judge": "deepseek/deepseek-v4-pro-0813",
+    "control": "passed"
+   },
+   {
+    "id": "L3",
+    "pass": true,
+    "oracle_exit": 0,
+    "oracle_ok": true,
+    "judge": "deepseek/deepseek-v4-pro-0813",
+    "control": "passed"
+   }
+  ],
+  "at": "2026-09-19T23:15:44+00:00"
+ },
  "events": [
   {
    "kind": "init",
@@ -451,6 +488,15 @@
    "at": "2026-09-19T23:08:29+00:00",
    "prev": "36a3e8c2b2b2e1e63882ce6b7d6139b4b51ae7baba3fa62264008b8bf5817c58",
    "receipt": "2b70ad996d945e5ddde3c12bd61a241ec7c5a8ae81a465cd45742d62cdfae60b"
+  },
+  {
+   "kind": "probe",
+   "payload": {
+    "score": 100
+   },
+   "at": "2026-09-19T23:15:44+00:00",
+   "prev": "2b70ad996d945e5ddde3c12bd61a241ec7c5a8ae81a465cd45742d62cdfae60b",
+   "receipt": "cf2c804b9ad6da7168c25c39a15d55fad064ba58ce4f312dac2fa41db589877d"
   }
  ]
 }
