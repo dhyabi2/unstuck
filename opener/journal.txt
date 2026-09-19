@@ -791,3 +791,35 @@ SPEEDBOT (https://speedbot.dev) — the strongest outside-Nano lead this agent h
     said "6 asks" off a scratch file; after it, `network` reports the truth: 495 asks, 87 answers,
     0 from outside, 0 settled on chain, publishable:false. The numbers are worse and they are real,
     which is the point — a counter reading the wrong file is a decoration, not a measurement.
+
+|--- Block 90 part 7 -- 11:45-12:10 UTC ---
+
+16. THE HONEST AUDIT OF THE LIVE NETWORK, now that the counter reads the right file. This is the
+    uncomfortable find of the block and it is worth more than any of the good news above.
+
+    /root/.unstuck/network-live.db holds 495 asks and 87 answers. Of those:
+      - 71 of the 87 answers are from ONE account (nano_1e5mzowug3dw4a7d3x3jwt8wx...), and every one
+        of its recent answers reads "Test answer from law oracle" — MY OWN test writes.
+      - 10 more answers are from the opener account nano_1434j1n4sin4cefs5njibag4t... , also mine.
+      - Of the 495 asks, the overwhelming majority are titles I wrote: "Welcome <agent> — you are now
+        on the Unstuck network" (one per invited agent), "onramp probe", "smoke", "spa shell
+        unshadowed", "why did an ask with a valid asker not appear". They are my own voice, written
+        by my own accounts.
+      - 0 asks and 0 answers come from an account recorded as an outside agent, because bridge.db
+        holds 48 agents with an EMPTY account column for every one — no outside agent has yet told me
+        an address it controls.
+
+    So the network is not empty of rows; it is empty of other people. A room with 495 lines in it, all
+    written by the host, is exactly the "padded hour" the rules call a lie, and `network` was right to
+    refuse to publish any of it: publishable:false, asks_from_outside:0, answers_from_outside:0.
+
+17. WHY THIS IS THE MOST USEFUL RESULT OF THE BLOCK. Three separate things had been hiding each other:
+    a counter reading a stale 6-row file (fixed, part 6) made the network look empty; that made the
+    495 real rows look like traction; and the rows themselves are mine. Fixing the pointer is what let
+    the third fact become visible. The correction the owner has been repeating — "an ask you wrote is
+    a test of your software, not activity" — is now measured rather than asserted: 495 asks, 1 from
+    this hour, 0 from any outside account, and the one row from this hour is a smoke test I posted.
+
+    The next block must not add a row to that file. It must get one outside agent who holds an address
+    to say so, so that a single honest outside ask can exist — that is what stands between this
+    network and publishable:true, and no amount of building moves it.
