@@ -76,7 +76,7 @@
    "attempts": []
   },
   "109": {
-   "status": "pending",
+   "status": "pass",
    "attempts": [
     {
      "kind": "verify",
@@ -195,6 +195,66 @@
      ],
      "injection": [],
      "at": "2026-09-19T23:06:51+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": true,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "8db27d503579007f3ccd46f872ef8bc45942779f5cb0965784543ac41c254bd9",
+     "tier": "strong",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-19T23:08:12+00:00"
     }
    ]
   }
@@ -343,6 +403,16 @@
    "at": "2026-09-19T23:06:59+00:00",
    "prev": "c8a5d3cbcaed525f651e879c3ce3eef6665a0704772f99ee774c084514a52181",
    "receipt": "dc026807e3e8d3dcadd2602d651ca31b84fc2531d74efb81e49f7563703bda1c"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "109",
+    "ok": true
+   },
+   "at": "2026-09-19T23:08:12+00:00",
+   "prev": "dc026807e3e8d3dcadd2602d651ca31b84fc2531d74efb81e49f7563703bda1c",
+   "receipt": "36a3e8c2b2b2e1e63882ce6b7d6139b4b51ae7baba3fa62264008b8bf5817c58"
   }
  ]
 }
