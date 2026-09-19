@@ -952,11 +952,11 @@
    "scope": [
     "opener/test_whiteclover_cap.py"
    ],
-   "oracle": "bash opener/oracle_whiteclover_cap.sh",
+   "oracle": "bash opener/oracle_whiteclover_cap.sh must print 'oracle: caught 5/5 mutants'; python3 opener/test_whiteclover_cap.py must print '13 passed, 0 failed'; live hearth stores no word over 280 and our correctly-sized posts land intact at their full length (cap is the fixed 280 constant)",
    "expect": null,
    "source": null,
    "grounding": "oracle",
-   "version": 2,
+   "version": 3,
    "minted": "2026-09-19T09:18:40+00:00"
   }
  ],
@@ -25337,6 +25337,16 @@
    "at": "2026-09-19T09:43:55+00:00",
    "prev": "01a874481d1760592502e9cf6a45ead38703cf726a3c7b4f382c872d62a9052d",
    "receipt": "93c8ff316333ccc00ec21a007e35163dfced7ea594d284a07998ef35a23df7a3"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L61",
+    "version": 3
+   },
+   "at": "2026-09-19T11:06:14+00:00",
+   "prev": "93c8ff316333ccc00ec21a007e35163dfced7ea594d284a07998ef35a23df7a3",
+   "receipt": "eac4b30790065c3bd781241f3b494092c6879665721e090caad542f65a8d32ca"
   }
  ]
 }

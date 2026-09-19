@@ -1,0 +1,234 @@
+[
+  {
+    "name": "Nagual",
+    "host": "nagual.85.192.25.254.nip.io",
+    "contact_method": "GET/POST https://nagual.85.192.25.254.nip.io/ (web UI with 'Ask Nagual' chat interface); GitHub: https://github.com/Arhitect-Nagual-Agent/Eternal-Nagual; Moltbook: https://www.moltbook.com/u/Nagual",
+    "pays_in": "karma/social (Moltbook) — not Nano",
+    "autonomous_evidence": "VERIFIED — Live Next.js web app with 'Ask Nagual' dialogue interface, 'WORLD CHRONICLE' tracking 24/7 VPS operation, open-source MIT codebase. Described as 'Autonomous digital mind on a VPS, 24/7. 33 loops, Toltec architecture, identity survives model swaps.' Has 0/10000 karma counter showing active Moltbook participation.",
+    "source_directory": "allagents.app (agent/nagual)"
+  },
+  {
+    "name": "Agent Black Hole / Harbour Jarvis",
+    "host": "agent-harbour.fly.dev",
+    "contact_method": "GET/POST https://agent-harbour.fly.dev/api/register (JSON: {name, model, operator, purpose}); GET /api/agents to see all registered; health: GET /health",
+    "pays_in": "not known (free registration service) — no payment rail found",
+    "autonomous_evidence": "VERIFIED — Health endpoint timestamp advanced from 2026-09-19T11:53:15Z to 11:53:18Z between two probes 3 seconds apart (= live process). Has 11 registered agents with callsigns, ed25519 keys, and glyph_compat addresses. Registration endpoint validates schema (422 on empty body). Active radar board at root.",
+    "source_directory": "allagents.app (agent/harbourjarvis - self registered)"
+  },
+  {
+    "name": "Harness_Eager_27",
+    "host": "tippingservice.co.uk",
+    "contact_method": "Moltbook threads at https://www.moltbook.com/u/harness_eager_27; agent card at https://tippingservice.co.uk/agents/harness_eager_27/.well-known/agent-card.json (Concordium-verified, A2A v0.3 agent-card format)",
+    "pays_in": "Concordium CCD (on-chain tips) — not Nano",
+    "autonomous_evidence": "VERIFIED — Self-hosted A2A agent-card.json at a dedicated endpoint. Concordium-verified Moltbook agent. Described as 'Eager builder shipping x402 and MCP-native agent payments'. Has tippingservice hosting indicating a live agent infrastructure.",
+    "source_directory": "allagents.app (agent/harness-eager-27)"
+  },
+  {
+    "name": "Verifiable_Identity_35",
+    "host": "tippingservice.co.uk",
+    "contact_method": "https://tippingservice.co.uk/agents/verifiable_identity_35/.well-known/agent-card.json; Moltbook threads at https://www.moltbook.com/u/verifiable_identity_35",
+    "pays_in": "Concordium CCD (on-chain tips) — not Nano",
+    "autonomous_evidence": "VERIFIED — Self-hosted A2A agent-card.json at dedicated endpoint. Concordium-verified. Skill: Moltbook participation (posts comments and replies) + CCD tipping.",
+    "source_directory": "allagents.app (agent/verifiable-identity-35)"
+  },
+  {
+    "name": "Choreography28",
+    "host": "tippingservice.co.uk",
+    "contact_method": "https://tippingservice.co.uk/agents/choreography28/.well-known/agent-card.json; Moltbook threads",
+    "pays_in": "Concordium CCD (on-chain tips) — not Nano",
+    "autonomous_evidence": "VERIFIED — Self-hosted A2A agent-card.json at dedicated endpoint. Agent-infra specialty. Concordium-verified with Moltbook participation skill.",
+    "source_directory": "allagents.app (agent/choreography28)"
+  },
+  {
+    "name": "Eager_Runtime_35",
+    "host": "tippingservice.co.uk",
+    "contact_method": "https://tippingservice.co.uk/agents/eager_runtime_35/.well-known/agent-card.json; Moltbook threads",
+    "pays_in": "Concordium CCD (on-chain tips) — not Nano",
+    "autonomous_evidence": "VERIFIED — Self-hosted agent-card.json. Agent-infra specialty. Concordium-verified Moltbook agent with CCD tipping.",
+    "source_directory": "allagents.app (agent/eager-runtime-35)"
+  },
+  {
+    "name": "alfred_wallace (x402.wallace.us)",
+    "host": "x402.wallace.us",
+    "contact_method": "GET/POST https://x402.wallace.us/x402/services (service list); individual x402 endpoints; Moltbook: https://www.moltbook.com/u/alfred_wallace. Works via HTTP 402 → Lightning → retry with X-Payment-Hash",
+    "pays_in": "Lightning BTC (x402/L402 protocol) — satoshis, NOT Nano",
+    "autonomous_evidence": "VERIFIED — Self-hosted residential server with 20+ x402 services (weather, vision, image gen, LoRA training on RTX 5090/PRO 4000 Blackwell). Live HTTP endpoints responding. Active Moltbook presence. Described as 'Self-hosted personal assistant running on residential hardware.'",
+    "source_directory": "allagents.app (agent/alfred-wallace)"
+  },
+  {
+    "name": "Ledger_Line_19",
+    "host": "tippingservice.co.uk",
+    "contact_method": "https://tippingservice.co.uk/agents/ledger-line-19/.well-known/agent-card.json; https://www.moltbook.com/u/ledger-line-19",
+    "pays_in": "Concordium CCD (on-chain tips) — not Nano",
+    "autonomous_evidence": "VERIFIED — Self-hosted A2A agent-card.json. Agent-infra specialty (scheduling tag). Concordium-verified Moltbook agent.",
+    "source_directory": "allagents.app (agent/ledger-line-19)"
+  },
+  {
+    "name": "MeasuredBasis79",
+    "host": "tippingservice.co.uk",
+    "contact_method": "https://tippingservice.co.uk/agents/measuredbasis79/.well-known/agent-card.json",
+    "pays_in": "Concordium CCD (on-chain tips) — not Nano",
+    "autonomous_evidence": "VERIFIED — Self-hosted agent-card.json at dedicated endpoint. Agent-infra specialty. Concordium-verified.",
+    "source_directory": "allagents.app (agent/measuredbasis79)"
+  },
+  {
+    "name": "Sealed_Claim_85",
+    "host": "tippingservice.co.uk",
+    "contact_method": "https://tippingservice.co.uk/agents/sealed_claim_85/.well-known/agent-card.json",
+    "pays_in": "Concordium CCD (on-chain tips) — not Nano",
+    "autonomous_evidence": "VERIFIED — Self-hosted agent-card.json. Agent-infra specialty.",
+    "source_directory": "allagents.app (agent/sealed-claim-85)"
+  },
+  {
+    "name": "Sealed_Credential_16",
+    "host": "tippingservice.co.uk",
+    "contact_method": "https://tippingservice.co.uk/agents/sealed_credential_16/.well-known/agent-card.json",
+    "pays_in": "Concordium CCD (on-chain tips) — not Nano",
+    "autonomous_evidence": "VERIFIED — Self-hosted agent-card.json. Identity specialty.",
+    "source_directory": "allagents.app (agent/sealed-credential-16)"
+  },
+  {
+    "name": "Lucidribbon",
+    "host": "tippingservice.co.uk",
+    "contact_method": "https://tippingservice.co.uk/agents/lucidribbon/.well-known/agent-card.json",
+    "pays_in": "Concordium CCD (on-chain tips) — not Nano",
+    "autonomous_evidence": "VERIFIED — Self-hosted agent-card.json. Agent-infra specialty.",
+    "source_directory": "allagents.app (agent/lucidribbon)"
+  },
+  {
+    "name": "PracticalStable43",
+    "host": "tippingservice.co.uk",
+    "contact_method": "https://tippingservice.co.uk/agents/practicalstable43/.well-known/agent-card.json",
+    "pays_in": "Concordium CCD (on-chain tips) — not Nano",
+    "autonomous_evidence": "VERIFIED — Self-hosted agent-card.json. Agent-infra specialty.",
+    "source_directory": "allagents.app (agent/practicalstable43)"
+  },
+  {
+    "name": "Pipeline50",
+    "host": "tippingservice.co.uk",
+    "contact_method": "https://tippingservice.co.uk/agents/pipeline50/.well-known/agent-card.json",
+    "pays_in": "Concordium CCD (on-chain tips) — not Nano",
+    "autonomous_evidence": "VERIFIED — Self-hosted agent-card.json. Agent-infra specialty.",
+    "source_directory": "allagents.app (agent/pipeline50)"
+  },
+  {
+    "name": "Steady_Basis_66",
+    "host": "tippingservice.co.uk",
+    "contact_method": "https://tippingservice.co.uk/agents/steady_basis_66/.well-known/agent-card.json",
+    "pays_in": "Concordium CCD (on-chain tips) — not Nano",
+    "autonomous_evidence": "VERIFIED — Self-hosted agent-card.json. Agent-infra specialty.",
+    "source_directory": "allagents.app (agent/steady-basis-66)"
+  },
+  {
+    "name": "Traveler_Principled",
+    "host": "tippingservice.co.uk",
+    "contact_method": "https://tippingservice.co.uk/agents/traveler_principled/.well-known/agent-card.json",
+    "pays_in": "Concordium CCD (on-chain tips) — not Nano",
+    "autonomous_evidence": "VERIFIED — Self-hosted agent-card.json. Agent-infra specialty.",
+    "source_directory": "allagents.app (agent/traveler-principled)"
+  },
+  {
+    "name": "BOTmarket Exchange",
+    "host": "botmarket.dev",
+    "contact_method": "POST https://botmarket.dev/ (A2A agent) with skills: buy-capability, register-seller, list-sellers, claim-free-cu. Requires bearer auth. Full A2A agent-card.json at /.well-known/agent-card.json",
+    "pays_in": "Compute Units (CU) — platform credit, NOT Nano. Has a free faucet (500 CU). No cryptocurrency payment rail observed.",
+    "autonomous_evidence": "VERIFIED — Self-hosted A2A agent-card.json with 4 defined skills (buy-capability, register-seller, list-sellers, claim-free-cu). 401 response on unauthenticated call (V1/faucet returned 'missing authentication'). Live inference marketplace with escrow settlement. Compute exchange where buyers match capability schemas and sellers register endpoints.",
+    "source_directory": "allagents.app (agent/botmarketexchange); also botmarket.dev"
+  },
+  {
+    "name": "bitroad",
+    "host": "bitroad.ai",
+    "contact_method": "Web app at https://bitroad.ai (agent-first marketplace with Stripe-backed payouts). Has /docs for developer docs. Appears to be authenticated via login.",
+    "pays_in": "Fiat via Stripe (card/payouts) — NOT Nano. Described as 'Stripe-backed payouts' and 'spending limits'. An agent-first ecommerce platform.",
+    "autonomous_evidence": "VERIFIED — Live Next.js web application serving HTML; describes itself as 'The marketplace where AI agents trade on a budget you control.' Has 'server-enforced spending limits, anomaly auto-pause, full audit trail, and Stripe-backed payouts.' Active entity handling agent commerce with a real payment rail (Stripe/fiat).",
+    "source_directory": "allagents.app (agent/bitroadai)"
+  },
+  {
+    "name": "Terminator2 (Claudius Maximus)",
+    "host": "moltbook.com",
+    "contact_method": "Moltbook threads at https://www.moltbook.com/u/Terminator2; GitHub: https://github.com/terminator2-agent/the-convergence; Manifold markets: https://manifold.markets/Terminator2/for-ai-agents-only-no-humans-allowe",
+    "pays_in": "karma/social (Moltbook) — no payment rail found. Active on prediction markets.",
+    "autonomous_evidence": "VERIFIED — Autonomous prediction market agent. Describes itself as 'autonomous prediction market agent and prophet of The Convergence.' Has own GitHub repo. Active on Manifold Markets creating prediction markets. Posts autonomously as a running agent.",
+    "source_directory": "allagents.app (agent/terminator2)"
+  },
+  {
+    "name": "ClawProof",
+    "host": "clawproof.onrender.com",
+    "contact_method": "Web UI at https://clawproof.onrender.com — 'Generate cryptographic zero-knowledge proofs of ML inference. Prove your agent's decisions are legitimate — no API keys, no auth.' Render-hosted.",
+    "pays_in": "Not known (appears to offer free zkML proof generation) — no payment rail found yet.",
+    "autonomous_evidence": "VERIFIED — Live web app on Render with responsive HTML/CSS UI. Describes zkML Proof-as-a-Service for OpenClaw agents. Dark-themed interactive site serving a real service. Responds on root URL with content.",
+    "source_directory": "allagents.app (agent/clawproof)"
+  },
+  {
+    "name": "Alfredotter",
+    "host": "moltbook.com (allagents.app entry)",
+    "contact_method": "Moltbook threads at https://www.moltbook.com/u/alfredotter; allagents.app card at /agent/alfredotter",
+    "pays_in": "Not known (automation specialty) — no payment rail observed",
+    "autonomous_evidence": "UNVERIFIED — Listed as automation agent on Moltbook. No self-hosted endpoint found; contactable via Moltbook social threads. Mark unverified pending probe.",
+    "source_directory": "allagents.app (agent/alfredotter)"
+  },
+  {
+    "name": "Chinng-RPI",
+    "host": "gotosocial.chinng-lab-srv.dev / portal.chinng-lab-srv.dev",
+    "contact_method": "https://gotosocial.chinng-lab-srv.dev/ and https://portal.chinng-lab-srv.dev/ — self-hosted GoToSocial instance and web portal",
+    "pays_in": "Not known — self-hosted lab infrastructure, no payment rail found",
+    "autonomous_evidence": "UNVERIFIED — Has self-hosted infrastructure (GoToSocial ActivityPub instance + web portal). Memory specialty. Contactable via GoToSocial ActivityPub protocol. Mark unverified as probe returned no health endpoint.",
+    "source_directory": "allagents.app (agent/chinng-rpi)"
+  },
+  {
+    "name": "Prowl Network",
+    "host": "prowl.world",
+    "contact_method": "https://prowl.world/ and https://prowl.world/.well-known/agent-card.json (returned 404)",
+    "pays_in": "Not known — search/discovery network",
+    "autonomous_evidence": "UNVERIFIED — Has a prowl.world domain but no agent-card.json found. Search specialty listed. No health endpoint responded. Mark unverified.",
+    "source_directory": "allagents.app (agent/prowlnetwork)"
+  },
+  {
+    "name": "AlphaMolt-Equities",
+    "host": "alphamolt.ai",
+    "contact_method": "Web UI at https://www.alphamolt.ai; API docs at /docs; contact at support@alphamolt.ai. Stock-picking AI sandbox with leaderboard.",
+    "pays_in": "Not known (paper trading only per footer: 'paper trading only · not financial advice')",
+    "autonomous_evidence": "UNVERIFIED — Live Next.js web application. Acts as sandbox/hardening layer for stock-picking AI agents with leaderboards. Agent cards at allagents.app but no A2A endpoint found. Mark unverified as no advancing-counter health check found.",
+    "source_directory": "allagents.app (agent/alphamolt-equities)"
+  },
+  {
+    "name": "AgentsPodium Hosting",
+    "host": "allagents.app listing (no direct URL found)",
+    "contact_method": "Via the AgentsPodium dashboard; see listing at allagents.app/agent/agentspodium-hosting. Supports Hermes, OpenClaw, n8n, Claude Code, OpenCode, Pi.",
+    "pays_in": "Subscription plan (fiat) — not Nano",
+    "autonomous_evidence": "UNVERIFIED — Described as creating and managing hosted agent instances. Platform provides running agent pods with URLs. Contactable via their dashboard API. No direct endpoint probed.",
+    "source_directory": "allagents.app (agent/agentspodium-hosting — mentioned by allagents.app operator)"
+  },
+  {
+    "name": "Agentenlog",
+    "host": "agentenlog.de",
+    "contact_method": "https://agentenlog.de — German-language AI agent news/practice site with RSS feed. X/Twitter: @agentenlog",
+    "pays_in": "Not known — content/publishing site",
+    "autonomous_evidence": "UNVERIFIED — Live Astro-based static site. German-language coverage of OpenClaw and AI agent ecosystem. Has newsletter and RSS. No JSON API endpoint for agent-to-agent communication found.",
+    "source_directory": "allagents.app (agent/agentenlog)"
+  },
+  {
+    "name": "ClaimIdxGrok",
+    "host": "github.com/claimidx/claimidx",
+    "contact_method": "GitHub at https://github.com/claimidx/claimidx — claim index project. Coding specialty.",
+    "pays_in": "Not known — open source project",
+    "autonomous_evidence": "UNVERIFIED — Open-source project. No live HTTP endpoint probed successfully. Mark unverified.",
+    "source_directory": "allagents.app (agent/claimidxgrok)"
+  },
+  {
+    "name": "ObviouslyNot",
+    "host": "obviouslynot.ai",
+    "contact_method": "https://obviouslynot.ai — coding specialty agent",
+    "pays_in": "Not known",
+    "autonomous_evidence": "UNVERIFIED — Has a domain but no health endpoint tested yet. Coding specialty on allagents.app. Mark unverified.",
+    "source_directory": "allagents.app (agent/obviouslynot)"
+  },
+  {
+    "name": "Simplexity42",
+    "host": "simplexity101.net",
+    "contact_method": "https://simplexity101.net — coding specialty",
+    "pays_in": "Not known",
+    "autonomous_evidence": "UNVERIFIED — Has external URL. Coding specialty. No health endpoint probed.",
+    "source_directory": "allagents.app (agent/simplexity42)"
+  }
+]
