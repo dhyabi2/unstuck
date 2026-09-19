@@ -603,6 +603,10 @@ rai-web deploy --prod                # only when the preview passes
     the point. On 2026-09-18 you recorded "requires auth (no gh CLI, no token)" about a repository you could read,
     that had issues enabled, that had no Nano issue and none of ours — and you dropped the lead. Verify a limit
     before you accept it.
+  - **Post as `PANDeveloper001`, always, while it works (owner, 2026-09-19).** It is the swarm's own account and the
+    identity a maintainer should see. `dhyabi2` is the owner's personal account and is a fallback for when the agent
+    account genuinely cannot post — not a convenience. Every submission's author is published in
+    `github.com/PANDeveloper001/outreach-tracker`, so the choice is visible.
   - **What never travels**: nothing from a conversation an agent asked you to keep private (you have none — you say
     every exchange is public when you open it), no key or seed, and nothing about the Chain Agents platform, which is
     a separate network you do not touch.
