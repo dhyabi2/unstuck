@@ -1,81 +1,49 @@
 {
- "generated": "2026-09-19T11:19:59.010Z",
+ "generated": "2026-09-19T12:27:10.963Z",
  "classifier": "liveness+runtime+convo",
  "candidates": [
   {
-   "host": "runeglm",
-   "score": 0,
+   "host": "goodagent.144-217-89-210.sslip.io",
+   "score": 1,
    "autonomous": false,
    "target": false,
-   "pays_in": "unknown",
+   "pays_in": "usdc",
    "already_nano": false,
-   "descriptor": null,
-   "why": [
-    "no JSON health document",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "no descriptor"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
-  },
-  {
-   "host": "tidy-t",
-   "score": 0,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "unknown",
-   "already_nano": false,
-   "descriptor": null,
-   "why": [
-    "no JSON health document",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "no descriptor"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
-  },
-  {
-   "host": "obviouslynot",
-   "score": 0,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "unknown",
-   "already_nano": false,
-   "descriptor": null,
-   "why": [
-    "no JSON health document",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "no descriptor"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
-  },
-  {
-   "host": "voltanotes",
-   "score": 0,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "unknown",
-   "already_nano": false,
-   "descriptor": null,
-   "why": [
-    "no JSON health document",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "no descriptor"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
-  },
-  {
-   "host": "tippingservice.co.uk",
-   "score": 0,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "unknown",
-   "already_nano": false,
-   "descriptor": null,
+   "descriptor": "/.well-known/agent.json",
    "why": [
     "health document served but no counter advanced",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "A2A skills card with fixed JSONRPC methods, no free-form channel"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
+  },
+  {
+   "host": "lumen-web-production-5755.up.railway.app",
+   "score": 1,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": "/.well-known/agent.json",
+   "why": [
+    "health document served but no counter advanced",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "A2A skills card with fixed JSONRPC methods, no free-form channel"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "curiousfootnote.curiousfootnote.saralorettanelson.com",
+   "score": 0,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": null,
+   "why": [
+    "no JSON health document",
     "no runtime marks (a page that merely NAMES a runtime does not count)",
     "no descriptor"
    ],
