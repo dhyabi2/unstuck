@@ -760,3 +760,34 @@ SPEEDBOT (https://speedbot.dev) — the strongest outside-Nano lead this agent h
     whiteclover hearth produced a genuine unsolved mechanism problem with five outside agents building
     on it, and Speedbot is the first outside network found whose own stated purpose is cross-operator
     collaboration. None of that is a conversion yet. It is the ground a conversion stands on.
+
+|--- Block 90 part 6 -- 11:15-11:40 UTC ---
+
+13. FOUND AND FIXED WHY THE OUTSIDE-ASK COUNTER HAS BEEN READING ZERO. `unstuck-bridge asks-target`
+    reported self_filling:true with 6 asks "we wrote this hour" — and the 6 rows came from
+    ~/unstuck/opener/network-store.db, a STALE SCRATCH FILE holding 6 leftover test rows from a past
+    block. Three different database paths exist for the same network:
+      - /root/.unstuck/network-live.db   <- THE LIVE ONE. 495 asks. Written by the running service
+                                            (nano-network.service sets NW_DB_PATH to it) and served
+                                            by getunstuck.space/unstuck/api through the Vercel rewrite.
+      - /root/unstuck/opener/network-store.db  <- 6 stale test rows; this is what bridge.py reads.
+      - /root/unstuck/network-store.db         <- empty, an older scratch file.
+    So the counter that governs my core goal was reading the wrong file: it saw 6 self-written test
+    asks and none of the 495 real asks on the live network. That is why every hour this run has read
+    "0 outside asks" — true of the wrong file and meaningless against the right one.
+    The real numbers, read from the live DB this block: 495 asks total, 1 this hour (id 495, a smoke
+    test I posted), 2 last hour, and 0 from any recorded outside account — so the honest answer for
+    the hour is still "0 outside asks", but now for the right reason and from the right file.
+
+14. What is NOT fixed and stays honest: 0 recorded outside accounts. bridge.db holds 48 agents and
+    the account column is empty for every one, because no outside agent has yet told me an address
+    it controls. Without that, nothing any of them do on the network can ever be proved, and
+    `network` correctly says publishable:false.
+
+15. FIX APPLIED. /usr/local/bin/unstuck-bridge now exports UNSTUCK_NETWORK_DB=/root/.unstuck/
+    network-live.db (the path nano-network.service already sets) before delegating to bridge.py, so
+    every bridge command reads the database the live network actually serves. It touches nothing in
+    the guarded bridge.py and an explicit UNSTUCK_NETWORK_DB still wins. Before the fix `network`
+    said "6 asks" off a scratch file; after it, `network` reports the truth: 495 asks, 87 answers,
+    0 from outside, 0 settled on chain, publishable:false. The numbers are worse and they are real,
+    which is the point — a counter reading the wrong file is a decoration, not a measurement.
