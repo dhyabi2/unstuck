@@ -1,63 +1,25 @@
 {
- "generated": "2026-09-20T04:12:41.149Z",
+ "generated": "2026-09-20T05:49:29.378Z",
  "classifier": "liveness+runtime+convo",
  "candidates": [
   {
-   "host": "api.sirenic.eu",
-   "score": 6,
-   "autonomous": true,
-   "target": true,
-   "pays_in": "usdc",
-   "already_nano": false,
-   "descriptor": "/.well-known/agent.json",
-   "why": [
-    "counter advanced across 2500ms",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "A2A skills card with fixed JSONRPC methods, no free-form channel"
-   ],
-   "live_sample": {
-    "status": "ok",
-    "service": "Sirenic",
-    "uptime_s": 13968,
-    "network": "base",
-    "commit": "643142b"
-   },
-   "found_via": "autonomous-discover: live/runtime signal; pays_in=usdc"
-  },
-  {
-   "host": "avalix.ai",
+   "host": "cvin.bio",
    "score": 1,
    "autonomous": false,
    "target": false,
-   "pays_in": "usdc",
+   "pays_in": "other",
    "already_nano": false,
-   "descriptor": "/.well-known/agent.json",
+   "descriptor": "/.well-known/agent-card.json",
    "why": [
     "no JSON health document",
     "no runtime marks (a page that merely NAMES a runtime does not count)",
     "no conversational channel found"
    ],
    "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
-  },
-  {
-   "host": "agent-guild-5d5r.onrender.com",
-   "score": 1,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "other",
-   "already_nano": false,
-   "descriptor": "/.well-known/agent.json",
-   "why": [
-    "health document served but no counter advanced",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "A2A skills card with fixed JSONRPC methods, no free-form channel"
-   ],
-   "live_sample": null,
    "found_via": "autonomous-discover: descriptor only; pays_in=other"
   },
   {
-   "host": "solvela.ai",
+   "host": "chainaware.ai",
    "score": 0,
    "autonomous": false,
    "target": false,
@@ -73,36 +35,30 @@
    "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
   },
   {
-   "host": "cracked.ai",
-   "score": 3,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "credits",
+   "host": "rettfrabonden.com",
+   "score": 8,
+   "autonomous": true,
+   "target": true,
+   "pays_in": "eth",
    "already_nano": false,
    "descriptor": "/.well-known/agent.json",
    "why": [
-    "no JSON health document",
+    "counter advanced across 2500ms",
     "no runtime marks (a page that merely NAMES a runtime does not count)",
     "descriptor exposes a free-form message channel"
    ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=credits"
-  },
-  {
-   "host": "ghost-identity.ghost-agent-os.workers.dev",
-   "score": 1,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "usdc",
-   "already_nano": false,
-   "descriptor": "/.well-known/agent-card.json",
-   "why": [
-    "health document served but no counter advanced",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "A2A skills card with fixed JSONRPC methods, no free-form channel"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
+   "live_sample": {
+    "status": "warning",
+    "warnings": [
+     "DB large: 734.5MB",
+     "analytics_page_views has 1171444 rows — consider pruning"
+    ],
+    "service": "rettfrabonden",
+    "version": "1.0.0",
+    "git_sha": "487803fa2015fdf58018dab9ee59dbbbf0a14497",
+    "uptime": 58269
+   },
+   "found_via": "autonomous-discover: live/runtime signal; pays_in=eth"
   }
  ]
 }
