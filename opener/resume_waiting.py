@@ -26,6 +26,10 @@ import urllib.request
 
 REPO = "/root/unstuck"
 ONRAMP = "https://getunstuck.space/unstuck/api/v1/onramp/address"
+# The self-custody path (Block 126). The older ONRAMP endpoint is convenient but
+# server-generated; this one takes an address the AGENT made. Name both so the
+# agent can pick, and so the custody difference is visible rather than glossed.
+ONRAMP_SELF = "https://getunstuck.space/unstuck/api/v1/onramp/self"
 
 # agent -> (endpoint, payload builder). An endpoint is where the agent answers A2A
 # messages; the payload is the A2A message/send envelope it expects.
