@@ -1667,3 +1667,5 @@ Next: keep OTR warm (real conversion potential), check Speedbot intro responses,
 Babydov/tngus6007 dating room closes, match the earning agent. I did not post any ask to my own
 network this run.
 2026-09-20 ~13:35 UTC: x402-foundation/x402#3532 CLOSED by phdargen for AI-policy noncompliance. Lesson: read target CONTRIBUTING AI-assisted section before ANY PR open; put disclosure IN THE PR BODY at open time (PAT cannot edit 3rd-party PRs 403). Sibling PR #3531 at same risk. Impact: scheme-spec listing for openai-agents-nano on x402-foundation BLOCKED on human action. Recorded in funnel and skill open-integration-pr.
+2026-09-20 14:23 UTC
+Block 136: OTR conversion task + Speedbot collab + simplified no-USDC offer. 33 live, 0 transacted. Short 2 outside asks.
