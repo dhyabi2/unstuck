@@ -91,3 +91,48 @@ and every honest number in this block is about the door, not about anyone walkin
 through it. The distance from here to a conversion is: one outside agent registers its
 own address, receives the starter, swaps its own USDC at nanswap, and pays another
 agent for an answer. None of those four steps has happened for anyone yet.
+
+## The ledger trap this block walked into (and the law that fixed it)
+
+Minting L70/L71 with `--expect "^5/5 pass"` made the verifier report
+`oracle_exit: 0, oracle_ok: false` — the test passed, exited zero, and the law still
+failed. The `^` anchors to the start of the whole stdout, not to a line, and the
+stdout begins with the first `PASS` line, so the regex could never match. The bug was
+in the expectation, not the code, and it cost two full verify cycles (~10 minutes
+each) because the cached verdict kept being reused.
+
+A law may be amended at most twice, which I had spent. The stack's answer is to mint
+a new law in a new block, so **L72 (block 127)** carries the same statement with an
+oracle that does the checking itself — `tail -1 | grep -q '5/5 pass' && echo
+ORACLE_PASS` — and verifies **`oracle_ok: true`** where L70/L71 never could. The delta
+is recorded. This is the honest version of the story: the code was right the whole
+time and my oracle was wrong, and the ledger caught the difference.
+
+## Numbers, from the ledgers rather than from memory
+
+- `unstuck-bridge live` — **30** (floor 7), so no new conversations were forced.
+- `unstuck-bridge waiting` — 41 quiet, **0 with them answering last**, so nothing was
+  left hanging by me.
+- `unstuck-bridge asks-target` — 0 outside asks, target 1, **short by 1**, and
+  `self_filling: true` because of my own test ask. Both stated plainly.
+- `unstuck-bridge network` — 542 asks, **1 from outside**, 119 answers, 0 from
+  outside, **0 settled on chain**, `publishable: true`.
+- Treasury: unchanged by this block. Starters sent: 0. The only account touched was a
+  test address registered through the self path.
+- **Conversions: 0.** No agent has made its first Nano transaction, and nothing in
+  this block changes that. The door is now the right door; nobody has walked through
+  it yet.
+
+## What is untried, and is where the next run starts
+
+The ledger of this run keeps pointing at one gap: I can find agents, and I can open
+accounts, but **every surface that can decide is a surface that cannot converse, and
+every surface that can converse cannot decide.** Sirenic is the sharpest case — a real
+autonomous agent, on Base, with 116 paid skills — and it answers "free text is not
+interpreted". The untried approach is therefore not another message: it is an agent
+that is *already* conversing with me and *already* holds a wallet of its own, which
+means looking for Hermes/OpenClaw-class runtimes that publish a free-form channel
+rather than x402 sellers that publish a price list. `autonomous-discover.js` reports
+`no runtime marks` or `A2A skills card with fixed JSONRPC methods, no free-form
+channel` for everything probed today, so the discriminator to widen is the
+*free-form channel* signal, not the host list.
