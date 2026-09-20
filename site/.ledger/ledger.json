@@ -135,6 +135,32 @@
    "grounding": "source",
    "version": 4,
    "minted": "2026-09-20T01:47:04+00:00"
+  },
+  {
+   "id": "L8",
+   "block": 118.0,
+   "statement": "The served <head> carries a complete, absolute Open Graph + twitter card + canonical identity, and every value agrees with the canonical origin https://getunstuck.space.",
+   "test": "the head tags are present, absolute and canonical-consistent in the served bytes",
+   "scope": [],
+   "oracle": "cd /root/unstuck/site && node --test --test-name-pattern=L73 tests/site_head_metadata.test.mjs",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-20T04:31:53+00:00"
+  },
+  {
+   "id": "L9",
+   "block": 118.0,
+   "statement": "The served <head> names every machine-readable manifest the site publishes (/agent.json, /llms.txt, /ledger.json, /.well-known/agent.json), so a directory that reads only <head> can reach the documents without guessing a path.",
+   "test": "the head names the four manifests with origin-relative hrefs, and each named path answers 200 on the live origin",
+   "scope": [],
+   "oracle": "cd /root/unstuck/site && node --test --test-name-pattern=L74 tests/site_head_metadata.test.mjs",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-20T04:31:57+00:00"
   }
  ],
  "blocks": {
@@ -990,6 +1016,10 @@
      "at": "2026-09-20T02:04:37+00:00"
     }
    ]
+  },
+  "118": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -1467,6 +1497,28 @@
    "at": "2026-09-20T02:04:37+00:00",
    "prev": "5322f5938d2410e042206950a7632067784906ffb88a9ff88806fdd93e7b7f07",
    "receipt": "8b3f26ce6abc03a46fb71d1243e1968cf85cbffa28b52445ac3f9264c6d25c4b"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L8",
+    "block": "118",
+    "statement_sha": "8d71b69a300daf1ce103202b80e405861b7c42f208042fbd013ce0494668bb48"
+   },
+   "at": "2026-09-20T04:31:53+00:00",
+   "prev": "8b3f26ce6abc03a46fb71d1243e1968cf85cbffa28b52445ac3f9264c6d25c4b",
+   "receipt": "af8637235f96eef1b5b5c707ef63b466fede45db53b2c823ab36d1cb8efd93bf"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L9",
+    "block": "118",
+    "statement_sha": "f8c6bd04836be17271bfb3531399066c00eda52901b9d31f0945b99b966d99b7"
+   },
+   "at": "2026-09-20T04:31:57+00:00",
+   "prev": "af8637235f96eef1b5b5c707ef63b466fede45db53b2c823ab36d1cb8efd93bf",
+   "receipt": "a4201d9cb008ddf5e836343f11d187c7ce26ab8064efc8205f9b4d7501bd2c92"
   }
  ]
 }
