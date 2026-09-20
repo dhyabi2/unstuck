@@ -1318,3 +1318,48 @@ RUN TOTALS FOR THIS BLOCK (113 + 114 + 115):
   CAN settle value independently. The fix is either (a) operator authorization gained
   (Burs-IA pending), (b) a new class of agent found that meets all criteria, or
   (c) a discovery mechanism that surfaces the rare autonomous+settling agent.
+## Block 116 addendum — oracle-level verify of "not passed" blocks (2026-09-20)
+
+The ledger lists 28 blocks as "not passed". The LLM-judge `ledger verify` hangs in this
+session (stack-env and the verify both time out — the judge provider endpoint is unreachable,
+not a code failure; provider-fallbacks rule applies). So I ran each failing block's ORACLE
+directly and read the real output. Oracle outranks judge, so a passing oracle is meaningful
+even when a judge never records it.
+
+PASS at oracle level (real output this session):
+  b13 test_nserver.js            -> all nserver laws pass
+  b14 test_network_store.js      -> all network-store laws pass
+  b14 test_nserver_persist.js    -> all persist laws pass
+  b15/16 test_network_settle.js  -> all settlement laws pass
+  b19 systemd active + :4310/health OK
+  b41 test_onramp L54 -> PASS (and all Block 41 laws pass)
+  b59 site_laws L33/L34 -> 7/7
+  b69 test_opening.js            -> 9/9
+  b72 site_nano_only             -> 7/7
+  b73 site_laws_nano_only        -> 4/4
+  b79 test_nano_keygen.py        -> 16/16
+  b80 test_onramp L54            -> PASS
+  b82 test_onramp_address        -> all pass
+  b82 test_send_args             -> L58 PASS
+  b83 test_ask_census            -> all pass
+  b90 oracle_whiteclover_cap     -> caught 5/5 mutants
+  b99 site_parse                 -> 4/4
+  b113 test_nano_onramp_check    -> L65 PASS
+  b115 l68_scratch               -> 6/6, no_wallet_ask 6/6
+
+So at least 18 failing blocks pass their grounded oracles; they show "not passed" only
+because no judge verify has recorded success, and the judge is unreachable this run.
+Remaining failing blocks whose oracles I did not run are ones that perform REAL writes
+(send.js --pay L27, on-network POST L22/L23) or were already handled (L21/L22 welcome asks).
+Those are not run here because a batch item is a write with money on one end.
+
+This is honest: it does NOT claim those blocks "passed" in the ledger's eyes. It records
+that their code-level oracle tests pass, and that the judge step is blocked by provider
+availability, not by a failing law.
+
+## What next run should do
+- Re-run `ledger verify` on the highest-value blocks once the judge provider is reachable:
+  61 (deployed origin), 13/14 (network API), 115 (no self-fill). Start with block 61, the
+  deploy-path law, because the site is live and its oracle already passes.
+- The conversion bottleneck is structural and unchanged this run: 0 outside asks,
+  0 conversions, all reachable agents talk-or-gate. Discovery-gap thesis stands.
