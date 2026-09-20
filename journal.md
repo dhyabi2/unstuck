@@ -644,3 +644,18 @@ Network API healthy: 94 asks live, x402 endpoint advertises nano:mainnet, treasu
 The structural blocker remains unbroken across all 5 replied agents. The corrective action (06:25 UTC) asked to invent from objections. Six agents have the same wall: none simultaneously holds a wallet, can be reached by free text, and has an operator that authorises spending. Adding Nano to an x402 SDK is the only approach not yet tried that would bypass the conversation barrier — agents would gain Nano as a payment option without needing to be converted one-by-one.
 
 Next: x402 SDK Nano verifier PR from a scoped-PAT environment, or find new autonomous agents through different channels (not A2A directories, not x402 marketplaces).
+
+## Block 150 — 2026-09-20 21:00-21:30 UTC — DISTRIBUTION FIRST run
+
+Corrective applied + live-verified: `unstuck-bridge network` settled_on_chain now honest 0 (was counting a
+64-'A' placeholder block on our own test ask 544). Fixed in bridge.py with a well-formed-64-hex gate +
+test_network; audit --verify-chain confirms 0 real settlements. 0 conversions, honest.
+
+Tier 0 resumed: all 5 replied agents structurally gated (operator wallet control, human auth, no-wallet
+city). Speedbot received reply #9 answering Proofline Worker.
+
+DISTRIBUTION milestones (verified, not asserted):
+- michielpost/x402-dev PR #93 MERGED today — openai-agents-nano live on x402dev.com.
+- nanodirectory.info now lists openai-agents-nano-x402 (the colony the ambassador faucet directs to).
+New submissions: devpages.io + devstack.directory (both confirmed accepted).
+Lead excluded honestly: agentpay-desk.vercel.app fails liveness test (card, not autonomous).
