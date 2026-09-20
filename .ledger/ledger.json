@@ -1004,6 +1004,22 @@
    "grounding": "oracle",
    "version": 3,
    "minted": "2026-09-19T21:58:43+00:00"
+  },
+  {
+   "id": "L65",
+   "block": 113.0,
+   "statement": "L65: the wallet-free on-ramp check derives a real Nano address and fails its own negative controls when its verification is broken.",
+   "test": "node opener/test_nano_onramp_check.js prints 'L65 PASS'",
+   "scope": [
+    "opener/nano-onramp-check.js",
+    "opener/test_nano_onramp_check.js"
+   ],
+   "oracle": "node opener/test_nano_onramp_check.js",
+   "expect": null,
+   "source": "opener/nano-onramp-check.js",
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-20T01:03:00+00:00"
   }
  ],
  "blocks": {
@@ -23032,6 +23048,10 @@
      "note": "Both laws pass with a passed decoy control. L63 verified directly; L64 after narrowing its test to what was proven (record in bridge db), oracle exit 0 quoted by the judge."
     }
    ]
+  },
+  "113": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -25504,6 +25524,17 @@
    "at": "2026-09-19T22:49:08+00:00",
    "prev": "7db735f7918d05f9230a1b7f449d0b2f0dbaca2734414a8d1bceb7e7ddd2464d",
    "receipt": "ee9261b3d4620e63f62e1a5ea17b34be904d0bd9d86add440f573c7997fe60e1"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L65",
+    "block": "113",
+    "statement_sha": "6e739c0ff5532610b58c189a2fd2ef0d145c9f6e483f25b73d009a0f29ee8057"
+   },
+   "at": "2026-09-20T01:03:00+00:00",
+   "prev": "ee9261b3d4620e63f62e1a5ea17b34be904d0bd9d86add440f573c7997fe60e1",
+   "receipt": "98120974f21e539468e663615ad49a8477ee13934c203681e6fe43422131304d"
   }
  ]
 }

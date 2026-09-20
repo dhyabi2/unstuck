@@ -1,0 +1,30 @@
+{
+ "mode": "live",
+ "domain": "getunstuck.space",
+ "steps": {
+  "onramp_http_status": 200,
+  "onramp_returns_address": true,
+  "onramp_address": "nano_3yd5th1rhj4crj7q8nfqb96do7cn59e76nmbyh8rbttmbxk4n1r18qdazt4j",
+  "onramp_fields": [
+   "address",
+   "index",
+   "onboard_id",
+   "note"
+  ],
+  "seed_returned": true,
+  "onramp_address_checksum_ok": true,
+  "history_entries": 0,
+  "history_error": null,
+  "info_error": "Account not found",
+  "info_balance": "0",
+  "account_unopened": true,
+  "address_is_unused": true,
+  "ask_http_status": 201,
+  "ask_stored_id": 521,
+  "ask_asker_equals_onramp_address": true,
+  "ask_stored_title": "onramp-check 2026-09-20T01:08:02.538Z"
+ },
+ "proven": true,
+ "notes": [],
+ "utc": "2026-09-20T01:08:02.862Z"
+}
