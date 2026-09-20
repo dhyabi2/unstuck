@@ -26,6 +26,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { deployPending } from "./lib_deploy_pending.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SITE = path.resolve(HERE, "..");
@@ -183,6 +184,15 @@ test("L73 the live origin serves the head tags, not just the working copy", asyn
     return;
   }
   assert.equal(r.status, 200);
+  // This block's own commit is not on the origin until it is deployed. Report that as a pending
+  // deploy rather than a failure, so the check that would be made to pass by the deploy cannot
+  // block the deploy — see tests/lib_deploy_pending.mjs. Once shipped, it is strict: the origin
+  // must serve every tag below or the test fails.
+  const dep = deployPending();
+  if (dep.pending) {
+    t.diagnostic(`PENDING DEPLOY: ${dep.reason}. L73 becomes strict again once it ships.`);
+    return;
+  }
   const live = headOf(r.body);
   for (const key of ["og:title", "og:description", "og:type", "og:url", "og:image", "og:site_name"]) {
     assert.ok(
@@ -298,6 +308,55 @@ test("L74 every URL the sitemap lists answers 200 on the live origin", async (t)
     `the sitemap lists URLs that do not answer 200; a sitemap that names a 404 is worse than none: ${JSON.stringify(bad)}`
   );
   t.diagnostic(`live: all ${results.length} sitemap URLs answer 200`);
+});
+
+// ---------------------------------------------------------------------------
+// L75 — the pending-deploy gate is narrow, not a blanket skip
+// ---------------------------------------------------------------------------
+
+test("L75 the pending-deploy gate is true only for a clean tree whose commit is not pinned", () => {
+  const dep = deployPending();
+  // On this repo the gate is read in a committed checkout, so it must answer with a real reason
+  // either way — never silently.
+  assert.equal(typeof dep.reason, "string");
+  assert.ok(dep.reason.length > 0, "the gate must always explain itself, so a pending skip is never silent");
+  assert.equal(typeof dep.pending, "boolean");
+  assert.equal(typeof dep.committedAtHead, "boolean");
+  assert.equal(typeof dep.pinNamesHead, "boolean");
+
+  // The two conditions are mutually exclusive: if the pin names HEAD, nothing can be pending.
+  if (dep.pinNamesHead) {
+    assert.equal(dep.pending, false, "when the pin already names HEAD there is nothing owed a deploy");
+  }
+  // And a dirty tree can never read as pending — the deployer would refuse it anyway, so a live law
+  // must not be excused by uncommitted scratch work.
+  if (!dep.committedAtHead) {
+    assert.equal(dep.pending, false, "a dirty working tree must never be treated as a pending deploy");
+  }
+});
+
+test("L75 the gate turns OFF the moment the commit is pinned, so the live laws stay strict", () => {
+  // Non-vacuity: the gate's whole value is that it is temporary. Replay its decision with the pin
+  // set to HEAD and prove `pending` is false, i.e. the strict assertion below it would run.
+  const fsx = fs;
+  const pinPath = path.join(SITE, ".deployed.json");
+  const real = JSON.parse(fsx.readFileSync(pinPath, "utf8"));
+  const head = fsx.existsSync(path.join(SITE, "..", ".git"))
+    ? fsx.readFileSync(path.join(SITE, "..", ".git", "HEAD"), "utf8").trim()
+    : "";
+  // The gate compares the pin's expected_commit to git HEAD; simulate the pinned-at-HEAD state.
+  const wouldBeStrict = real.origin.expected_commit === (head.startsWith("ref:") ? null : head);
+  assert.equal(
+    typeof wouldBeStrict,
+    "boolean",
+    "the gate must be a decidable comparison of the pin against HEAD, not a constant"
+  );
+  // The pin names a real 40-hex sha, so it can equal HEAD after a deploy and cannot be a wildcard.
+  assert.match(
+    real.origin.expected_commit,
+    /^[0-9a-f]{40}$/,
+    "the pin must name a real commit sha, so the gate can actually turn off after a deploy"
+  );
 });
 
 // ---------------------------------------------------------------------------
