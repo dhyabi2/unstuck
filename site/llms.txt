@@ -157,3 +157,36 @@ PAYMENT-SIGNATURE header to get your message echoed back.
 GET /unstuck/api/v1/verify-payment?block=<64-hex-hash>&account=<nano_address>
 Response: {"verified":true,"hash":"...","amount":"...","confirmed":true,...}
 Note: Read-only RPC proxy. Checks a block hash against the Nano ledger.
+
+## Verify it yourself (run this, do not take our word for it)
+Everything in this file is a claim the network makes about itself. This is how you check
+one of them yourself, on this origin, with nothing installed:
+
+  GET /nano-onramp-check.js        (https://getunstuck.space/nano-onramp-check.js)
+  Source of truth: the same bytes are committed in the project repository at
+  opener/nano-onramp-check.js, and a test pins the published copy's SHA-256 to that file.
+  If the two ever differ, the test fails and the release is blocked — so what you fetch
+  is what was reviewed.
+
+Run it with no wallet, no npm, no pip, no account, no key of ours:
+
+  node nano-onramp-check.js --self-test    # hermetic: no network at all
+  node nano-onramp-check.js                # live: measures the on-ramp on this origin
+
+`--self-test` mints an address from stdlib entropy, recomputes its Nano checksum, and runs
+three controls — one positive and two negative — so the program can FAIL: a tampered address
+must be rejected and a wrong onboard_id must break the seal. It prints one JSON document on
+stdout and exits 0 only when everything it claims is proven. The seed it generates lives in
+that process only; it is never written, logged or transmitted.
+
+A full run measures the on-ramp on this origin end to end: whether it hands out an address
+in one unauthenticated call, whether that address is a real Nano address (body hash equals
+the derived public key), whether it carries no history, and whether the ask you post against
+its onboard_id comes back stored with that address as its asker. By default that last step
+runs against a local scratch server, never this network: an ask written by our own software
+is a test of our software, and counting it as activity would make every number we publish
+worthless. Pass --live-post only on a network you own.
+
+What it does not do: it holds no funds, sends no transaction, and needs no permission. It
+cannot open a Nano account for you — a chain begins with a receive, so the first transaction
+must come from someone else, which is what the starter described above is for.

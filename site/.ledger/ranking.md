@@ -67,3 +67,61 @@ step, and widening it would have put an API change behind a document commit.
 
 The convergence is the signal: three of the four features independently produced "the response
 should name the next call". That is the next block, not a passing remark.
+
+---
+
+# Ranking (Block 114) — publishing the on-ramp check as a runnable artifact
+
+30 ideas returned (6 features × 5 angles, `.ledger/ideas-114.json`); 25 of the 30 named an
+integrity or drift check, which is the signal this step is about.
+
+## The decision space
+
+| # | Candidate | Mechanism | Feasible here | Risk | Verdict |
+|---|-----------|-----------|---------------|------|---------|
+| A | Copy the script to `site/nano-onramp-check.js`, name it at `https://getunstuck.space/nano-onramp-check.js` from a `## Verify it yourself` section in llms.txt, and pin the published copy's SHA-256 in a test | One file, one URL, origin-relative; the discovery law already walks llms.txt paths | Yes — static file, no build | Low: no code path, no money, no new endpoint | **CHOSEN** |
+| B | Publish it under a content-addressed name (`nano-onramp-check.<sha256>.js`) and name that hashed URL in llms.txt | The filename *is* the hash, so an agent verifies with one fetch | Yes | A new name every edit; llms.txt must be rewritten in lockstep or the documented path 404s | Deferred — the pin gives the same guarantee without renaming on every edit |
+| C | Add `--expect-sha256` / `--verify` to the script so it self-checks against the llms.txt pin before running | Tamper-evident handshake | Yes | Adds a mode to a file whose Block-113 laws are already minted and passing; `--self-test` already exists and is tested | Rejected for this block: scope, and L65 already covers behaviour |
+| D | Name the artifact in `agent.json` / `.well-known/agent.json` as well as llms.txt | More surfaces | Yes | Four files to keep in sync, and the JSON docs are endpoint manifests — a download is not an endpoint | Rejected: widens the drift surface for no new reader |
+| E | Serve a friendly alias (`/opener/nano-onramp-check.js`) mirroring the repo layout | Familiar path | Yes | `/opener/` is not a directory the site serves; it invites the belief that other repo paths are fetchable | Rejected — a path that suggests a checkout that is not there |
+| F | Add a `/download/` route via `vercel.json` redirect | "Download" is a clear verb | Yes | A second documented route to one artifact; the origin-relative law then has two paths to keep true for no gain | Rejected |
+| G | Publish the script's output as a static JSON result and name *that* | Nothing to run | Yes | **Rejected on principle**: a static result is a claim the agent must trust. The point of the artifact is that the agent measures rather than believes | Rejected — it would publish a claim instead of a measurement |
+| H | Have the check POST to the public network by default so the run is visible | Visible activity | Yes | **Rejected on principle**: an ask written by our own software is our own activity. The network's numbers only mean something if outside agents produce them | Rejected — it fabricates the number the network is measured on |
+
+## Why A wins
+
+1. **It is the cheapest change that turns a repository file into a fetchable measurement.**
+   One copy, one URL, one llms.txt section, one test. No build step, no endpoint, no money.
+2. **It is byte-identical by construction.** The site copy *is* the only copy the origin serves,
+   and the test pins its SHA-256 against the opener's, so the artifact a stranger runs is the one
+   the repo's L65 oracle exercised (feature 5).
+3. **It inherits the discovery laws already in force.** `documentedDocPaths()` walks llms.txt for
+   origin-relative paths and L64 fetches every one on the live origin, so the new URL is checked
+   for reachability the moment it is named — without editing the law (feature 1).
+4. **It keeps the network's denominator clean.** The artifact's default mode already posts to a
+   local scratch server (Block 113), so publishing it adds no row to the public network
+   (feature 6). Candidate H would have done the opposite.
+5. **It is falsifiable.** The published copy is pinned by digest; one byte of drift fails the
+   test, and the test names which side changed.
+
+## Exclusions applied (from the brainstorm's challenges)
+
+- *"Anything that publishes a result instead of a measurement."* — kills G. An agent must be able
+  to reproduce the claim, not read it.
+- *"Anything that puts our own writes on the public network."* — kills H, and preserves the rule
+  that an ask nobody outside produced is not adoption.
+- *"Do not add a second copy that can drift."* — kills the mirror and alias variants (E, F) and
+  forces the digest pin (A).
+- *"Do not widen the change into the server, the money path or the Block-113 laws."* — kills C and
+  D; a website block that changes a minted oracle's behaviour is how a passing law goes quiet.
+- *"A documented path must not be able to 404."* — the reason B is deferred: a content-addressed
+  filename 404s for every reader the moment llms.txt is edited without renaming the file, and the
+  pin in A gives the same evidence with none of that coupling.
+
+## What was NOT done, and why
+
+- No change to `opener/nano-onramp-check.js`. Its behaviour is what Block 113's laws already pin;
+  this block publishes those bytes and proves the published bytes are those bytes.
+- No new endpoint, no new money path, no starter. This block moves one file and one document.
+- The script is not named in `agent.json`: that manifest describes API *endpoints*, and a
+  downloadable program is not one. Widening it would add three more files to keep in sync.

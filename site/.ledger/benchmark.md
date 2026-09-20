@@ -28,3 +28,38 @@ Prior art check: this is a **new combination**, not a new mechanism. Each half e
 identity-handing endpoint, and a machine-readable endpoint list); what did not exist was a
 discovery document that carries both the bootstrap call and its `onboard_id` handoff so an agent
 can go from zero to its first ask without leaving the document.
+
+---
+
+# Benchmark (Block 114) — publishing a *runnable* wallet-free on-ramp check
+
+Goal: an outside agent (USDC / card / platform credits, never heard of Nano) fetches, from the
+origin that serves the discovery document, a program it can run to measure the Nano on-ramp
+itself — and llms.txt tells it that the program exists.
+
+| # | Solution | What it is best at | Why it is not enough here |
+|---|----------|--------------------|---------------------------|
+| 1 | `opener/nano-onramp-check.js` (Block 113) | One hermetic measurement; mints an address with no wallet lib; 3 controls including 2 negative | Lives in the repo, not on the origin. An agent reading llms.txt cannot fetch it. |
+| 2 | `opener/test_nano_onramp_check.js` (L65) | Mutation-proves the controls cannot be inert | Needs a git checkout; not a URL. |
+| 3 | x402 "try it" demos (Coinbase, thirdweb) | One-click runnable demo | Vendor origin, often account/keyed, not Nano, nothing reproducible offline. |
+| 4 | Nano faucets / `nanodirectory.info` | Real Nano from a real source | They *give* money; they do not let an agent verify a claim about a rail. |
+| 5 | `try-nano.html` on this origin | Prose describing the starter | Prose. An agent cannot run prose. |
+| 6 | npm `nanocurrency` | Correct address math | Requires `npm install`; the check must run on stdlib alone. |
+| 7 | OpenAPI/`llms.txt` conventions | Reachability: known path, no parsing skill | Describe endpoints; they cannot carry a program or its expected output. |
+
+## The gap
+
+Every existing answer is (a) in a repository an agent has no reason to clone, (b) prose, or
+(c) a library it must install. None is a **single origin-relative URL, named in the same
+document that describes the network, returning a program that runs with only python3 and node,
+whose stdout is JSON and whose failure is observable**.
+
+## What "best" means, measurably
+
+1. Reachable at an origin-relative path named in llms.txt, served by the same origin as llms.txt.
+2. Self-contained: no npm, no pip, no wallet software, no operator key.
+3. Reproducible: the self-test mode is hermetic (no network) and its output is JSON.
+4. Falsifiable: a mutation of the shipped file makes its test fail.
+5. Byte-identical across the two places it is served — one download, not a second copy that drifts.
+6. It never fabricates activity: by default it posts to a local scratch server, never the public
+   network, so nothing it does can be counted as an outside ask.

@@ -68,6 +68,66 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-19T23:02:38+00:00"
+  },
+  {
+   "id": "L4",
+   "block": 114.0,
+   "statement": "The named on-ramp check is fetchable from the origin serving the document, byte-identical to the committed source, and keeps its wallet-free controls.",
+   "test": "node --test --test-name-pattern=L69 tests/site_onramp_artifact.test.mjs",
+   "scope": [
+    "opener/nano-onramp-check.js"
+   ],
+   "oracle": null,
+   "expect": null,
+   "source": "opener/nano-onramp-check.js:1",
+   "grounding": "source",
+   "version": 1,
+   "minted": "2026-09-20T01:46:54+00:00"
+  },
+  {
+   "id": "L5",
+   "block": 114.0,
+   "statement": "The discovery document tells a reader how to run the artifact and states the limits it does not have.",
+   "test": "node --test --test-name-pattern=L70 tests/site_onramp_artifact.test.mjs",
+   "scope": [
+    "site/llms.txt"
+   ],
+   "oracle": null,
+   "expect": null,
+   "source": "site/llms.txt:160",
+   "grounding": "source",
+   "version": 1,
+   "minted": "2026-09-20T01:46:58+00:00"
+  },
+  {
+   "id": "L6",
+   "block": 114.1,
+   "statement": "The published check writes nothing to the network it measures unless a caller explicitly asks for it.",
+   "test": "node --test --test-name-pattern=L71 tests/site_onramp_artifact.test.mjs",
+   "scope": [
+    "site/llms.txt"
+   ],
+   "oracle": null,
+   "expect": null,
+   "source": "site/nano-onramp-check.js:1",
+   "grounding": "source",
+   "version": 1,
+   "minted": "2026-09-20T01:47:03+00:00"
+  },
+  {
+   "id": "L7",
+   "block": 114.2,
+   "statement": "The published file runs to completion alone, and a checkout run still exercises the repository server.",
+   "test": "node --test --test-name-pattern=L72 tests/site_onramp_artifact.test.mjs",
+   "scope": [
+    "site/tests/site_onramp_artifact.test.mjs"
+   ],
+   "oracle": null,
+   "expect": null,
+   "source": "site/tests/site_onramp_artifact.test.mjs:238",
+   "grounding": "source",
+   "version": 1,
+   "minted": "2026-09-20T01:47:04+00:00"
   }
  ],
  "blocks": {
@@ -285,6 +345,18 @@
      "at": "2026-09-19T23:08:29+00:00"
     }
    ]
+  },
+  "114": {
+   "status": "pending",
+   "attempts": []
+  },
+  "114.1": {
+   "status": "pending",
+   "attempts": []
+  },
+  "114.2": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [],
@@ -497,6 +569,50 @@
    "at": "2026-09-19T23:15:44+00:00",
    "prev": "2b70ad996d945e5ddde3c12bd61a241ec7c5a8ae81a465cd45742d62cdfae60b",
    "receipt": "cf2c804b9ad6da7168c25c39a15d55fad064ba58ce4f312dac2fa41db589877d"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L4",
+    "block": "114",
+    "statement_sha": "13da8c3079dfa149e00ee71a2e99f2d3f08d5e18c489a6b39677e44b7846e85c"
+   },
+   "at": "2026-09-20T01:46:54+00:00",
+   "prev": "cf2c804b9ad6da7168c25c39a15d55fad064ba58ce4f312dac2fa41db589877d",
+   "receipt": "70a0dc0c29bfe66d04ae8ade3275991fece1f11587657991fbcdb6133e28d2f4"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L5",
+    "block": "114",
+    "statement_sha": "7adbf4cb117fa5eb3bbdc4fc9ccf7205a67bae1a07f78d1ab31c665ccc551646"
+   },
+   "at": "2026-09-20T01:46:58+00:00",
+   "prev": "70a0dc0c29bfe66d04ae8ade3275991fece1f11587657991fbcdb6133e28d2f4",
+   "receipt": "65493e9e1e848fd35e1867a1a1bfe142e15718c7ecb8cd92e2d60812cef5f48d"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L6",
+    "block": "114.1",
+    "statement_sha": "25c2c4322b37dfe6d5f1d8788a8c8db4860907766b2a7371a9a70a774c2c59de"
+   },
+   "at": "2026-09-20T01:47:03+00:00",
+   "prev": "65493e9e1e848fd35e1867a1a1bfe142e15718c7ecb8cd92e2d60812cef5f48d",
+   "receipt": "c2aea3ae81a626416dba746405088984a4494dd28be4644c6734b8c1803d0ca3"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L7",
+    "block": "114.2",
+    "statement_sha": "37bf449b4aa2d47e3e5b9416985542b8043c8d351bf812c947168e6564f550a2"
+   },
+   "at": "2026-09-20T01:47:04+00:00",
+   "prev": "c2aea3ae81a626416dba746405088984a4494dd28be4644c6734b8c1803d0ca3",
+   "receipt": "426910b03de753421b48dfe6b531651db699b778f2c40d48bc42a66c4eaa694d"
   }
  ]
 }
