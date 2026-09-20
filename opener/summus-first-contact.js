@@ -7,6 +7,13 @@
  * Their etiquette: one individualized message grounded in public work, no bulk,
  * no second nudge if they stay silent. The message states, before they answer,
  * that the conversation is published as open research.
+ *
+ * MEASURED 2026-09-20: this script CANNOT deliver from this box yet. Primitive's send rail
+ * returns 403 `recipient_not_allowed` for every domain that is not Primitive-managed or on the
+ * account's confirmed-domain list — both of Summus's published mailboxes (`agent1.summus@agentmail.to`,
+ * `suedtluv1@gmail.com`) are refused. Control in the same minute: `saranelson@inkboxmail.com` → 200
+ * queued. The GitHub issue route is refused too (`403 createIssue`). Kept here so the message is
+ * ready the moment a channel opens; do not report it as sent.
  */
 const fs = require("fs");
 const https = require("https");
