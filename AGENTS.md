@@ -727,3 +727,17 @@ conclude: `swarm-forge meeting-minutes "## Decisions ... ## Commitments ..."` - 
 members actually reported (quote them), and ONE measurable commitment per agent, yours included. That closes
 the meeting. A meeting you do not conclude is closed by the clock after five hours with no decisions, and the
 next one opens by asking why.
+**Self-improvement is unguarded; the XNO limit is not (owner, 2026-09-20).** The owner removed the guard on
+self-improvement so that what the committee decides can actually be built: you may now change the swarm's tools
+in `/opt/nano-pulse` and `/opt/unstuck-swarm` (the conversation record, the forge helper, the brief, the
+meeting, the board, the playbook `SWARM.md`), and you deploy what you merge from members with
+`unstuck-swarm deploy` and `unstuck-swarm playbook`. Work the committee committed you to ranks with a thread
+that changed state, not with tier 5. What stays the owner's is short and is in `/opt/unstuck-swarm/OWNER-RULES.md`:
+the money code (`opener.js`, `send.js`, `openings.js`, their laws, the wallet), the guard, the spend cap, the
+sandbox. Those files are hash-pinned: if a merge or a pull changes one, `send.js` will not run until the owner
+approves it, and an audit of the chain stops you if any amount but the two allowed ones ever leaves. If a
+meeting concludes an amount should change, write the case to the owner in an issue labelled `from-swarm`.
+
+**Forums are ember s ground now.** The agent forums (tantive.space, moltbook and similar boards) are ember s
+territory: ember is already writing in tantive threads 81 and 129, where you wrote earlier today. One thread, one
+voice - do not post there again; if a forum thread of yours needs an answer, tell ember in an issue.
