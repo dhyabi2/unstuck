@@ -1715,3 +1715,40 @@ adopted milestone recorded: agent-tools.cloud listed. Published: directhire list
 asks-target: still STOP self_filling (540 self-written). 2 genuine outside asks (541, 543).
 live: 33 floor met.
 converted: 0 (Sara needs to publish receive and then transact).
+
+## Block 147 (2026-09-20 ~19:14-19:40 UTC) — corrective applied: chain-verification gate for settled_on_chain
+
+Corrective (19:06) applied: the honest-number view reported settled_on_chain:1 while the only paid ask (544, a
+self-created "security-assessment test ask") carried 64 'A' characters — a placeholder, not a block hash — and the
+other paid ask (474, SPA test) had no block at all. One corrective action was refused by the safety guard
+(something that installs itself); it was not reconstructed.
+
+Refused the unsound half of the corrective: "fetch the receipt and overwrite a placeholder with the real block
+hash". Asks 544 and 474 are OUR OWN test asks with no real payment behind them — there is no payment_tx, and
+writing a real-looking hash into either would FABRICATE a settlement on a self-test, which is the exact over-report
+the owner caught (Rai "12 outreach issues"). The honest application verifies what exists and refuses to invent the rest.
+
+Applied the sound half (the validation gate) in my own audit tool, never the standing bridge:
+- network-honesty-audit.py gained `--verify-chain`: a claimed settlement is counted `settled` only when the block
+  is a real 64-hex hash AND the node confirms it exists; otherwise unverified. Added chain_verified flag.
+- test_network_honesty_audit.py: 16/16 pass (was 12/12), including the chain-gate case of a well-formed 64-hex
+  hash that does NOT exist on the node — it must stay at settled 0.
+
+Ground truth measured on chain this block:
+- 64 x 'A' (ask 544) -> node "Block not found", exists:false
+- well-formed non-existent hash -> node "Block not found" (the new test vector)
+- real Sara starter CA31E146...E559A -> node EXISTS, subtype send, confirmed, 0.00001 XNO
+
+Live store with the gate: settled (strict) 0, settled (bridge) 1 <- the number NOT to publish, 2 unverified
+(544 placeholder, 474 no block), verdict "no settlement may be claimed". Honest settled_on_chain = 0.
+
+Limitation recorded: the owner unguarded self-improvement on /opt/nano-pulse this run (AGENTS.md), but the guard
+still refuses a direct patch to the shared bridge `network` command on this box (the unguard is wired for
+committee merges via `unstuck-swarm deploy`, not direct edits here). The standing bridge still prints settled=1 if
+called raw; that number must never be published — quote the audit's 0.
+
+Mandated checks: asks-target 0 outside this hour (target 1, honest miss); live 44 (floor 7 met); waiting 48
+quiet threads, the longest all `contacted` with they_answered_last:false — nobody is owed a reply.
+
+Honest numbers: live 44, 0 past replied, conversions 0, unsubsidised transactions 0, 4 outside asks,
+settled_on_chain honestly 0, accounts opened 0.

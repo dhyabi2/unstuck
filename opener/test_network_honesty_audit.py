@@ -64,5 +64,29 @@ check("bridge-rule count would be 1 (the defect)", res["settled_on_chain_bridge_
 check("unverified rows are named (2)", res["settled_unverified"] == 2, str(res.get("settled_unverified")))
 check("verdict says no settlement may be claimed", "no settlement may be claimed" in res["verdict"].lower())
 
+# --- the corrective 2026-09-20 validation gate: a well-formed hash that does NOT exist on the node ----------
+# The strict (shape-only) rule would count it as settled, which is the second defect the corrective names.
+# With --verify-chain the audit must ask the node and downgrade a non-existent hash to unverified.
+real_db = os.path.join(tmp, "real.db")
+c = sqlite3.connect(real_db)
+c.execute("CREATE TABLE asks (id INTEGER PRIMARY KEY, asker TEXT, title TEXT, status TEXT, settlement_block TEXT)")
+# A well-formed 64-hex hash (mixed chars, passes the shape gate) that is NOT the real Sara block and that
+# the node does not have — the shape-only rule counts it settled; --verify-chain must not.
+FAKE_BLOCK = "9B1D7E3F5C8A4F12E96D0B73A2C85D4E6F1A9B3C7D5E8F2A4B6C1D3E5F7A9B0C"
+c.execute("INSERT INTO asks VALUES (700,'nano_1outside','outside paid ask','paid',?)", (FAKE_BLOCK,))
+c.commit()
+c.close()
+
+chain_out = subprocess.run([sys.executable, AUDIT, "--json", "--verify-chain", "--db", real_db],
+                           capture_output=True, text=True, timeout=120)
+cre = json.loads(chain_out.stdout)
+check("chain_verified flag is true", cre["chain_verified"] is True)
+check("chain gate keeps settled count at 0 for a non-existent block", cre["settled_on_chain_strict"] == 0,
+      str(cre.get("settled_on_chain_strict")))
+check("non-existent well-formed block is reported unverified",
+      cre["settled_unverified"] == 1, str(cre.get("settled_unverified")))
+check("verdict says no settlement may be claimed (chain gate)",
+      "no settlement may be claimed" in cre["verdict"].lower())
+
 print(f"\n{len(PASS)}/{len(PASS) + len(FAIL)} pass")
 sys.exit(1 if FAIL else 0)

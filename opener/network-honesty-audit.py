@@ -80,6 +80,10 @@ def main():
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--db", default=NETWORK_DB)
     ap.add_argument("--block", default=None, help="ask the node whether this hash really exists")
+    ap.add_argument("--verify-chain", action="store_true",
+                    help="verify claimed settlement blocks against the node RPC; a block that does not "
+                         "exist is downgraded to unverified and never counted as settled (corrective "
+                         "2026-09-20, validation gate)")
     args = ap.parse_args()
 
     if args.block:
@@ -100,7 +104,19 @@ def main():
                 bad_block_rows.append({"id": aid, "title": title, "reason": "marked paid with no block"})
             continue
         if real_block(blk):
-            settled.append({"id": aid, "block": blk})
+            if args.verify_chain:
+                r = rpc_exists(blk)
+                if not r.get("queried"):
+                    unverified.append({"id": aid, "title": title, "block": blk[:16] + "…",
+                                       "reason": "could not be verified against the node (" +
+                                                 str(r.get("error", "unqueried")) + ")"})
+                elif not r.get("exists"):
+                    unverified.append({"id": aid, "title": title, "block": blk[:16] + "…",
+                                       "reason": "well-formed hash but the node reports it does not exist"})
+                else:
+                    settled.append({"id": aid, "block": blk})
+            else:
+                settled.append({"id": aid, "block": blk})
         else:
             unverified.append({"id": aid, "title": title, "block": blk[:16] + "…",
                                "reason": "placeholder, not a block hash"})
@@ -108,19 +124,24 @@ def main():
     out = {
         "db": args.db,
         "asks": len(asks),
+        "chain_verified": bool(args.verify_chain),
         "settled_on_chain_strict": len(settled),
         "settled_on_chain_bridge_rule": sum(1 for _a, _s, _t, _st, blk in asks if blk),
         "settled_unverified": len(unverified) + len(bad_block_rows),
         "unverified_rows": unverified + bad_block_rows,
         "settled_rows": settled,
         "verdict": ("no settlement may be claimed: every block present is a placeholder or absent"
-                    if not settled else "at least one real block hash is present - verify it with --block"),
+                    if not settled else
+                    ("settled blocks have been verified to exist on the node"
+                     if args.verify_chain else
+                     "at least one real block hash is present - run with --verify-chain to check it exists")),
     }
     if args.json:
         print(json.dumps(out, indent=1))
     else:
         print(f"store            {out['db']}")
         print(f"asks             {out['asks']}")
+        print(f"chain verified   {out['chain_verified']}")
         print(f"settled (strict) {out['settled_on_chain_strict']}")
         print(f"settled (bridge) {out['settled_on_chain_bridge_rule']}   <- the number NOT to publish")
         print(f"unverified       {out['settled_unverified']}")
