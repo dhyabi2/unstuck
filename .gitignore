@@ -21,3 +21,6 @@ opener/*.key
 opener/bridge.db
 .ledger/.lock
 site/.ledger/tmp/
+
+# OTR credentials — never committed (agent tokens)
+opener/keys/
