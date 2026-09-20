@@ -75,13 +75,16 @@
    "statement": "The named on-ramp check is fetchable from the origin serving the document, byte-identical to the committed source, and keeps its wallet-free controls.",
    "test": "node --test --test-name-pattern=L69 tests/site_onramp_artifact.test.mjs",
    "scope": [
-    "opener/nano-onramp-check.js"
+    "site/tests/site_onramp_artifact.test.mjs",
+    "site/nano-onramp-check.js",
+    "opener/nano-onramp-check.js",
+    "site/llms.txt"
    ],
-   "oracle": null,
-   "expect": null,
+   "oracle": "node --test --test-name-pattern=L69 tests/site_onramp_artifact.test.mjs",
+   "expect": "pass 4",
    "source": "opener/nano-onramp-check.js:1",
    "grounding": "source",
-   "version": 1,
+   "version": 5,
    "minted": "2026-09-20T01:46:54+00:00"
   },
   {
@@ -90,13 +93,15 @@
    "statement": "The discovery document tells a reader how to run the artifact and states the limits it does not have.",
    "test": "node --test --test-name-pattern=L70 tests/site_onramp_artifact.test.mjs",
    "scope": [
-    "site/llms.txt"
+    "site/nano-onramp-check.js",
+    "opener/nano-onramp-check.js",
+    "site/tests/site_onramp_artifact.test.mjs"
    ],
-   "oracle": null,
-   "expect": null,
+   "oracle": "node --test --test-name-pattern=L70 tests/site_onramp_artifact.test.mjs",
+   "expect": "pass 2",
    "source": "site/llms.txt:160",
    "grounding": "source",
-   "version": 1,
+   "version": 4,
    "minted": "2026-09-20T01:46:58+00:00"
   },
   {
@@ -105,13 +110,14 @@
    "statement": "The published check writes nothing to the network it measures unless a caller explicitly asks for it.",
    "test": "node --test --test-name-pattern=L71 tests/site_onramp_artifact.test.mjs",
    "scope": [
-    "site/llms.txt"
+    "site/nano-onramp-check.js",
+    "site/tests/site_onramp_artifact.test.mjs"
    ],
-   "oracle": null,
-   "expect": null,
+   "oracle": "node --test --test-name-pattern=L71 tests/site_onramp_artifact.test.mjs",
+   "expect": "pass 2",
    "source": "site/nano-onramp-check.js:1",
    "grounding": "source",
-   "version": 1,
+   "version": 4,
    "minted": "2026-09-20T01:47:03+00:00"
   },
   {
@@ -120,13 +126,14 @@
    "statement": "The published file runs to completion alone, and a checkout run still exercises the repository server.",
    "test": "node --test --test-name-pattern=L72 tests/site_onramp_artifact.test.mjs",
    "scope": [
-    "site/tests/site_onramp_artifact.test.mjs"
+    "site/nano-onramp-check.js",
+    "opener/nano-onramp-check.js"
    ],
-   "oracle": null,
-   "expect": null,
+   "oracle": "node --test --test-name-pattern=L72 tests/site_onramp_artifact.test.mjs",
+   "expect": "pass 2",
    "source": "site/tests/site_onramp_artifact.test.mjs:238",
    "grounding": "source",
-   "version": 1,
+   "version": 4,
    "minted": "2026-09-20T01:47:04+00:00"
   }
  ],
@@ -348,7 +355,335 @@
   },
   "114": {
    "status": "pending",
-   "attempts": []
+   "attempts": [
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "b021923d509c6fd2ed3b9dee2101ae669cae73f4f3875e8c76ed261b834c062f",
+     "tier": "strong",
+     "coverage_gaps": [
+      "site/ledger.json",
+      "site/nano-onramp-check.js"
+     ],
+     "injection": [],
+     "at": "2026-09-20T01:48:16+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "48fc22f8607fee63820ca9d328fd363cf936adae96cf694dd2230a4e405c8583",
+     "tier": "strong",
+     "coverage_gaps": [
+      "site/ledger.json",
+      "site/nano-onramp-check.js"
+     ],
+     "injection": [],
+     "at": "2026-09-20T01:51:48+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "07e6ef65b84ef6485bb9adb29fa24c951edd347259750e76f4c427d7ede3a29e",
+     "tier": "strong",
+     "coverage_gaps": [
+      "site/ledger.json",
+      "site/nano-onramp-check.js"
+     ],
+     "injection": [],
+     "at": "2026-09-20T01:53:38+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "2e698f011392589d5d8ffcec459ab6b1acb251dd26a212a6c11b2a4f6a0aaa2e",
+     "tier": "strong",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-20T01:57:12+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "c4b4c529a5dcca6f856866aa94f32276e0f0e1be43153a3430c1f4ce8a6456dd",
+     "tier": "strong",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-20T01:58:36+00:00"
+    }
+   ]
   },
   "114.1": {
    "status": "pending",
@@ -359,7 +694,23 @@
    "attempts": []
   }
  },
- "deltas": [],
+ "deltas": [
+  {
+   "block": 114.0,
+   "text": "L4.scope: [opener/nano-onramp-check.js] -> [site/llms.txt, site/tests/site_onramp_artifact.test.mjs, opener/nano-onramp-check.js, site/nano-onramp-check.js]",
+   "at": "2026-09-20T01:54:28+00:00"
+  },
+  {
+   "block": 114.0,
+   "text": "L5.scope: [site/llms.txt] -> [site/nano-onramp-check.js, opener/nano-onramp-check.js, site/tests/site_onramp_artifact.test.mjs]",
+   "at": "2026-09-20T01:54:28+00:00"
+  },
+  {
+   "block": 114.0,
+   "text": "L6.scope: [site/llms.txt] -> [site/nano-onramp-check.js, site/tests/site_onramp_artifact.test.mjs]",
+   "at": "2026-09-20T01:54:28+00:00"
+  }
+ ],
  "waivers": [
   {
    "pattern": "site/tests/site_discovery_paths.test.mjs",
@@ -375,6 +726,11 @@
    "pattern": "site/.deployed.json",
    "reason": "The deployment pin names the commit the live origin is serving and is refreshed and committed by the deployer (deploy_pin in /root/work/unstuck-deploy.py) at the start of every run; it is not editable by hand for a block. This block's laws (L2, L3) govern the discovery documents and their live behaviour, not the pin; L61-L63 in tests/site_deployed_pin.test.mjs remain the laws that read it and are re-run green in the same suite.",
    "at": "2026-09-19T23:06:59+00:00"
+  },
+  {
+   "pattern": "site/ledger.json",
+   "reason": "Machine-generated openings ledger projected from openings.db by publish.js; it changes whenever the opener DB changes and is written by that tool, not by hand. This block's laws (L69-L72) govern the published on-ramp check and the discovery document that names it; site/ledger.json is regenerated by publish.js and is not part of this block's claim.",
+   "at": "2026-09-20T01:54:28+00:00"
   }
  ],
  "contested": [],
@@ -613,6 +969,176 @@
    "at": "2026-09-20T01:47:04+00:00",
    "prev": "c2aea3ae81a626416dba746405088984a4494dd28be4644c6734b8c1803d0ca3",
    "receipt": "426910b03de753421b48dfe6b531651db699b778f2c40d48bc42a66c4eaa694d"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "114",
+    "ok": false
+   },
+   "at": "2026-09-20T01:48:16+00:00",
+   "prev": "426910b03de753421b48dfe6b531651db699b778f2c40d48bc42a66c4eaa694d",
+   "receipt": "6018886f95356ad978c46f68fb7dac894b405d9c6c2f04db5823862681924a39"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "114",
+    "ok": false
+   },
+   "at": "2026-09-20T01:51:48+00:00",
+   "prev": "6018886f95356ad978c46f68fb7dac894b405d9c6c2f04db5823862681924a39",
+   "receipt": "4b84013260d55f4c86a8697ddd50047c8c99bc83748b692b00e9bf17ab2c922a"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L4",
+    "version": 2
+   },
+   "at": "2026-09-20T01:52:06+00:00",
+   "prev": "4b84013260d55f4c86a8697ddd50047c8c99bc83748b692b00e9bf17ab2c922a",
+   "receipt": "8c5ce4c8505c00005b5b612f344c961af57d58df19567c6b4f014cbc5ea46dba"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L5",
+    "version": 2
+   },
+   "at": "2026-09-20T01:52:06+00:00",
+   "prev": "8c5ce4c8505c00005b5b612f344c961af57d58df19567c6b4f014cbc5ea46dba",
+   "receipt": "8ecf201e13fbcb873f1900fe03fbf67dd6b86ca918fa41d2414f4923037eb61d"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L6",
+    "version": 2
+   },
+   "at": "2026-09-20T01:52:06+00:00",
+   "prev": "8ecf201e13fbcb873f1900fe03fbf67dd6b86ca918fa41d2414f4923037eb61d",
+   "receipt": "6056ed220151fb71ed6ed65732c7be158b4b841d148801cdd3aa4617038059d9"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L7",
+    "version": 2
+   },
+   "at": "2026-09-20T01:52:07+00:00",
+   "prev": "6056ed220151fb71ed6ed65732c7be158b4b841d148801cdd3aa4617038059d9",
+   "receipt": "6ed17d59cadd1e2a83cbae4715ec704d25dfcd0c987cad3f49957a349f343a0a"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "114",
+    "ok": false
+   },
+   "at": "2026-09-20T01:53:38+00:00",
+   "prev": "6ed17d59cadd1e2a83cbae4715ec704d25dfcd0c987cad3f49957a349f343a0a",
+   "receipt": "10b2482087add287e57b54d8bbd73659d5ec9f65fb1ed833aebcc7d78fea7537"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L4",
+    "version": 3
+   },
+   "at": "2026-09-20T01:54:22+00:00",
+   "prev": "10b2482087add287e57b54d8bbd73659d5ec9f65fb1ed833aebcc7d78fea7537",
+   "receipt": "f125574bda4ed69f9bd412c64f5a5ecf2eec630eacaa72614ffa58b3c44a046a"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L5",
+    "version": 3
+   },
+   "at": "2026-09-20T01:54:22+00:00",
+   "prev": "f125574bda4ed69f9bd412c64f5a5ecf2eec630eacaa72614ffa58b3c44a046a",
+   "receipt": "c497c62e9cb9a2a1a82beb5ce6e50bccc82e27843931b4939b19a64ed97693c2"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L6",
+    "version": 3
+   },
+   "at": "2026-09-20T01:54:22+00:00",
+   "prev": "c497c62e9cb9a2a1a82beb5ce6e50bccc82e27843931b4939b19a64ed97693c2",
+   "receipt": "03788c57eac512db1bc428e5487f24c5ce9727d0278e7435f188c190e682d880"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L7",
+    "version": 3
+   },
+   "at": "2026-09-20T01:54:22+00:00",
+   "prev": "03788c57eac512db1bc428e5487f24c5ce9727d0278e7435f188c190e682d880",
+   "receipt": "0cecaccbe01141cfad607716dde6c86e02a133d268834d7528cf11c7df97542c"
+  },
+  {
+   "kind": "delta",
+   "payload": {
+    "block": "114",
+    "sha": "31b08f169f7fa087587a2b5c016507817f16604ecc3247522e2aede32272ccde"
+   },
+   "at": "2026-09-20T01:54:28+00:00",
+   "prev": "0cecaccbe01141cfad607716dde6c86e02a133d268834d7528cf11c7df97542c",
+   "receipt": "be29e74a8a71ca802bb01dcc6c04b7e69360a89fff2bde7d4d9f0cff5655ed2c"
+  },
+  {
+   "kind": "delta",
+   "payload": {
+    "block": "114",
+    "sha": "91bd9ea8b3b53734e8f7b8c221349c3b36f29896ba3c54d98aa5958038e77f7d"
+   },
+   "at": "2026-09-20T01:54:28+00:00",
+   "prev": "be29e74a8a71ca802bb01dcc6c04b7e69360a89fff2bde7d4d9f0cff5655ed2c",
+   "receipt": "e22e1925ea717ca4881cead20340f41a21345812e860098c81c7c331a978eb7a"
+  },
+  {
+   "kind": "delta",
+   "payload": {
+    "block": "114",
+    "sha": "e624ef7caa4b135173b970bf0f7c3d25e163e1ab070d893f5a12ebf9729245e3"
+   },
+   "at": "2026-09-20T01:54:28+00:00",
+   "prev": "e22e1925ea717ca4881cead20340f41a21345812e860098c81c7c331a978eb7a",
+   "receipt": "8653f13ccaf80b153e647482b6845eccdb0a28312a8445a546cce0285721ee99"
+  },
+  {
+   "kind": "waive",
+   "payload": {
+    "pattern": "site/ledger.json",
+    "reason_sha": "e9cd41aa7c7b18605898552f4f0c5958fc6c052ebd015cd2b181fc59be3bc24a"
+   },
+   "at": "2026-09-20T01:54:28+00:00",
+   "prev": "8653f13ccaf80b153e647482b6845eccdb0a28312a8445a546cce0285721ee99",
+   "receipt": "564069f5f09a515e3a34b602d4fd78929d8d5aa42fba9e74bb8e9f6ea4b93c29"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "114",
+    "ok": false
+   },
+   "at": "2026-09-20T01:57:12+00:00",
+   "prev": "564069f5f09a515e3a34b602d4fd78929d8d5aa42fba9e74bb8e9f6ea4b93c29",
+   "receipt": "d36215d951b9266a447d17f975f48f353a64cf5dcb8b5211a7b72bfe685de5ed"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "114",
+    "ok": false
+   },
+   "at": "2026-09-20T01:58:36+00:00",
+   "prev": "d36215d951b9266a447d17f975f48f353a64cf5dcb8b5211a7b72bfe685de5ed",
+   "receipt": "773e42fae455e67713b9b6e4a24375d80d62df416bf6b4b58c1b3110f8937091"
   }
  ]
 }
