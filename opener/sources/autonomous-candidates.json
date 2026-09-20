@@ -1,45 +1,35 @@
 {
- "generated": "2026-09-20T00:46:15.613Z",
+ "generated": "2026-09-20T04:12:41.149Z",
  "classifier": "liveness+runtime+convo",
  "candidates": [
   {
-   "host": "getamber.dev",
-   "score": 1,
-   "autonomous": false,
-   "target": false,
+   "host": "api.sirenic.eu",
+   "score": 6,
+   "autonomous": true,
+   "target": true,
    "pays_in": "usdc",
    "already_nano": false,
    "descriptor": "/.well-known/agent.json",
    "why": [
-    "no JSON health document",
+    "counter advanced across 2500ms",
     "no runtime marks (a page that merely NAMES a runtime does not count)",
     "A2A skills card with fixed JSONRPC methods, no free-form channel"
    ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
+   "live_sample": {
+    "status": "ok",
+    "service": "Sirenic",
+    "uptime_s": 13968,
+    "network": "base",
+    "commit": "643142b"
+   },
+   "found_via": "autonomous-discover: live/runtime signal; pays_in=usdc"
   },
   {
-   "host": "hello.a2aregistry.org",
+   "host": "avalix.ai",
    "score": 1,
    "autonomous": false,
    "target": false,
-   "pays_in": "unknown",
-   "already_nano": false,
-   "descriptor": "/.well-known/agent-card.json",
-   "why": [
-    "health document served but no counter advanced",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "no conversational channel found"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
-  },
-  {
-   "host": "www.grahampaasch.com",
-   "score": 1,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "unknown",
+   "pays_in": "usdc",
    "already_nano": false,
    "descriptor": "/.well-known/agent.json",
    "why": [
@@ -48,14 +38,14 @@
     "no conversational channel found"
    ],
    "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+   "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
   },
   {
-   "host": "tooloracle.io",
+   "host": "agent-guild-5d5r.onrender.com",
    "score": 1,
    "autonomous": false,
    "target": false,
-   "pays_in": "usdc",
+   "pays_in": "other",
    "already_nano": false,
    "descriptor": "/.well-known/agent.json",
    "why": [
@@ -64,74 +54,10 @@
     "A2A skills card with fixed JSONRPC methods, no free-form channel"
    ],
    "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
+   "found_via": "autonomous-discover: descriptor only; pays_in=other"
   },
   {
-   "host": "beta.backend.chainaware.ai",
-   "score": 1,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "usdc",
-   "already_nano": false,
-   "descriptor": "/.well-known/agent.json",
-   "why": [
-    "no JSON health document",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "A2A skills card with fixed JSONRPC methods, no free-form channel"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
-  },
-  {
-   "host": "api.getsly.ai",
-   "score": 3,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "usdc",
-   "already_nano": false,
-   "descriptor": "/.well-known/agent.json",
-   "why": [
-    "health document served but no counter advanced",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "descriptor exposes a free-form message channel"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
-  },
-  {
-   "host": "emem.dev",
-   "score": 3,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "eth",
-   "already_nano": false,
-   "descriptor": "/.well-known/agent.json",
-   "why": [
-    "health document served but no counter advanced",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "descriptor exposes a free-form message channel"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=eth"
-  },
-  {
-   "host": "raras.org",
-   "score": 1,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "unknown",
-   "already_nano": false,
-   "descriptor": "/.well-known/agent-card.json",
-   "why": [
-    "no JSON health document",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "A2A skills card with fixed JSONRPC methods, no free-form channel"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
-  },
-  {
-   "host": "kaderos.io",
+   "host": "solvela.ai",
    "score": 0,
    "autonomous": false,
    "target": false,
@@ -147,23 +73,23 @@
    "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
   },
   {
-   "host": "agentsearch.luthersystems.com",
-   "score": 1,
+   "host": "cracked.ai",
+   "score": 3,
    "autonomous": false,
    "target": false,
-   "pays_in": "unknown",
+   "pays_in": "credits",
    "already_nano": false,
    "descriptor": "/.well-known/agent.json",
    "why": [
     "no JSON health document",
     "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "no conversational channel found"
+    "descriptor exposes a free-form message channel"
    ],
    "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+   "found_via": "autonomous-discover: descriptor only; pays_in=credits"
   },
   {
-   "host": "agentarena.site",
+   "host": "ghost-identity.ghost-agent-os.workers.dev",
    "score": 1,
    "autonomous": false,
    "target": false,
@@ -171,7 +97,7 @@
    "already_nano": false,
    "descriptor": "/.well-known/agent-card.json",
    "why": [
-    "no JSON health document",
+    "health document served but no counter advanced",
     "no runtime marks (a page that merely NAMES a runtime does not count)",
     "A2A skills card with fixed JSONRPC methods, no free-form channel"
    ],
