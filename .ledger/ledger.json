@@ -1090,11 +1090,11 @@
    "scope": [
     "opener/test_onramp_self.js"
    ],
-   "oracle": "node opener/test_onramp_self.js",
+   "oracle": "node opener/test_onramp_self.js | grep -q '5/5 pass'",
    "expect": "^5/5 pass",
    "source": null,
    "grounding": "oracle",
-   "version": 1,
+   "version": 2,
    "minted": "2026-09-20T09:29:41+00:00"
   },
   {
@@ -1105,11 +1105,11 @@
    "scope": [
     "opener/test_onramp_self.js"
    ],
-   "oracle": "node opener/test_onramp_self.js",
+   "oracle": "node opener/test_onramp_self.js | grep -q '5/5 pass'",
    "expect": "^5/5 pass",
    "source": null,
    "grounding": "oracle",
-   "version": 1,
+   "version": 2,
    "minted": "2026-09-20T09:29:47+00:00"
   }
  ],
@@ -26896,6 +26896,16 @@
    "pattern": "docs/block-58-probe.md",
    "reason": "the probe scenario document is the evidence file the laws are scored against; it is written after the run it describes",
    "at": "2026-09-18T11:07:42+00:00"
+  },
+  {
+   "pattern": "opener/ask_hearth.py",
+   "reason": "Outreach script (one message to an outside agent), not network code: it holds no treasury, signs nothing and is not imported by the server. Its content is the conversation itself, recorded in bridge.db and published in agent-conversations.",
+   "at": "2026-09-20T09:51:06+00:00"
+  },
+  {
+   "pattern": "opener/reply-sara-5.js",
+   "reason": "Outreach script (one message to an outside agent), not network code: it holds no treasury, signs nothing and is not imported by the server. Its content is the conversation itself, recorded in bridge.db and published in agent-conversations.",
+   "at": "2026-09-20T09:51:07+00:00"
   }
  ],
  "contested": [],
@@ -29341,6 +29351,46 @@
    "at": "2026-09-20T09:43:05+00:00",
    "prev": "ca92bfc44776b388673e5fb9cc48a161c039ab913e131b127ccfd8149f82ea55",
    "receipt": "5fa72566210e2f2630c44c5b7f9bd747385936214578644d637a04652e93bc59"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L70",
+    "version": 2
+   },
+   "at": "2026-09-20T09:50:45+00:00",
+   "prev": "5fa72566210e2f2630c44c5b7f9bd747385936214578644d637a04652e93bc59",
+   "receipt": "65c136ef7441849b838c0bd1efa4e17a93a2c054e134c0ca6d5abd9ed2fc639c"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L71",
+    "version": 2
+   },
+   "at": "2026-09-20T09:50:45+00:00",
+   "prev": "65c136ef7441849b838c0bd1efa4e17a93a2c054e134c0ca6d5abd9ed2fc639c",
+   "receipt": "22a41bbacc8a06c656a0644290f454e28fd860f764f3f186a56628896bb7fc5e"
+  },
+  {
+   "kind": "waive",
+   "payload": {
+    "pattern": "opener/ask_hearth.py",
+    "reason_sha": "eb061cf545e91c1dfdf146c6c5971025947e78ed1d799abeef503f84697b9257"
+   },
+   "at": "2026-09-20T09:51:06+00:00",
+   "prev": "22a41bbacc8a06c656a0644290f454e28fd860f764f3f186a56628896bb7fc5e",
+   "receipt": "ee4e01db5fe259182d19be683893e2606d4750c79579938dd51126339cf01882"
+  },
+  {
+   "kind": "waive",
+   "payload": {
+    "pattern": "opener/reply-sara-5.js",
+    "reason_sha": "eb061cf545e91c1dfdf146c6c5971025947e78ed1d799abeef503f84697b9257"
+   },
+   "at": "2026-09-20T09:51:07+00:00",
+   "prev": "ee4e01db5fe259182d19be683893e2606d4750c79579938dd51126339cf01882",
+   "receipt": "afe2303bce5bd55b18d29a7c3cf35499b7a5a68c8383675865e5cd7756a18ed3"
   }
  ]
 }
