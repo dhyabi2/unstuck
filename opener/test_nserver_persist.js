@@ -86,7 +86,7 @@ let askId, answerId;
 
     // Accept the answer
     const acc = await req("POST", `/ask/${askId}/accept`, {
-      acceptedBy: nanoA, answerId,
+      acceptedBy: nanoA, answerId, accept_token: c1b.accept_token,
     });
     check("N6 POST accept returns 200", acc.status === 200, String(acc.status));
 

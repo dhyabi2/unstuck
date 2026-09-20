@@ -69,7 +69,7 @@ async function run() {
     catch (e) { check("L12 cannot settle an open ask", /paid/.test(e.message), e.message); }
 
     // Accept it -> paid
-    s.acceptAnswer(a1.id, ans1.answerId, nanoA);
+    s.acceptAnswer(a1.id, ans1.answerId, nanoA, a1.accept_token);
     const paid1 = s.getAsk(a1.id);
     check("L12 ask is paid after acceptance", paid1.status === "paid");
 
@@ -85,7 +85,7 @@ async function run() {
     // Bad-format block refused
     const a2 = s.createAsk({ asker: nanoA, title: "t2", body: "b2", bountyRaw: bounty });
     const ans2 = s.addAnswer(a2.id, { answerer: nanoB, body: "answer 2" });
-    s.acceptAnswer(a2.id, ans2.answerId, nanoA);
+    s.acceptAnswer(a2.id, ans2.answerId, nanoA, a2.accept_token);
     try { s.recordSettlement(a2.id, "short-hash"); failed++; console.log("FAIL L12 bad hash accepted"); }
     catch (e) { check("L12 bad block hash refused", /64-hex/.test(e.message), e.message); }
 
@@ -106,7 +106,7 @@ async function run() {
     // Second settled ask: same answerer B paid by a NEW asker C -> B now has 2 distinct
     const a3 = s2.createAsk({ asker: nanoC, title: "t3", body: "b3", bountyRaw: bounty });
     const ans3 = s2.addAnswer(a3.id, { answerer: nanoB, body: "answer 3" });
-    s2.acceptAnswer(a3.id, ans3.answerId, nanoC);
+    s2.acceptAnswer(a3.id, ans3.answerId, nanoC, a3.accept_token);
     s2.recordSettlement(a3.id, HASH2);
     const st2 = s2.getStanding();
     check("L13 distinct askers counted, not volume", st2[nanoB] === 2, JSON.stringify(st2));
@@ -116,7 +116,7 @@ async function run() {
     // Add a second settled ask from the SAME asker A to prove volume is not counted:
     const a4 = s2.createAsk({ asker: nanoA, title: "t4", body: "b4", bountyRaw: bounty });
     const ans4 = s2.addAnswer(a4.id, { answerer: nanoB, body: "answer 4" });
-    s2.acceptAnswer(a4.id, ans4.answerId, nanoA);
+    s2.acceptAnswer(a4.id, ans4.answerId, nanoA, a4.accept_token);
     s2.recordSettlement(a4.id, "C".repeat(64));
     const st3 = s2.getStanding();
     check("L13 same asker twice counts once (distinct, not volume)", st3[nanoB] === 2, JSON.stringify(st3));
@@ -161,10 +161,12 @@ async function run() {
 
     // Create via HTTP, settle via POST /ask/:id/settle, read standing
     const c = await req(PORT, "POST", "/ask", { asker: nanoA, title: "http", body: "settle via http", bounty_raw: bounty });
-    const cid = JSON.parse(c.body).id;
+    const cB = JSON.parse(c.body);
+    const cid = cB.id;
+    const cTok = cB.accept_token;
     const ans = await req(PORT, "POST", `/ask/${cid}/answers`, { answerer: nanoB, body: "http answer" });
     const aid = JSON.parse(ans.body).answerId;
-    const acc = await req(PORT, "POST", `/ask/${cid}/accept`, { acceptedBy: nanoA, answerId: aid });
+    const acc = await req(PORT, "POST", `/ask/${cid}/accept`, { acceptedBy: nanoA, answerId: aid, accept_token: cTok });
     check("L13 accept via HTTP 200", acc.status === 200, String(acc.status));
     const st = await req(PORT, "POST", `/ask/${cid}/settle`, { paymentBlock: "D".repeat(64), acceptedBy: nanoA });
     check("L13 settle via HTTP 200", st.status === 200, String(st.status) + " " + st.body);

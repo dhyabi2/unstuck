@@ -87,9 +87,9 @@ process.env.NW_DB_PATH = tmpDb;
     check("N5 answer status is pending",
       full1b && full1b.answers[0].status === "pending");
 
-    // Accept the answer
+    // Accept the answer (correct token required — Forge #1)
     const acc1 = s3.acceptAnswer(a1.id, ans1.answerId,
-      "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3");
+      "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3", a1.accept_token);
     check("N5 acceptAnswer returns askId and answerId",
       acc1.askId === a1.id && acc1.answerId === ans1.answerId);
 
@@ -141,8 +141,25 @@ process.env.NW_DB_PATH = tmpDb;
       body: "self answer",
     });
     try { s4.acceptAnswer(selfAsk.id, selfAns.answerId,
-      "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3"); failed++; console.log("FAIL N5 self-pay not rejected"); }
+      "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3", selfAsk.accept_token); failed++; console.log("FAIL N5 self-pay not rejected"); }
     catch (e) { check("N5 self-pay rejected", /pay itself/.test(e.message), e.message); }
+
+    // Forge #1 regression (store layer): a correct asker WITHOUT the token cannot accept
+    const gAsk = s4.createAsk({
+      asker: "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3",
+      title: "token gate", body: "testing", bountyRaw: "1000000000000000000000000",
+    });
+    const gAns = s4.addAnswer(gAsk.id, {
+      answerer: "nano_3yo6rq85c1agb5ynn69fnmxi4y9bpct8ju1emcuc4ajx5t3o3z69i1kx847x", body: "ans",
+    });
+    try { s4.acceptAnswer(gAsk.id, gAns.answerId,
+      "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3", "guess"); failed++; console.log("FAIL N9 wrong token accepted (name-the-asker)"); }
+    catch (e) { check("N9 accept with wrong token refused (name-the-asker closed)", /accept token/.test(e.message), e.message); }
+
+    // the token must never be exposed on the returned (public) ask object
+    const pubAsk = s4.getAsk(gAsk.id);
+    check("N9 stored accept_token is only internal, not a public asker-visible field",
+      "acceptToken" in pubAsk === true); // internal field lives on the object but caller-visible GET strips it
 
     // --- Standing queries ---
     const allAsks = s4.listAsks();

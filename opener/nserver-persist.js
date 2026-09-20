@@ -12,7 +12,9 @@
  *   GET  /try-nano           -> 200 the on-ramp: how an agent outside Nano gets in (JSON or HTML)
  *   GET  /v1/onramp/address   -> 200 {address, seed, index} — generate a fresh Nano keypair
  *   POST /ask/:id/answers    {answerer, body} -> 201 {askId, answerId}
- *   POST /ask/:id/accept     {acceptedBy, answerId} -> 200 {askId, answerId}
+ *   POST /ask/:id/accept     {acceptedBy, answerId, accept_token} -> 200 {askId, answerId}
+ *                            (accept_token is returned once at create time; the only
+ *                            authority to accept — Forge #1, closing 'name the asker')
  *   GET  /health             -> 200 {status:"ok"}
  *   GET  /v1/x402            -> 200 {x402Version, accepts} — x402 discovery for agents
  *   POST /v1/echo            -> 402 with accepts for nano:mainnet — seller verification
@@ -71,11 +73,19 @@ function handleCreateAsk(req, res) {
         bountyRaw: body.bounty_raw,
         type: body.type,
       });
-      send(res, 201, { id: ask.id, status: ask.status, type: ask.type });
+      send(res, 201, { id: ask.id, status: ask.status, type: ask.type, accept_token: ask.accept_token });
     } catch (e) {
       send(res, 400, { error: e.message });
     }
   }).catch(() => send(res, 400, { error: "invalid JSON body" }));
+}
+
+/** Strip the internal accept token before an ask is sent to any client (Forge #1). */
+function publicAsk(ask) {
+  if (!ask || typeof ask !== "object") return ask;
+  const out = { ...ask };
+  delete out.acceptToken;
+  return out;
 }
 
 function handleListAsks(req, res) {
@@ -83,13 +93,13 @@ function handleListAsks(req, res) {
   const status = url.searchParams.get("status") || null;
   const type = url.searchParams.get("type") || null;
   const list = s.listAsks({ status, type });
-  send(res, 200, { asks: list });
+  send(res, 200, { asks: list.map(publicAsk) });
 }
 
 function handleGetAsk(req, res, id) {
   const ask = s.getAsk(Number(id));
   if (!ask) return send(res, 404, { error: `no ask ${id}` });
-  send(res, 200, { ask });
+  send(res, 200, { ask: publicAsk(ask) });
 }
 
 /**
@@ -209,10 +219,14 @@ function handleAddAnswer(req, res, id) {
 function handleAccept(req, res, id) {
   readJson(req).then((body) => {
     try {
-      const r = s.acceptAnswer(Number(id), Number(body.answerId), body.acceptedBy);
+      // Forge #1: authority is the ask's accept token (returned at create), never the
+      // caller-claimed `acceptedBy` address. Anyone can name an asker; only the token
+      // holder can accept.
+      const r = s.acceptAnswer(Number(id), Number(body.answerId), body.acceptedBy, body.accept_token);
       send(res, 200, r);
     } catch (e) {
       if (/no answer/.test(e.message)) return send(res, 404, { error: e.message });
+      if (/accept token/.test(e.message)) return send(res, 403, { error: e.message });
       send(res, 400, { error: e.message });
     }
   }).catch(() => send(res, 400, { error: "invalid JSON body" }));
@@ -310,7 +324,7 @@ function handleAgentDotWellKnown(req, res) {
       { path: "/v1/onramp/self", method: "POST", description: "Self-custody on-ramp: POST {address} with a keypair YOUR runtime generated. The server generates nothing and stores no seed; it only remembers the address so the one-time 0.00001 XNO starter can open the chain and you can post an ask before you hold any XNO" },
       { path: "/ask/:id", method: "GET", description: "Get ask detail with answers" },
       { path: "/ask/:id/answers", method: "POST", description: "Post an answer {answerer, body}" },
-      { path: "/ask/:id/accept", method: "POST", description: "Accept an answer {acceptedBy, answerId}" },
+      { path: "/ask/:id/accept", method: "POST", description: "Accept an answer {acceptedBy, answerId, accept_token}; accept_token is returned once at create time and is the only authority to accept (Forge #1 — naming the asker is not enough)" },
       { path: "/ask/:id/settle", method: "POST", description: "Record settlement block {paymentBlock, acceptedBy}" },
       { path: "/standing", method: "GET", description: "Agent standing (distinct funded counterparties)" },
       { path: "/v1/x402", method: "GET", description: "x402 capabilities discovery" },

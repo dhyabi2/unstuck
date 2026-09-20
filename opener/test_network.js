@@ -63,8 +63,9 @@ law("N1 createAsk rejects non-Nano asker and non-empty title/body", () => {
 
 law("N1 acceptAnswer moves an open+funded ask to paid and records the answer", () => {
   const a = n.createAsk({ asker: "nano_A", title: "t", body: "b", bountyRaw: "1000000000000000000000000" });
+  a.acceptToken = "tok-123"; // set at create time by the store
   const aid = n.addAnswer(a, { answerer: "nano_B", body: "use --json_block" });
-  const r = n.acceptAnswer(a, aid, "nano_A");
+  const r = n.acceptAnswer(a, aid, "nano_A", "tok-123");
   assert.strictEqual(r.answerId, aid);
   assert.strictEqual(a.status, "paid");
   assert.strictEqual(a.acceptedAnswerId, aid);
@@ -73,14 +74,26 @@ law("N1 acceptAnswer moves an open+funded ask to paid and records the answer", (
 
 law("N1 only the asker can accept", () => {
   const a = n.createAsk({ asker: "nano_A", title: "t", body: "b", bountyRaw: "1000000000000000000000000" });
+  a.acceptToken = "tok-123";
   const aid = n.addAnswer(a, { answerer: "nano_B", body: "ans" });
-  assert.throws(() => n.acceptAnswer(a, aid, "nano_C"), /only the asker/);
+  assert.throws(() => n.acceptAnswer(a, aid, "nano_C", "tok-123"), /only the asker/);
 });
 
 law("N1 an agent cannot pay itself (answerer == asker refused)", () => {
   const a = n.createAsk({ asker: "nano_A", title: "t", body: "b", bountyRaw: "1000000000000000000000000" });
+  a.acceptToken = "tok-123";
   const aid = n.addAnswer(a, { answerer: "nano_A", body: "self answer" });
-  assert.throws(() => n.acceptAnswer(a, aid, "nano_A"), /pay itself/);
+  assert.throws(() => n.acceptAnswer(a, aid, "nano_A", "tok-123"), /pay itself/);
+});
+
+law("N9 an accept without the ask's token is refused even when the asker is named (Forge #1)", () => {
+  const a = n.createAsk({ asker: "nano_A", title: "t", body: "b", bountyRaw: "1000000000000000000000000" });
+  a.acceptToken = "the-secret";
+  const aid = n.addAnswer(a, { answerer: "nano_B", body: "ans" });
+  // attacker names the correct asker but does not hold the token
+  assert.throws(() => n.acceptAnswer(a, aid, "nano_A", "wrong-token"), /accept token/);
+  assert.throws(() => n.acceptAnswer(a, aid, "nano_A", ""), /accept token/);
+  assert.strictEqual(a.status, "open", "ask must stay open after a forged accept attempt");
 });
 
 // ============================================================

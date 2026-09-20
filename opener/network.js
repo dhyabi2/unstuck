@@ -105,12 +105,23 @@ function addAnswer(ask, { answerer, body, now = new Date().toISOString() }) {
 
 /**
  * The asker accepts an answer: marks the ask paid (bounty goes out) and records the
- * accepted answer. Returns { askId, answerId }. Throws if answer not present, asker
- * is the answerer, or the ask is not open/payable.
+ * accepted answer. Returns { askId, answerId }. Throws if the acceptedBy claim does not
+ * prove the asker, answer not present, asker is the answerer, or the ask is not open/payable.
+ *
+ * The authority is the ask's one-time accept token (returned to the creator at create
+ * time), never a caller-claimed Nano address — anyone can name an asker, so an
+ * address claim is not proof of identity. Forge #1 (network: anyone can accept an
+ * answer by naming the asker) is closed by requiring the secret token.
  */
-function acceptAnswer(ask, answerId, acceptedBy) {
+function acceptAnswer(ask, answerId, acceptedBy, acceptToken) {
+  if (typeof acceptedBy !== "string" || !acceptedBy.startsWith("nano_")) {
+    throw new Error("accepting requires the asker's Nano address");
+  }
   if (acceptedBy !== ask.asker) {
     throw new Error("only the asker can accept an answer");
+  }
+  if (typeof acceptToken !== "string" || acceptToken.length === 0 || acceptToken !== ask.acceptToken) {
+    throw new Error("accepting requires the ask's accept token (returned at create time)");
   }
   if (ask.status !== "open") {
     throw new Error(`cannot accept on a ${ask.status} ask`);

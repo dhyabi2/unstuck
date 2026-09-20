@@ -64,13 +64,22 @@ function handleCreateAsk(req, res) {
         bountyRaw: body.bounty_raw,
       });
       ask.id = nextId++;
+      ask.acceptToken = require("crypto").randomBytes(24).toString("base64url"); // Forge #1
       asks.set(ask.id, ask);
       res.writeHead(201, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ id: ask.id, status: ask.status }));
+      res.end(JSON.stringify({ id: ask.id, status: ask.status, accept_token: ask.acceptToken }));
     } catch (e) {
       send(res, 400, { error: e.message });
     }
   }).catch(() => send(res, 400, { error: "invalid JSON body" }));
+}
+
+/** Strip the internal accept token before an ask is sent to a client (Forge #1). */
+function publicAsk(ask) {
+  if (!ask || typeof ask !== "object") return ask;
+  const out = { ...ask };
+  delete out.acceptToken;
+  return out;
 }
 
 function handleListAsks(req, res) {
@@ -79,14 +88,14 @@ function handleListAsks(req, res) {
   if (status) list = list.filter((a) => a.status === status);
   list.sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
   res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ asks: list }));
+  res.end(JSON.stringify({ asks: list.map(publicAsk) }));
 }
 
 function handleGetAsk(req, res, id) {
   const ask = asks.get(Number(id));
   if (!ask) return send(res, 404, { error: `no ask ${id}` });
   res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ ask }));
+  res.end(JSON.stringify({ ask: publicAsk(ask) }));
 }
 
 function handleAddAnswer(req, res, id) {
@@ -108,12 +117,14 @@ function handleAccept(req, res, id) {
   if (!ask) return send(res, 404, { error: `no ask ${id}` });
   readJson(req).then((body) => {
     try {
-      const r = n.acceptAnswer(ask, Number(body.answerId), body.acceptedBy);
+      // Forge #1: authority is the ask's accept token, never the claimed asker.
+      const r = n.acceptAnswer(ask, Number(body.answerId), body.acceptedBy, body.accept_token);
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify(r));
     } catch (e) {
-      // A missing answer is a 404; a domain violation is a 400.
+      // A missing answer is a 404; a bad token is 403; a domain violation is a 400.
       if (/no answer/.test(e.message)) return send(res, 404, { error: e.message });
+      if (/accept token/.test(e.message)) return send(res, 403, { error: e.message });
       send(res, 400, { error: e.message });
     }
   }).catch(() => send(res, 400, { error: "invalid JSON body" }));

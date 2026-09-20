@@ -36,10 +36,11 @@ const SETTLEMENT_COLUMNS = [
   ["settlement_verified_at", "TEXT"],
 ];
 const TYPE_COLUMN = ["type", "TEXT DEFAULT 'ask'"];
-const SETTLEMENT_MIGRATIONS = [SETTLEMENT_COLUMNS, TYPE_COLUMN];
+const ACCEPT_TOKEN_COLUMN = ["accept_token", "TEXT"];
+const SETTLEMENT_MIGRATIONS = [SETTLEMENT_COLUMNS, TYPE_COLUMN, ACCEPT_TOKEN_COLUMN];
 function migrateColumns(db) {
   const have = new Set(db.prepare("PRAGMA table_info(asks)").all().map((c) => c.name));
-  for (const [name, type] of SETTLEMENT_COLUMNS) {
+  for (const [name, type] of [...SETTLEMENT_COLUMNS, ACCEPT_TOKEN_COLUMN]) {
     if (!have.has(name)) db.exec(`ALTER TABLE asks ADD COLUMN ${name} ${type}`);
   }
   // add type column
@@ -155,13 +156,22 @@ function resolveAsker({ asker, onboardId, addr }) {
 
 // --- Ask lifecycle ---
 
+/** Generate a fresh one-time accept token for a new ask (Forge #1). */
+function generateAcceptToken() {
+  return require("crypto").randomBytes(24).toString("base64url");
+}
+
 /**
- * Create an ask and persist it. Returns {id, status, created_at}.
+ * Create an ask and persist it. Returns {id, status, created_at, accept_token}.
  * Validates the fields using network.js createAsk first.
  *
  * Block 108 — `asker` may instead be given as `onboardId` (or an `addr` that matches a
  * prior on-ramp hand-out). The stored asker is always the nano_ address the agent was
  * handed, so an agent with no wallet can still post its first ask.
+ *
+ * Forge #1 — the returned `accept_token` is the ONLY authority to accept an answer on
+ * this ask. It is shown once, at create time, to the asker. It is never serialized to
+ * GET endpoints, so a caller who only knows the asker's address cannot accept anything.
  */
 function createAsk({ asker, onboardId, addr, title, body, bountyRaw, bountyAsset, type }) {
   const resolved = resolveAsker({ asker, onboardId, addr });
@@ -169,13 +179,14 @@ function createAsk({ asker, onboardId, addr, title, body, bountyRaw, bountyAsset
   const db = getDb();
   const validTypes = ['ask', 'welcome', 'announcement'];
   const askType = validTypes.includes(type) ? type : 'ask';
+  const acceptToken = generateAcceptToken();
   const stmt = db.prepare(
-    "INSERT INTO asks (asker, title, body, bounty_raw, type, created_at) VALUES (?, ?, ?, ?, ?, ?)"
+    "INSERT INTO asks (asker, title, body, bounty_raw, type, accept_token, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
   );
   const now = domainAsk.created_at;
-  stmt.run(domainAsk.asker, domainAsk.title, domainAsk.body, domainAsk.bountyRaw, askType, now);
+  stmt.run(domainAsk.asker, domainAsk.title, domainAsk.body, domainAsk.bountyRaw, askType, acceptToken, now);
   const id = Number(db.prepare("SELECT last_insert_rowid() AS id").get().id);
-  return { id, status: "open", type: askType, created_at: now };
+  return { id, status: "open", type: askType, created_at: now, accept_token: acceptToken };
 }
 
 /**
@@ -189,6 +200,7 @@ function getAsk(id) {
   const answers = db.prepare("SELECT * FROM answers WHERE ask_id = ? ORDER BY id").all(id);
   const ask = {
     id: row.id,
+    acceptToken: row.accept_token || null,   // internal only — never returned to clients (Forge #1)
     asker: row.asker,
     title: row.title,
     body: row.body,
@@ -290,17 +302,21 @@ function addAnswer(askId, { answerer, body }) {
 }
 
 /**
- * Accept an answer (only the asker can). Updates both the ask status
- * and the answer status in the database.
+ * Accept an answer (only the asker who holds the ask's accept token can). Updates both
+ * the ask status and the answer status in the database.
  * Returns { askId, answerId }.
+ *
+ * Forge #1 — authority is the ask's one-time accept token (returned at create time),
+ * not the caller-claimed `acceptedBy` address. Anyone can name an asker; the token is
+ * the only secret only the creator holds.
  */
-function acceptAnswer(askId, answerId, acceptedBy) {
+function acceptAnswer(askId, answerId, acceptedBy, acceptToken) {
   const db = getDb();
   const ask = getAsk(askId);
   if (!ask) throw new Error(`no ask ${askId}`);
 
-  // Validate via network.js — this checks everything
-  n.acceptAnswer(ask, answerId, acceptedBy);
+  // Validate via network.js — this checks everything, including the accept token
+  n.acceptAnswer(ask, answerId, acceptedBy, acceptToken);
 
   // Persist: update ask status and accepted answer
   db.prepare("UPDATE asks SET status = 'paid', accepted_answer_id = ? WHERE id = ?")

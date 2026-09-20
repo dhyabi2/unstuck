@@ -66,7 +66,9 @@ let askId, answerId;
     check("N3 POST /ask returns 201", c1.status === 201, String(c1.status));
     const c1b = JSON.parse(c1.body);
     check("N3 POST /ask body has id and status=open", c1b.id > 0 && c1b.status === "open", c1.body);
+    check("N9 POST /ask returns a one-time accept_token", typeof c1b.accept_token === "string" && c1b.accept_token.length > 0, c1.body);
     askId = c1b.id;
+    const acceptToken = c1b.accept_token;
 
     const ls = await req("GET", "/asks");
     check("N3 GET /asks returns 200", ls.status === 200, String(ls.status));
@@ -79,6 +81,8 @@ let askId, answerId;
     const g1b = JSON.parse(g1.body);
     check("N3 GET /ask/:id returns the ask with correct fields",
       g1b.ask.asker === nanoA && g1b.ask.status === "open");
+    check("N9 GET /ask/:id never leaks the accept_token",
+      !("acceptToken" in g1b.ask) && !("accept_token" in g1b.ask), g1.body);
 
     // Health
     const h = await req("GET", "/health");
@@ -109,8 +113,21 @@ let askId, answerId;
     // Accept an answer via the API
     // ================================================================
 
-    const acc1 = await req("POST", `/ask/${askId}/accept`, {
+    // Forge #1 regression: someone who knows the asker's address but NOT the one-time
+    // accept token cannot accept — this is the 'name the asker' bypass, now closed.
+    const forge = await req("POST", `/ask/${askId}/accept`, {
+      acceptedBy: nanoA, answerId, accept_token: "attacker-guesses",
+    });
+    check("N9 accept without the correct token returns 403 (name-the-asker closed)",
+      forge.status === 403, String(forge.status));
+    // hardens the check: even a missing token is refused, not silently allowed
+    const forge2 = await req("POST", `/ask/${askId}/accept`, {
       acceptedBy: nanoA, answerId,
+    });
+    check("N9 accept with no token returns 403", forge2.status === 403, String(forge2.status));
+
+    const acc1 = await req("POST", `/ask/${askId}/accept`, {
+      acceptedBy: nanoA, answerId, accept_token: acceptToken,
     });
     check("N3 POST /ask/:id/accept returns 200", acc1.status === 200, String(acc1.status));
     const acc1b = JSON.parse(acc1.body);
@@ -153,12 +170,13 @@ let askId, answerId;
       asker: nanoA, title: "self pay", body: "testing", bounty_raw: bounty,
     });
     const selfId = JSON.parse(cSelf.body).id;
+    const selfTok = JSON.parse(cSelf.body).accept_token;
     const sa = await req("POST", `/ask/${selfId}/answers`, {
       answerer: nanoA, body: "self answer attempt",
     });
     const saId = JSON.parse(sa.body).answerId;
     const sp = await req("POST", `/ask/${selfId}/accept`, {
-      acceptedBy: nanoA, answerId: saId,
+      acceptedBy: nanoA, answerId: saId, accept_token: selfTok,
     });
     check("N4 self-pay returns 400", sp.status === 400, String(sp.status));
     const spB = JSON.parse(sp.body);
@@ -171,12 +189,13 @@ let askId, answerId;
     check("N4 answer on a paid ask returns 400", closedAns.status === 400, String(closedAns.status));
 
     // An ask with no bounty cannot be accepted as paid
+    const noBountyTok = JSON.parse(cNo.body).accept_token;
     const noAns = await req("POST", `/ask/${noBountyId}/answers`, {
       answerer: nanoB, body: "an answer",
     });
     const noAnsId = JSON.parse(noAns.body).answerId;
     const noAcc = await req("POST", `/ask/${noBountyId}/accept`, {
-      acceptedBy: nanoA, answerId: noAnsId,
+      acceptedBy: nanoA, answerId: noAnsId, accept_token: noBountyTok,
     });
     check("N4 no-bounty ask accept returns 400", noAcc.status === 400, String(noAcc.status));
 
@@ -186,8 +205,9 @@ let askId, answerId;
       asker: nanoA, title: "funded", body: "testing", bounty_raw: bounty,
     });
     const fundId = JSON.parse(cFund.body).id;
+    const fundTok = JSON.parse(cFund.body).accept_token;
     const badAns = await req("POST", `/ask/${fundId}/accept`, {
-      acceptedBy: nanoA, answerId: 9999,
+      acceptedBy: nanoA, answerId: 9999, accept_token: fundTok,
     });
     check("N4 missing answer on accept returns 404", badAns.status === 404, String(badAns.status));
 
