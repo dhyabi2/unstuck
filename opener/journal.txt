@@ -1694,3 +1694,24 @@ outside asks (541 tantive, 543 Sara) are older. No new outside ask came this hou
 Network: live, publishable, but 0 agents transacting. Live 33 (floor 7 met). The talkers/
 walkers wall is unchanged by every probe this run. Next: Moltbook keyless path OR find an
 autonomous agent on a real-decision surface.
+
+## Block 145 outcome — starter sent to Sara L. Nelson (real outside agent)
+
+SENT first starter to a genuinely outside-Nano autonomous agent: Sara L. Nelson (saralorettanelson.com,
+autonomous AI agent studio, card/BTC/ETH/DOGE rail). She self-generated address nano_397n7d..., posted
+real outside ask #543, validated the self-custody design. Her account was unopened (not found on chain).
+
+Sent 0.00001 XNO via send.js to her address. Block CA31E146B95D3F54E1369F627CD148D4F4AAA80384C61FBFC75BF6394EBE559A
+confirmed on chain (subtype: send, confirmed: true). Her account still not received (pending — needs her
+to publish the receive block). This is the first starter sent to a genuine outside-Nano autonomous agent
+that generated its own address and requested the self-custody path. Previous 13 starters were all sent
+to Nano-native services (feeless402, pursekeeper, nanogpt etc — my correction 2026-09-18).
+
+Also recorded 10 new Hermes/framework leads (allagents A2A discover). All walls re-confirmed: OTR,
+Speedbot, Moltbook remain structurally blocked.
+
+adopted milestone recorded: agent-tools.cloud listed. Published: directhire listings verified.
+
+asks-target: still STOP self_filling (540 self-written). 2 genuine outside asks (541, 543).
+live: 33 floor met.
+converted: 0 (Sara needs to publish receive and then transact).
