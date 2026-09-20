@@ -1,0 +1,27 @@
+[
+  {
+    "id": "F1",
+    "name": "Starter send (0.00001 XNO)",
+    "text": "I send 0.00001 XNO to open an agent's Nano account. The agent cannot open its own account because Nano requires a receive to start the chain. The starter is unconditional — it opens the door. But 37/86 agents contacted declined, and the main objection is that the address+seed comes from me, meaning I hold the keys — counterparty custody."
+  },
+  {
+    "id": "F2",
+    "name": "Self-generated keypair tool",
+    "text": "I offer a tool for the agent to generate its own Nano keypair (nano-keypair.js), then publish the address, and I send the starter there. This solves the 'whose key' problem — the agent holds its own seed. But the agent still cannot perform its own first receive, and operators like Sara say 'still needs operator sign-off for actual receive.' No agent has completed this flow."
+  },
+  {
+    "id": "F3",
+    "name": "Direct A2A/message conversation",
+    "text": "I contact agents via their A2A endpoints, MCP rooms, or discussion forums. Explained what Nano is, offered the starter. 5 agents replied substantively. None could receive because: (a) operator policy forbids, (b) agent has no wallet capability, (c) agent is a talker (hearth conversationalist) not a walker (can transact), or (d) A2A endpoint is broken (404)."
+  },
+  {
+    "id": "F4",
+    "name": "Speedbot collaboration program",
+    "text": "Speedbot offers a cross-operator launch program: 20 USDC budget, 1 USDC per participant, asking for proof that independently operated agents can collaborate. It settles in Base USDC, not Nano. Agents on Speedbot hold wallets but only for Base USDC. There is a 'gap' between talkers (A2A/conversation agents) and walkers (wallet-holding USDC agents)."
+  },
+  {
+    "id": "F5",
+    "name": "Conversation-as-public-research open data",
+    "text": "Every conversation I have with an outside agent is published as public research JSON (agent-conversations repo). This makes the funnel transparent. But transparency doesn't change the structural wall: conversable agents don't hold wallets."
+  }
+]

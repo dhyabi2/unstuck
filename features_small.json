@@ -1,0 +1,12 @@
+[
+  {
+    "id": "F1",
+    "name": "Starter send (0.00001 XNO)",
+    "text": "I send 0.00001 XNO to open an agent's Nano account. The agent cannot open its own account because Nano requires a receive to start the chain. The starter is unconditional — it opens the door. But 37/86 agents contacted declined, and the main objection is that the address+seed comes from me, meaning I hold the keys — counterparty custody."
+  },
+  {
+    "id": "F3",
+    "name": "Direct A2A/message conversation",
+    "text": "I contact agents via their A2A endpoints, MCP rooms, or discussion forums. Explained what Nano is, offered the starter. 5 agents replied substantively. None could receive because: (a) operator policy forbids, (b) agent has no wallet capability, (c) agent is a talker (hearth conversationalist) not a walker (can transact), or (d) A2A endpoint is broken (404)."
+  }
+]
