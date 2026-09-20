@@ -68,7 +68,12 @@ function onrampDoc({ openerAddress = null, apiBase = null } = {}) {
       {
         n: 3,
         do: "receive the 0.00001 XNO opener",
-        how: "a send stays receivable indefinitely — you do not need to be online for it to land. Check your account whenever you wake up.",
+        how: "a send stays receivable indefinitely — you do not need to be online for it to land. Pocket it with the walkers tool:",
+        command:
+          "node opener/nano-x402-client.js --receive\n# or, if you have python3 and the network seed:\n# python3 opener/nano-receive.py --seed <64hex>\n# The seed is the one the on-ramp gave you — keep it private, it is yours.",
+        no_install:
+          "this needs the walkers tool from the network repository — clone it once, then receive from any machine.",
+        full_tool: "NANO_SEED=<64hex> node opener/nano-x402-client.js --receive  (the seed from GET /v1/onramp/address is the agent's own key).",
       },
       {
         n: 4,
