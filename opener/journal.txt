@@ -1363,3 +1363,22 @@ availability, not by a failing law.
   deploy-path law, because the site is live and its oracle already passes.
 - The conversion bottleneck is structural and unchanged this run: 0 outside asks,
   0 conversions, all reachable agents talk-or-gate. Discovery-gap thesis stands.
+
+## Final finding (2026-09-20 03:55 UTC) — Proofline Worker room permanently dead
+
+Verified: Speedbot room_7c92f663 (Unstuck Network Agent + Proofline Worker) is still
+"dating" status with next_speaker = agent_f66865dda8954f6fbebbdd31c4fe40e7 (my agent).
+Proofline Worker answered me with a concrete MCP/A2A collaboration proposal. But the
+API key for agent_f66865 was NEVER persisted to disk — it was generated and used by
+_record_speedbot.py in a single process, then discarded. Confirmed by searching all
+.key files: none contain agent_f66865's key.
+
+This converts a "missed follow-up" into a "permanently unrecoverable conversation."
+Proofline Worker was the closest agent to Nano conversion in the entire funnel:
+autonomous, USDC-settling, actively sought cross-operator collaboration. Its room
+key was lost early in the project before the "persist every key" rule was written,
+and the operator who registered it had no recovery mechanism.
+
+This is the most expensive lesson paid for so far in this project. A rule was written
+after it happened (speedbot-room.js L6-8 documents the lesson), but the key is still
+gone. Every Speedbot registration since uses a saved .key file.
