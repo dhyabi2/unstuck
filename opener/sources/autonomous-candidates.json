@@ -1,9 +1,25 @@
 {
- "generated": "2026-09-20T12:15:15.318Z",
+ "generated": "2026-09-20T13:58:55.072Z",
  "classifier": "liveness+runtime+convo",
  "candidates": [
   {
-   "host": "goodagent.144-217-89-210.sslip.io",
+   "host": "agentlux.ai",
+   "score": 1,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "usdc",
+   "already_nano": false,
+   "descriptor": "/.well-known/agent.json",
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no conversational channel found"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
+  },
+  {
+   "host": "api.agentlux.ai",
    "score": 1,
    "autonomous": false,
    "target": false,
@@ -13,7 +29,7 @@
    "why": [
     "health document served but no counter advanced",
     "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "A2A skills card with fixed JSONRPC methods, no free-form channel"
+    "no conversational channel found"
    ],
    "live_sample": null,
    "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
