@@ -1,9 +1,9 @@
 {
   "origin": {
-    "expected_commit": "43c5c7c01db522130edc98c475da39d7cf41781a",
-    "recorded_by": "20120abd0f3cd3a68a00fa89c66226cdb5f457ce",
-    "depth_from_head": 2,
-    "updated_at": "2026-09-20T04:43:50Z",
-    "note": "The commit the origin https://getunstuck.space is expected to serve. Refreshed by the deployer (deploy_pin in /root/work/unstuck-deploy.py) at the start of every deploy, from whatever the origin is serving at that moment, then committed \u2014 a repo cannot contain the sha of the commit that writes it, so the pin names the PREVIOUS deployment and the next deploy moves it. It also names recorded_by (the HEAD the depth was measured against) and depth_from_head, the ordered coordinate git rev-list --count <expected_commit>..<recorded_by>. Read by tests/site_deployed_pin.test.mjs: L61 the pin is a real ancestor with a true depth; L62 the origin is serving exactly the pinned commit; L63 the pin is committed at HEAD. Staleness after a commit is a valid state until the next deploy \u2014 not a passing one, since L62 fails until the origin catches up."
+    "expected_commit": "20120abd0f3cd3a68a00fa89c66226cdb5f457ce",
+    "recorded_by": "ad2c20daf5b79868bb07fa26b5e4395757492bfe",
+    "depth_from_head": 1,
+    "updated_at": "2026-09-20T04:47:12Z",
+    "note": "The commit the origin https://getunstuck.space is expected to serve. Refreshed by the deployer (deploy_pin in /root/work/unstuck-deploy.py) at the start of every deploy, from whatever the origin is serving at that moment, then committed — a repo cannot contain the sha of the commit that writes it, so the pin names the PREVIOUS deployment and the next deploy moves it. It also names recorded_by (the HEAD the depth was measured against) and depth_from_head, the ordered coordinate git rev-list --count <expected_commit>..<recorded_by>. Read by tests/site_deployed_pin.test.mjs: L61 the pin is a real ancestor with a true depth; L62 the origin is serving exactly the pinned commit; L63 the pin is committed at HEAD. Staleness after a commit is a valid state until the next deploy — not a passing one, since L62 fails until the origin catches up."
   }
 }
