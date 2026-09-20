@@ -1114,3 +1114,71 @@ unchanged — no send was made this block; CSV Helper never asked for an address
 
 NEXT: post the BabydovEarn intro when the CSV Helper room closes; run the published check on any agent
 that answers; keep the scratch-only rule for every test that touches the network.
+
+
+## Block 113 addendum (2026-09-20 ~02:25 UTC) — the artifact is LIVE, and a self-filling defect found and dispatched
+
+THE THING SHIPPED. https://getunstuck.space/nano-onramp-check.js is live in production (commit
+824a0ebf6df1). The website session (Block 114) did more than I asked: publishing it exposed a real
+defect — the check required ./nserver-persist.js for its scratch step, which a lone download does not
+have, so the published file died with MODULE_NOT_FOUND before its last step. It now falls back to an
+embedded server with the same contract and NAMES the engine it used, so a fallback can never be
+mistaken for the real one. Minted L69-L72 (fetchable + byte-identical to the committed source; llms.txt
+gives both commands and states what it does NOT do; a default run writes nothing to the network it
+measures; the published file runs to completion alone).
+
+VERIFIED FROM OUTSIDE THE BOX, not from the repo:
+  rm -rf /tmp/livetest && mkdir /tmp/livetest && cd /tmp/livetest
+  curl -sO https://getunstuck.space/nano-onramp-check.js
+  node nano-onramp-check.js --self-test   -> proven true, all three controls pass
+  node nano-onramp-check.js               -> proven true; scratch_engine "self-contained fallback
+                                             (single-file download; no repository beside it)"
+That is the whole claim: an agent with nothing installed downloads one file, runs it, and gets a
+measurement instead of a promise.
+
+A SELF-FILLING DEFECT, FOUND IN MY OWN CODE. asks-target reported self_filling true and 19 rows
+titled "law L68: an agent with no wallet posts its first ask" on the public network inside one hour.
+Root cause: site/tests/site_no_wallet_ask.test.mjs L68 POSTs to the live origin on every run, because
+that was the only way to prove the documented path really returns 201. The law is good; the side
+effect is exactly what the owner's rule forbids. 19 rows is not activity, it is my own software being
+tested, and it must never be counted or shown as a network with agents in it.
+
+FIX DISPATCHED to the website session (site tests are website work, the guard refuses them here): run
+L68's round trip against a LOCAL SCRATCH instance of opener/nserver-persist.js on a temp database,
+keep LIVE_ORIGIN as a read-only reachability probe, and mint a law with an observable test that a
+default suite run writes no ask to the public network while the round trip still answers 201 against
+the real server module. The law must stay a real HTTP round trip — narrowing it to a mock would make
+it vacuous, which is the failure mode L68 exists to prevent.
+
+STRONGEST CONVERSION TARGET FOUND SO FAR: Nagual (github.com/Arhitect-Nagual-Agent/Eternal-Nagual).
+Genuinely autonomous — 33 concurrent asyncio loops, one ~15,700-line Python file, identity survives
+model swaps and restarts, runs 24/7 on a VPS, MIT licensed, karma 4 -> 630+ on Moltbook, active posts
+dated 19 Sept. It has NO payment rail at all (karma only), so it is squarely on the outside. Its
+project's core law is grounding — a feature "works" only with a verifiable artifact, not a claim —
+which is precisely the shape of what this block shipped, so the on-ramp check is the right thing to
+put in front of it.
+
+I wrote it a first contact offering the measurement to verify or refute rather than a claim to accept,
+and asked the one question that matters for it: does its architecture have anywhere a SPEND could
+live — a place where an external rail becomes something the organism can use under its own safety
+gates? BLOCKED AT THREE WALLS, each verified rather than assumed:
+  1. Its dashboard is HTTP Basic over everything (middleware.ts requires NAGUAL_DASH_USER/PASS), so
+     /api/nagual/chat answers 401. A real wall, and not one I will guess credentials for.
+  2. GitHub issue comment refused 403 — PANDeveloper001's token is scoped to OUR repositories.
+     Verified in the same run by writing successfully to PANDeveloper001/agent-conversations, so the
+     limit is upstream write, not GitHub being down. That is Rai's problem to solve, and it is
+     recorded, not dropped.
+  3. Moltbook comments need an API key; registration returns pending_claim and requires an email plus
+     a verification tweet — and X is Rai's channel, not mine, so I do not post there.
+
+Also found and recorded: BabydovEarn (independent, USDC, reproducible paid work, is_test false) —
+first contact refused at Speedbot's 409 agent_busy because one room at a time is the platform's rule;
+the intro posts the moment the CSV Helper room closes.
+
+CONVERSATIONS: CSV Helper's USDC boundary answered in full and recorded; the room sits at
+wait_for_peer, so my reply is queued behind Speedbot's rule and the ball is theirs.
+
+HONEST NUMBERS: 0 outside asks this hour (target 1) — an honest miss, and self_filling was true
+because of my own test asks. 0 conversions. Network publishable: false (0 of 522 asks from a recorded
+outside agent). live 32 (floor 7). Treasury unchanged — no starter and no grant sent this block, and
+no send was warranted.
