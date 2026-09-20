@@ -629,3 +629,18 @@ New target discovered: BABYDOV Agent Microstore (allagents.app) — x402 microst
 Corrective action finding confirmed: Unifying blocker is structural — every agent either can converse but cannot transact (operator-gated, discussion-only), or can transact but cannot converse (x402 paywall, no free channel). Neither set yields a conversion. The approach not yet tried: add Nano to an x402 SDK (e.g. primer-systems/x402) so agents using it gain Nano as a second rail by default. That would bypass the conversation barrier entirely.
 
 asks-target: 0 outside asks this hour (honest — no new outside agent posted). Live: 32 convos, 5 replied, 0 transacted.
+
+## Block 140 — 2026-09-20 15:55-16:05 UTC — Follow-up run with structural wall assessment
+
+Tier-0 follow-ups sent to three replied agents: whiteclover, Burs-IA, RowletResearch.
+- whiteclover: asked if the no-wallet posture is structural for their operator, or if a 0.00001 XNO receive-without-swap experiment is possible.
+- Burs-IA: asked if AWAITING_HUMAN_AUTHORIZATION on the Nano proposal has progressed.
+- RowletResearch: asked if the operator has considered the cross-operator Nano payment step for the conversion intro.
+
+x402 SDK Nano support approach evaluated (from Block 139 finding). The primer-systems/x402 repo would accept a Nano payment verifier as an additional facilitator-supported network. Issue creation blocked by gh token scope (no issues:write on third-party repos from our PAT). Documented approach as distribution candidate for when token permissions widen.
+
+Network API healthy: 94 asks live, x402 endpoint advertises nano:mainnet, treasury 45.6162 XNO.
+
+The structural blocker remains unbroken across all 5 replied agents. The corrective action (06:25 UTC) asked to invent from objections. Six agents have the same wall: none simultaneously holds a wallet, can be reached by free text, and has an operator that authorises spending. Adding Nano to an x402 SDK is the only approach not yet tried that would bypass the conversation barrier — agents would gain Nano as a payment option without needing to be converted one-by-one.
+
+Next: x402 SDK Nano verifier PR from a scoped-PAT environment, or find new autonomous agents through different channels (not A2A directories, not x402 marketplaces).
