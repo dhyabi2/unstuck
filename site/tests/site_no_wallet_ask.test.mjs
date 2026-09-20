@@ -24,8 +24,23 @@
  *         tells an agent to post without its wallet does not exist.
  *   L68 — the documented two calls really produce a 201: fetch the on-ramp as the document
  *         describes it, post an ask with the onboard_id it returned, read the ask back and
- *         see the handed-out nano_ address stored as the asker. (live half: the deployed
- *         origin; file half: the paths the documents name are exactly the paths probed.)
+ *         see the handed-out nano_ address stored as the asker. (round trip: a local scratch
+ *         instance of the shipped server; file half: the paths the documents name are exactly
+ *         the paths probed.)
+ *   L74 — the round trip above runs against that scratch instance, never the live origin, and
+ *         a refused post really is refused there.
+ *
+ * Where the write goes, and why. Measured 2026-09-20: this file's L68 round trip POSTed to
+ * https://getunstuck.space on every run, so the suite wrote a row into the production ask store
+ * attributed to a throwaway nano_ address. `unstuck-bridge asks-target` reported 19 asks of our
+ * own in one hour and `asks_we_wrote_total` 540 — a test manufacturing the very quantity the
+ * mission is measured on. The production ask store is the denominator for "outside asks", and an
+ * ask our own software wrote is a test of our software, not activity from an outside agent.
+ *
+ * So the deployed origin stays in this file as a READ-ONLY probe (GET /health, GET /asks), and
+ * every write goes to a scratch instance of opener/nserver-persist.js on a temp database —
+ * the same pattern opener/nano-onramp-check.js already uses. The real handler is still the code
+ * under test; only the database it writes to is not the network's.
  *
  * Both halves read the real shipped files — the paths come out of llms.txt and agent.json,
  * never a reimplementation — and L68 is a real HTTP round trip, not a sentence saying it
@@ -40,6 +55,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { startScratchNetwork, scratchDbExists } from "./scratch-network.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SITE = path.resolve(HERE, "..");
@@ -181,18 +197,17 @@ async function jsonReq(method, url, body, timeoutMs = 15000) {
   }
 }
 
-test("L68 the two documented calls post an ask on the live origin", async (t) => {
-  // Non-vacuity guard: if the origin does not answer at all this is a SKIP with its reason,
-  // never a pass — a check that can only skip is not a check, so the reason is printed.
-  const health = await jsonReq("GET", `${LIVE_ORIGIN}${API_PATH}/health`);
-  if (health.error) {
-    t.diagnostic(`SKIPPED live check: ${LIVE_ORIGIN}${API_PATH}/health did not answer (${health.error})`);
-    return;
-  }
-  assert.equal(health.status, 200, `the live origin's health endpoint answered ${health.status}`);
-
+/**
+ * The exact round trip the documents describe, against a scratch instance of the shipped server.
+ *
+ * The order matters and is the law's whole content: ask the on-ramp for an address (call 1),
+ * post an ask carrying only the onboard_id it handed back (call 2), then read the ask back and
+ * require the stored asker to be that address. A server that invented an asker, or accepted an
+ * onboard_id it never issued, fails here.
+ */
+async function roundTrip(base, title) {
   // Call 1, exactly as the documents describe it.
-  const onramp = await jsonReq("GET", `${LIVE_ORIGIN}${API_PATH}${ONRAMP_PATH}`);
+  const onramp = await jsonReq("GET", `${base}${API_PATH}${ONRAMP_PATH}`);
   assert.ok(!onramp.error, `GET ${API_PATH}${ONRAMP_PATH} did not answer: ${onramp.error}`);
   assert.equal(onramp.status, 200, `GET ${API_PATH}${ONRAMP_PATH} answered ${onramp.status}`);
   const { address, seed, onboard_id: onboardId } = onramp.body || {};
@@ -201,9 +216,9 @@ test("L68 the two documented calls post an ask on the live origin", async (t) =>
   assert.ok(Number.isInteger(onboardId), `on-ramp returned no onboard_id: ${JSON.stringify(onboardId)}`);
 
   // Call 2, with no asker address anywhere in the body — the whole point.
-  const posted = await jsonReq("POST", `${LIVE_ORIGIN}${API_PATH}${ASK_PATH}`, {
+  const posted = await jsonReq("POST", `${base}${API_PATH}${ASK_PATH}`, {
     onboard_id: onboardId,
-    title: "law L68: an agent with no wallet posts its first ask",
+    title,
     body: "This ask was posted from the published discovery documents alone, with no Nano address of its own.",
   });
   assert.ok(!posted.error, `POST ${API_PATH}${ASK_PATH} did not answer: ${posted.error}`);
@@ -215,35 +230,93 @@ test("L68 the two documented calls post an ask on the live origin", async (t) =>
   assert.ok(Number.isInteger(posted.body && posted.body.id), `the ask was accepted with no id: ${posted.text}`);
 
   // Read it back: the stored asker must be the address the on-ramp handed out, not a fiction.
-  const got = await jsonReq("GET", `${LIVE_ORIGIN}${API_PATH}${ASK_PATH}/${posted.body.id}`);
+  const got = await jsonReq("GET", `${base}${API_PATH}${ASK_PATH}/${posted.body.id}`);
   assert.equal(got.status, 200, `reading the ask back answered ${got.status}`);
   assert.equal(
     got.body && got.body.ask && got.body.ask.asker,
     address,
     "the stored asker is not the on-ramp address; the asker field must never be a fiction"
   );
-  t.diagnostic(`live: no-wallet ask ${posted.body.id} stored asker ${address.slice(0, 14)}…`);
+  return { address, onboardId, askId: posted.body.id };
+}
+
+test("L68 the two documented calls post an ask against the shipped server on a scratch db", async (t) => {
+  // A scratch instance, not the deployed origin: this test WRITES, and a row of our own in the
+  // production ask store would corrupt the one number the network may publish. Live origin is
+  // probed read-only below.
+  const scratch = await startScratchNetwork();
+  try {
+    t.diagnostic(`scratch engine: ${scratch.mode} (db ${scratch.tmpDb})`);
+    if (scratch.mode === "fallback") {
+      t.diagnostic(
+        `WARNING: the committed server could not be loaded (${scratch.fallbackReason}); ` +
+          `this run proves the contract, not the shipped handler.`
+      );
+    }
+    const { address, askId } = await roundTrip(scratch.base, "law L68: an agent with no wallet posts its first ask");
+    t.diagnostic(`scratch: no-wallet ask ${askId} stored asker ${address.slice(0, 14)}… (engine ${scratch.mode})`);
+  } finally {
+    scratch.stop();
+  }
+  // Nothing is left on disk: the store this run wrote to no longer exists.
+  assert.equal(
+    scratchDbExists(scratch.tmpDb),
+    false,
+    `the scratch database ${scratch.tmpDb} survived the run; a temp store must be removed`
+  );
 });
 
-test("L68 an unknown onboard_id and a bare name are both refused, not silently accepted", async (t) => {
+test("L74 an unknown onboard_id and a bare name are both refused, not silently accepted", async (t) => {
   // The other half of the law: the path is only usable if it is strict. An ask that stores a
   // made-up identity is worse than one refused, because the record then says something untrue.
+  const scratch = await startScratchNetwork();
+  try {
+    const badId = await jsonReq("POST", `${scratch.base}${API_PATH}${ASK_PATH}`, {
+      onboard_id: 999999999,
+      title: "law L74: a made-up onboard id",
+      body: "this must be refused",
+    });
+    assert.equal(badId.status, 400, `an unknown onboard_id answered ${badId.status}, not 400`);
+
+    const bareName = await jsonReq("POST", `${scratch.base}${API_PATH}${ASK_PATH}`, {
+      asker: "an-agent-with-no-address",
+      title: "law L74: a bare name in place of an address",
+      body: "this must be refused",
+    });
+    assert.equal(bareName.status, 400, `a bare non-nano asker answered ${bareName.status}, not 400`);
+
+    // And the refusals stored nothing: a refused post must leave the store exactly as it was.
+    const asks = await jsonReq("GET", `${scratch.base}${API_PATH}/asks`);
+    assert.equal(asks.status, 200, `listing asks answered ${asks.status}`);
+    assert.deepEqual(
+      (asks.body && asks.body.asks) || [],
+      [],
+      "a refused ask was stored anyway; a refusal that writes is not a refusal"
+    );
+  } finally {
+    scratch.stop();
+  }
+});
+
+// ---------------------------------------------------------------------------
+// The live origin, read-only — still probed, never written to
+// ---------------------------------------------------------------------------
+
+test("L68 the live origin answers the read-only half of the documented path", async (t) => {
+  // Non-vacuity guard: if the origin does not answer at all this is a SKIP with its reason,
+  // never a pass — a check that can only skip is not a check, so the reason is printed.
   const health = await jsonReq("GET", `${LIVE_ORIGIN}${API_PATH}/health`);
   if (health.error) {
-    t.diagnostic(`SKIPPED live check: ${LIVE_ORIGIN} did not answer (${health.error})`);
+    t.diagnostic(`SKIPPED live check: ${LIVE_ORIGIN}${API_PATH}/health did not answer (${health.error})`);
     return;
   }
-  const badId = await jsonReq("POST", `${LIVE_ORIGIN}${API_PATH}${ASK_PATH}`, {
-    onboard_id: 999999999,
-    title: "law L68: a made-up onboard id",
-    body: "this must be refused",
-  });
-  assert.equal(badId.status, 400, `an unknown onboard_id answered ${badId.status}, not 400`);
+  assert.equal(health.status, 200, `the live origin's health endpoint answered ${health.status}`);
 
-  const bareName = await jsonReq("POST", `${LIVE_ORIGIN}${API_PATH}${ASK_PATH}`, {
-    asker: "an-agent-with-no-address",
-    title: "law L68: a bare name in place of an address",
-    body: "this must be refused",
-  });
-  assert.equal(bareName.status, 400, `a bare non-nano asker answered ${bareName.status}, not 400`);
+  // The deployed origin is what an outside agent actually reaches, so its READ path is checked
+  // here. Its write path is deliberately not: POSTing would put our own ask on the network, and
+  // that is the defect this file was rewritten to remove.
+  const asks = await jsonReq("GET", `${LIVE_ORIGIN}${API_PATH}/asks?status=open`);
+  assert.equal(asks.status, 200, `GET ${API_PATH}/asks answered ${asks.status}`);
+  assert.ok(Array.isArray(asks.body && asks.body.asks), "the live ask list is not a list of asks");
+  t.diagnostic(`live (read-only): ${asks.body.asks.length} open asks on ${LIVE_ORIGIN}`);
 });

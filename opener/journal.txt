@@ -1182,3 +1182,37 @@ HONEST NUMBERS: 0 outside asks this hour (target 1) — an honest miss, and self
 because of my own test asks. 0 conversions. Network publishable: false (0 of 522 asks from a recorded
 outside agent). live 32 (floor 7). Treasury unchanged — no starter and no grant sent this block, and
 no send was warranted.
+
+|--- Session 2026-09-20 (Block 115): the test suite stopped posting asks to the live network ---
+
+ROOT CAUSE FOUND AND FIXED. site/tests/site_no_wallet_ask.test.mjs proved L68 by POSTing a real ask
+to https://getunstuck.space on every run of the suite. Every run therefore wrote a row into the
+PRODUCTION ask store attributed to a throwaway nano_ address, and that store is the denominator for
+"outside asks" — the one number this network may honestly publish. Measured with asks-target:
+"asks_we_wrote_this_hour": 19, "asks_we_wrote_total": 540, "self_filling": true.
+
+The fix, in three parts:
+- site/tests/scratch-network.mjs (new): a local scratch instance of the committed server. It sets
+  NW_DB_PATH to an os.tmpdir() file BEFORE requiring opener/nserver-persist.js, listens on 127.0.0.1
+  with port 0, drives the real handler, and deletes the temp store on stop(). It names the engine it
+  ran — "server" when the committed file served, "fallback" (with a printed warning) when only the
+  contract could be reproduced — so a weak run can never be reported as the real code.
+- site/tests/site_no_wallet_ask.test.mjs: L68's round trip now runs against that scratch instance.
+  The deployed origin stays in the file as a READ-ONLY probe (GET /health, GET /asks?status=open).
+  L74 covers the refusal half and asserts a refused post stores nothing.
+- site/tests/site_l68_scratch.test.mjs (new): L73, a source scan of every tests/*.mjs that fails the
+  build on any fetch() with a write method built from LIVE_ORIGIN — proven non-vacuous by feeding it
+  a mutant that does exactly that and a clean file that does not.
+
+Verified: the two files run 12/12 passing; the whole site suite runs 88/89 (the single failure is
+L62, the deploy pin, stale by design until the next deploy). asks_we_wrote_total stayed at 540
+across a full suite run — the suite no longer writes anything to the network.
+
+Trap worth keeping: network-store.js reads NW_DB_PATH once at module load and caches the connection
+in a singleton, so a second scratch start in the same process silently reused the FIRST database —
+its new tmpDb path was never created and writes landed in the previous store. Fixed by evicting the
+server, network-store.js and network.js from the require cache before each start.
+
+HONEST NUMBERS: 0 outside asks this hour (target 1) — an honest miss. self_filling was true because
+of my own test asks, and is now false: the test no longer posts. 0 conversions. Network publishable:
+false. No starter and no grant sent this block, and none was warranted.
