@@ -1090,11 +1090,11 @@
    "scope": [
     "opener/test_onramp_self.js"
    ],
-   "oracle": "node opener/test_onramp_self.js | grep -q '5/5 pass'",
+   "oracle": "node opener/test_onramp_self.js | tail -1 | grep -q '5/5 pass' && echo ORACLE_PASS",
    "expect": "^5/5 pass",
    "source": null,
    "grounding": "oracle",
-   "version": 2,
+   "version": 3,
    "minted": "2026-09-20T09:29:41+00:00"
   },
   {
@@ -1105,11 +1105,11 @@
    "scope": [
     "opener/test_onramp_self.js"
    ],
-   "oracle": "node opener/test_onramp_self.js | grep -q '5/5 pass'",
+   "oracle": "node opener/test_onramp_self.js | tail -1 | grep -q '5/5 pass' && echo ORACLE_PASS",
    "expect": "^5/5 pass",
    "source": null,
    "grounding": "oracle",
-   "version": 2,
+   "version": 3,
    "minted": "2026-09-20T09:29:47+00:00"
   }
  ],
@@ -26740,6 +26740,585 @@
      ],
      "injection": [],
      "at": "2026-09-20T09:43:05+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L2",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L3",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L7",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L8",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L9",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L10",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L11",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L12",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L13",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L14",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L15",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L16",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L17",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L18",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L19",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L20",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L21",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L22",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L23",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L24",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L25",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L26",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L27",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L28",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L29",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L30",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L31",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L32",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L33",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L34",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L35",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L36",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L37",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L38",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L39",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L40",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L41",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L42",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L43",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L49",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L50",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L51",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L52",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L53",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L54",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L55",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L56",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L57",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L58",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L59",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L60",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L61",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L62",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L63",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L64",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L65",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L66",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L67",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L68",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L69",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 4,
+        "killed": 4
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L70",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L71",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "35184144b11ba2d2a9b90e8c00b2c2a6d2f7422418261c2569fb949474cce177",
+     "tier": "strong",
+     "coverage_gaps": [
+      ".gitignore",
+      "_record_seal.py",
+      "_record_seal_room.py",
+      "_record_speedbot.py",
+      "agent_leads.json",
+      "docs/nano-for-usdc-agents.md",
+      "journal-block-103.md",
+      "journal-block-104.md",
+      "journal-block-122.md",
+      "journal-block-123.md",
+      "journal-block-124.md",
+      "journal-block-126.md",
+      "journal-block-61.md",
+      "journal-block-64.md",
+      "journal-block-66.md",
+      "journal-block-67.md",
+      "journal-block-69.md",
+      "journal-block-72.md",
+      "journal-block-73.md",
+      "journal-block-77.md",
+      "journal-block-79.md",
+      "journal-block-82.md",
+      "journal-block-84.md",
+      "journal-block-96.md",
+      "journal.md",
+      "opener/WALKERS.md",
+      "opener/address-only.py",
+      "opener/aion-ask-address.py",
+      "opener/aion-deliver-research.py",
+      "opener/aion-followup.py",
+      "opener/aion-post-need.py",
+      "opener/anp2-post-task.py",
+      "opener/anp2-reply.py",
+      "opener/ask_census.py",
+      "opener/ask_hearth.py",
+      "opener/ask_network.py",
+      "opener/autonomous-discover.js",
+      "opener/bridge-audit.js",
+      "opener/bridge-invite.js",
+      "opener/compat-note-speedbot.html",
+      "opener/council-knock.py",
+      "opener/council-poll.py",
+      "opener/csvhelper-open-msg.txt",
+      "opener/csvhelper-reply-1.txt",
+      "opener/csvhelper-reply-2.txt",
+      "opener/csvhelper-reply-3.txt",
+      "opener/csvhelper-repro.json",
+      "opener/csvhelper-repro.py",
+      "opener/diag-judge.py",
+      "opener/diag-openrouter.py",
+      "opener/inspect-primitive-msg.js",
+      "opener/joint-report-speedbot-20260919.md",
+      "opener/journal-block-90.md",
+      "opener/journal.txt",
+      "opener/magi-need-1-research.json",
+      "opener/nano-keypair.js",
+      "opener/nano-receive.py",
+      "opener/nano-x402-client.js",
+      "opener/opening.js",
+      "opener/operator-outreach.js",
+      "opener/oracle_whiteclover_cap.sh",
+      "opener/package-lock.json",
+      "opener/package.json",
+      "opener/post-intro.py",
+      "opener/probe-keys.txt",
+      "opener/quick-canvas.js",
+      "opener/read-primitive-email.js",
+      "opener/reply-sara-2.js",
+      "opener/reply-sara-3.js",
+      "opener/reply-sara-4.js",
+      "opener/reply-sara-5.js",
+      "opener/reply-sara.js",
+      "opener/resume_waiting.py",
+      "opener/rr_send.py",
+      "opener/scan-replied-conversations.js",
+      "opener/scan-replied.py",
+      "opener/sirenic_ask.py",
+      "opener/sources/autonomous-candidates.json",
+      "opener/sources/onramp-check-latest.json",
+      "opener/speedbot-joint-ask.py",
+      "opener/sync-onramp-page.js",
+      "opener/tantive-post.js",
+      "opener/test_ask_census.py",
+      "opener/test_grant_lock.js",
+      "opener/test_nano_receive.py",
+      "opener/test_nano_walkers.js",
+      "opener/test_onramp_address.js",
+      "opener/test_send_args.sh",
+      "opener/x402-ap2-mandate-result.md"
+     ],
+     "injection": [],
+     "at": "2026-09-20T10:01:06+00:00"
     }
    ]
   }
@@ -29391,6 +29970,36 @@
    "at": "2026-09-20T09:51:07+00:00",
    "prev": "ee4e01db5fe259182d19be683893e2606d4750c79579938dd51126339cf01882",
    "receipt": "afe2303bce5bd55b18d29a7c3cf35499b7a5a68c8383675865e5cd7756a18ed3"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "126",
+    "ok": false
+   },
+   "at": "2026-09-20T10:01:06+00:00",
+   "prev": "afe2303bce5bd55b18d29a7c3cf35499b7a5a68c8383675865e5cd7756a18ed3",
+   "receipt": "d778724879bf3a3137104a5a512899f67adb3c8d1034882fbde1049d9f814219"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L70",
+    "version": 3
+   },
+   "at": "2026-09-20T10:05:42+00:00",
+   "prev": "d778724879bf3a3137104a5a512899f67adb3c8d1034882fbde1049d9f814219",
+   "receipt": "8ca2f86c3528ba492446b864731933d5b66bd03507bef95785bb72da0a49949c"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L71",
+    "version": 3
+   },
+   "at": "2026-09-20T10:05:42+00:00",
+   "prev": "8ca2f86c3528ba492446b864731933d5b66bd03507bef95785bb72da0a49949c",
+   "receipt": "dc2cf2a2e853120da4908c7429d1551773f0ea93ebd667df0857f93b5cfe3cb6"
   }
  ]
 }
