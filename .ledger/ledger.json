@@ -1051,6 +1051,21 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-20T02:28:14+00:00"
+  },
+  {
+   "id": "L68",
+   "block": 123.0,
+   "statement": "the walkers tool lets an agent that holds its own XNO settle an x402 exact payment on nano:mainnet, and never spends treasury money",
+   "test": "node opener/test_nano_walkers.js prints '5 passed, 0 failed': the zero-seed derivation matches the published Nano vector, the seed gate refuses a malformed seed, the accepts selector picks exact/nano:mainnet over other schemes/networks, raw-to-XNO conversion divides by 1e30, and the same seed+index is deterministic",
+   "scope": [
+    "opener/nano-keypair.js opener/nano-x402-client.js opener/test_nano_walkers.js"
+   ],
+   "oracle": "cd /root/unstuck/opener && node test_nano_walkers.js",
+   "expect": "5 passed, 0 failed",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-20T07:07:30+00:00"
   }
  ],
  "blocks": {
@@ -25264,6 +25279,10 @@
      "at": "2026-09-20T03:11:04+00:00"
     }
    ]
+  },
+  "123": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -27799,6 +27818,17 @@
    "at": "2026-09-20T03:11:04+00:00",
    "prev": "d58aadfea2d08a1c3ea84dc3994f5f726e7a66f92d571c1a76e733112d4ca8b5",
    "receipt": "0cd56f1dcfd808626ba69655f6634aef11b2933cc90489779a282f68ad9dc0c4"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L68",
+    "block": "123",
+    "statement_sha": "d1876299a46a0f8b43bf0330b64cf290e3799e4becda8f8264414aa05d3fbf09"
+   },
+   "at": "2026-09-20T07:07:30+00:00",
+   "prev": "0cd56f1dcfd808626ba69655f6634aef11b2933cc90489779a282f68ad9dc0c4",
+   "receipt": "b11eb4b8623eb2953b87e5bfd2a9a435b031cd7f8174f99d819ef1064da17b12"
   }
  ]
 }
