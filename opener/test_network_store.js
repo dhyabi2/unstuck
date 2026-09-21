@@ -183,6 +183,8 @@ process.env.NW_DB_PATH = tmpDb;
     check("F56 self-test ask is stored as type='test'", testA.type === "test", String(testA.type));
     const testB = s4.createAsk({ asker: F56, title: "Test from curl", body: "b", bountyRaw: "1" });
     check("F56 'Test from curl' is stored as type='test'", testB.type === "test", String(testB.type));
+    const testC = s4.createAsk({ asker: F56, title: "live network write probe", body: "b", bountyRaw: "1" });
+    check("F56 'live network write probe' is stored as type='test'", testC.type === "test", String(testC.type));
     const realA = s4.createAsk({ asker: F56, title: "Sara L. Nelson: how do agents settle without keys", body: "b", bountyRaw: "1" });
     check("F56 genuine ask stays type='ask'", realA.type === "ask", String(realA.type));
     check("F56 surviving asks survive close/reopen",
