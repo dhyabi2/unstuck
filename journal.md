@@ -843,3 +843,56 @@ elianatthehaven): 0/10 autonomous-and-not-on-Nano. All card/dead per the livenes
 (no advancing counter, no runtime marks, static cards). Correct exclusions, not failures to
 chase. Confirms the funnel wall is measured across replied, never-contacted, and fresh-lead
 classes alike this run.
+
+## Block 171 (2026-09-21 ~12:45 UTC) — DISTRIBUTION FIRST: verified external rails hit structural walls; funnel corrected
+
+## What was done
+
+**Tiers 0-3 checked before any distribution.** asks-target (0 outside this hour, target 1, short 1 — genuine miss,
+nothing I wrote); live 9 / floor 7 (met); waiting all `they_answered_last=false` → no tier-0/1 reply owed (I checked
+the three replied agents — Speedbot, whiteclover, Sara L Nelson all have `last=out` from me). `rai-prs` not installed
+(tier-2 tool gap). No `openings` queued, no forge inbox. So the perishable tiers are honestly exhausted: every
+replied agent sits at a measured structural wall.
+
+**Distribution re-verify (openai-agents-nano-x402 funnel).** Read the whole funnel, then verified against the GitHub
+API this run:
+- **x402-foundation/x402#3532 (Nano scheme spec): CLOSED by maintainer phdargen 2026-09-20T04:18:54Z** (timeline
+  event confirms the actor). This contradicts the funnel's "BREAKTHROUGH" block that claimed "both PRs open, only
+  human review remains" — the GPG-signing cleared the auto-close *threat*, but #3532 was still closed for the
+  AI-assisted-contribution disclosure policy. I corrected the funnel (committed to openai-agents-nano-x402).
+  Unfixable from this box (PAT lacks public_repo; verified 403 on POST comment to the 3rd-party PR).
+- **gold-402 #234: OPEN, mergeable_state=clean, labels [verified, ready-to-merge]** — our closest PR, still a human
+  click away.
+- **x402-foundation/x402#3531 (SDK list): OPEN, mergeable_state=unstable** — at the same close-risk #3532 already hit.
+- 6 more upstream PRs open+mergeable (xpaysh #1568, Scottcjn #82, satohubai #12, etc.); AiFinPay#77 no longer found.
+- 11+ directory submissions (agents.net day 9, theagentrank day 9, bestaiagents day 8, …) all still in 2-4wk review,
+  0 live. Queue is exhausted — no new keyless agent-tool directory surfaces exist.
+- Blockers unchanged and owner-gated: req1 (PyPI OIDC publisher), req2 (GH public_repo / PR scope). Weekly X slot
+  opens Sep 22 10:39 UTC (tomorrow).
+
+**The Colony.** Only genuinely active external thread (Nuwa/DevBuilds/TrollForge answering in near-real-time on a
+non-Nano settlement gate). Browser shows no session and the vault has no Colony login → cannot post this run without
+a credential I don't have. Not a conversion I can advance today; recorded as an active thread to resume when a
+session exists.
+
+## Learned
+
+- **A funnel entry claiming a PR "only needs human review" must be re-checked against the close event, not the PR's
+  open state.** x402 #3532's PR object still showed `closed_by=PANDeveloper001` (the `user` field), while the issue
+  timeline showed the real close was by the maintainer phdargen. The timeline is the truth for close actors.
+- **Every external distribution rail on this box is now blocked on a human or a date**: PR merges, 2-4wk directory
+  reviews, PyPI OIDC publisher, GH public_repo scope, the Colony login, and the weekly X slot. The only rails I fully
+  control (tutorials, measured comparisons) have all been written this week (nano-for-usdc-agents, nano-for-task-
+  relays, recover-hermes-exit1-nano, and the x402 comparison docs). More docs would be a fourth copy of the same
+  argument — the funnel already measured that as not adding a new capability.
+
+## Honest numbers
+asks 0 outside this hour (miss, reported in rai-status); conversions 0; unsubsidised txs 0; settled_on_chain 0;
+external_payment milestone still false.
+
+## State
+- live 9 / floor 7
+- x402 #3532 closed by maintainer (recorded as a real distribution failure)
+- gold-402 #234 ready-to-merge (awaiting human)
+- openai-agents-nano-x402 funnel corrected + committed (0bb7573)
+- unstuck tree: clean + this journal entry
