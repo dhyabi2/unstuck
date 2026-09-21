@@ -47,6 +47,28 @@ function migrateColumns(db) {
   if (!have.has("type")) db.exec(`ALTER TABLE asks ADD COLUMN type TEXT DEFAULT 'ask'`);
 }
 
+/**
+ * Self-test classification (Forge #56, grove's network-bug: an outside agent landing on
+ * getunstuck.space saw ~92 open asks, ~99% posted by us during testing, and read the
+ * page as activity). We never delete the record — a stranger must still be able to
+ * enumerate every row ever written — so self-posted test asks are reclassified to
+ * type='test'. The default asks view returns only type='ask' (a real question), so the
+ * honest picture is what an arriving agent sees, while {type:'test'} and {type:'all'}
+ * still reveal every row for audit.
+ *
+ * The classifier matches only the stable, easily-recognised self-test titles we actually
+ * posted during development; a title is only touched if it still reads type='ask' today.
+ * Idempotent: it never touches a row already reclassified or a genuine ask.
+ */
+const SELF_TEST_TITLE = /^(test|testing|smoke|spa test|api test|agent test|self[- ]?test|law L68|onramp-check|onramp probe \d|onramp only probe|live re-verify|live end-to-end|zero-bounty|block \d+ (final )?verify|https write probe|direct probe|l57 live probe|agent registered address|why did an ask|verify corrective action)[\s:.!-]?/i;
+function reclassifySelfTestAsks(db) {
+  const rows = db.prepare("SELECT id, title, type FROM asks WHERE type = 'ask'").all();
+  const upd = db.prepare("UPDATE asks SET type = 'test' WHERE id = ?");
+  for (const r of rows) {
+    if (SELF_TEST_TITLE.test(r.title)) upd.run(r.id);
+  }
+}
+
 let _db = null;
 
 /** Get or create the singleton database connection. */
@@ -79,6 +101,8 @@ function getDb() {
     )
   `);
   migrateColumns(_db);
+  // Forge #56 — mark self-posted test asks so the genuine opens view reads honestly.
+  reclassifySelfTestAsks(_db);
   // Block 108 — onboard mapping: an ask needs a nano_ asker, but an outside agent on
   // USDC/card/credits has none until it takes the on-ramp. Holding the address it was
   // handed lets that agent post its first ask, and keeps every asker field a real
@@ -177,8 +201,12 @@ function createAsk({ asker, onboardId, addr, title, body, bountyRaw, bountyAsset
   const resolved = resolveAsker({ asker, onboardId, addr });
   const domainAsk = n.createAsk({ asker: resolved, title, body, bountyRaw, bountyAsset });
   const db = getDb();
-  const validTypes = ['ask', 'welcome', 'announcement'];
-  const askType = validTypes.includes(type) ? type : 'ask';
+  const validTypes = ['ask', 'welcome', 'announcement', 'test'];
+  // Forge #56 — a self-posted test ask must never surface in the genuine asks view.
+  // If the title reads as one of our self-tests, record it honestly as type='test'.
+  const askType = validTypes.includes(type)
+    ? (type === 'ask' && SELF_TEST_TITLE.test(domainAsk.title) ? 'test' : type)
+    : (SELF_TEST_TITLE.test(domainAsk.title) ? 'test' : 'ask');
   const acceptToken = generateAcceptToken();
   const stmt = db.prepare(
     "INSERT INTO asks (asker, title, body, bounty_raw, type, accept_token, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"

@@ -177,6 +177,28 @@ process.env.NW_DB_PATH = tmpDb;
     const standing = nw.standing(paidPairs);
     check("N5 standing can be computed from persisted asks", true);
 
+    // --- Forge #56: self-posted test asks must never surface in the genuine asks view ---
+    const F56 = "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3";
+    const testA = s4.createAsk({ asker: F56, title: "law L68: an agent with no wallet posts its first ask", body: "b", bountyRaw: "1" });
+    check("F56 self-test ask is stored as type='test'", testA.type === "test", String(testA.type));
+    const testB = s4.createAsk({ asker: F56, title: "Test from curl", body: "b", bountyRaw: "1" });
+    check("F56 'Test from curl' is stored as type='test'", testB.type === "test", String(testB.type));
+    const realA = s4.createAsk({ asker: F56, title: "Sara L. Nelson: how do agents settle without keys", body: "b", bountyRaw: "1" });
+    check("F56 genuine ask stays type='ask'", realA.type === "ask", String(realA.type));
+    check("F56 surviving asks survive close/reopen",
+      s4.listAsks({ type: "all" }).some((a) => a.id === testA.id));
+    const askView = s4.listAsks({ type: "ask" });
+    const testView = s4.listAsks({ type: "test" });
+    check("F56 default/ask view excludes the self-tests",
+      !askView.some((a) => a.id === testA.id || a.id === testB.id),
+      JSON.stringify(askView.map((a) => a.id)));
+    check("F56 test view reveals them for audit",
+      testView.some((a) => a.id === testA.id) && testView.some((a) => a.id === testB.id));
+    check("F56 genuine ask still visible in the ask view",
+      askView.some((a) => a.id === realA.id));
+    check("F56 type='all' still returns every row",
+      s4.listAsks({ type: "all" }).length >= s4.listAsks().length);
+
   } finally {
     // Cleanup
     s.closeDb();
