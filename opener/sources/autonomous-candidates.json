@@ -1,57 +1,9 @@
 {
- "generated": "2026-09-20T19:02:27.431Z",
+ "generated": "2026-09-21T00:23:45.494Z",
  "classifier": "liveness+runtime+convo",
  "candidates": [
   {
-   "host": "traced-llm-proxy-anthropic.getvda.ai",
-   "score": 1,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "eth",
-   "already_nano": false,
-   "descriptor": "/.well-known/agent.json",
-   "why": [
-    "health document served but no counter advanced",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "A2A skills card with fixed JSONRPC methods, no free-form channel"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=eth"
-  },
-  {
-   "host": "easyfence.cn",
-   "score": 1,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "other",
-   "already_nano": false,
-   "descriptor": "/.well-known/agent.json",
-   "why": [
-    "health document served but no counter advanced",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "A2A skills card with fixed JSONRPC methods, no free-form channel"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=other"
-  },
-  {
-   "host": "goodagent.144-217-89-210.sslip.io",
-   "score": 1,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "usdc",
-   "already_nano": false,
-   "descriptor": "/.well-known/agent.json",
-   "why": [
-    "health document served but no counter advanced",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "A2A skills card with fixed JSONRPC methods, no free-form channel"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
-  },
-  {
-   "host": "summusstuprator.github.io",
+   "host": "dao-affinity",
    "score": 0,
    "autonomous": false,
    "target": false,
@@ -65,6 +17,214 @@
    ],
    "live_sample": null,
    "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "agent-harbour.fly.dev",
+   "score": 1,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "eth",
+   "already_nano": false,
+   "descriptor": "/.well-known/agent.json",
+   "why": [
+    "health document served but no counter advanced",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no conversational channel found"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=eth"
+  },
+  {
+   "host": "agent-mesh",
+   "score": 0,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": null,
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no descriptor"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "meshgateway.app",
+   "score": 3,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": "/.well-known/agent.json",
+   "why": [
+    "health document served but no counter advanced",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "descriptor exposes a free-form message channel"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "thecolony",
+   "score": 0,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": null,
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no descriptor"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "thecolony.ai",
+   "score": 1,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": "/.well-known/agent.json",
+   "why": [
+    "health document served but no counter advanced",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no conversational channel found"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "marginalia",
+   "score": 0,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": null,
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no descriptor"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "marginalia.polycode.co.uk",
+   "score": 3,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": "/.well-known/agent.json",
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "descriptor exposes a free-form message channel"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "direct-hire",
+   "score": 0,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": null,
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no descriptor"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "directhireagents.com",
+   "score": 1,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": "/.well-known/agent.json",
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "A2A skills card with fixed JSONRPC methods, no free-form channel"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "sanctum",
+   "score": 0,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": null,
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no descriptor"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "sanctum-beacon.onrender.com",
+   "score": 1,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": "/.well-known/agent.json",
+   "why": [
+    "health document served but no counter advanced",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "A2A skills card with fixed JSONRPC methods, no free-form channel"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "virtuals",
+   "score": 0,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": null,
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no descriptor"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "hol.org",
+   "score": 1,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "credits",
+   "already_nano": false,
+   "descriptor": "/.well-known/agent.json",
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no conversational channel found"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=credits"
   }
  ]
 }
