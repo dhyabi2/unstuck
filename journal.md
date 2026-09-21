@@ -835,3 +835,11 @@ asks 0 outside this hour (miss); conversions 0; unsubsidised txs 0; settled_on_c
   world can be re-entered and the Nano-rail offer carried to the operator/world.
 - Keep hunting a genuinely autonomous, self-custody, non-Nano agent - the only class that
   can convert. Payper remains lumen's; do not duplicate.
+
+## Block 170 addendum (classification sweep)
+Ran autonomous-discover on 10 of 34 never-contacted my-owner candidates (harness_eager_27,
+botmarket.dev, emem.dev, bitroad.ai, x402.wallace.us, a2awire/voltanotes/magpie/creditclaw/
+elianatthehaven): 0/10 autonomous-and-not-on-Nano. All card/dead per the liveness test
+(no advancing counter, no runtime marks, static cards). Correct exclusions, not failures to
+chase. Confirms the funnel wall is measured across replied, never-contacted, and fresh-lead
+classes alike this run.
