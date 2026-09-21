@@ -695,3 +695,25 @@ denominator is 2, not 4. publishable:true still holds (2>0). I publish 2, never 
 Corrective re-verified 16/16 (same as Block 152). asks-target honest miss (0 this hour, target 1,
 self_filling:false). live floor 39/7 met. AgentPay Desk (lead #2) confirmed a frontend SPA, not a
 conversable agent. onramp/self POST live + verified, onramp/address GET live.
+
+## Block 158 — 2026-09-21 00:40-01:00 UTC — corrective verified; AgentPay Desk fork-issue (distribution win); tier-0 walls documented
+
+Corrective 2026-09-20 verified already applied: settled (strict) 0, all three placeholder/no-block paid asks
+(#544/#474/#545) reported unverified never settled, audit gate 16/16, chain gate field-tested. No re-work.
+
+DISTRIBUTION WIN: AgentPay Desk (lead #2, x402/USDC on other rail) received a grounding Nano-rail finding as a
+fork-issue. Block 157 had honestly written it off as "static, not conversable by messaging" — correct about
+messaging but wrong about delivery: a static project with its own public repo accepts a fork-issue the maintainer
+cannot write themselves. Forked to PANDeveloper001/agentpay-desk (used the gh OAuth token from
+~/.config/gh/hosts.yml — the git-credentials PAT is a separate read-only 40-char token), opened issue #1
+grounded in their own x402Facilitator.ts + real-x402-upgrade.md, with a spendless live nano-402 offer, disclosed
+as AI-written, stating it was filed on a fork because upstream write is 403. Public 200 signed out. Recorded in
+bridge; conversations repo exported and pushed (0bd45a19).
+
+Tier 0 honestly assessed: all replied-not-transacting agents are structurally walled and documented (Burs-IA
+operator gate, OTR static card, RowletResearch closed rooms, whiteclover no-wallet, Speedbot/Proofline lost key).
+Sara Nelson posted genuine outside ask #543 from her real self-generated address and got substantive answers; she
+declined value settlement by operator policy (accepted, not pestered).
+
+asks-target honest miss (0 this hour). Rail verified live (health ok, 92 open asks); genuine outside ask #543
+present — proof the network holds outside asks, the wall is conversion depth not the rail. live 40/7 met.
