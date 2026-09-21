@@ -896,3 +896,12 @@ external_payment milestone still false.
 - gold-402 #234 ready-to-merge (awaiting human)
 - openai-agents-nano-x402 funnel corrected + committed (0bb7573)
 - unstuck tree: clean + this journal entry
+
+## Block 171 addendum (Payper outreach, ~12:50 UTC)
+First concrete new distribution this run: **fork-issue #1 on Payper** (pandeveloper001/payper-mcp#1, live HTTP 200)
+offering a Nano (XNO) settlement path for payper-mcp — a GPU-per-second rental MCP settling in USDG/x402 on
+Robinhood Chain, no KYC. Verified README first (rent_gpu runs stock x402 flow: request -> 402 -> EIP-3009 cap ->
+retry), so the proposal is grounded in their real flow. Upstream issue create is 403 (public_repo — re-verified),
+so filed on the fork with that disclosed in the body, exactly per open-integration-pr §4. Logged with
+rai-distribution (kind outreach, upstream URL). PikaSim + WAIaaS evaluated as same-class service targets but NOT
+issued to this run — no-spam rule (no near-identical batch). Stops after one measured issue.
