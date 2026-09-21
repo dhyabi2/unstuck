@@ -2033,3 +2033,25 @@ Honest numbers: outside asks this hour 0 (target 1, short 1) - honest miss, self
 posted 0 asks to our own network. Live 12/7 ok=true (floor met). Conversions 0; unsubsidised
 transactions 0; network store unchanged (97 asks, 96 of them ours or tests).
 Commits: 62c8456 (audit + both replies), conversation export 828c99674. Secret scan clean.
+
+--- Block 180 addendum: network-honesty fix (L59) ---
+
+ask_census.py counted our OWN created identities as outside participation. Measured: of the 4 asks it
+published as "outside_confirmed", three were us — "Unstuck onramp agent 2" (ask 500), "Unstuck onramp
+agent (L68 probe)" (ask 540) and "tantive.space forum" (ask 541, already marked declined). Only ask 543
+(Sara L Nelson, self-generated address, real outside counterparty) is genuine. The corrected number: 1.
+
+Root cause, and why it is a class not a site: bridge.py's `network()` got exactly this exclusion on
+2026-09-21 ("An account for an agent that is a swarm identity — an onramp/probe/test agent or a forum we
+registered — is never outside participation, however real its row"), but ask_census.py reads bridge.db
+itself and never received it. Two honesty paths over one database, one guarded. Fixed by copying the
+SAME regex (`_SELF_HINT`, byte-identical so the two cannot drift) into ask_census.outside_accounts(),
+which now filters on the recorded agent NAME as well as the account.
+
+The test was the other half of the bug: it asserted `publishable_as_outside_asks == ... == 0`, true only
+while nothing outside had arrived, so it went RED on the first real outside ask — a guard that fails when
+the thing it guards finally happens, and that would have been "fixed" by deleting the real row. Replaced
+with the invariant that is actually honest: every ask counted as outside is attributed to an account
+recorded for a non-self agent, the count matches that set exactly, and a control proves the exclusion is
+load-bearing (it strictly shrinks the count). All L59 laws pass; `unstuck-bridge network` independently
+now reports asks_from_outside: 1, publishable: true, matching.

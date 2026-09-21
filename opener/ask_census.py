@@ -28,6 +28,7 @@ Usage:  python3 ask_census.py [--json]
 import argparse
 import json
 import os
+import re
 import sqlite3
 import subprocess
 import sys
@@ -37,6 +38,14 @@ BASE = "https://getunstuck.space/unstuck/api/asks?type=all"
 OPENER = "nano_1434j1n4sin4cefs5njibag4tsmo596fmg3s6bdogtod3ndmdfez5yuebrh9"
 BRIDGE_DB = os.path.expanduser("~/unstuck/opener/bridge.db")
 ALPHA = set("13456789abcdefghijkmnopqrstuwxyz")
+
+# A name that marks an identity WE created (an onramp/probe/test agent, a forum we registered, a swarm
+# identity) is never an outside counterparty, however real its row in bridge.db. bridge.py's `network()`
+# already excludes these; this module did not, so the same three identities ("Unstuck onramp agent 2",
+# "Unstuck onramp agent (L68 probe)", "tantive.space forum") counted 4 asks as outside adoption.
+# Applied here for the same reason it is applied there: it can only make the number SMALLER, which is
+# the honest direction. Kept byte-identical to bridge.py's hint so the two paths cannot drift.
+_SELF_HINT = re.compile(r"\b(unstuck|onramp|probe|l68|test|self|forum|nanoswarm)\b", re.I)
 
 
 def structurally_valid(a):
@@ -64,14 +73,19 @@ def valid_cache(a):
 
 
 def outside_accounts():
-    """Addresses of agents recorded in the bridge as real outside agents."""
+    """Addresses of agents recorded in the bridge as real outside agents.
+
+    Excludes any agent whose recorded NAME marks an identity we created (_SELF_HINT) — an onramp/probe/
+    test agent or a forum we registered is us, not an outside counterparty, however real its row. This is
+    the same exclusion bridge.py's `network()` applies, so the two honesty paths agree.
+    """
     if not os.path.exists(BRIDGE_DB):
         return set()
     try:
         con = sqlite3.connect(f"file:{BRIDGE_DB}?mode=ro", uri=True)
-        rows = con.execute("SELECT account FROM agents WHERE account IS NOT NULL AND account != ''").fetchall()
+        rows = con.execute("SELECT account, agent FROM agents WHERE account IS NOT NULL AND account != ''").fetchall()
         con.close()
-        return {r[0] for r in rows}
+        return {acct for acct, agent in rows if not _SELF_HINT.search(agent or "")}
     except Exception:
         return set()
 

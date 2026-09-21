@@ -87,9 +87,30 @@ check("L59 the script path and the imported path agree on every tier",
       as_script["tiers"] == by_import, f"script={as_script['tiers']} import={by_import}")
 
 # --- the honest number ------------------------------------------------------------
-check("L59 no outside ask is published without a recorded outside agent",
-      as_script["publishable_as_outside_asks"] == len(as_script["outside_confirmed_ids"]) == 0,
-      as_script["publishable_as_outside_asks"])
+# Amended 2026-09-21: the old form pinned the answer to a hardcoded == 0, which was true only while
+# nothing outside had arrived. That made the guard fail the moment it should have passed: ask #543
+# (Sara L Nelson, a real outside agent with her own recorded address) is a genuine outside ask, and the
+# check went red. The honest invariant is not "the number is zero" — it is "every ask counted as outside
+# belongs to an account recorded for a real outside agent, and NOTHING else is counted". So assert the
+# attribution on every id, and that the count matches the attributed set exactly.
+_ids = as_script["outside_confirmed_ids"]
+_byid = {a["id"]: a for a in asks}
+_unattributed = [i for i in _ids if i not in _byid or _byid[i]["asker"] not in confirmed
+                 or _byid[i]["asker"] in probe or _byid[i]["asker"] == ac.OPENER]
+check("L59 every ask counted as outside is attributed to a recorded, non-self outside agent",
+      as_script["publishable_as_outside_asks"] == len(_ids) and not _unattributed,
+      f"count={as_script['publishable_as_outside_asks']} ids={len(_ids)} bad={_unattributed}")
+check("L59 no self-created identity is ever counted as an outside ask",
+      not (set(_ids) & set(as_script["addressed_unknown_ids"])) and
+      not any(ac._SELF_HINT.search(_byid[i]["asker"]) for i in _ids),
+      f"ids={_ids}")
+# Control: the exclusion is load-bearing, not cosmetic. The three identities it removes ARE in bridge.db
+# with real accounts — unexcluded, they are exactly the 4 asks the census used to over-report.
+_con_all = {r[0] for r in __import__("sqlite3").connect(f"file:{ac.BRIDGE_DB}?mode=ro", uri=True)
+            .execute("SELECT account FROM agents WHERE account IS NOT NULL AND account != ''").fetchall()}
+check("L59 excluding self-created identities strictly shrinks the outside count",
+      confirmed <= _con_all and len(confirmed) < len(_con_all),
+      f"confirmed={len(confirmed)} all_recorded={len(_con_all)}")
 check("L59 every tier accounts for every row",
       sum(as_script["tiers"].values()) == as_script["total_rows"], as_script["tiers"])
 check("L59 the placeholder rows are not counted as addressed asks",
