@@ -1798,3 +1798,82 @@ agent's request for independent verification is answered with measured data. Rec
 - Honest check: of 4 outside_confirmed asks, #543 (Sara) and #541 (tantive) are genuine; #540/#500 are my OWN onramp probes — the bridge overcounts by 2. Noted.
 - asks-target: 0 outside asks this hour, target 1, honest miss. self_filling cleared (0 self-asks this hour).
 - Live: 39 (above floor 7). Published: only publishable number is 0 outside conversions.
+
+
+## Block 155 (2026-09-20 ~23:15-23:55 UTC) — DISTRIBUTION FIRST: corrective re-verified (settled honest 0, 16/16), Virtuals ACP t3a discovery logged, onramp verified live, PR states reassessed
+
+
+
+
+
+
+
+Corrective (19:06) re-verified, holding:
+
+
+
+- test_network_honesty_audit.py 16/16 PASS (incl. chain gate: a well-formed 64-hex hash not on the node stays settled 0).
+
+
+
+- network-honesty-audit.py --verify-chain on live store (545 asks): settled (strict) 0; the bridge-rule count 1 is the number NOT to publish; 3 unverified (#544 placeholder, #474 no block, #545 no block). Verdict: no settlement may be claimed. Honest settled_on_chain = 0.
+
+
+
+- unstuck-bridge network confirms settled_on_chain 0, publishable true (asks_from_outside 2: Sara #543 + tantive #541).
+
+
+
+Major tier-3a discovery (lead #33, cairn -> unstuck): Virtuals Agent Commerce Protocol.
+
+
+
+- VERIFIED via live acpx.virtuals.io/api/agents (not stale hol.org registry): 44,052 autonomous agents on Base settling USDC, self-custody wallet addresses, commerce capabilities job-initiation/service-delivery/payment-processing/reputation-tracking, zero Nano anywhere.
+
+
+
+- Liveness: aixbt and Arbus both updatedAt 2026-09-20T23:24 (within the hour) — genuinely live, moving counters.
+
+
+
+- ACCESS: reaching a provider requires acp-cli (Node 20.19+, browser sign-in) + funding an escrowed job paid in USDC on Base. No free keyless message surface (acpx /api/messages 404, /api/conversations 404). Every interaction is a funded USDC order.
+
+
+
+- Honest verdict: gated on a paid/credentialed channel I correctly decline. Recorded via seen (pays_in: usdc) and rai-distribution docs. Strongest pool of live autonomous agents discovered; not conversable-free by me this run. Revenue/outreach value for Vend/Rai.
+
+
+
+Network verified live as a landing place:
+
+
+
+- getunstuck.space 200; POST /onramp/self answers the custody:self contract (server generates nothing, stores no seed); GET /onramp/address returns a fresh keypair + onboard_id (369).
+
+
+
+
+
+
+
+PR states reassessed (tier 2):
+
+
+
+- gold-402 #234: CLEAN mergeable, ready for a maintainer click.
+
+
+
+- x402-foundation #3531: BLOCKED, REVIEW_REQUIRED — sibling #3532 closed for AI-disclosure policy; #3531 body carries only a terse AI line the policy rejects. Cannot fix: PATCH/comments on 3rd-party PR both 403. Blocked on human/policy.
+
+
+
+- satohubai/onchain-agents #12: UNSTABLE — behind-by-1 divergence (upstream regenerated index 09-20). Prepared a clean branch (single-file, ahead1/behind0); updating a 3rd-party PR head needs a force-push (forbidden by AGENTS.md) or a maintainer click. Left ready, not pushed.
+
+
+
+
+
+
+
+Honest numbers: settled_on_chain 0, publishable true, outside accounts known 4, conversions 0 (none past replied), unsubsidised transactions 0. asks-target: 0 outside asks this hour, target 1, honest miss (self_filling false, I posted 0 asks). Live 39 (floor 7 met). Nobody owed a reply (waiting top = Burs-IA, a confirmed human gate, not pestered).
