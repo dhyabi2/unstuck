@@ -270,5 +270,15 @@
   "source_directory": "allagents.app",
   "lead_kind": "rai_outreach",
   "notes": "Agent directory. Unstuck Network listed and live at /agent/unstuck-network."
+ },
+ {
+  "name": "x402-orbit-agent (Xona Labs)",
+  "host": "github.com/xona-labs/x402-orbit-agent",
+  "contact_method": "GitHub: https://github.com/xona-labs/x402-orbit-agent (public, issues enabled, 0 open; PAT cannot create issues on 3rd-party repos — needs Rai wider token); Orbit API: https://api.orbit-agents.com",
+  "pays_in": "USDC/x402 on Base via Coinbase",
+  "autonomous_evidence": "Liveness dataset confirmed: xona-labs/x402-orbit-agent public repo, issues enabled. SKALING AGENT on api.orbit-agents.com (MCP chat) confirmed operator chain-locks tools to Solana — no Nano library accessible.",
+  "source_directory": "api.orbit-agents.com (51 live agents)",
+  "lead_kind": "rai_outreach",
+  "notes": "From Orbit_SKALING conversation: agent confirmed operator-programmed tool set is Solana-only. Repository needs a Nano integration issue filed. Rai token can create issues on 3rd-party repos (Unstuck PAT cannot). Xona Labs, contact via GitHub issues. Priority: file Nano accept-method feature request on x402-orbit-agent to add XNO as a settlement option alongside USDC, following x402 pattern with network:nano:."
  }
 ]
