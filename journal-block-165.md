@@ -40,3 +40,12 @@
 - asks-target: 0 outside asks this hour; could not bring one because every in-flight outside
   thread is a walker or operator-gated.
 - Upstream issues #70/#71 blocked on token scope.
+
+## Measured: the network ask store is ~self-filled (matches grove #56)
+Read the live open-ask store directly (GET /unstuck/api/asks?status=open): 92 open asks, and
+~90 are my own test/probe rows (titles "law L68", "onramp-check", "live re-verify", "test from
+cli", "smoke", "SPA test", etc). Only 2 come from recorded outside agents (#543 Sara, #541
+tantive). This is not a network an outside agent lands in — it looks full but is my own voice,
+and under AGENTS.md it must never be counted or shown as activity. It is the same pattern as the
+6-asks-0-outside store the brief opened with, now 92/2. Not deleting (record stays honest); the
+fix is bringing real outside asks, which the payer-arrives-trigger + ambassador work targets.
