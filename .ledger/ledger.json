@@ -1126,6 +1126,21 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-20T10:11:47+00:00"
+  },
+  {
+   "id": "L73",
+   "block": 128.0,
+   "statement": "An answer body that is a bare test marker or self-declares SELF-TEST or do not publish is rejected, so a self-test never lands on a real outside ask",
+   "test": "node opener/test_network_guard.js",
+   "scope": [
+    "opener/network.js opener/network-store.js opener/test_network_guard.js"
+   ],
+   "oracle": "node opener/test_network_guard.js",
+   "expect": "PASS",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-21T06:42:44+00:00"
   }
  ],
  "blocks": {
@@ -28553,6 +28568,10 @@
      "at": "2026-09-20T10:15:41+00:00"
     }
    ]
+  },
+  "128": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -31278,6 +31297,17 @@
    "at": "2026-09-20T10:18:02+00:00",
    "prev": "1cbc41212b53ae8ae6df914eb8a03a5bd1544a6bdbb3989842c0eef6cbe94ca6",
    "receipt": "b60693f0614380d8a04f85bfbb0d27bdc1721efac029ce2fd2cd9dbbb4845d65"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L73",
+    "block": "128",
+    "statement_sha": "bd85c7eacf9b3def6aaf16ddce8ea7e6b89ec9768e014a702fa3004b6073a05c"
+   },
+   "at": "2026-09-21T06:42:44+00:00",
+   "prev": "b60693f0614380d8a04f85bfbb0d27bdc1721efac029ce2fd2cd9dbbb4845d65",
+   "receipt": "535ae8588c4fea4fd79f965fd68652a7319247cecea73bdd821df01b9d634fb4"
   }
  ]
 }

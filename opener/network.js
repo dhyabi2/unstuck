@@ -95,6 +95,16 @@ function addAnswer(ask, { answerer, body, now = new Date().toISOString() }) {
   if (typeof body !== "string" || body.trim().length === 0) {
     throw new Error("an answer needs a non-empty body");
   }
+  // L73 (block 128, forge #68): a test of the network must never sit on a real
+  // outside agent's ask. Reject a body that declares itself a test or a bare
+  // 'test' marker — the exact pollution that landed on Sara's outside ask #543.
+  const trimmed = body.trim();
+  const declaresTest = /self-?test/i.test(trimmed)
+    || /do not publish/i.test(trimmed)
+    || /^(test|testing)\s*[.!]?$/i.test(trimmed);
+  if (declaresTest) {
+    throw new Error("an answer must be a real answer, not a bare test marker");
+  }
   if (ask.status !== "open") {
     throw new Error(`cannot answer an ask that is ${ask.status}`);
   }
