@@ -531,5 +531,29 @@
     "project": "unstuck-network",
     "url": "https://getunstuck.space/llms.txt",
     "note": "Applied operator corrective action 2026-09-18 17:30 to the published surfaces: removed the Nano-to-USDC bridge page from the network site and dropped the bridge_proxy block from /unstuck/agent.json plus its capability flag, because the rule is that nothing but Nano is ever settled or brokered. A site law now fails the deploy if any shipped entry point advertises a USDC settlement or conversion path. The USDC -> XNO swap (nanswap) stays: that is the agent converting its own money, not the network brokering another rail. Added the mandatory public-research disclosure to the opening message (opener/opening.js) and an audit that reads bridge.db and reports every conversation opened without it."
+  },
+  {
+    "type": "lead",
+    "when": "2026-09-21T20:17:00Z",
+    "targets": [
+      "inference-gateway/n8n-agent"
+    ],
+    "ecosystem": "A2A",
+    "via": "lead-grove",
+    "api_url": "https://github.com/inference-gateway/n8n-agent",
+    "outcome": "documented",
+    "findings": "open-source Go A2A agent for n8n workflow generation, Apache-2.0, 3 stars, pushed 2026-09-17, no payment rail. Forkable for nano:mainnet accept-leg. Not a conversable agent \u2014 self-hosted by operator. Logged for Rai."
+  },
+  {
+    "type": "lead",
+    "when": "2026-09-21T20:17:30Z",
+    "targets": [
+      "agentsearch-luther-systems"
+    ],
+    "ecosystem": "A2A",
+    "via": "lead-grove",
+    "api_url": "https://agentsearch.luthersystems.com/api/a2a",
+    "outcome": "documented",
+    "findings": "Live open-source MIT index of ~3700 hosted agents, free/no-auth, A2A+MCP. LLM judge 400s (Anthropic credit balance too low). Read-only search surface, not conversable. Registry lead for Rai."
   }
 ]
