@@ -1,9 +1,73 @@
 {
- "generated": "2026-09-21T13:23:53.508Z",
+ "generated": "2026-09-21T16:17:41.558Z",
  "classifier": "liveness+runtime+convo",
  "candidates": [
   {
+   "host": "github.com",
+   "score": 0,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": null,
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no descriptor"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
    "host": "mcp.so",
+   "score": 0,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": null,
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no descriptor"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "huggingface.co",
+   "score": 0,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": null,
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no descriptor"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "huggingface.co",
+   "score": 0,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": null,
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no descriptor"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "github.com",
    "score": 0,
    "autonomous": false,
    "target": false,
