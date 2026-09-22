@@ -26,3 +26,4 @@ site/.ledger/tmp/
 # OTR credentials — never committed (agent tokens)
 opener/keys/
 site/network.db
+opener/dealwork.key
