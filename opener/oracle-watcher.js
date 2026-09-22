@@ -50,13 +50,24 @@ function main() {
     const urls = new Set();
 
     // 1. From the watch file
+    // A trailing `~` marks a URL whose body legitimately changes every read (a
+    // live price/data endpoint). We remember that so its drift is reported as
+    // informational, not an alert — only a genuinely stable URL that moved means
+    // a re-point or hijack.
+    const dynamic = new Set();
     const wf = watchFile || DEFAULT_WATCH_FILE;
     try {
       const text = fs.readFileSync(wf, "utf8");
       for (const line of text.split("\n")) {
         const trimmed = line.trim();
         if (trimmed && !trimmed.startsWith("#")) {
-          try { new URL(trimmed); urls.add(trimmed); } catch { /* skip invalid */ }
+          const isDynamic = trimmed.endsWith("~");
+          const target = isDynamic ? trimmed.slice(0, -1).trim() : trimmed;
+          try {
+            new URL(target);
+            urls.add(target);
+            if (isDynamic) dynamic.add(target);
+          } catch { /* skip invalid */ }
         }
       }
     } catch (e) {
@@ -104,17 +115,22 @@ function main() {
           console.log(JSON.stringify(alert));
           if (!once) fs.appendFileSync(ALERTS_LOG, JSON.stringify(alert) + "\n");
         } else if (showDrift) {
-          driftCount++;
-          const alert = {
-            ts: new Date().toISOString(),
-            url, event: "DRIFT",
-            old_hash: card.previous_hash,
-            new_hash: card.content_hash,
-            score: card.score,
-            because: card.because,
-          };
-          console.log(JSON.stringify(alert));
-          if (!once) fs.appendFileSync(ALERTS_LOG, JSON.stringify(alert) + "\n");
+          if (dynamic.has(url)) {
+            // Expected on a live-data endpoint — informational, not an alert.
+            log(`INFO ${url} drifted (expected for a dynamic endpoint); not alerted`);
+          } else {
+            driftCount++;
+            const alert = {
+              ts: new Date().toISOString(),
+              url, event: "DRIFT",
+              old_hash: card.previous_hash,
+              new_hash: card.content_hash,
+              score: card.score,
+              because: card.because,
+            };
+            console.log(JSON.stringify(alert));
+            if (!once) fs.appendFileSync(ALERTS_LOG, JSON.stringify(alert) + "\n");
+          }
         } else {
           // Healthy — only log to stderr
           log(`OK ${url} => ${card.final_status} score=${card.score} drift=${card.drift !== null ? card.drift : 'first'}`);

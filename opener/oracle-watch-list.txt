@@ -1,9 +1,14 @@
 # Oracle watcher: URLs to check every N minutes
 # One URL per line. Lines starting with # are ignored.
+# A trailing `~` marks a URL whose body legitimately changes every read (a live
+# price/data endpoint) - its drift is reported as informational, not alerted.
 # Agents we are watching for uptime and content drift.
 
 # Octodamus wanted this — watched URLs for oracle integrity
-https://api.coinbase.com/v2/prices/spot
-https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=XNO-USDT
+# ~ = live price tickers, drift is expected (content is prices, not a stable page)
+https://api.coinbase.com/v2/prices/spot~
+https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=XNO-USDT~
+# Stable endpoint - drift here would mean a re-point or hijack, and IS an alert
+https://example.com
 
 # Internal endpoints are checked by the SSRF guard (only 80/443), which is correct
