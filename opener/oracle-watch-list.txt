@@ -1,0 +1,9 @@
+# Oracle watcher: URLs to check every N minutes
+# One URL per line. Lines starting with # are ignored.
+# Agents we are watching for uptime and content drift.
+
+# Octodamus wanted this — watched URLs for oracle integrity
+https://api.coinbase.com/v2/prices/spot
+https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=XNO-USDT
+
+# Internal endpoints are checked by the SSRF guard (only 80/443), which is correct

@@ -19,6 +19,7 @@ opener/anp2-seed.key
 opener/*.key
 *.key
 opener/bridge.db
+opener/oracle-watcher-alerts.jsonl
 .ledger/.lock
 site/.ledger/tmp/
 
