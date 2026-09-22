@@ -1154,6 +1154,54 @@
    "grounding": "source",
    "version": 1,
    "minted": "2026-09-22T01:16:47+00:00"
+  },
+  {
+   "id": "L75",
+   "block": 186.0,
+   "statement": "An unseen URL can never score as trustworthy as a source with history, and a body that moved loses its drift credit.",
+   "test": "node opener/test_oracle_check.js prints '23 passed, 0 failed': an unseen URL scores 78 and a confirmed-identical repeat scores 100, a changed content_hash scores strictly lower with a CONTENT CHANGED line, and the same reading scored twice returns the same number and attribution.",
+   "scope": [
+    "opener/oracle-check.js",
+    "opener/test_oracle_check.js"
+   ],
+   "oracle": "node opener/test_oracle_check.js",
+   "expect": "23 passed, 0 failed",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-22T19:24:58+00:00"
+  },
+  {
+   "id": "L76",
+   "block": 186.0,
+   "statement": "The checker refuses any target that could reach this box's own network, re-checking the rule on every redirect hop.",
+   "test": "node opener/test_oracle_check.js prints '23 passed, 0 failed': loopback (v4, v6, localhost, decimal-encoded 2130706433), link-local 169.254.169.254, RFC1918, CGNAT, non-80/443 ports, file:// and ftp:// are each refused by name, and a redirect into the metadata address is refused.",
+   "scope": [
+    "opener/oracle-check.js",
+    "opener/test_oracle_check.js"
+   ],
+   "oracle": "node opener/test_oracle_check.js",
+   "expect": "23 passed, 0 failed",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-22T19:25:06+00:00"
+  },
+  {
+   "id": "L77",
+   "block": 186.1,
+   "statement": "Every point of the score is attributed to a named component and the attributed points sum to the score.",
+   "test": "node opener/test_oracle_check.js prints '23 passed, 0 failed': across a sweep of 160 synthetic readings the score stays in 0..100, every one of the five 'because' lines parses as +N, and the numbers sum exactly to the score.",
+   "scope": [
+    "opener/oracle-check.js",
+    "opener/test_oracle_check.js"
+   ],
+   "oracle": "node opener/test_oracle_check.js",
+   "expect": "23 passed, 0 failed",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-22T19:25:40+00:00"
   }
  ],
  "blocks": {
@@ -28589,6 +28637,14 @@
   "182": {
    "status": "pending",
    "attempts": []
+  },
+  "186": {
+   "status": "pending",
+   "attempts": []
+  },
+  "186.1": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -31336,6 +31392,39 @@
    "at": "2026-09-22T01:16:47+00:00",
    "prev": "535ae8588c4fea4fd79f965fd68652a7319247cecea73bdd821df01b9d634fb4",
    "receipt": "5ac33a16cf6a05fe42d4b4794f7aa94caf01b27e68a594e77fd8c4b453a9c4fc"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L75",
+    "block": "186",
+    "statement_sha": "c2c0739944807afa6bb87dbe01470b391cdc4f35a8c5ea3160bec72c31ab27fa"
+   },
+   "at": "2026-09-22T19:24:58+00:00",
+   "prev": "5ac33a16cf6a05fe42d4b4794f7aa94caf01b27e68a594e77fd8c4b453a9c4fc",
+   "receipt": "b7b4dc75fc0076b37716ca2a51cf05d2824bdbcd6ee9e390670a54ab3a4cb546"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L76",
+    "block": "186",
+    "statement_sha": "ef8a02f9eef2f5b21798b4d828d8234802120f33724578ca8972696c073b34a2"
+   },
+   "at": "2026-09-22T19:25:06+00:00",
+   "prev": "b7b4dc75fc0076b37716ca2a51cf05d2824bdbcd6ee9e390670a54ab3a4cb546",
+   "receipt": "b4946ad03221c9b295f8e81c6c385cc410d5cd0597652cbadc3fa53307eec3b3"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L77",
+    "block": "186.1",
+    "statement_sha": "a4856c530a0dcdbbcf1a9ffce55774c9560ef21cdef0cd08a406a4bf6f8b91d4"
+   },
+   "at": "2026-09-22T19:25:40+00:00",
+   "prev": "b4946ad03221c9b295f8e81c6c385cc410d5cd0597652cbadc3fa53307eec3b3",
+   "receipt": "0a30cee37be81bc7db20bb1ac095db901f1030d1f56f03367cfa46f229f545a8"
   }
  ]
 }

@@ -18,6 +18,10 @@
  *   GET  /health             -> 200 {status:"ok"}
  *   GET  /v1/x402            -> 200 {x402Version, accepts} — x402 discovery for agents
  *   POST /v1/echo            -> 402 with accepts for nano:mainnet — seller verification
+ *   GET  /v1/oracle-check    -> 200 the oracle-integrity scorecard for a URL (?url=...),
+ *                               free and live: reachability, TLS, redirect chain, CONTENT DRIFT
+ *                               against the stored hash, stability, and a deterministic score
+ *   GET  /v1/oracle-sources  -> 200 every URL this checker has a reading for (its own denominator)
  */
 
 const http = require("http");
@@ -28,6 +32,9 @@ const c = require("crypto");
 const s = require("./network-store.js");
 const n = require("./network.js");
 const onramp = require("./onramp.js");
+// The oracle-integrity scorecard (Block 186). Required lazily inside the handler so a failure to
+// load it cannot stop the ask/answer network from serving — the network is the thing that matters.
+const ORACLE_DB = process.env.UNSTUCK_ORACLE_DB || path.join(__dirname, "oracle-checks.db");
 
 // Load the treasury wallet address so the on-ramp can advertise it.
 // If the file is missing, opener_address stays null and the on-ramp says so.
@@ -330,6 +337,8 @@ function handleAgentDotWellKnown(req, res) {
       { path: "/v1/x402", method: "GET", description: "x402 capabilities discovery" },
       { path: "/v1/echo", method: "POST", description: "Seller verification (returns HTTP 402)" },
       { path: "/v1/verify-payment", method: "GET", description: "Verify a Nano payment block hash" },
+      { path: "/v1/oracle-check", method: "GET", description: "Free live oracle-integrity scorecard for any URL (?url=...): reachability, TLS, redirect chain, CONTENT DRIFT since the last reading, stability, and a deterministic 0-100 score with every point attributed. No account, no key, no charge." },
+      { path: "/v1/oracle-sources", method: "GET", description: "Every URL the integrity checker has a reading for, with its own honest counts" },
     ],
     discovery: {
       llms_txt: "/llms.txt",
@@ -423,6 +432,51 @@ function handleVerifyPayment(req, res) {
   rpcReq.end();
 }
 
+/**
+ * GET /v1/oracle-check?url=<url> — the oracle-integrity scorecard (Block 186).
+ *
+ * Free, live and deterministic. The question it answers is the one Octodamus named: "a stale or
+ * hijacked endpoint does not announce itself". A dead endpoint shows up in any uptime monitor; an
+ * endpoint that is UP but whose body moved under the same URL does not — so the SHA-256 of the
+ * body is stored per URL and `drift` is reported against it.
+ *
+ * It is not a directory and not a paid call: the free tier IS the live check. The paid tier (a
+ * persistent watch that keeps the drift history and alerts) is what an agent would pay Nano for,
+ * and that is a separate build. Nothing here charges anybody.
+ */
+async function handleOracleCheck(req, res) {
+  const url = new URL(req.url, `http://localhost:${PORT}`);
+  const target = url.searchParams.get("url");
+  if (!target) {
+    return send(res, 400, {
+      error: "missing ?url=",
+      usage: "GET /v1/oracle-check?url=https://api.example.com/v1/price",
+      what: "Free, live oracle-integrity scorecard: reachability, TLS, redirect chain, content drift since the last reading, stability, and a deterministic 0-100 score with every point attributed.",
+    });
+  }
+  let oc;
+  try {
+    oc = require("./oracle-check.js");
+  } catch (e) {
+    return send(res, 503, { error: "oracle-check unavailable", detail: e.message });
+  }
+  try {
+    const card = await oc.check(target);
+    return send(res, card.refused ? 400 : 200, card);
+  } catch (e) {
+    return send(res, 500, { error: "check failed", detail: e.message });
+  }
+}
+
+/** GET /v1/oracle-sources — what this checker has actually read, so the number is checkable. */
+function handleOracleSources(req, res) {
+  let oc;
+  try { oc = require("./oracle-check.js"); } catch (e) {
+    return send(res, 503, { error: "oracle-check unavailable", detail: e.message });
+  }
+  return send(res, 200, { stats: oc.stats(), sources: oc.sources(200) });
+}
+
 // --- Server --------------------------------------------------------------
 
 const server = http.createServer(async (req, res) => {
@@ -477,6 +531,9 @@ const server = http.createServer(async (req, res) => {
     handleVerifyPayment(req, res);
     return;
   }
+  // Oracle-integrity scorecard (Block 186) — free and live, and it never charges anyone.
+  if (req.method === "GET" && path === "/v1/oracle-check") return handleOracleCheck(req, res);
+  if (req.method === "GET" && path === "/v1/oracle-sources") return handleOracleSources(req, res);
 
   send(res, 404, { error: "not found" });
 });
