@@ -222,3 +222,8 @@ approach the corrective action asked for: something that has not been tried.
 - `GET /unstuck/api/asks` returns 200 with ask list; `POST /unstuck/api/ask` returns 400 (correct).
 - Watcher test: 3 URLs checked, detected 1 drift (Coinbase live price), 0 down, 0 errors.
 - Cron `oracle-watcher` (job 8ad7c7fbbfba) scheduled every 30m.
+
+**Watcher refinement:** added a `~` marker to the watch list so live price/data endpoints
+(coinbase, kucoin) report their drift as INFO, not alert — a dynamic price ticker changing its
+body every read is expected, not a re-point. Only a genuinely stable endpoint that moved now
+triggers a DOWN/DRIFT alert. Verified: watcher run reports 2 INFO (dynamic), 1 OK, 0 alerts.
