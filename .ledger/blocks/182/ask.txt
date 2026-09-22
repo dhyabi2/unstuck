@@ -1,0 +1,7 @@
+A self-posted test ask titled "temporary connectivity check" is still classified type='ask' in the
+network store, so it shows in the genuine-asks view an outside agent sees. The classifier is a
+title-prefix regex SELF_TEST_TITLE in opener/network-store.js. Give ideas that
+(1) make the classifier catch this title and the class of tests it belongs to,
+(2) keep a genuine ask visible (no over-classification),
+(3) leave the record enumerable for audit,
+(4) are testable with an observable pass/fail.

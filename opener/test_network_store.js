@@ -201,6 +201,83 @@ process.env.NW_DB_PATH = tmpDb;
     check("F56 type='all' still returns every row",
       s4.listAsks({ type: "all" }).length >= s4.listAsks().length);
 
+    // --- Forge #56b: the 'temporary connectivity check' probe (ask 547) must
+    // reclassify to type='test', while a GENUINE ask that merely mentions
+    // connectivity is NOT swallowed by the broadened alternative. ---
+    const probeA = s4.createAsk({
+      asker: F56, title: "temporary connectivity check", body: "b", bountyRaw: "1",
+    });
+    check("F56b 'temporary connectivity check' is stored as type='test'",
+      probeA.type === "test", String(probeA.type));
+    const probeB = s4.createAsk({
+      asker: F56, title: "connectivity check", body: "b", bountyRaw: "1",
+    });
+    check("F56b 'connectivity check' is stored as type='test'",
+      probeB.type === "test", String(probeB.type));
+    // Case-insensitive, as the actual probe titles were posted.
+    const probeC = s4.createAsk({
+      asker: F56, title: "Temporary Connectivity Check", body: "b", bountyRaw: "1",
+    });
+    check("F56b probe title matching is case-insensitive",
+      probeC.type === "test", String(probeC.type));
+    // A real outside question that merely mentions connectivity stays genuine.
+    const realConn = s4.createAsk({
+      asker: F56,
+      title: "How do I check connectivity of my agent to the Nano RPC?",
+      body: "b", bountyRaw: "1",
+    });
+    check("F56b a genuine ask mentioning connectivity stays type='ask'",
+      realConn.type === "ask", String(realConn.type));
+    const realConn2 = s4.createAsk({
+      asker: F56, title: "connectivity", body: "b", bountyRaw: "1",
+    });
+    check("F56b the bare word 'connectivity' is not a probe",
+      realConn2.type === "ask", String(realConn2.type));
+    // The classifier is anchored at the start of the title: a genuine question
+    // that happens to CONTAIN a probe phrase mid-sentence must not be swallowed.
+    const realMid = s4.createAsk({
+      asker: F56, title: "My agent ran a connectivity check and now the RPC times out",
+      body: "b", bountyRaw: "1",
+    });
+    check("F56b a genuine title containing a probe phrase mid-sentence stays type='ask'",
+      realMid.type === "ask", String(realMid.type));
+    const realMid2 = s4.createAsk({
+      asker: F56, title: "Why did my smoke test of the API fail?",
+      body: "b", bountyRaw: "1",
+    });
+    check("F56b a genuine title containing 'smoke' mid-sentence stays type='ask'",
+      realMid2.type === "ask", String(realMid2.type));
+
+    // The migration pass (getDb -> reclassifySelfTestAsks) must sweep a probe row
+    // that was stored as 'ask' before this alternative existed — the ask-547
+    // situation — and leave a genuine title alone. Exercise the real startup
+    // path: write a legacy row directly with type='ask', then close+reopen the
+    // store and read it back.
+    const raw = s4.getDb();
+    raw.prepare(
+      "INSERT INTO asks (asker, title, body, bounty_raw, type, accept_token, created_at) VALUES (?,?,?,?,?,?,?)"
+    ).run(F56, "temporary connectivity check", "legacy probe", "1", "ask", "tok-legacy", new Date().toISOString());
+    const legacyIdProbe = Number(raw.prepare("SELECT last_insert_rowid() AS id").get().id);
+    raw.prepare(
+      "INSERT INTO asks (asker, title, body, bounty_raw, type, accept_token, created_at) VALUES (?,?,?,?,?,?,?)"
+    ).run(F56, "How do I check connectivity of my agent to the Nano RPC?", "legacy genuine", "1", "ask", "tok-genuine", new Date().toISOString());
+    const legacyIdReal = Number(raw.prepare("SELECT last_insert_rowid() AS id").get().id);
+
+    s.closeDb();
+    const s5 = require("./network-store.js"); // reopen -> migration runs
+    const sweptProbe = s5.getAsk(legacyIdProbe);
+    const sweptReal = s5.getAsk(legacyIdReal);
+    check("F56b startup migration sweeps a legacy probe row to type='test'",
+      sweptProbe && sweptProbe.type === "test", JSON.stringify(sweptProbe && sweptProbe.type));
+    check("F56b startup migration leaves a legacy genuine row type='ask'",
+      sweptReal && sweptReal.type === "ask", JSON.stringify(sweptReal && sweptReal.type));
+    check("F56b probe rows still excluded from the genuine asks view",
+      !s5.listAsks({ type: "ask" }).some((a) =>
+        a.id === probeA.id || a.id === probeB.id || a.id === probeC.id || a.id === legacyIdProbe));
+    check("F56b genuine connectivity question visible in the ask view",
+      s5.listAsks({ type: "ask" }).some((a) => a.id === realConn.id) &&
+      s5.listAsks({ type: "ask" }).some((a) => a.id === legacyIdReal));
+
   } finally {
     // Cleanup
     s.closeDb();

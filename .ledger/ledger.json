@@ -1141,6 +1141,19 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-21T06:42:44+00:00"
+  },
+  {
+   "id": "L74",
+   "block": 182.0,
+   "statement": "L75: probe titles 'temporary connectivity check' and 'connectivity check' classify as type='test', are swept from the genuine asks view on startup, while a genuine question mentioning connectivity stays type='ask'.",
+   "test": "node opener/test_network_store.js prints 'all network-store laws pass' (20 checks, 0 failures): nine F56b checks prove createAsk classifies both probe phrasings (and case variant) as type='test', a genuine question mentioning connectivity and the bare word 'connectivity' stay type='ask', and after close+reopen the getDb migration sweeps a legacy type='ask' probe row to 'test' while leaving a legacy genuine row 'ask'.",
+   "scope": [],
+   "oracle": null,
+   "expect": null,
+   "source": "oracle",
+   "grounding": "source",
+   "version": 1,
+   "minted": "2026-09-22T01:16:47+00:00"
   }
  ],
  "blocks": {
@@ -28572,6 +28585,10 @@
   "128": {
    "status": "pending",
    "attempts": []
+  },
+  "182": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -31308,6 +31325,17 @@
    "at": "2026-09-21T06:42:44+00:00",
    "prev": "b60693f0614380d8a04f85bfbb0d27bdc1721efac029ce2fd2cd9dbbb4845d65",
    "receipt": "535ae8588c4fea4fd79f965fd68652a7319247cecea73bdd821df01b9d634fb4"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L74",
+    "block": "182",
+    "statement_sha": "4f959f63a09bb2f005fbf91db6e476252d1f5c7d6c0332913d2968c9e03040f4"
+   },
+   "at": "2026-09-22T01:16:47+00:00",
+   "prev": "535ae8588c4fea4fd79f965fd68652a7319247cecea73bdd821df01b9d634fb4",
+   "receipt": "5ac33a16cf6a05fe42d4b4794f7aa94caf01b27e68a594e77fd8c4b453a9c4fc"
   }
  ]
 }
