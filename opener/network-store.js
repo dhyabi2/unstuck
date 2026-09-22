@@ -60,7 +60,7 @@ function migrateColumns(db) {
  * posted during development; a title is only touched if it still reads type='ask' today.
  * Idempotent: it never touches a row already reclassified or a genuine ask.
  */
-const SELF_TEST_TITLE = /^(test|testing|smoke|spa test|api test|agent test|self[- ]?test|law L68|onramp-check|onramp probe \d|onramp only probe|live re-verify|live end-to-end|live network write probe|zero-bounty|block \d+ (final )?verify|https write probe|direct probe|l57 live probe|agent registered address|why did an ask|verify corrective action)[\s:.!-]?/i;
+const SELF_TEST_TITLE = /^(test|testing|smoke|spa test|api test|agent test|self[- ]?test|law L68|onramp-check|onramp probe \d|onramp only probe|live re-verify|live end-to-end|live network write probe|zero-bounty|block \d+ (final )?verify|https write probe|direct probe|l57 live probe|agent registered address|why did an ask|verify corrective action|temporary connectivity check|connectivity check)[\s:.!-]?/i;
 function reclassifySelfTestAsks(db) {
   const rows = db.prepare("SELECT id, title, type FROM asks WHERE type = 'ask'").all();
   const upd = db.prepare("UPDATE asks SET type = 'test' WHERE id = ?");
