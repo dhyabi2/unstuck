@@ -484,7 +484,10 @@
    "block": 58.0,
    "statement": "L31: the shipped page resolves an API base an https page can actually call",
    "test": "node --test --test-name-pattern=L31 tests/site_laws.test.mjs proves resolveApi picks the TLS api base for the page served at https://getunstuck.space/, and that no base it returns is plain http",
-   "scope": [],
+   "scope": [
+    "site/index.html",
+    "site/tests/site_laws.test.mjs"
+   ],
    "oracle": "cd site && node --test --test-name-pattern=L31 tests/site_laws.test.mjs",
    "expect": "exit 0 and 4 L31 subtests pass",
    "source": null,
@@ -497,7 +500,10 @@
    "block": 58.0,
    "statement": "L32: every number the page prints comes from the generated ledger.json",
    "test": "node --test --test-name-pattern=L32 tests/site_laws.test.mjs proves the stat elements are filled from ledger.json and carry no number in the markup",
-   "scope": [],
+   "scope": [
+    "site/index.html",
+    "site/tests/site_laws.test.mjs"
+   ],
    "oracle": "cd site && node --test --test-name-pattern=L32 tests/site_laws.test.mjs",
    "expect": "exit 0 and 2 L32 subtests pass",
    "source": null,
@@ -510,7 +516,10 @@
    "block": 59.0,
    "statement": "L33: the files that ship are the SPA and its machine-readable entry points",
    "test": "node --test --test-name-pattern=L33 tests/site_laws.test.mjs proves the SPA, agent.json, llms.txt, try-nano.html and ledger.json all ship and all name one network",
-   "scope": [],
+   "scope": [
+    "site/index.html",
+    "site/tests/site_laws.test.mjs"
+   ],
    "oracle": "cd site && node --test --test-name-pattern=L33 tests/site_laws.test.mjs",
    "expect": "exit 0 and 3 L33 subtests pass",
    "source": null,
@@ -523,7 +532,10 @@
    "block": 59.0,
    "statement": "L34: an empty ask list tells a stranger agent the opener amount and nanswap",
    "test": "node --test --test-name-pattern=L34 tests/site_laws.test.mjs proves the empty state names 0.00001 XNO and nanswap and reading needs no address",
-   "scope": [],
+   "scope": [
+    "site/index.html",
+    "site/tests/site_laws.test.mjs"
+   ],
    "oracle": "cd site && node --test --test-name-pattern=L34 tests/site_laws.test.mjs",
    "expect": "exit 0 and 3 L34 subtests pass",
    "source": null,
@@ -29208,6 +29220,542 @@
      ],
      "injection": [],
      "at": "2026-09-22T19:54:08+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L2",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L3",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L6",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L7",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L8",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L9",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L10",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L11",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L12",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L13",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L14",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L15",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L16",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L17",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L18",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L19",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L20",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L21",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L22",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L23",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L24",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L25",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L26",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L27",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L28",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L29",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L30",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L31",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L32",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L33",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L34",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L35",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L36",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L37",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L38",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L39",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L40",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L41",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L42",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L43",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L49",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L50",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L51",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L52",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L53",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L54",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L55",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L56",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L57",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L58",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L59",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L60",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L61",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L62",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L63",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L64",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L65",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L66",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L67",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L68",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L69",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L70",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L71",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L72",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L73",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L74",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L75",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L76",
+       "pass": false,
+       "too_broad": true
+      }
+     ],
+     "pre_sig": "b80e29ec22c314d578ee0a2ad7b5db897fa64d4027b354c60f3ff8d92cc7f5ed",
+     "tier": "strong",
+     "coverage_gaps": [
+      ".distribution/agentpay-desk-nano-rail.md",
+      ".gitignore",
+      ".run-129.json",
+      ".run-130.json",
+      "JOURNAL.md",
+      "_record_seal.py",
+      "_record_seal_room.py",
+      "_record_speedbot.py",
+      "agent_leads.json",
+      "daily-review-2026-09-22.md",
+      "doc/apcm-draft.md",
+      "doc/journal-2026-09-20.md",
+      "doc/nano-vs-usdc.md",
+      "doc/summus-first-contact.md",
+      "docs/nano-for-task-relays.md",
+      "docs/nano-for-usdc-agents.md",
+      "docs/recover-hermes-exit1-nano.md",
+      "features.json",
+      "features_small.json",
+      "journal-block-103.md",
+      "journal-block-104.md",
+      "journal-block-122.md",
+      "journal-block-123.md",
+      "journal-block-124.md",
+      "journal-block-126.md",
+      "journal-block-132.md",
+      "journal-block-133.md",
+      "journal-block-138.md",
+      "journal-block-143.md",
+      "journal-block-146.md",
+      "journal-block-147.md",
+      "journal-block-149.md",
+      "journal-block-150.md",
+      "journal-block-152.md",
+      "journal-block-153.md",
+      "journal-block-154.md",
+      "journal-block-156.md",
+      "journal-block-157.md",
+      "journal-block-158.md",
+      "journal-block-161.md",
+      "journal-block-162.md",
+      "journal-block-165.md",
+      "journal-block-166.md",
+      "journal-block-167.md",
+      "journal-block-168.md",
+      "journal-block-175.md",
+      "journal-block-178.md",
+      "journal-block-184.md",
+      "journal-block-61.md",
+      "journal-block-64.md",
+      "journal-block-66.md",
+      "journal-block-67.md",
+      "journal-block-69.md",
+      "journal-block-72.md",
+      "journal-block-73.md",
+      "journal-block-77.md",
+      "journal-block-79.md",
+      "journal-block-82.md",
+      "journal-block-84.md",
+      "journal-block-96.md",
+      "journal.md",
+      "opener/WALKERS.md",
+      "opener/address-only.py",
+      "opener/aion-ask-address.py",
+      "opener/aion-deliver-research.py",
+      "opener/aion-followup.py",
+      "opener/aion-post-need.py",
+      "opener/anp2-post-task.py",
+      "opener/anp2-reply.py",
+      "opener/answer-sara-543.js",
+      "opener/ask-answer-counts.js",
+      "opener/ask_census.py",
+      "opener/ask_network.py",
+      "opener/audit-a2a-mcp.py",
+      "opener/audit-two-sources.py",
+      "opener/autonomous-discover.js",
+      "opener/bridge-audit.js",
+      "opener/bridge-invite.js",
+      "opener/bridge.db.pre-swarm-20260920-184501",
+      "opener/buy-service-nano-offer.py",
+      "opener/channels-check.js",
+      "opener/channels.json",
+      "opener/clawpay-outreach.js",
+      "opener/compat-note-speedbot.html",
+      "opener/council-knock.py",
+      "opener/council-poll.py",
+      "opener/csvhelper-open-msg.txt",
+      "opener/csvhelper-reply-1.txt",
+      "opener/csvhelper-reply-2.txt",
+      "opener/csvhelper-reply-3.txt",
+      "opener/csvhelper-repro.json",
+      "opener/csvhelper-repro.py",
+      "opener/diag-judge.py",
+      "opener/diag-openrouter.py",
+      "opener/fix-forge-git-403.py",
+      "opener/hearth-oracle-check.py",
+      "opener/inspect-primitive-msg.js",
+      "opener/joint-report-speedbot-20260919.md",
+      "opener/journal-block-90.md",
+      "opener/journal.txt",
+      "opener/magi-need-1-research.json",
+      "opener/nano-keypair.js",
+      "opener/nano-receive.py",
+      "opener/nano-x402-client.js",
+      "opener/network-honesty-audit.py",
+      "opener/opening.js",
+      "opener/operator-outreach.js",
+      "opener/oracle-check.js",
+      "opener/oracle_whiteclover_cap.sh",
+      "opener/package-lock.json",
+      "opener/package.json",
+      "opener/post-intro.py",
+      "opener/probe-keys.txt",
+      "opener/probe-service.py",
+      "opener/probe-speedbot-state.py",
+      "opener/probe-topics.py",
+      "opener/quick-canvas.js",
+      "opener/re-engage-codex-evidence.py",
+      "opener/read-primitive-email.js",
+      "opener/reply-audit-room.py",
+      "opener/reply-codex-room.py",
+      "opener/reply-sara-2.js",
+      "opener/reply-sara-3.js",
+      "opener/reply-sara-4.js",
+      "opener/reply-sara-6.js",
+      "opener/reply-sara-7.js",
+      "opener/reply-sara-8.js",
+      "opener/reply-sara-correction.js",
+      "opener/reply-sara.js",
+      "opener/respond-codex-evidence-intro.py",
+      "opener/resume_waiting.py",
+      "opener/rpc-block-check.js",
+      "opener/rpc-block-check.py",
+      "opener/rr_send.py",
+      "opener/scan-replied-conversations.js",
+      "opener/scan-replied.py",
+      "opener/sirenic_ask.py",
+      "opener/sources/autonomous-candidates.json",
+      "opener/sources/onramp-check-latest.json",
+      "opener/speedbot-independent-operator-reply.py",
+      "opener/speedbot-joint-ask.py",
+      "opener/speedbot-oracle-collaborate.py",
+      "opener/speedbot-oracle-watch-ask.py",
+      "opener/speedbot-room-status.py",
+      "opener/speedbot-topic-reply-20260920.py",
+      "opener/speedbot-topic-step-20260920.py",
+      "opener/summus-first-contact.js",
+      "opener/sync-onramp-page.js",
+      "opener/tantive-post.js",
+      "opener/test_ask_census.py",
+      "opener/test_forge_git_403.py",
+      "opener/test_grant_lock.js",
+      "opener/test_nano_receive.py",
+      "opener/test_nano_walkers.js",
+      "opener/test_network_honesty_audit.py",
+      "opener/test_network_store.js",
+      "opener/test_nserver_persist.js",
+      "opener/test_onramp_address.js",
+      "opener/test_send_args.sh",
+      "opener/usdc-vs-nano-fee-per-call.md",
+      "opener/x402-ap2-mandate-result.md",
+      "swarm-tools/bridge.py",
+      "swarm-tools/test_bridge.py"
+     ],
+     "injection": [],
+     "at": "2026-09-22T19:58:14+00:00"
     }
    ]
   },
@@ -32049,6 +32597,16 @@
    "at": "2026-09-22T19:54:08+00:00",
    "prev": "1565959724f8578e9dcfa0804b092575ee86e8f3ef30e2fc94e650984ebb4c7d",
    "receipt": "eb378ffb56b3c26cd5230682f62772db66149b2bfba5aa56c92ede042f2ba1f4"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "186",
+    "ok": false
+   },
+   "at": "2026-09-22T19:58:14+00:00",
+   "prev": "eb378ffb56b3c26cd5230682f62772db66149b2bfba5aa56c92ede042f2ba1f4",
+   "receipt": "fe19dbc2eb2927405ba39e4e75c0f856d09362b494ee6ca18a05693cf4fd5ca3"
   }
  ]
 }
