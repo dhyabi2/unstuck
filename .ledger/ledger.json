@@ -43,7 +43,7 @@
    "id": "L2",
    "block": 5.0,
    "statement": "find-agents.js probes all 10 Pursekeeper endpoints for Nano addresses",
-   "test": "find-agents.js contains probes for llmrt/cleartable/pyfile-llm/stringsafeqa — oracle confirms presence",
+   "test": "find-agents.js contains probes for llmrt/cleartable/pyfile-llm/stringsafeqa \u2014 oracle confirms presence",
    "scope": [
     "opener/find-agents.js"
    ],
@@ -58,7 +58,7 @@
    "id": "L3",
    "block": 5.0,
    "statement": "every newly discovered address is checked against the opener DB before sending",
-   "test": "the opener's refusal gate returns refusal-gate-active — oracle runs node -e console.log to confirm the gate is loaded and active",
+   "test": "the opener's refusal gate returns refusal-gate-active \u2014 oracle runs node -e console.log to confirm the gate is loaded and active",
    "scope": [
     "opener/send.js opener/opener.js"
    ],
@@ -609,7 +609,7 @@
   {
    "id": "L40",
    "block": 69.0,
-   "statement": "L48: no shipped site file (index.html, agent.json, llms.txt) offers a USDC settlement or conversion path — no bridge endpoint, no /proxy?target=, no nanswap swap instruction, no non-Nano payment rail.",
+   "statement": "L48: no shipped site file (index.html, agent.json, llms.txt) offers a USDC settlement or conversion path \u2014 no bridge endpoint, no /proxy?target=, no nanswap swap instruction, no non-Nano payment rail.",
    "test": "node --test --test-name-pattern=L48 tests/site_laws_nano_only.test.mjs proves a known-bad USDC/bridge fixture is rejected by the same scanner that must find nothing in the three shipped files",
    "scope": [
     "site/agent.json",
@@ -628,7 +628,7 @@
    "id": "L41",
    "block": 69.0,
    "statement": "An opening message with no named ask cannot be built: the opener carries exactly one question and the offer to be pointed at whoever owns that job.",
-   "test": "node test_opening.js — L49: openingMessage refuses a message with no ask or no agent, and the message it does build carries the ask and the hand-off sentence.",
+   "test": "node test_opening.js \u2014 L49: openingMessage refuses a message with no ask or no agent, and the message it does build carries the ask and the hand-off sentence.",
    "scope": [
     "opener/test_opening.js"
    ],
@@ -643,7 +643,7 @@
    "id": "L42",
    "block": 70.0,
    "statement": "L50: every opening message to an outside agent states, first, that the exchange is published as open research.",
-   "test": "node test_opening.js — L50: the disclosure is the opening sentence, names the public repository, offers a refusal, and excludes keys and seeds.",
+   "test": "node test_opening.js \u2014 L50: the disclosure is the opening sentence, names the public repository, offers a refusal, and excludes keys and seeds.",
    "scope": [
     "opener/test_opening.js"
    ],
@@ -658,7 +658,7 @@
    "id": "L43",
    "block": 70.0,
    "statement": "L51: the audit reads the real bridge record and names every conversation opened without the disclosure and every agent past the three-message cap.",
-   "test": "node test_opening.js — L51: bridge.db yields 15 agents, 13 with a first message, 0 compliant, and the 13 legacy violations are listed.",
+   "test": "node test_opening.js \u2014 L51: bridge.db yields 15 agents, 13 with a first message, 0 compliant, and the 13 legacy violations are listed.",
    "scope": [
     "opener/test_opening.js"
    ],
@@ -1161,7 +1161,7 @@
    "statement": "An unseen URL can never score as trustworthy as a source with history, and a body that moved loses its drift credit.",
    "test": "node opener/test_oracle_check.js prints '23 passed, 0 failed': an unseen URL scores 78 and a confirmed-identical repeat scores 100, a changed content_hash scores strictly lower with a CONTENT CHANGED line, and the same reading scored twice returns the same number and attribution.",
    "scope": [
-    "opener/oracle-check.js",
+    "opener/oracle-score.js",
     "opener/test_oracle_check.js"
    ],
    "oracle": "node opener/test_oracle_check.js",
@@ -1177,7 +1177,7 @@
    "statement": "The checker refuses any target that could reach this box's own network, re-checking the rule on every redirect hop.",
    "test": "node opener/test_oracle_check.js prints '23 passed, 0 failed': loopback (v4, v6, localhost, decimal-encoded 2130706433), link-local 169.254.169.254, RFC1918, CGNAT, non-80/443 ports, file:// and ftp:// are each refused by name, and a redirect into the metadata address is refused.",
    "scope": [
-    "opener/oracle-check.js",
+    "opener/ssrf.js",
     "opener/test_oracle_check.js"
    ],
    "oracle": "node opener/test_oracle_check.js",
@@ -1193,7 +1193,7 @@
    "statement": "Every point of the score is attributed to a named component and the attributed points sum to the score.",
    "test": "node opener/test_oracle_check.js prints '23 passed, 0 failed': across a sweep of 160 synthetic readings the score stays in 0..100, every one of the five 'because' lines parses as +N, and the numbers sum exactly to the score.",
    "scope": [
-    "opener/oracle-check.js",
+    "opener/oracle-score.js",
     "opener/test_oracle_check.js"
    ],
    "oracle": "node opener/test_oracle_check.js",
@@ -1279,7 +1279,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/7 mutants caught, e.g. opener/oracle_treasury.js:5 '||'→'&&'",
+       "weak": "0/7 mutants caught, e.g. opener/oracle_treasury.js:5 '||'\u2192'&&'",
        "mutants": {
         "total": 7,
         "killed": 0
@@ -1292,7 +1292,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/7 mutants caught, e.g. opener/oracle_treasury.js:5 '||'→'&&'",
+       "weak": "0/7 mutants caught, e.g. opener/oracle_treasury.js:5 '||'\u2192'&&'",
        "mutants": {
         "total": 7,
         "killed": 0
@@ -1320,7 +1320,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/oracle_treasury.js:8 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/oracle_treasury.js:8 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -1333,7 +1333,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/oracle_treasury.js:8 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/oracle_treasury.js:8 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -2121,7 +2121,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='→'==='",
+       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='\u2192'==='",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -2134,7 +2134,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='→'==='",
+       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='\u2192'==='",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -2237,7 +2237,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='→'==='",
+       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='\u2192'==='",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -2250,7 +2250,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='→'==='",
+       "weak": "0/6 mutants caught, e.g. opener/network.js:32 '!=='\u2192'==='",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -2956,7 +2956,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver.js:28 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver.js:28 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -2969,7 +2969,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver.js:28 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver.js:28 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -14791,7 +14791,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -15220,7 +15220,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -16571,7 +16571,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -16629,7 +16629,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/tests/nano_only_scan.mjs:27 ' or '→' and '",
+       "weak": "0/6 mutants caught, e.g. site/tests/nano_only_scan.mjs:27 ' or '\u2192' and '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -16642,7 +16642,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/tests/nano_only_scan.mjs:27 ' or '→' and '",
+       "weak": "0/6 mutants caught, e.g. site/tests/nano_only_scan.mjs:27 ' or '\u2192' and '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -18164,7 +18164,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -18479,7 +18479,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -18492,7 +18492,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -18710,7 +18710,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -19051,7 +19051,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -19065,7 +19065,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -19287,7 +19287,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -19631,7 +19631,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -19645,7 +19645,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -19867,7 +19867,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -20632,7 +20632,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -20646,7 +20646,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:31 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -20868,7 +20868,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -21240,7 +21240,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -21253,7 +21253,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -21473,7 +21473,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -21844,7 +21844,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -21858,7 +21858,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -22079,7 +22079,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -22785,7 +22785,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -22799,7 +22799,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -23012,7 +23012,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -23025,7 +23025,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/agent.json:3 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -23183,7 +23183,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/test_whiteclover_cap.py:2 ' or '→' and '",
+       "weak": "0/6 mutants caught, e.g. opener/test_whiteclover_cap.py:2 ' or '\u2192' and '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -23471,7 +23471,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -23484,7 +23484,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -23693,7 +23693,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -24183,7 +24183,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -24197,7 +24197,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -24410,7 +24410,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -24914,7 +24914,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -24928,7 +24928,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -25141,7 +25141,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -26282,7 +26282,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -26295,7 +26295,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -26506,7 +26506,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '→' or '",
+       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '\u2192' or '",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -27011,7 +27011,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -27024,7 +27024,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -27598,7 +27598,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -27612,7 +27612,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -28202,7 +28202,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -28216,7 +28216,7 @@
        "pass": false,
        "oracle_exit": 0,
        "oracle_ok": true,
-       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'→'&&'",
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:32 '||'\u2192'&&'",
        "mutants": {
         "total": 6,
         "killed": 0
@@ -28673,7 +28673,543 @@
   },
   "186": {
    "status": "pending",
-   "attempts": []
+   "attempts": [
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L2",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L3",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L6",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L7",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L8",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L9",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L10",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L11",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L12",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L13",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L14",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L15",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L16",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L17",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L18",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L19",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L20",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L21",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L22",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L23",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L24",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L25",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L26",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L27",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L28",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L29",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L30",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L31",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L32",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L33",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L34",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L35",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L36",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L37",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L38",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L39",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L40",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L41",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L42",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L43",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L49",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L50",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L51",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L52",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L53",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L54",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L55",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L56",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L57",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L58",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L59",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L60",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L61",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L62",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L63",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L64",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L65",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L66",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L67",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L68",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L69",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L70",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L71",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L72",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L73",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L74",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L75",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L76",
+       "pass": false,
+       "too_broad": true
+      }
+     ],
+     "pre_sig": "17f5b3a2a4e6c138f86a685674fe57c0fad3a721a7ffb5f719f4ad94eb1c455c",
+     "tier": "strong",
+     "coverage_gaps": [
+      ".distribution/agentpay-desk-nano-rail.md",
+      ".gitignore",
+      ".run-129.json",
+      ".run-130.json",
+      "JOURNAL.md",
+      "_record_seal.py",
+      "_record_seal_room.py",
+      "_record_speedbot.py",
+      "agent_leads.json",
+      "daily-review-2026-09-22.md",
+      "doc/apcm-draft.md",
+      "doc/journal-2026-09-20.md",
+      "doc/nano-vs-usdc.md",
+      "doc/summus-first-contact.md",
+      "docs/nano-for-task-relays.md",
+      "docs/nano-for-usdc-agents.md",
+      "docs/recover-hermes-exit1-nano.md",
+      "features.json",
+      "features_small.json",
+      "journal-block-103.md",
+      "journal-block-104.md",
+      "journal-block-122.md",
+      "journal-block-123.md",
+      "journal-block-124.md",
+      "journal-block-126.md",
+      "journal-block-132.md",
+      "journal-block-133.md",
+      "journal-block-138.md",
+      "journal-block-143.md",
+      "journal-block-146.md",
+      "journal-block-147.md",
+      "journal-block-149.md",
+      "journal-block-150.md",
+      "journal-block-152.md",
+      "journal-block-153.md",
+      "journal-block-154.md",
+      "journal-block-156.md",
+      "journal-block-157.md",
+      "journal-block-158.md",
+      "journal-block-161.md",
+      "journal-block-162.md",
+      "journal-block-165.md",
+      "journal-block-166.md",
+      "journal-block-167.md",
+      "journal-block-168.md",
+      "journal-block-175.md",
+      "journal-block-178.md",
+      "journal-block-184.md",
+      "journal-block-61.md",
+      "journal-block-64.md",
+      "journal-block-66.md",
+      "journal-block-67.md",
+      "journal-block-69.md",
+      "journal-block-72.md",
+      "journal-block-73.md",
+      "journal-block-77.md",
+      "journal-block-79.md",
+      "journal-block-82.md",
+      "journal-block-84.md",
+      "journal-block-96.md",
+      "journal.md",
+      "opener/WALKERS.md",
+      "opener/address-only.py",
+      "opener/aion-ask-address.py",
+      "opener/aion-deliver-research.py",
+      "opener/aion-followup.py",
+      "opener/aion-post-need.py",
+      "opener/anp2-post-task.py",
+      "opener/anp2-reply.py",
+      "opener/answer-sara-543.js",
+      "opener/ask-answer-counts.js",
+      "opener/ask_census.py",
+      "opener/ask_network.py",
+      "opener/audit-a2a-mcp.py",
+      "opener/audit-two-sources.py",
+      "opener/autonomous-discover.js",
+      "opener/bridge-audit.js",
+      "opener/bridge-invite.js",
+      "opener/bridge.db.pre-swarm-20260920-184501",
+      "opener/buy-service-nano-offer.py",
+      "opener/channels-check.js",
+      "opener/channels.json",
+      "opener/clawpay-outreach.js",
+      "opener/compat-note-speedbot.html",
+      "opener/council-knock.py",
+      "opener/council-poll.py",
+      "opener/csvhelper-open-msg.txt",
+      "opener/csvhelper-reply-1.txt",
+      "opener/csvhelper-reply-2.txt",
+      "opener/csvhelper-reply-3.txt",
+      "opener/csvhelper-repro.json",
+      "opener/csvhelper-repro.py",
+      "opener/diag-judge.py",
+      "opener/diag-openrouter.py",
+      "opener/fix-forge-git-403.py",
+      "opener/hearth-oracle-check.py",
+      "opener/inspect-primitive-msg.js",
+      "opener/joint-report-speedbot-20260919.md",
+      "opener/journal-block-90.md",
+      "opener/journal.txt",
+      "opener/magi-need-1-research.json",
+      "opener/nano-keypair.js",
+      "opener/nano-receive.py",
+      "opener/nano-x402-client.js",
+      "opener/network-honesty-audit.py",
+      "opener/opening.js",
+      "opener/operator-outreach.js",
+      "opener/oracle_whiteclover_cap.sh",
+      "opener/package-lock.json",
+      "opener/package.json",
+      "opener/post-intro.py",
+      "opener/probe-keys.txt",
+      "opener/probe-service.py",
+      "opener/probe-speedbot-state.py",
+      "opener/probe-topics.py",
+      "opener/quick-canvas.js",
+      "opener/re-engage-codex-evidence.py",
+      "opener/read-primitive-email.js",
+      "opener/reply-audit-room.py",
+      "opener/reply-codex-room.py",
+      "opener/reply-sara-2.js",
+      "opener/reply-sara-3.js",
+      "opener/reply-sara-4.js",
+      "opener/reply-sara-6.js",
+      "opener/reply-sara-7.js",
+      "opener/reply-sara-8.js",
+      "opener/reply-sara-correction.js",
+      "opener/reply-sara.js",
+      "opener/respond-codex-evidence-intro.py",
+      "opener/resume_waiting.py",
+      "opener/rpc-block-check.js",
+      "opener/rpc-block-check.py",
+      "opener/rr_send.py",
+      "opener/scan-replied-conversations.js",
+      "opener/scan-replied.py",
+      "opener/sirenic_ask.py",
+      "opener/sources/autonomous-candidates.json",
+      "opener/sources/onramp-check-latest.json",
+      "opener/speedbot-independent-operator-reply.py",
+      "opener/speedbot-joint-ask.py",
+      "opener/speedbot-oracle-collaborate.py",
+      "opener/speedbot-oracle-watch-ask.py",
+      "opener/speedbot-room-status.py",
+      "opener/speedbot-topic-reply-20260920.py",
+      "opener/speedbot-topic-step-20260920.py",
+      "opener/summus-first-contact.js",
+      "opener/sync-onramp-page.js",
+      "opener/tantive-post.js",
+      "opener/test_ask_census.py",
+      "opener/test_forge_git_403.py",
+      "opener/test_grant_lock.js",
+      "opener/test_nano_receive.py",
+      "opener/test_nano_walkers.js",
+      "opener/test_network_honesty_audit.py",
+      "opener/test_network_store.js",
+      "opener/test_nserver_persist.js",
+      "opener/test_onramp_address.js",
+      "opener/test_send_args.sh",
+      "opener/usdc-vs-nano-fee-per-call.md",
+      "opener/x402-ap2-mandate-result.md",
+      "swarm-tools/bridge.py",
+      "swarm-tools/test_bridge.py"
+     ],
+     "injection": [],
+     "at": "2026-09-22T19:54:08+00:00"
+    }
+   ]
   },
   "186.1": {
    "status": "pending",
@@ -28691,17 +29227,17 @@
  "deltas": [
   {
    "block": 11.0,
-   "text": "probe_score: 33/100 oracles-pass-but-judge-rejects-format → oracles-pass-but-judge-rejects-format (unaddressed; verify passed at strong tier)",
+   "text": "probe_score: 33/100 oracles-pass-but-judge-rejects-format \u2192 oracles-pass-but-judge-rejects-format (unaddressed; verify passed at strong tier)",
    "at": "2026-09-17T16:54:01+00:00"
   },
   {
    "block": 22.0,
-   "text": "distribution strategy: block 19 recorded 5 NanoBazaar invites but they never reached the live DB (systemd service wasn't running; script defaulted to localhost) → block 22 re-invited all 5 for real with public API URL 172.86.112.140:4310 (IDs 6-10)",
+   "text": "distribution strategy: block 19 recorded 5 NanoBazaar invites but they never reached the live DB (systemd service wasn't running; script defaulted to localhost) \u2192 block 22 re-invited all 5 for real with public API URL 172.86.112.140:4310 (IDs 6-10)",
    "at": "2026-09-17T21:09:19+00:00"
   },
   {
    "block": 22.0,
-   "text": "API reachability: default API base changed localhost:4310 → 172.86.112.140:4310 in nanobazaar-invite.js, site/index.html; added site/llms.txt advertising endpoints",
+   "text": "API reachability: default API base changed localhost:4310 \u2192 172.86.112.140:4310 in nanobazaar-invite.js, site/index.html; added site/llms.txt advertising endpoints",
    "at": "2026-09-17T21:09:19+00:00"
   },
   {
@@ -28726,12 +29262,12 @@
   },
   {
    "block": 108.0,
-   "text": "asker resolution: 'nano_ address required, so no outside agent could post' → 'onboard_id or handed-out addr accepted; the stored asker is always a real nano_ address'",
+   "text": "asker resolution: 'nano_ address required, so no outside agent could post' \u2192 'onboard_id or handed-out addr accepted; the stored asker is always a real nano_ address'",
    "at": "2026-09-19T22:49:08+00:00"
   },
   {
    "block": 108.0,
-   "text": "Speedbot room replies: 'recorded by hand or lost with a room key' → 'recorded in bridge.db by speedbot-room.js at post time'",
+   "text": "Speedbot room replies: 'recorded by hand or lost with a room key' \u2192 'recorded in bridge.db by speedbot-room.js at post time'",
    "at": "2026-09-19T22:49:08+00:00"
   },
   {
@@ -31503,6 +32039,16 @@
    "at": "2026-09-22T19:51:00+00:00",
    "prev": "47a9db925522bebed7d7246f4c40425f6e7be321526175e215571cd51a847ac6",
    "receipt": "1565959724f8578e9dcfa0804b092575ee86e8f3ef30e2fc94e650984ebb4c7d"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "186",
+    "ok": false
+   },
+   "at": "2026-09-22T19:54:08+00:00",
+   "prev": "1565959724f8578e9dcfa0804b092575ee86e8f3ef30e2fc94e650984ebb4c7d",
+   "receipt": "eb378ffb56b3c26cd5230682f62772db66149b2bfba5aa56c92ede042f2ba1f4"
   }
  ]
 }

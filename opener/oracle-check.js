@@ -54,20 +54,12 @@
 "use strict";
 
 const crypto = require("crypto");
-const dns = require("dns");
 const fs = require("fs");
-const net = require("net");
 const path = require("path");
 
 const VERSION = "oracle-check/1";
-/** Published weights. They sum to 100 and are the whole score — nothing else contributes. */
-const WEIGHTS = {
-  reachable: 30,
-  tls: 15,
-  redirects: 10,
-  drift: 25,
-  stability: 20,
-};
+const { scoreReading, verdictOf, WEIGHTS } = require("./oracle-score.js");
+
 const DEFAULT_TIMEOUT_MS = 8000;
 const MAX_HOPS = 4;
 const MAX_BODY_BYTES = 262144; // hash the first 256 KiB; a body larger than this is noted, not read
@@ -130,60 +122,8 @@ function historyFor(url, limit = DRIFT_WINDOW) {
 
 // --- SSRF -----------------------------------------------------------------
 
-/** True when an IP literal is private, loopback, link-local, CGNAT or unique-local. */
-function isBlockedIp(ip) {
-  const v = net.isIP(ip);
-  if (v === 4) {
-    const p = ip.split(".").map(Number);
-    if (p[0] === 10 || p[0] === 127 || p[0] === 0) return true;
-    if (p[0] === 169 && p[1] === 254) return true;            // link-local / cloud metadata
-    if (p[0] === 172 && p[1] >= 16 && p[1] <= 31) return true; // private
-    if (p[0] === 192 && p[1] === 168) return true;            // private
-    if (p[0] === 100 && p[1] >= 64 && p[1] <= 127) return true; // CGNAT
-    if (p[0] >= 224) return true;                              // multicast / reserved
-    return false;
-  }
-  if (v === 6) {
-    const s = ip.toLowerCase();
-    if (s === "::1" || s === "::") return true;
-    if (s.startsWith("fe80") || s.startsWith("fc") || s.startsWith("fd")) return true;
-    if (s.startsWith("::ffff:")) return isBlockedIp(s.slice(7)); // v4-mapped
-    return false;
-  }
-  return true; // not an IP at all: refuse rather than guess
-}
+const { checkTarget, isBlockedIp } = require("./ssrf.js");
 
-/**
- * Validate the target: http/https only, port 80/443 only, and every resolved address public.
- * Returns { ok, reason, hostname, port } — never throws, so a caller gets a verdict not a stack.
- */
-async function checkTarget(rawUrl) {
-  let u;
-  try { u = new URL(String(rawUrl)); } catch { return { ok: false, reason: "not a URL" }; }
-  if (u.protocol !== "http:" && u.protocol !== "https:") {
-    return { ok: false, reason: `scheme ${u.protocol} not allowed (http/https only)` };
-  }
-  const port = u.port ? Number(u.port) : (u.protocol === "https:" ? 443 : 80);
-  if (port !== 80 && port !== 443) return { ok: false, reason: `port ${port} not allowed (80/443 only)` };
-  const host = u.hostname;
-  // URL.hostname keeps the brackets on an IPv6 literal ("[::1]"); strip them so net.isIP sees the
-  // address. Without this an IPv6 literal falls through to DNS and is refused as ENOTFOUND — the
-  // right answer for the wrong reason, and it would hide a genuinely non-public v6 address.
-  const bare = host.startsWith("[") && host.endsWith("]") ? host.slice(1, -1) : host;
-  if (net.isIP(bare)) {
-    if (isBlockedIp(bare)) return { ok: false, reason: `address ${bare} is not public` };
-    return { ok: true, hostname: bare, port };
-  }
-  let addrs;
-  try {
-    addrs = await dns.promises.lookup(bare, { all: true });
-  } catch (e) {
-    return { ok: false, reason: `DNS lookup failed: ${e.code || e.message}` };
-  }
-  const bad = addrs.find((a) => isBlockedIp(a.address));
-  if (bad) return { ok: false, reason: `hostname resolves to non-public address ${bad.address}` };
-  return { ok: true, hostname: host, port };
-}
 
 // --- fetching -------------------------------------------------------------
 
@@ -278,80 +218,6 @@ function certInfo(cert, isTls) {
 
 // --- scoring --------------------------------------------------------------
 
-/**
- * The score: fixed published weights over measured facts. Returns the total plus a `because`
- * line per component, so every point can be traced to the reading that earned it.
- */
-function scoreReading(reading, prior) {
-  const because = [];
-  let score = 0;
-
-  // 1. Reachable (30)
-  const reachable = !reading.error && reading.final_status >= 200 && reading.final_status < 400;
-  if (reachable) { score += WEIGHTS.reachable; because.push(`+${WEIGHTS.reachable} reachable (HTTP ${reading.final_status})`); }
-  else because.push(`+0 not reachable${reading.error ? ` (${reading.error})` : ` (HTTP ${reading.final_status})`}`);
-
-  // 2. TLS (15): https with a valid certificate, and no credit for plain http.
-  const tls = reading.tls || {};
-  if (tls.valid === true) {
-    const nearExpiry = tls.days_remaining !== null && tls.days_remaining <= 21;
-    const pts = nearExpiry ? Math.round(WEIGHTS.tls / 3) : WEIGHTS.tls;
-    score += pts;
-    because.push(`+${pts} TLS valid${nearExpiry ? ` but expires in ${tls.days_remaining}d` : ` (${tls.days_remaining}d left)`}`);
-  } else if (tls.valid === null) {
-    because.push("+0 plain http, no certificate to check");
-  } else {
-    because.push("+0 TLS invalid or unreadable");
-  }
-
-  // 3. Redirect chain (10): a stable single hop is fine; each extra hop is a re-pointing risk.
-  const hops = (reading.redirects || []).length;
-  if (reachable) {
-    const pts = hops === 0 ? WEIGHTS.redirects : hops <= 2 ? 7 : hops <= 3 ? 4 : 0;
-    score += pts;
-    because.push(`+${pts} ${hops} redirect hop(s)${hops ? ` [${(reading.redirects || []).join(" -> ")}]` : ""}`);
-  } else because.push("+0 redirect chain not measurable (unreachable)");
-
-  // 4. Content drift (25): the component an uptime grade cannot produce.
-  const history = prior.filter((r) => r.content_hash);
-  if (reading.content_hash && history.length >= 1) {
-    const changed = history[history.length - 1].content_hash !== reading.content_hash;
-    const pts = changed ? 0 : WEIGHTS.drift;
-    score += pts;
-    because.push(changed
-      ? "+0 CONTENT CHANGED since the last reading (a live endpoint whose body moved — re-pointed, hijacked, or genuinely dynamic)"
-      : `+${WEIGHTS.drift} content identical to the last reading`);
-  } else if (reading.content_hash && history.length === 0) {
-    const pts = Math.round(WEIGHTS.drift / 2);
-    score += pts;
-    because.push(`+${pts} first reading: baseline hash stored, drift unknown (half credit, not a verdict)`);
-  } else because.push("+0 no body to hash");
-
-  // 5. Stability (20): how many of the recent readings were reachable.
-  if (history.length >= 1) {
-    const ok = history.filter((r) => !r.error && r.final_status >= 200 && r.final_status < 400).length;
-    const ratio = ok / history.length;
-    const pts = Math.round(WEIGHTS.stability * ratio);
-    score += pts;
-    because.push(`+${pts} ${ok}/${history.length} previous readings reachable`);
-  } else {
-    const pts = Math.round(WEIGHTS.stability / 2);
-    score += pts;
-    because.push(`+${pts} no history yet (half credit, not a verdict)`);
-  }
-
-  return { score, because };
-}
-
-/** The published reading of the number, so nobody has to interpret it themselves. */
-function verdictOf(score, unseen) {
-  if (unseen) return "unknown — first reading, no history to compare against";
-  if (score >= 90) return "trustworthy — reachable, stable, content unchanged";
-  if (score >= 70) return "mostly trustworthy — one component degraded";
-  if (score >= 50) return "caution — verify before you rely on it";
-  if (score >= 30) return "suspect — multiple components failing";
-  return "do not trust — reachable but unreliable or its content moved";
-}
 
 // --- the public entry point ----------------------------------------------
 
@@ -460,6 +326,8 @@ function sources(limit = 100) {
   return db().prepare("SELECT url, checks, first_at, last_at, last_score, last_status, drift_seen FROM sources ORDER BY last_at DESC LIMIT ?").all(limit);
 }
 
+// The public surface is unchanged: the pieces that moved are re-exported so every existing
+// caller (nserver-persist.js, the CLI, the tests) keeps working without knowing about the split.
 module.exports = { check, checkTarget, scoreReading, verdictOf, stats, sources, isBlockedIp, closeDb, WEIGHTS, DB_PATH, VERSION };
 
 // CLI: node opener/oracle-check.js <url> [--json]
