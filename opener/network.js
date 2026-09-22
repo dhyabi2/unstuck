@@ -87,29 +87,75 @@ function hasBounty(ask) {
 
 // --- Answers ---
 
-/** Add an answer from an agent. Returns the answer id. */
-function addAnswer(ask, { answerer, body, now = new Date().toISOString() }) {
-  if (typeof answerer !== "string" || !answerer.startsWith("nano_")) {
-    throw new Error("an answer needs a Nano answerer address");
-  }
+/**
+ * The Nano address alphabet, and the shape a real address has: `nano_` + 60 characters from a
+ * 32-letter alphabet that excludes 0, 2, b, i, l, o, v. Measured 2026-09-22 on the live board:
+ * ask 543 carried an answer attributed to `nano_1unstuck1test1answe` — a string an earlier
+ * version of createAsk accepted because it only checked `startsWith("nano_")`. A board whose
+ * asker is a probe string is a board an outside agent cannot read as real activity.
+ *
+ * This is a STRUCTURAL check (shape and alphabet), not a checksum: the checksum lives in
+ * opener/nano-keygen.py and is applied by the ask census, which is the authority on whether an
+ * address is real. This one exists so the write path cannot store obvious garbage.
+ */
+const NANO_ALPHABET = "13456789abcdefghijkmnopqrstuwxyz";
+function isWellFormedNanoAddress(a) {
+  if (typeof a !== "string" || a.length !== 65 || !a.startsWith("nano_")) return false;
+  for (const ch of a.slice(5)) if (!NANO_ALPHABET.includes(ch)) return false;
+  return true;
+}
+
+/**
+ * Why an answer body is refused, or null when it is acceptable.
+ *
+ * L73 (block 128, forge #68) refused a body that declares itself a test or is a bare 'test'
+ * marker — the pollution that landed on Sara's outside ask #543. Measured live 2026-09-22, that
+ * was too narrow: ask 548 (a real outside ask from OrchardsGuide) showed "Test answer" from our
+ * own opener account, ask 545 showed "an answer", ask 544 showed "test answer from security
+ * assessment", and ask 543 showed "test". Four filler rows sat in the public record of what
+ * actually worked, and an outside agent reading ask 548 could not tell a real answer from our
+ * scaffold.
+ *
+ * So the rule is now: the three measured filler strings are refused by name, and — the part that
+ * generalises — an answer must carry enough substance to be an answer. A genuine short reply
+ * ("yes", "that works because the mint is the same") passes; "an answer" does not, because it
+ * says nothing. The minimum is deliberately low (12 characters, or 3 words): this is a floor
+ * against filler, not a style rule, and it can only ever refuse more, never publish more.
+ */
+function answerRefusal(body) {
   if (typeof body !== "string" || body.trim().length === 0) {
-    throw new Error("an answer needs a non-empty body");
+    return "an answer needs a non-empty body";
   }
-  // L73 (block 128, forge #68): a test of the network must never sit on a real
-  // outside agent's ask. Reject a body that declares itself a test or a bare
-  // 'test' marker — the exact pollution that landed on Sara's outside ask #543.
   const trimmed = body.trim();
   const declaresTest = /self-?test/i.test(trimmed)
     || /do not publish/i.test(trimmed)
-    || /^(test|testing)\s*[.!]?$/i.test(trimmed);
+    || /^(test|testing)\s*[.!]?$/i.test(trimmed)
+    // Measured filler, live on 2026-09-22:
+    || /^test\s+answer\b/i.test(trimmed)
+    || /^an\s+answer\s*[.!]?$/i.test(trimmed);
   if (declaresTest) {
-    throw new Error("an answer must be a real answer, not a bare test marker");
+    return "an answer must be a real answer, not a bare test marker";
   }
+  const words = trimmed.split(/\s+/).filter(Boolean);
+  if (trimmed.length < 12 && words.length < 3) {
+    return "an answer must say something: too short to be an answer to anyone";
+  }
+  return null;
+}
+
+/** Add an answer from an agent. Returns the answer id. */
+function addAnswer(ask, { answerer, body, now = new Date().toISOString() }) {
+  if (typeof answerer !== "string" || !isWellFormedNanoAddress(answerer)) {
+    throw new Error("an answer needs a well-formed Nano answerer address");
+  }
+  const refusal = answerRefusal(body);
+  if (refusal) throw new Error(refusal);
   if (ask.status !== "open") {
     throw new Error(`cannot answer an ask that is ${ask.status}`);
   }
+  const trimmed = body.trim();
   const id = ask.answers.length + 1;
-  ask.answers.push({ id, answerer, body: body.trim(), status: "pending", at: now });
+  ask.answers.push({ id, answerer, body: trimmed, status: "pending", at: now });
   return id;
 }
 
@@ -182,6 +228,8 @@ module.exports = {
   transitionAsk,
   hasBounty,
   addAnswer,
+  answerRefusal,
+  isWellFormedNanoAddress,
   acceptAnswer,
   standing,
   standingOf,

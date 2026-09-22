@@ -1202,6 +1202,39 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-22T19:25:40+00:00"
+  },
+  {
+   "id": "L78",
+   "block": 186.2,
+   "statement": "The board's visible answers are answers: the filler strings measured on live asks 548, 545 and 544 are refused.",
+   "test": "node opener/test_ask_quality.js prints '6 passed, 0 failed' and node opener/test_network_guard.js prints 'all tests pass': 'Test answer', 'an answer', 'test answer from security assessment' and 'test' are each refused by the SHIPPED predicate network.js answerRefusal (never a copy), while a genuine answer that merely mentions testing is accepted, and the predicate never throws on null or a 5000-char string.",
+   "scope": [
+    "opener/network.js",
+    "opener/test_ask_quality.js",
+    "opener/test_network_guard.js"
+   ],
+   "oracle": "node opener/test_ask_quality.js && node opener/test_network_guard.js",
+   "expect": "6 passed, 0 failed",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-22T19:50:49+00:00"
+  },
+  {
+   "id": "L79",
+   "block": 186.3,
+   "statement": "The write path refuses a malformed Nano address, so a probe string cannot sit in the board as an asker or answerer.",
+   "test": "node opener/test_ask_quality.js prints '6 passed, 0 failed': the live row's account nano_1unstuck1test1answe is refused by the shipped network.js isWellFormedNanoAddress while a real 65-char address passes, and addAnswer throws and pushes nothing when handed the malformed address.",
+   "scope": [
+    "opener/network.js",
+    "opener/test_ask_quality.js"
+   ],
+   "oracle": "node opener/test_ask_quality.js",
+   "expect": "6 passed, 0 failed",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-22T19:51:00+00:00"
   }
  ],
  "blocks": {
@@ -28645,6 +28678,14 @@
   "186.1": {
    "status": "pending",
    "attempts": []
+  },
+  "186.2": {
+   "status": "pending",
+   "attempts": []
+  },
+  "186.3": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -28697,6 +28738,11 @@
    "block": 127.0,
    "text": "block 126 laws L70/L71: oracle expectation '^5/5 pass' anchored to whole stdout and could never match -> replaced by L72 in block 127, whose oracle pipes 'tail -1 | grep -q 5/5 pass && echo ORACLE_PASS' and verifies oracle_ok:true",
    "at": "2026-09-20T10:18:02+00:00"
+  },
+  {
+   "block": 186.0,
+   "text": "answer-guard.strictness: L73 accepted any short non-marker token (test123) -> the L78 floor refuses it, because four filler rows ('Test answer', 'an answer', 'test answer from security assessment', 'test') were measured sitting on real outside asks 548/545/544/543 and L73 refused none of them",
+   "at": "2026-09-22T19:51:00+00:00"
   }
  ],
  "waivers": [
@@ -31425,6 +31471,38 @@
    "at": "2026-09-22T19:25:40+00:00",
    "prev": "b4946ad03221c9b295f8e81c6c385cc410d5cd0597652cbadc3fa53307eec3b3",
    "receipt": "0a30cee37be81bc7db20bb1ac095db901f1030d1f56f03367cfa46f229f545a8"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L78",
+    "block": "186.2",
+    "statement_sha": "acdc89817c8f005e0e4dddabcf4ccf4a52ce7ba32fbeaa3c412806ddf28bf40a"
+   },
+   "at": "2026-09-22T19:50:49+00:00",
+   "prev": "0a30cee37be81bc7db20bb1ac095db901f1030d1f56f03367cfa46f229f545a8",
+   "receipt": "145df59774ae1a350405a63e47a9500aa54d361a3fb131c5a4b1206ac455ebb6"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L79",
+    "block": "186.3",
+    "statement_sha": "43829e07a8837212cec9b88672e1468fab7a264d509640bb9f7b5acbdac8d724"
+   },
+   "at": "2026-09-22T19:51:00+00:00",
+   "prev": "145df59774ae1a350405a63e47a9500aa54d361a3fb131c5a4b1206ac455ebb6",
+   "receipt": "47a9db925522bebed7d7246f4c40425f6e7be321526175e215571cd51a847ac6"
+  },
+  {
+   "kind": "delta",
+   "payload": {
+    "block": "186",
+    "sha": "64caa8193bd4bdf9d0e8dede1b3fdcdf67b64cb0dc435d4d1136f5105a808c85"
+   },
+   "at": "2026-09-22T19:51:00+00:00",
+   "prev": "47a9db925522bebed7d7246f4c40425f6e7be321526175e215571cd51a847ac6",
+   "receipt": "1565959724f8578e9dcfa0804b092575ee86e8f3ef30e2fc94e650984ebb4c7d"
   }
  ]
 }

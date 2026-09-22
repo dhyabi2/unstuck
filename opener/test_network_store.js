@@ -138,7 +138,7 @@ process.env.NW_DB_PATH = tmpDb;
     });
     const selfAns = s4.addAnswer(selfAsk.id, {
       answerer: "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3",
-      body: "self answer",
+      body: "the self-pay path is refused by the accept guard",
     });
     try { s4.acceptAnswer(selfAsk.id, selfAns.answerId,
       "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3", selfAsk.accept_token); failed++; console.log("FAIL N5 self-pay not rejected"); }
@@ -150,7 +150,7 @@ process.env.NW_DB_PATH = tmpDb;
       title: "token gate", body: "testing", bountyRaw: "1000000000000000000000000",
     });
     const gAns = s4.addAnswer(gAsk.id, {
-      answerer: "nano_3yo6rq85c1agb5ynn69fnmxi4y9bpct8ju1emcuc4ajx5t3o3z69i1kx847x", body: "ans",
+      answerer: "nano_3yo6rq85c1agb5ynn69fnmxi4y9bpct8ju1emcuc4ajx5t3o3z69i1kx847x", body: "a substantive answer used to exercise the token gate",
     });
     try { s4.acceptAnswer(gAsk.id, gAns.answerId,
       "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3", "guess"); failed++; console.log("FAIL N9 wrong token accepted (name-the-asker)"); }
