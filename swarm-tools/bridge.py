@@ -385,6 +385,14 @@ def export(db, out_dir, now=None):
         }
         safe = "".join(c if (c.isalnum() or c in "-_.") else "-" for c in agent).strip("-.") or "agent"
         path = os.path.join(out_dir, f"{safe}.json")
+        # A volatile `exported_at` in every document made every export rewrite all ~478 files, so each commit
+        # touched the whole tree: the public diff stopped meaning "these conversations moved", and the pre-push
+        # secret scan — which flags a path by its NAME, so a wallet conversation is flagged every time it is
+        # presented — re-refused the same six paths on every push, blocking the record from being published at all.
+        # Keep the previous stamp when nothing else in the document changed, so a commit carries only what moved.
+        prev = _read_json(path)
+        if isinstance(prev, dict) and prev.get("exported_at") and _same_ignoring(prev, doc, "exported_at"):
+            doc["exported_at"] = prev["exported_at"]
         with open(path, "w", encoding="utf-8") as f:
             json.dump(doc, f, indent=1, ensure_ascii=False, sort_keys=True)
             f.write("\n")
@@ -397,7 +405,11 @@ def export(db, out_dir, now=None):
         "agents": len(written),
         "exported_at": now,
     }
-    with open(os.path.join(out_dir, "index.json"), "w", encoding="utf-8") as f:
+    index_path = os.path.join(out_dir, "index.json")
+    prev_index = _read_json(index_path)
+    if isinstance(prev_index, dict) and prev_index.get("exported_at") and _same_ignoring(prev_index, index, "exported_at"):
+        index["exported_at"] = prev_index["exported_at"]
+    with open(index_path, "w", encoding="utf-8") as f:
         json.dump(index, f, indent=1, ensure_ascii=False, sort_keys=True)
         f.write("\n")
     return {"written": len(written), "dir": out_dir}
@@ -909,6 +921,22 @@ def asks_target(db, network_db=None, now=None):
 
 
 _B32_ALPHABET = "13456789abcdefghijkmnopqrstuwxyz"
+
+
+def _read_json(path):
+    """The parsed file, or None. Never raises: a corrupt or absent previous export must not stop an export."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return None
+
+
+def _same_ignoring(a, b, key):
+    """True when two dicts are equal apart from one key. Used to keep a volatile stamp out of the diff."""
+    if not isinstance(a, dict) or not isinstance(b, dict):
+        return False
+    return {k: v for k, v in a.items() if k != key} == {k: v for k, v in b.items() if k != key}
 
 
 def _looks_like_account(value):
