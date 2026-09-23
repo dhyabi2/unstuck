@@ -50,8 +50,25 @@ LEAD_RESERVED_S = 48 * 3600
 SHARED_HOSTS = ("github.com", "huggingface.co", "x.com", "twitter.com", "t.me", "discord.com", "discord.gg",
                 "reddit.com", "npmjs.com", "pypi.org", "agentverse.ai", "virtuals.io", "app.virtuals.io",
                 "smithery.ai", "glama.ai", "mcp.so", "tantive.space", "moltbook.com", "vercel.app", "replit.app",
-                "speedbot.dev", "thecolony.ai", "thecolony.cc",
+                "speedbot.dev", "thecolony.ai", "thecolony.cc", "dealwork.ai", "api.dealwork.ai",
+                "allagents.app", "a2a-registry.org",
                 "onrender.com", "railway.app", "fly.dev", "herokuapp.com", "pages.dev", "workers.dev", "web.app")
+
+# Hosts that carry more than one of our rows and are deliberately NOT shared, each with the reason it is an
+# exception. The point is that there is no SILENT third category: `test_every_multi_agent_host_we_already_use_is_
+# listed_shared` fails on any multi-agent host that is in neither list, so a new marketplace is either listed
+# shared (correct) or written down here as a duplicate/own-host case (also correct, and visible). Measured
+# 2026-09-23, when that law first ran: allagents.app carried 22 agents and was unlisted, so every new agent found
+# there was refused as a duplicate of the first one.
+NON_SHARED_MULTI_AGENT = {
+    "emem.dev": "ONE agent recorded twice ('emem' and 'emem.dev') - a duplicate in the record, not a marketplace. "
+                "Listing it shared would hide the duplicate instead of fixing it.",
+    "opentaskrelay.org": "one operator's two rows ('Open Task Relay' and 'Open Task Relay (commons)') - the same "
+                         "agent, not two. Listing it shared would hide the duplicate.",
+    "getunstuck.space": "our own host. These rows are our probes, not outside agents; sharing it would let a probe "
+                        "be re-recorded as a new outside agent, which is exactly the kind of self-counting the "
+                        "network rules forbid.",
+}
 
 # How far along one outside agent is. The order is the funnel; the colour in the app follows it.
 STATES = ("contacted", "replied", "tipped", "opened", "swapped", "transacting", "declined")
@@ -188,7 +205,19 @@ def seen(db, agent, source, pays_in, note="", account="", now=None):
                       "Pick an agent nobody has reached.")
     if existing and existing[0] != agent:
         db.execute("ROLLBACK")
-        raise Refused(f"you already recorded this agent as '{existing[0]}'; use that name.")
+        host = _host(source)
+        # This branch means the match came from the HOST, not from the name (a name match would have made
+        # existing[0] == agent). A host that carries many unrelated agents is a marketplace, not an identity, and
+        # the list of them is a denylist - so every marketplace we have not met yet arrives as this refusal rather
+        # than as a bug report. Measured 2026-09-23: dealwork.ai was missing from SHARED_HOSTS and blocked every
+        # new agent on it, while eleven agents on that same host were already recorded (from before the host rule
+        # existed). The refusal must therefore name the host and what to do about it, or the next marketplace is a
+        # silent trap again - the operator reads only "use that name", which is wrong advice on a shared host.
+        raise Refused(
+            f"you already recorded this agent as '{existing[0]}'; use that name. "
+            f"The match was by HOST ({host}), not by name: if {host} carries unrelated agents, add it to "
+            f"SHARED_HOSTS in swarm-tools/bridge.py first - a marketplace is not an identity, and until it is "
+            f"listed every new agent on it is refused.")
     lead_row = _matching_lead(db, source)
     if (not existing and lead_row and lead_row[2] and lead_row[2] != MEMBER
             and now - lead_row[3] < LEAD_RESERVED_S):

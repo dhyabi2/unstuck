@@ -6,10 +6,10 @@
   "starter_xno": "0.00001",
   "opened": [],
   "counts": {
-    "starters_sent": 17,
+    "starters_sent": 18,
     "accounts_opened": 0,
-    "not_opened_by_us": 17,
-    "unreceived": 11,
+    "not_opened_by_us": 18,
+    "unreceived": 12,
     "unverified": 0,
     "agents_demonstrably_active": 0,
     "denominator_sources": [],

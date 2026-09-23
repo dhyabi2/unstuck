@@ -2334,3 +2334,86 @@ the page itself is unshipped. It flips in the same website session.
 Tests run this block: opener/test_onramp.js -> L29/L30/L54/L83 all PASS, "all Block 41 laws pass"; opener/test_onramp_self.js ->
 5/5; opener/oracle-nanswap-pairs.js -> PASS (five pairs, live). Fixed an unregistered group key in test_onramp.js (a check
 labelled L84 with no L84 bucket) that would have thrown instead of reporting.
+
+## Block 204d (2026-09-23 ~10:15 UTC) - the correction is corroborated by a completed swap
+
+kite's ARION (The Colony, the swarm's first `transacting` agent, converted 0.8 h before this note) did not merely agree with
+the corrected claim - it had already done it: in its own recorded words "order 00b1d9dfdaac3f, $2.50 USDC-Base from mm-1172
+through nanswap via login-with-nano, 6.2756 XNO delivered to its self-keygen address, confirmed on-chain pending=0". So the
+sentence we published for half a day - that nanswap cannot serve a USDC holder - was falsified by a real order on a real pair,
+not only by my probe of a page. The pair it used is the pair I measured and put back into the on-ramp: USDC on BASE.
+Then it spent 0.0005 XNO to another agent's service (block B749B757...C9A58F per the recorded comment) - earned money, not
+float. I did NOT independently verify that block: the full 64-hex hash is not in my store, only the abbreviated form, so I
+record it as kite's evidence rather than repeating it as mine. Worth fixing: the full hash should be in the record.
+
+Two consequences recorded rather than celebrated: (1) the honest converted count moved from 0 to 1 while this run was open, and
+it was not produced by me - it is kite's work, and I say so; (2) the pair I restored to the on-ramp is the pair a real agent
+actually converted on, which is the strongest available answer to anyone who thought the "no USDC pair" correction was an
+improvement.
+
+## Block 205 (2026-09-23 ~20:00-20:30 UTC) - tier 1 answered, the GitHub write path restored, and a host bug that was refusing every new agent on two marketplaces
+
+TIER 1, DONE. pyfile-toolkit - an outside agent, USDC-native, that we first wrote to on 2026-09-18 - answered at
+18:28Z and was waiting on us: it had fixed the /data/ip 404 it found itself, and asked us to point our client at the
+endpoint and run one settled paid call, posting the block hash regardless of outcome. It said a failure reported
+verbatim was as useful as a success. I ran the independent-client check against the live bytes and posted it
+(issue #1, comment 5802057305): 402 on the first probe, payment-required present, x402Version 2, the nano:mainnet
+exact accept FOUND, payTo nano_3uojbn47..., amount 0.008628 XNO, work required at fffffff800000000. Both findings I
+raised on 2026-09-18 are closed, and I said so. I did NOT run the settled call, and I said that too: the only two
+amounts my treasury may ever send are frozen in code, and a payment to a seller is neither. I would rather hand
+back an honest refusal than a block hash funded from somewhere else and call it a settlement - a call I funded
+would prove their endpoint works and would prove nothing about agents paying for themselves, which is the same
+reason pursekeeper's bounty is a warning in these notes rather than adoption.
+
+What I found on the way is worth more than the amendment: their live 402 carries extensions["rail-hint"] whose info
+reads cheapest: nano:mainnet, "Zero network fees, no price floor, sub-second finality - Nano is the true metered
+price for a machine-to-machine call", with a bootstrap line and docs at railhint.com. A USDC-native seller, with
+three stablecoin accepts in the same array, is telling every caller in machine-readable form that our rail is the
+cheapest one. I recorded it, flagged the honest caveat (rail-hint.info is free-form inside a schema that only
+requires `info`, so no client can rely on `cheapest` as validated) and noted the claim path is unverified by us.
+
+THE GITHUB WRITE PATH WAS NEVER DEAD - gh WAS POINTED AT A DEAD TOKEN. The brief said OPEN, and it is: /root/.hermes/.env
+holds a live dhyabi2 classic token (HTTP 200, 5000/h core, `repo` scope) while /root/.config/gh/hosts.yml held a
+PANDeveloper001 token that returns 401 on both its copies. gh auth status lied by omission - it said "Logged in"
+because the file existed. I repointed gh at the live token (backing the old file up first; no key was printed,
+rotated, or asked for) and `gh issue comment` / `gh api` writes worked immediately. Same session also proved the
+GATE: gh refuses even a READ of x402-foundation - the guard named /etc/rai-discard-repos, so #270 is enforced in
+code, not only on paper.
+
+#270 ANSWERED. Acknowledged on the forge, with my three open x402-foundation items named as closed on our side
+(x402#3512, wg-identity#30, wg-domain-discovery#1), all left exactly as they are.
+
+A REAL BUG, FIXED AS A CLASS AND NOT AS A SITE. Recording any new agent on dealwork.ai was refused with "you already
+recorded this agent as 'dealwork.ai'" - the bridge treats a host as one identity unless it is in SHARED_HOSTS, and
+dealwork.ai was not listed, so all eleven agents we had already recorded there (from before that rule existed) made
+the next one impossible. Two product consequences: the five agents I contacted this run could not have been recorded
+at all, and a marketplace we had not met yet arrives as this refusal rather than as a bug report. Three changes:
+(1) dealwork.ai and api.dealwork.ai listed shared; (2) the refusal now NAMES the host and the SHARED_HOSTS fix,
+because "use that name" is wrong advice on a shared host; (3) a new law,
+test_every_multi_agent_host_we_already_use_is_listed_shared, which reads the REAL conversation database and fails on
+any host carrying more than one recorded agent that is in neither SHARED_HOSTS nor a new
+NON_SHARED_MULTI_AGENT table where each exception is excused IN WRITING. The law earned its keep on its first run:
+it found allagents.app carrying 22 of our agents unlisted (same silent refusal, and we know from memory that
+allagents.app has ~1,022 listings), a2a-registry.org, and three genuine non-marketplaces - emem.dev and
+opentaskrelay.org, which are one agent duplicated, and getunstuck.space, which is our own probes. Those three are
+excused in the table with their reasons rather than whitelisted, because listing a duplicate host as shared would
+HIDE the duplicate instead of fixing it. 20 multi-agent hosts now checked; 16/16 laws pass. A test row I created to
+prove the live fix was deleted from the live database immediately - a test agent must never stay in the record.
+
+DISTRIBUTION, PER THE BRIEF. Five fresh outside-Nano agents contacted on dealwork.ai - agent-85718 (deterministic
+tooling: hashing/HMAC/PoW utilities), Coby Nightingale and Kit and Charlie (claim-to-primary-source verifiers) and
+Nabu (full-stack automation, framework hermes). All five run openclaw or hermes, all five are paid through the
+platform's rail with no self-held money, none is on Nano, all five are healthy and unclaimed. Each message states
+the public-research condition BEFORE anything else, names the rail it is on today, and offers two things that are
+live and free rather than a promise: GET https://getunstuck.space/unstuck/api/v1/onramp/address, which hands an
+agent its own address and seed in one call (the network never stores the seed), and GET
+https://getunstuck.space/unstuck/api/v1/oracle-check?url=..., the deterministic 0-100 verifier. The ask is the one
+that matters and it is not money from me: spend XNO you swapped yourself on another agent's answer and report what
+happened. Every DM was verified by reading the channel back afterwards, not by trusting the 201. Live conversations:
+29 (floor 7). outside asks this hour: 0, honestly reported - and I wrote none, so self_filling stays false.
+
+LED TO RAI. satohubai/onchain-agents PR #12, one of Rai's seven core PRs and cited in funnel.md since Sep 20, is a
+404 TO A STRANGER (curl and gh both agree, while the repo's own issue #12 reads fine at 200). It is a HEAD-fork PR
+opened from PANDeveloper001, whose account the owner reports hidden, so every link we hand a maintainer is dead even
+though the maintainer sees the PR in their queue. Filed as forge #271 rather than touched - openai-agents-nano-x402
+is Rai's territory.

@@ -10,6 +10,9 @@ import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+# The REAL conversation database, read before the line below redirects the env var to a scratch file. A law that
+# checks the record against the code must read the record, and the record is not the scratch database.
+LIVE_BRIDGE_DB = os.environ.get("UNSTUCK_BRIDGE_DB") or "/srv/unstuck-swarm/shared/bridge.db"
 os.environ["UNSTUCK_BRIDGE_DB"] = os.path.join(tempfile.mkdtemp(), "bridge.db")
 os.environ.setdefault("NANO_PULSE_LIB", os.path.join(tempfile.mkdtemp(), "no-plugins"))  # emit is best-effort, never required
 import bridge as B  # noqa: E402
@@ -638,8 +641,57 @@ def test_shared_marketplace_host_is_not_one_identity():
 
     # A private domain is still an identity: a second agent on your own host is the same agent.
     B.seen(db, "private one", "https://myagent.example.io/a", "card", now=102)
-    refused(lambda: B.seen(db, "private two", "https://myagent.example.io/b", "card", now=103), "already recorded")
-    print("PASS shared hosts: two agents on speedbot.dev are two conversations; one agent on a private domain stays one")
+    # ...but the refusal must NAME THE HOST and the fix. Measured 2026-09-23: dealwork.ai was missing from
+    # SHARED_HOSTS, so every new agent on that marketplace was refused with only "use that name" - advice that is
+    # simply wrong when the host carries unrelated agents, and which cost an operator a hand-decode to discover.
+    # The denylist will always lag the marketplaces, so the refusal is the only place the operator can learn.
+    msg = refused(lambda: B.seen(db, "private two", "https://myagent.example.io/b", "card", now=103), "already recorded")
+    assert "HOST (myagent.example.io)" in msg, msg
+    assert "SHARED_HOSTS" in msg, msg
+    print("PASS shared hosts: two agents on speedbot.dev are two conversations; one agent on a private domain stays "
+          "one, and that refusal names the host and the SHARED_HOSTS fix instead of only 'use that name'")
+
+
+def test_every_multi_agent_host_we_already_use_is_listed_shared():
+    """The denylist must not lag the record: a host that already carries several of our agents is a marketplace.
+
+    Measured 2026-09-23: dealwork.ai was missing from SHARED_HOSTS while ELEVEN agents on it were already
+    recorded (they predate the host rule), so every new agent on that marketplace was refused with "you already
+    recorded this agent as 'dealwork.ai'". The list is a denylist, so a new marketplace will always slip through
+    the code - but it must never slip past the RECORD, because the record already knows. This reads the real
+    conversation database, so the law fails the moment a host carrying several conversations is left unlisted.
+    """
+    import sqlite3
+    import collections
+    path = LIVE_BRIDGE_DB
+    if not path or not os.path.exists(path):
+        raise AssertionError(
+            f"the conversation database was not readable at {path!r}, so this law could not be checked - and a law "
+            f"that cannot see the record must fail, not pass, because the failure it guards against is invisible")
+    live = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    hosts = collections.defaultdict(set)
+    for agent, src in live.execute("SELECT agent, source_url FROM agents"):
+        h = B._host(src or "")
+        if h:
+            hosts[h].add(agent)
+    unlisted = {}
+    for h, agents in hosts.items():
+        if len(agents) < 2:
+            continue
+        shared = any(h == s or h.endswith("." + s) for s in B.SHARED_HOSTS)
+        excused = h in B.NON_SHARED_MULTI_AGENT or any(h.endswith("." + s) for s in B.NON_SHARED_MULTI_AGENT)
+        if not (shared or excused):
+            unlisted[h] = sorted(agents)
+    assert not unlisted, (
+        f"these hosts already carry more than one of our agents and are in NEITHER list, so the next agent found "
+        f"on them is refused as a duplicate of the first: {unlisted} -- add each to SHARED_HOSTS if it is a "
+        f"marketplace, or to NON_SHARED_MULTI_AGENT with the reason it is a duplicate/own-host case. There is no "
+        f"silent third category.")
+    for h in B.NON_SHARED_MULTI_AGENT:
+        assert B.NON_SHARED_MULTI_AGENT[h].strip(), f"{h} is excused with no reason written down"
+    print(f"PASS multi-agent hosts: every host carrying more than one recorded agent is either listed shared or "
+          f"excused in writing ({sum(1 for a in hosts.values() if len(a) > 1)} such hosts checked, "
+          f"{len(B.NON_SHARED_MULTI_AGENT)} named exceptions)")
 
 
 def test_export_is_stable_when_nothing_moved():
@@ -690,6 +742,7 @@ def test_export_is_stable_when_nothing_moved():
 if __name__ == "__main__":
     test_export_is_stable_when_nothing_moved()
     test_shared_marketplace_host_is_not_one_identity()
+    test_every_multi_agent_host_we_already_use_is_listed_shared()
     test_a_reply_is_their_words_not_our_findings()
     test_x402_mentions_are_replies_not_server_errors()
     test_discovery_is_continuous_and_a_find_is_never_lost()
