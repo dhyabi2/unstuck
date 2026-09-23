@@ -1319,6 +1319,32 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-23T07:35:29+00:00"
+  },
+  {
+   "id": "L85",
+   "block": 204.0,
+   "statement": "The on-ramp names the chain-qualified nanswap pairs that serve USDC and the live probe that measured them, never a bare-ticker denial.",
+   "test": "node opener/oracle-nanswap-pairs.js",
+   "scope": [],
+   "oracle": "node opener/oracle-nanswap-pairs.js",
+   "expect": "PASS nanswap chain-qualified USDC pairs measured live",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-23T09:04:43+00:00"
+  },
+  {
+   "id": "L86",
+   "block": 204.1,
+   "statement": "No outreach template may claim nanswap cannot serve USDC (the scan test rejects that denial in every template): old L84 premise retired, replaced by the measured chain-qualified pairs.",
+   "test": "node opener/test_onramp.js",
+   "scope": [],
+   "oracle": "node opener/test_onramp.js --only=L101",
+   "expect": "L83 PASS",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-23T09:05:27+00:00"
   }
  ],
  "blocks": {
@@ -30578,6 +30604,14 @@
      "at": "2026-09-23T07:46:23+00:00"
     }
    ]
+  },
+  "204": {
+   "status": "pending",
+   "attempts": []
+  },
+  "204.1": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -33480,6 +33514,28 @@
    "at": "2026-09-23T07:46:23+00:00",
    "prev": "30bd2077f0ddba7b61b1f9ead813586ed03ea792a12e48a7d721135d9b230364",
    "receipt": "e7c3d8ed6e16e372226a5092d779ca8e1f0f27035a073ac7ca4d8d754396814d"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L85",
+    "block": "204",
+    "statement_sha": "a7ab3bc67a25f5671ca04582772f8433d0cdee47cce9e5849c41d6e701344858"
+   },
+   "at": "2026-09-23T09:04:43+00:00",
+   "prev": "e7c3d8ed6e16e372226a5092d779ca8e1f0f27035a073ac7ca4d8d754396814d",
+   "receipt": "b24368a4cd54898a2ec3c78d3e89a0d5d0d0a44c3573b2b46abbf9fcb4e1ff6e"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L86",
+    "block": "204.1",
+    "statement_sha": "e9ed98116788bf0dd7d2f72242542a0410d291f1518fe97145211d4f99bcd757"
+   },
+   "at": "2026-09-23T09:05:27+00:00",
+   "prev": "b24368a4cd54898a2ec3c78d3e89a0d5d0d0a44c3573b2b46abbf9fcb4e1ff6e",
+   "receipt": "243e7c98f4db6b95df82363a9c26794e9508721506fd9423184bce160c0a9141"
   }
  ]
 }
