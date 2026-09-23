@@ -1,9 +1,9 @@
 {
   "origin": {
     "expected_commit": "cdd438a24519ed8aaab7003ce0e1b16e4de369b7",
-    "recorded_by": "cdd438a24519ed8aaab7003ce0e1b16e4de369b7",
-    "depth_from_head": 0,
-    "updated_at": "2026-09-23T08:02:51Z",
+    "recorded_by": "345fa56f73d17f3b2f3c470f2268f8a906cc92ba",
+    "depth_from_head": 3,
+    "updated_at": "2026-09-23T08:05:29Z",
     "note": "The commit the origin https://getunstuck.space is expected to serve. Refreshed by the deployer (deploy_pin in /root/work/unstuck-deploy.py) at the start of every deploy, from whatever the origin is serving at that moment, then committed \u2014 a repo cannot contain the sha of the commit that writes it, so the pin names the PREVIOUS deployment and the next deploy moves it. It also names recorded_by (the HEAD the depth was measured against) and depth_from_head, the ordered coordinate git rev-list --count <expected_commit>..<recorded_by>. Read by tests/site_deployed_pin.test.mjs: L61 the pin is a real ancestor with a true depth; L62 the origin is serving exactly the pinned commit; L63 the pin is committed at HEAD. Staleness after a commit is a valid state until the next deploy \u2014 not a passing one, since L62 fails until the origin catches up."
   }
 }
