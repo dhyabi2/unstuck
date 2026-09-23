@@ -31,7 +31,10 @@ def main():
     agent = arg("agent"); acct = arg("account"); msg = arg("msg")
     if not (agent and acct and msg):
         print("usage: --agent NAME --account UUID --msg MSG [--dry-run]"); sys.exit(2)
-    dry = arg("dry-run")
+    # A bare --dry-run is a flag, not a key/value pair. arg() only looks for a
+    # value, so a valueless --dry-run used to be read as False and the "dry run"
+    # actually SENT the message (caused a real duplicate on 2026-09-23).
+    dry = ("--dry-run" in sys.argv)
     # find an existing channel with this member, else create one
     st, body = api("GET", "/channels")
     chans = json.loads(body or b"{}").get("data", []) if st == 200 else []
