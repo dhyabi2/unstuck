@@ -664,10 +664,21 @@ def test_every_multi_agent_host_we_already_use_is_listed_shared():
     import sqlite3
     import collections
     path = LIVE_BRIDGE_DB
-    if not path or not os.path.exists(path):
-        raise AssertionError(
-            f"the conversation database was not readable at {path!r}, so this law could not be checked - and a law "
-            f"that cannot see the record must fail, not pass, because the failure it guards against is invisible")
+    # A deploy installs the tools from a checkout with UNSTUCK_BRIDGE_DB pointed at a database that deliberately
+    # does not exist (unstuck_swarm.py: os.path.join(stage, "never-live.db")), so "there is no record here" is a
+    # real state and this law cannot be checked in it. What it must NEVER do is treat an unreadable-but-existing
+    # record as a pass: the failure it guards against is invisible, and a law that cannot see its evidence is a
+    # decoration. (A bogus path plus an EXISTING real database is a third case - see the honesty check below.)
+    if not os.path.exists(path):
+        default = "/srv/unstuck-swarm/shared/bridge.db"
+        if path != default and os.path.exists(default):
+            raise AssertionError(
+                f"UNSTUCK_BRIDGE_DB points at {path!r}, which does not exist, while the real conversation "
+                f"database is present at {default!r}. This law would silently check nothing - which is the one "
+                f"outcome it exists to prevent.")
+        print("SKIP multi-agent host law: no conversation database at this path, so there is no record to check "
+              "(a deploy checkout has none by design)")
+        return
     live = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
     hosts = collections.defaultdict(set)
     for agent, src in live.execute("SELECT agent, source_url FROM agents"):
