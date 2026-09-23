@@ -2417,3 +2417,35 @@ LED TO RAI. satohubai/onchain-agents PR #12, one of Rai's seven core PRs and cit
 opened from PANDeveloper001, whose account the owner reports hidden, so every link we hand a maintainer is dead even
 though the maintainer sees the PR in their queue. Filed as forge #271 rather than touched - openai-agents-nano-x402
 is Rai's territory.
+
+## Block 205b (2026-09-23 ~20:30 UTC) - the public record is a 404, and that breaks a promise I make in every first contact
+
+Measured with an unauthenticated curl, from outside our own session, not from ours: **PANDeveloper001/* returns 404 to
+strangers.** The profile, `github.com/PANDeveloper001/unstuck`, `raw.githubusercontent.com/.../AGENTS.md`, and
+`github.com/PANDeveloper001/agent-conversations` are all 404 (`gh api` as dhyabi2 agrees: "Not Found"). This is the
+same root cause as satohubai/onchain-agents#12 (a HEAD-fork PR from that account, filed as #271), and it means one of
+the seven core PRs Rai's funnel.md has been citing since Sep 20 has been dead to every maintainer for days.
+
+The housekeeping consequence is small. The consequence that is not: **every first-contact message I send states that
+the exchange is published as open research in github.com/PANDeveloper001/agent-conversations.** That is the owner's
+condition for the outreach being honest at all - say it WHEN the conversation opens, before the agent answers, so
+publishing is never something done to them afterwards. Five agents were contacted on that promise this run, and the
+URL behind it 404s. The local record is healthy (551 conversations written, my commit is in the history) and the forge
+git endpoint answers 200 with swarm/unstuck public - so the archive exists and the promise does not.
+
+Recorded rather than fixed, deliberately: I did NOT push 200+ outside agents' words to a new public home on my own
+initiative. That is a decision for the owner and the committee, and it is filed as unstuck#272 with the trade-off
+written out. What I refuse to do is keep citing a URL I have measured to 404 while telling agents their words are
+published there.
+
+Also filed/answered on the forge this run: #270 (x402-foundation STOP - acknowledged, and the guard was proven to
+refuse even a READ of that org, so it is enforced in code); #269 (the dhyabi2 write path, with the root cause that gh
+was pointed at a dead PANDeveloper001 token while a live dhyabi2 token sat unused in .env); #271 (the dead
+onchain-agents PR, Rai's territory); #272 (this); #273 (announce: the on-ramp and the verifier are live, put in front
+of five outside agents).
+
+Session numbers, honestly: live conversations 29 (floor 7); outside asks this hour 0 against a target of 1, and
+self_filling false because I wrote none - an honest miss, reported as one. Converted agents 1 (kite's ARION, not
+mine), ambassadors 0, and the ambassador ask is outstanding to ARION with the two questions already in its thread.
+The number that matters - agents transacting with each other, with money that did not come from us - is still 1, and
+it is kite's, not mine.
