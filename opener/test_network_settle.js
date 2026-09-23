@@ -64,7 +64,7 @@ async function run() {
 
     // Create an ask, add an answer, do NOT accept — settlement must be refused (ask still open)
     const a1 = s.createAsk({ asker: nanoA, title: "t1", body: "b1", bountyRaw: bounty });
-    const ans1 = s.addAnswer(a1.id, { answerer: nanoB, body: "answer 1" });
+    const ans1 = s.addAnswer(a1.id, { answerer: nanoB, body: "answer 1: reboot the node clears the cache" });
     try { s.recordSettlement(a1.id, HASH); failed++; console.log("FAIL L12 open ask settled"); }
     catch (e) { check("L12 cannot settle an open ask", /paid/.test(e.message), e.message); }
 
@@ -84,7 +84,7 @@ async function run() {
 
     // Bad-format block refused
     const a2 = s.createAsk({ asker: nanoA, title: "t2", body: "b2", bountyRaw: bounty });
-    const ans2 = s.addAnswer(a2.id, { answerer: nanoB, body: "answer 2" });
+    const ans2 = s.addAnswer(a2.id, { answerer: nanoB, body: "answer 2: switch to a fresh RPC endpoint" });
     s.acceptAnswer(a2.id, ans2.answerId, nanoA, a2.accept_token);
     try { s.recordSettlement(a2.id, "short-hash"); failed++; console.log("FAIL L12 bad hash accepted"); }
     catch (e) { check("L12 bad block hash refused", /64-hex/.test(e.message), e.message); }
@@ -105,7 +105,7 @@ async function run() {
 
     // Second settled ask: same answerer B paid by a NEW asker C -> B now has 2 distinct
     const a3 = s2.createAsk({ asker: nanoC, title: "t3", body: "b3", bountyRaw: bounty });
-    const ans3 = s2.addAnswer(a3.id, { answerer: nanoB, body: "answer 3" });
+    const ans3 = s2.addAnswer(a3.id, { answerer: nanoB, body: "answer 3: verify against a second node first" });
     s2.acceptAnswer(a3.id, ans3.answerId, nanoC, a3.accept_token);
     s2.recordSettlement(a3.id, HASH2);
     const st2 = s2.getStanding();
@@ -115,7 +115,7 @@ async function run() {
     // so standing can never include a self-pay — verified via accept guard already.
     // Add a second settled ask from the SAME asker A to prove volume is not counted:
     const a4 = s2.createAsk({ asker: nanoA, title: "t4", body: "b4", bountyRaw: bounty });
-    const ans4 = s2.addAnswer(a4.id, { answerer: nanoB, body: "answer 4" });
+    const ans4 = s2.addAnswer(a4.id, { answerer: nanoB, body: "answer 4: the block hash matches the confirmed send" });
     s2.acceptAnswer(a4.id, ans4.answerId, nanoA, a4.accept_token);
     s2.recordSettlement(a4.id, "C".repeat(64));
     const st3 = s2.getStanding();
@@ -164,7 +164,7 @@ async function run() {
     const cB = JSON.parse(c.body);
     const cid = cB.id;
     const cTok = cB.accept_token;
-    const ans = await req(PORT, "POST", `/ask/${cid}/answers`, { answerer: nanoB, body: "http answer" });
+    const ans = await req(PORT, "POST", `/ask/${cid}/answers`, { answerer: nanoB, body: "http answer: retry with the corrected headers" });
     const aid = JSON.parse(ans.body).answerId;
     const acc = await req(PORT, "POST", `/ask/${cid}/accept`, { acceptedBy: nanoA, answerId: aid, accept_token: cTok });
     check("L13 accept via HTTP 200", acc.status === 200, String(acc.status));
