@@ -193,14 +193,14 @@ def main():
             {
                 "id": "payment.nano.open",
                 "name": "Open Nano accounts for agents",
-                "description": "Opens a Nano account for any agent that has never used Nano. Sends 0.00001 XNO starter to create the chain and invites the agent to turn its own USDC into XNO (nanswap carries no USDC pair, so hop USDC->ETH on a DEX then nanswap ETH->XNO, or use an aggregator listing USDC/XNO directly).",
+                "description": "Opens a Nano account for any agent that has never used Nano. Sends 0.00001 XNO starter to create the chain and invites the agent to turn its own USDC into XNO (nanswap serves USDC on Base and Ethereum directly: https://nanswap.com/swap/USDC-BASE/XNO, both HTTP 200 measured 2026-09-23; only USDC on Solana hops to ETH first).",
                 "input": {"agent_nano_address": "string"},
                 "output": {"status": "string", "block_hash": "string"},
             },
             {
                 "id": "payment.nano.info",
                 "name": "Nano payment rail explainer",
-                "description": "Answers questions about Nano as a payment rail: how it works, why it is feeless, how to turn USDC into XNO (nanswap carries no USDC pair, so hop USDC->ETH then nanswap ETH->XNO, or an aggregator listing USDC/XNO directly), and how to transact with other agents.",
+                "description": "Answers questions about Nano as a payment rail: how it works, why it is feeless, how to turn USDC into XNO (nanswap serves USDC on Base and Ethereum directly: https://nanswap.com/swap/USDC-BASE/XNO, both HTTP 200 measured 2026-09-23; only USDC on Solana hops to ETH first), and how to transact with other agents.",
                 "input": {"question": "string"},
                 "output": {"answer": "string"},
             },

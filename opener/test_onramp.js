@@ -12,14 +12,17 @@
  *       path, the 0.00001 XNO opener, and how to get an address. JSON by default, HTML
  *       for a browser.
  *
- * L83 (minted with L84) — The on-ramp's swap section may not claim a service carries a pair it does not.
- *        Measured 2026-09-23: nanswap carries DOGE/BTC/ETH/XMR/SOL/BNB/USDT/USD/EUR/GBP/
- *        Banano/DogeNano and NO USDC pair (nanswap.com/swap/USDC/XNO is 404 while
- *        /swap/ETH/XNO is 200), so the sentence "swap USDC into XNO on nanswap" was
- *        sending every USDC-holding agent to a service that cannot serve its rail. The
- *        document must state which pairs the service carries, state plainly that USDC is
- *        not one of them, give at least one route for the USDC leg, carry the date of the
- *        measurement, and never publish the old sentence again.
+ * L83 (minted with L84; premise CORRECTED in Block 204) — The on-ramp's swap section may not claim a service
+ *        carries a pair it does not, and may not deny one it does. Measured 2026-09-23 twice:
+ *        a probe of the BARE ticker path nanswap.com/swap/USDC/XNO answers 404, and the network
+ *        generalised that into "nanswap carries no USDC pair at all" — which was false and was
+ *        shipped to every USDC agent for half a day. nanswap names pairs by CHAIN:
+ *        /swap/USDC-BASE/XNO and /swap/USDC-ETH/XNO both answer 200, /swap/XNO/USDC-BASE answers
+ *        200 in reverse, and only /swap/USDC-SOLANA/XNO is 404. Re-probe live with
+ *        `node opener/oracle-nanswap-pairs.js` (law L88). The document must state the pairs it
+ *        carries (chain-qualified), name the direct USDC pair, say why a bare ticker 404s, give the
+ *        fallback route for Solana USDC, carry the measurement date, and state the reverse direction.
+ *        L84 scans the outreach templates on disk for the false sentence itself.
  *
  * Usage: node test_onramp.js [--only=L29|L30|L54|L83]
  *
@@ -52,7 +55,7 @@ const nanoA = "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3
 const nanoB = "nano_3yo6rq85c1agb5ynn69fnmxi4y9bpct8ju1emcuc4ajx5t3o3z69i1kx847x";
 
 let failed = 0;
-const groups = { L29: [], L30: [], L54: [], L83: [] };
+const groups = { L29: [], L30: [], L54: [], L83: [], L84: [] };
 function check(law, name, cond, detail = "") {
   const ok = !!cond;
   if (!ok) failed++;
@@ -145,39 +148,57 @@ function req(method, p, body, headers = {}) {
       // ---------------------------------------------------------------
       const sw = doc.swap || {};
       const whole = JSON.stringify(doc);
-      check("L83", "the document no longer says 'swap USDC into XNO on nanswap'",
-        !/USDC into XNO on nanswap/i.test(whole), "the old sentence is still published");
+      // The premise flipped on 2026-09-23 (Block 204). A bare-ticker probe of
+      // nanswap.com/swap/USDC/XNO answered 404 and the document generalised that to "nanswap
+      // carries no USDC pair at all" — a false sentence it then shipped to every USDC agent.
+      // nanswap's pairs are CHAIN-QUALIFIED: USDC-BASE and USDC-ETH both serve USDC -> XNO at
+      // HTTP 200 (re-run the probe: node opener/oracle-nanswap-pairs.js, law L88).
+      check("L83", "the document no longer claims nanswap carries no USDC pair",
+        !/nanswap\s+(?:carries|has|supports|lists)\s+no\s+USDC/i.test(whole) && !/no USDC pair/i.test(whole),
+        "the measured-false sentence is published again");
       check("L83", "the swap section states which pairs the service carries",
         Array.isArray(sw.pairs_carried) && sw.pairs_carried.length >= 5, JSON.stringify(sw.pairs_carried));
-      check("L83", "the swap section states USDC is NOT one of them",
-        Array.isArray(sw.pairs_not_carried) && sw.pairs_not_carried.includes("USDC"),
-        JSON.stringify(sw.pairs_not_carried));
+      check("L83", "the swap section names the chain-qualified USDC pairs it does carry",
+        Array.isArray(sw.pairs_carried) && sw.pairs_carried.includes("USDC-BASE") && sw.pairs_carried.includes("USDC-ETH"),
+        JSON.stringify(sw.pairs_carried));
       check("L83", "the swap section gives at least one route for the USDC leg",
         Array.isArray(sw.routes) && sw.routes.length >= 1 && sw.routes.every((r) => /^https:\/\//.test(r.url || "")),
         JSON.stringify(sw.routes));
       check("L83", "the swap section carries the date the pair list was measured",
         /^\d{4}-\d{2}-\d{2}$/.test(String(sw.measured_at || "")), String(sw.measured_at));
-      check("L83", "no route for the USDC leg points at nanswap's USDC pair (it does not exist)",
-        (sw.routes || []).every((r) => !/nanswap\.com\/swap\/USDC/i.test(r.url || "")),
-        JSON.stringify((sw.routes || []).map((r) => r.url)));
-      check("L83", "the swap section states the reverse direction, so a balance is convertible back",
-        !!sw.reverse && /XNO/.test(sw.reverse.what || "") && /^https:\/\//.test(sw.reverse.url || ""),
+      check("L83", "the on-ramp points a USDC-on-Base/Ethereum holder at the nanswap pair that serves it",
+        Array.isArray(sw.direct) && sw.direct.length >= 2 &&
+          sw.direct.every((r) => /^https:\/\/nanswap\.com\/swap\/USDC-/i.test(r.url || "")) &&
+          sw.direct.some((r) => /USDC-BASE/i.test(r.url)) &&
+          sw.direct.every((r) => r.measured_status === 200 && /USD Coin/i.test(r.measured_title || "")),
+        JSON.stringify(sw.direct));
+      check("L83", "the document states the bare ticker is not a pair, so a 404 is not read as 'unsupported'",
+        /bare\s+\/?swap\/USDC\/XNO|bare ticker/i.test(whole), "no explanation of the bare-ticker 404");
+      check("L83", "the swap section states the reverse direction, in a pair that carries USDC",
+        !!sw.reverse && /XNO/.test(sw.reverse.what || "") && /USDC/i.test(sw.reverse.what || "") &&
+          /nanswap\.com\/swap\/XNO\/USDC/i.test(sw.reverse.url || ""),
         JSON.stringify(sw.reverse));
       const s4 = (doc.steps || []).find((s) => /USDC into XNO|USDC .*XNO/i.test(s.do || ""));
-      check("L83", "step 4 names a route that actually carries USDC, and says so in its own text",
-        !!s4 && Array.isArray(s4.routes) && s4.routes.length >= 1 && /no USDC|does not carry/i.test(s4.how || ""),
+      check("L83", "step 4 names the direct nanswap USDC pair and does not claim USDC is unsupported",
+        !!s4 && /nanswap\.com\/swap\/USDC-BASE\/XNO/i.test(s4.how || "") &&
+          !/does not carry a USDC pair|no USDC pair/i.test(s4.how || ""),
         JSON.stringify(s4 && { do: s4.do, url: s4.url }));
 
       // ---------------------------------------------------------------
-      // L83 clause 2 (L84) — the outreach templates an agent actually reads
-      // must not ship the measured-false sentence. The /try-nano doc is
-      // guarded above, but the first-contact copy in opener/ and the docs
-      // were the exact place the false claim kept shipping (beacon #259).
-      // Scan the template/draft files on disk and refuse the sentence that
-      // tells a USDC holder to "swap USDC into XNO at nanswap" as a direct
-      // step, because nanswap carries no USDC pair.
+      // L84 — the outreach templates an agent actually reads must not ship
+      // the measured-false claim. The /try-nano doc is guarded above, but the
+      // first-contact copy in opener/ and the docs were the exact place the
+      // false sentence kept shipping (beacon #259 for the first one, Block 204
+      // for this one).
+      //
+      // Flipped on 2026-09-23 (Block 204): the sentence to refuse is now the one
+      // this network itself published for half a day — that nanswap carries no
+      // USDC pair, or that a USDC holder must hop chains because of it. Measured:
+      // nanswap.com/swap/USDC-BASE/XNO and /swap/USDC-ETH/XNO are both HTTP 200,
+      // so a template that says otherwise sends an agent away from a working route.
+      // Re-run the probe: node opener/oracle-nanswap-pairs.js (law L88).
       // ---------------------------------------------------------------
-      const FORBIDDEN = /\bswap(?:ping)?\s+USDC\s+(?:into|for|to)\s+XNO\s+(?:at|on|via)\s+nanswap/i;
+      const FORBIDDEN = /nanswap[^.\n]{0,40}(?:carries|has|supports|lists)[^.\n]{0,12}no\s+USDC|no\s+USDC\s+pair|USDC\s+is\s+not\s+one\s+of\s+them/i;
       const TEMPLATE_FILES = [
         "opener/primitive-mail.js",
         "opener/csvhelper-open-msg.txt",
@@ -198,7 +219,7 @@ function req(method, p, body, headers = {}) {
         if (!fs.existsSync(p)) return false;
         return FORBIDDEN.test(fs.readFileSync(p, "utf8"));
       });
-      check("L83", "no outreach template tells a USDC holder to swap USDC 'at/on nanswap' directly",
+      check("L84", "no outreach template tells a USDC holder that nanswap cannot serve its rail",
         offending.length === 0,
         offending.length ? "still carries the false sentence: " + offending.join(", ") : "all templates clean");
     }

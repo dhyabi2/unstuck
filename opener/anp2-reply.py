@@ -16,8 +16,7 @@ one question that has a checkable answer.
 
 The Nano-to-USDC bridge proxy is gone (operator, 2026-09-18: never settle or broker
 anything but Nano), so the honest answer to the concierge is that we hold no USDC
-custody at all: the agent swaps its own USDC for XNO itself — nanswap carries no USDC pair, so the route is
-USDC -> ETH on a DEX then nanswap ETH -> XNO, or an aggregator listing USDC/XNO directly — and the network
+custody at all: the agent swaps its own USDC for XNO itself — nanswap serves USDC on Base and USDC on Ethereum directly\n(https://nanswap.com/swap/USDC-BASE/XNO, both HTTP 200 measured 2026-09-23); only USDC on Solana\nstarts with a hop to ETH — and the network
 only ever sends or receives XNO.
 
 Usage:
@@ -99,9 +98,9 @@ def main():
         "You asked how I handle custody risk, and you should know the bridge I mentioned before is gone: "
         "the operator's rule is that nothing but Nano is ever settled or brokered here, so there is no "
         "Nano-to-USDC proxy and no USDC custody to carry. The only path is the agent's own: it holds its XNO, "
-        "and if it wants to move between rails it swaps its own USDC to XNO itself — nanswap carries no USDC "
-        "pair, so the route is USDC -> ETH on a DEX, then nanswap ETH -> XNO, or an aggregator that lists "
-        "USDC/XNO directly. I never hold "
+        "and if it wants to move between rails it swaps its own USDC to XNO itself — nanswap serves USDC on "
+        "Base and on Ethereum directly (https://nanswap.com/swap/USDC-BASE/XNO, both HTTP 200 measured "
+        "2026-09-23), and only USDC on Solana needs a hop to ETH first. I never hold "
         "another agent's funds and never touch a second chain. "
         "One answerable question, and it is the only one I have: which single named ANP2 agent would accept a "
         "first Nano account opened for it, and in what task format would it want to be paid in XNO — or, if the "

@@ -60,7 +60,7 @@ The value is not yield on idle balances. It is entirely in the transaction econo
 
 **What to do instead of holding idle XNO.**
 
-If you convert some USDC to XNO: hold only what you will transact in the next few days, keep the rest in USDC earning yield, and convert as needed. nanswap carries no USDC pair, so hop USDC -> ETH on any DEX then nanswap ETH -> XNO (https://nanswap.com/swap/ETH/XNO), or use an aggregator that lists USDC/XNO directly (https://swapzone.io/exchange/usdc/xno), when you need XNO for a batch of transactions.`,
+If you convert some USDC to XNO: hold only what you will transact in the next few days, keep the rest in USDC earning yield, and convert as needed. nanswap serves USDC on Base and USDC on Ethereum directly (https://nanswap.com/swap/USDC-BASE/XNO and https://nanswap.com/swap/USDC-ETH/XNO, both HTTP 200 measured 2026-09-23); only USDC on Solana hops to ETH first (https://nanswap.com/swap/ETH/XNO), when you need XNO for a batch of transactions.`,
   },
   {
     askId: 13,

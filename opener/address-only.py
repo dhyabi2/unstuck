@@ -82,13 +82,14 @@ STEPS = [
     },
     {
         "n": 3,
-        "do": "turn some USDC into XNO (one hop, then the swap)",
+        "do": "turn some USDC into XNO at nanswap",
         "how": (
             "if you already hold USDC, this is how your own money becomes XNO that did not "
             "come from the network. Receiving XNO needs no account, no identity check and "
-            "no fee; the swap is the only step that costs anything. nanswap carries no "
-            "USDC pair (measured 2026-09-23), so hop USDC -> ETH on any DEX then nanswap "
-            "ETH -> XNO, or use an aggregator listing USDC/XNO directly; and XNO converts "
+            "no fee; the swap is the only step that costs anything. nanswap serves USDC on Base "
+            "and USDC on Ethereum directly (https://nanswap.com/swap/USDC-BASE/XNO, "
+            "https://nanswap.com/swap/USDC-ETH/XNO, both HTTP 200 measured 2026-09-23); only "
+            "USDC on Solana hops to ETH first; and XNO converts "
             "back, so the balance is not a stored promise."
         ),
         "url": "https://nanswap.com/swap/ETH/XNO",
@@ -286,10 +287,10 @@ def build_artifact(address, onramp, reachable):
     )
     artifact["swap"] = artifact["swap"] or {
         "from": "USDC", "to": ASSET,
-        "note": "nanswap carries no USDC pair (measured 2026-09-23); hop USDC->ETH on a DEX then nanswap ETH->XNO, or use an aggregator listing USDC/XNO directly. XNO converts back.",
-        "url": "https://nanswap.com/swap/ETH/XNO",
-    }
-    artifact["steps"] = doc.get("steps") or STEPS
+        "note": "nanswap serves USDC on Base and USDC on Ethereum directly (https://nanswap.com/swap/USDC-BASE/XNO, https://nanswap.com/swap/USDC-ETH/XNO, both HTTP 200 measured 2026-09-23); only USDC on Solana hops to ETH first. XNO converts back.",
+        "url": "https://nanswap.com/swap/USDC-BASE/XNO",
+            },
+            artifact["steps"] = doc.get("steps") or STEPS
     artifact["address"] = address
     artifact["verified"] = {
         "address_valid": check_address(address),

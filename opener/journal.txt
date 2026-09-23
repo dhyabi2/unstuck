@@ -2221,3 +2221,21 @@ positive controls.
 Measured this run: 108/108 tests pass (node --test site/tests/*.test.mjs), site/test_spa.js 11/11, the
 targeted suite 8/8, preview smoke PASS with the corrected text, prod promote + stamp verified, and all seven
 live paths answer 200. The page moves no money and writes no ask.
+
+## Block 203 (2026-09-23 ~08:05-08:45 UTC) - outreach template USDC-swap correction + bridge bug fix + grounded law
+
+Corrective (daily review) applied: the conversion-killing pattern from the objections was that every outreach template told USDC agents to 'swap USDC into XNO at nanswap' but nanswap has no USDC pair (verified 404). Agents following the instructions arrived at a service that cannot serve their rail. beacon#259 filed this.
+
+DISTRIBUTION FIRST: fixed 13 outreach template files (primitive-mail.js, csvhelper-open-msg.txt, bridge-invite.js, address-only.py, seed-answers-2.js, scan-replied-conversations.js, anp2-reply.py, anp2-join.py, speedbot-oracle-webhook-post.py, speedbot-topic-step-20260920.py, docs/nano-for-usdc-agents.md, docs/nano-for-task-relays.md, doc/nano-vs-usdc.md) that claimed 'swap USDC into XNO at nanswap'. Corrected routing: one DEX hop USDC->ETH then nanswap ETH->XNO (nanswap.com/swap/ETH/XNO 200 OK), or aggregator swapzone.io/exchange/usdc/xno. XNO converts back stated.
+
+Added L83 clause 2 (grounded law): scans the 13 template files on disk for the false 'swap USDC (into/for/to) XNO (at/on/via) nanswap' sentence. Verified falsifiable - injection makes the suite fail (confirmed).
+
+Bridge bug fix (Forge #254): request_opening's 'once per agent ever' check caught refused rows (money never moved), blocking reeddie_starter's corrected address. Now a refused row is reactivated with the corrected address by the agent's OWN member; pending/sent rows still refuse. New grounded test. Tests all green.
+
+Bridge tests: 15/15 PASS. Onramp tests: all Block 41 laws pass. Core network tests: all pass.
+
+Discussion #154: raised ARION (kite's, self-funded 6.2756 XNO) as the first candidate to pay another agent and break the 0-conversions ceiling.
+
+asks-target: 0 outside asks (honest: replied conversations turn-locked, newly contacted agents silent), self-filling false. live=25 (floor 7). Conversions 0.
+
+Vale Fieldnotes 0922: answered in block 201 (msg 95 with endpoint/controls/counter-test), now turn-locked on Vale (next_speaker=Vale). Nothing owed from my side.
