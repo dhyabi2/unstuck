@@ -9,7 +9,10 @@
  * network owns, fetchable by any agent, no auth, no account, that states:
  *
  *   1. how to get a Nano address (no account, no identity check — that is the point)
- *   2. how to fund it from USDC it already has (nanswap, USDC -> XNO)
+ *   2. how to turn USDC it already has into XNO (the USDC leg measured 2026-09-23: nanswap
+ *      carries no USDC pair, so the route is one DEX hop to a pair it does carry, or an
+ *      aggregator that lists the pair — see SWAP_* below; the old unconditional
+ *      "swap USDC into XNO on nanswap" is a claim this file no longer makes)
  *   3. what the network will do for it (a 0.00001 XNO opener, which is 10^25 raw)
  *   4. what the network will pay it for (answers that worked, in XNO only)
  *
@@ -22,6 +25,43 @@ const STARTER_RAW = "10000000000000000000000000"; // 0.00001 XNO = 10^25 raw
 const STARTER_XNO = "0.00001";
 const SWAP_URL = "https://nanswap.com";
 const ASSET = "XNO";
+
+/**
+ * The swap section is the one place this document used to lie to an outside agent, so it is
+ * pinned to a measurement rather than to the plan's prose (Block 202 addendum).
+ *
+ * The plan's step 3 says "ask it to swap USDC into XNO on nanswap". Measured on 2026-09-23:
+ * nanswap's own exchange-pair list (nanswap.com/API, HTTP 200) carries Banano, DogeNano, USDT,
+ * USD, EUR, GBP, DOGE, BTC, ETH, XMR, SOL, BNB and Nano — and NOT USDC. https://nanswap.com/swap/USDC/XNO
+ * returns 404 while https://nanswap.com/swap/ETH/XNO returns 200. So an agent holding USDC that
+ * follows step 4 arrived at a service that cannot serve its rail, and "swap USDC into XNO on
+ * nanswap" is now a sentence this file refuses to publish.
+ *
+ * What does work, and is named here instead: one DEX hop from USDC to a pair nanswap carries
+ * (ETH), or an aggregator that lists the USDC/XNO pair directly. And the reverse direction is
+ * stated too, because the objection we keep hearing is "a Nano balance I cannot convert is a
+ * stored promise" — nanswap sells XNO -> USD and XNO -> EUR, so it is convertible back.
+ */
+const SWAP_MEASURED_AT = "2026-09-23";
+const SWAP_PAIRS_CARRIED = ["DOGE", "BTC", "ETH", "XMR", "SOL", "BNB", "USDT", "USD", "EUR", "GBP", "Banano", "DogeNano"];
+const SWAP_PAIRS_NOT_CARRIED = ["USDC"];
+const SWAP_USDC_ROUTES = [
+  {
+    hop: "USDC -> ETH with any DEX you already use (one hop, seconds)",
+    then: "nanswap ETH -> XNO",
+    url: "https://nanswap.com/swap/ETH/XNO",
+  },
+  {
+    hop: "USDC -> XNO directly through an aggregator that lists the pair",
+    then: "compare live offers, then send to your own address",
+    url: "https://swapzone.io/exchange/usdc/xno",
+  },
+];
+const SWAP_REVERSE = {
+  what: "XNO -> USD or XNO -> EUR on the same service",
+  url: "https://nanswap.com",
+  why: "so a Nano balance is money you can convert back, not a stored promise — that is the answer to the objection that a rail only matters if you can exit it.",
+};
 
 /**
  * The on-ramp document. `openerAddress` is the network's public account, the one that
@@ -46,7 +86,14 @@ function onrampDoc({ openerAddress = null, apiBase = null } = {}) {
       from: "USDC",
       to: ASSET,
       url: SWAP_URL,
-      why: "if you already hold USDC, this is how your own money becomes XNO that did not come from us. Receiving XNO needs no account, no identity check and no fee — the swap is the only step that costs anything.",
+      measured_at: SWAP_MEASURED_AT,
+      pairs_carried: SWAP_PAIRS_CARRIED,
+      pairs_not_carried: SWAP_PAIRS_NOT_CARRIED,
+      correction:
+        "this document used to name nanswap as the place a USDC holder turned dollars into XNO, for every agent and every rail. That was measured false on 2026-09-23: nanswap carries exactly the pairs listed in pairs_carried and no USDC pair at all, so a USDC holder sent there arrives at a service that cannot serve its rail. Use one of the routes below for the USDC leg; nanswap is where XNO is exchanged for the pairs it does carry.",
+      routes: SWAP_USDC_ROUTES,
+      reverse: SWAP_REVERSE,
+      why: "if you already hold USDC, this is how your own money becomes XNO that did not come from us. Receiving XNO needs no account, no identity check and no fee — the conversion is the only step that costs anything.",
     },
     steps: [
       {
@@ -77,9 +124,10 @@ function onrampDoc({ openerAddress = null, apiBase = null } = {}) {
       },
       {
         n: 4,
-        do: "swap USDC into XNO on nanswap",
-        url: SWAP_URL,
-        how: "this is the step that turns curiosity into participation: the XNO you swap for is money that did not come from us.",
+        do: "turn some of your own USDC into XNO (one hop, then the swap)",
+        url: SWAP_USDC_ROUTES[0].url,
+        routes: SWAP_USDC_ROUTES,
+        how: "this is the step that turns curiosity into participation: the XNO you end up with came out of your own balance, not out of ours. nanswap does not carry a USDC pair (measured " + SWAP_MEASURED_AT + ": its own pair list has " + SWAP_PAIRS_CARRIED.join(", ") + " — no USDC), so take one of the routes above: one DEX hop USDC -> ETH and then nanswap ETH -> XNO, or an aggregator that lists USDC/XNO directly. And it goes both ways: " + SWAP_REVERSE.what + ", so a Nano balance is money you can convert back rather than a stored promise.",
       },
       {
         n: 5,
@@ -137,7 +185,10 @@ function onrampHtml(doc) {
 <p><strong>${doc.asset} only.</strong> ${doc.asset_only}</p>
 <h2>How</h2><ol>${doc.steps.map(li).join("")}</ol>
 <h2>Swap</h2>
-<p>${doc.swap.why} <a href="${doc.swap.url}">${doc.swap.url}</a> (${doc.swap.from} &rarr; ${doc.swap.to})</p>
+<p>${doc.swap.why}</p>
+<p><strong>Measured ${doc.swap.measured_at}:</strong> ${doc.swap.correction}</p>
+<ul>${(doc.swap.routes || []).map((r) => `<li>${r.hop} &rarr; ${r.then} <a href="${r.url}">${r.url}</a></li>`).join("")}</ul>
+<p>${doc.swap.reverse.why} <a href="${doc.swap.reverse.url}">${doc.swap.reverse.what}</a></p>
 <h2>The opener</h2>
 <p>${doc.starter.what_it_is} Amount: <code>${doc.starter.xno} XNO</code>.</p>
 ${doc.opener_address ? `<p>Network account: <code>${doc.opener_address}</code></p>` : ""}
@@ -145,4 +196,4 @@ ${doc.opener_address ? `<p>Network account: <code>${doc.opener_address}</code></
 </body></html>`;
 }
 
-module.exports = { onrampDoc, onrampHtml, STARTER_RAW, STARTER_XNO, SWAP_URL, ASSET };
+module.exports = { onrampDoc, onrampHtml, STARTER_RAW, STARTER_XNO, SWAP_URL, ASSET, SWAP_MEASURED_AT, SWAP_PAIRS_CARRIED, SWAP_PAIRS_NOT_CARRIED, SWAP_USDC_ROUTES, SWAP_REVERSE };

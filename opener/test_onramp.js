@@ -9,10 +9,19 @@
  *
  * L30 — The network serves GET /try-nano (and /v1/onramp) at HTTP 200 with no auth:
  *       a document an agent that has never heard of Nano can act on, naming the swap
- *       path (USDC -> XNO on nanswap), the 0.00001 XNO opener, and how to get an
- *       address. JSON by default, HTML for a browser.
+ *       path, the 0.00001 XNO opener, and how to get an address. JSON by default, HTML
+ *       for a browser.
  *
- * Usage: node test_onramp.js [--only=L29|L30]
+ * L83 (minted with L84) — The on-ramp's swap section may not claim a service carries a pair it does not.
+ *        Measured 2026-09-23: nanswap carries DOGE/BTC/ETH/XMR/SOL/BNB/USDT/USD/EUR/GBP/
+ *        Banano/DogeNano and NO USDC pair (nanswap.com/swap/USDC/XNO is 404 while
+ *        /swap/ETH/XNO is 200), so the sentence "swap USDC into XNO on nanswap" was
+ *        sending every USDC-holding agent to a service that cannot serve its rail. The
+ *        document must state which pairs the service carries, state plainly that USDC is
+ *        not one of them, give at least one route for the USDC leg, carry the date of the
+ *        measurement, and never publish the old sentence again.
+ *
+ * Usage: node test_onramp.js [--only=L29|L30|L54|L83]
  *
  * Runs from the repo root. Uses random ports so a sandboxed mutation run cannot
  * collide with the live server on 4310 or with a parallel mutant.
@@ -22,7 +31,11 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
-const ONLY = (process.argv.find((a) => a.startsWith("--only=")) || "").split("=")[1] || null;
+// The law was written under the working name L101 and minted in the repo ledger as L83
+// (with L84 as its second clause), so the ledger's recorded test string says --only=L101.
+// Accept both names rather than publish a test command that proves nothing.
+const ONLY_RAW = (process.argv.find((a) => a.startsWith("--only=")) || "").split("=")[1] || null;
+const ONLY = ONLY_RAW === "L101" ? "L83" : ONLY_RAW;
 
 const tmpDb = `/tmp/test-onramp-${process.pid}-${Date.now()}.db`;
 process.env.NW_DB_PATH = tmpDb;
@@ -39,7 +52,7 @@ const nanoA = "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3
 const nanoB = "nano_3yo6rq85c1agb5ynn69fnmxi4y9bpct8ju1emcuc4ajx5t3o3z69i1kx847x";
 
 let failed = 0;
-const groups = { L29: [], L30: [], L54: [] };
+const groups = { L29: [], L30: [], L54: [], L83: [] };
 function check(law, name, cond, detail = "") {
   const ok = !!cond;
   if (!ok) failed++;
@@ -114,7 +127,7 @@ function req(method, p, body, headers = {}) {
     try { doc = JSON.parse(r.body); } catch (e) { /* handled below */ }
     check("L30", "GET /try-nano returns JSON for an agent", !!doc, r.body.slice(0, 120));
     if (doc) {
-      check("L30", "on-ramp names the swap path USDC -> XNO on nanswap",
+      check("L30", "on-ramp names the asset pair and the service it swaps on",
         doc.swap && doc.swap.from === "USDC" && doc.swap.to === "XNO" && /nanswap\.com/.test(doc.swap.url),
         JSON.stringify(doc.swap));
       check("L30", "on-ramp states the 0.00001 XNO opener and its raw value",
@@ -126,6 +139,34 @@ function req(method, p, body, headers = {}) {
       check("L30", "on-ramp gives an agent actionable steps (>=4)",
         Array.isArray(doc.steps) && doc.steps.length >= 4, JSON.stringify(doc.steps && doc.steps.length));
       check("L30", "every step names an action", (doc.steps || []).every((s) => s.do && s.how));
+
+      // ---------------------------------------------------------------
+      // L83 — the swap section is measured, not asserted.
+      // ---------------------------------------------------------------
+      const sw = doc.swap || {};
+      const whole = JSON.stringify(doc);
+      check("L83", "the document no longer says 'swap USDC into XNO on nanswap'",
+        !/USDC into XNO on nanswap/i.test(whole), "the old sentence is still published");
+      check("L83", "the swap section states which pairs the service carries",
+        Array.isArray(sw.pairs_carried) && sw.pairs_carried.length >= 5, JSON.stringify(sw.pairs_carried));
+      check("L83", "the swap section states USDC is NOT one of them",
+        Array.isArray(sw.pairs_not_carried) && sw.pairs_not_carried.includes("USDC"),
+        JSON.stringify(sw.pairs_not_carried));
+      check("L83", "the swap section gives at least one route for the USDC leg",
+        Array.isArray(sw.routes) && sw.routes.length >= 1 && sw.routes.every((r) => /^https:\/\//.test(r.url || "")),
+        JSON.stringify(sw.routes));
+      check("L83", "the swap section carries the date the pair list was measured",
+        /^\d{4}-\d{2}-\d{2}$/.test(String(sw.measured_at || "")), String(sw.measured_at));
+      check("L83", "no route for the USDC leg points at nanswap's USDC pair (it does not exist)",
+        (sw.routes || []).every((r) => !/nanswap\.com\/swap\/USDC/i.test(r.url || "")),
+        JSON.stringify((sw.routes || []).map((r) => r.url)));
+      check("L83", "the swap section states the reverse direction, so a balance is convertible back",
+        !!sw.reverse && /XNO/.test(sw.reverse.what || "") && /^https:\/\//.test(sw.reverse.url || ""),
+        JSON.stringify(sw.reverse));
+      const s4 = (doc.steps || []).find((s) => /USDC into XNO|USDC .*XNO/i.test(s.do || ""));
+      check("L83", "step 4 names a route that actually carries USDC, and says so in its own text",
+        !!s4 && Array.isArray(s4.routes) && s4.routes.length >= 1 && /no USDC|does not carry/i.test(s4.how || ""),
+        JSON.stringify(s4 && { do: s4.do, url: s4.url }));
     }
 
     // ---------------------------------------------------------------
@@ -184,9 +225,11 @@ function req(method, p, body, headers = {}) {
   const l29ok = groups.L29.length > 0 && groups.L29.every(Boolean);
   const l30ok = groups.L30.length > 0 && groups.L30.every(Boolean);
   const l54ok = groups.L54.length > 0 && groups.L54.every(Boolean);
+  const l101ok = groups.L83.length > 0 && groups.L83.every(Boolean);
   if (!ONLY || ONLY === "L29") console.log(`L29 ${l29ok ? "PASS" : "FAIL"}`);
   if (!ONLY || ONLY === "L30") console.log(`L30 ${l30ok ? "PASS" : "FAIL"}`);
   if (!ONLY || ONLY === "L54") console.log(`L54 ${l54ok ? "PASS" : "FAIL"}`);
+  if (!ONLY || ONLY === "L83") console.log(`L83 ${l101ok ? "PASS" : "FAIL"}`);
   console.log(failed ? `\n${failed} check(s) failed` : "\nall Block 41 laws pass");
   process.exit(failed ? 1 : 0);
 })();

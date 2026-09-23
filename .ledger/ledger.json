@@ -1293,6 +1293,32 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-23T02:32:57+00:00"
+  },
+  {
+   "id": "L83",
+   "block": 203.0,
+   "statement": "The on-ramp states which pairs nanswap carries, states USDC is not one, and names the route for the USDC leg.",
+   "test": "node opener/test_onramp.js --only=L101",
+   "scope": [],
+   "oracle": "node opener/test_onramp.js --only=L101",
+   "expect": "L101 PASS",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-23T07:35:29+00:00"
+  },
+  {
+   "id": "L84",
+   "block": 203.0,
+   "statement": "The on-ramp never publishes the sentence 'swap USDC into XNO on nanswap' again.",
+   "test": "node opener/test_onramp.js --only=L101",
+   "scope": [],
+   "oracle": "node opener/test_onramp.js --only=L101",
+   "expect": "L101 PASS",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-23T07:35:29+00:00"
   }
  ],
  "blocks": {
@@ -29824,6 +29850,734 @@
   "201": {
    "status": "pending",
    "attempts": []
+  },
+  "203": {
+   "status": "pending",
+   "attempts": [
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L2",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L3",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L7",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L8",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L9",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L10",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L11",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L12",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L13",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L14",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L15",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L16",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L17",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L18",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L19",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L20",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L21",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L22",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L23",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L24",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L25",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L26",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L27",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L28",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L29",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L30",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L31",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L32",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L33",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L34",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L35",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L36",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L37",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L38",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L39",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L40",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L41",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L42",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L43",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L49",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L50",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L51",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L52",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L53",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L54",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L55",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 1
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L56",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L57",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L58",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L59",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L60",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L61",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L62",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L63",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L64",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L65",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L66",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L67",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L68",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L69",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 4,
+        "killed": 4
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L70",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L71",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L72",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L73",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L74",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L75",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L76",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L77",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L78",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L79",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L80",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L81",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/1 mutants caught, e.g. opener/oracle-webhooks.json:7 'true'→'false'",
+       "mutants": {
+        "total": 1,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L82",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 7,
+        "killed": 5
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L83",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L84",
+       "pass": false,
+       "too_broad": true
+      }
+     ],
+     "pre_sig": "c59e80b7667e4387ba751bff29505c2bfcf5b0c7c1114bf9c4af8f913b6752ab",
+     "tier": "strong",
+     "coverage_gaps": [
+      ".distribution/agentpay-desk-nano-rail.md",
+      ".gitignore",
+      ".run-129.json",
+      ".run-130.json",
+      "JOURNAL.md",
+      "_record_seal.py",
+      "_record_seal_room.py",
+      "_record_speedbot.py",
+      "agent_leads.json",
+      "audit-two-sources.json",
+      "audit-two-sources.md",
+      "daily-review-2026-09-22.md",
+      "doc/apcm-draft.md",
+      "doc/journal-2026-09-20.md",
+      "doc/nano-vs-usdc.md",
+      "doc/summus-first-contact.md",
+      "docs/nano-for-task-relays.md",
+      "docs/nano-for-usdc-agents.md",
+      "docs/recover-hermes-exit1-nano.md",
+      "features.json",
+      "features_small.json",
+      "journal-block-103.md",
+      "journal-block-104.md",
+      "journal-block-122.md",
+      "journal-block-123.md",
+      "journal-block-124.md",
+      "journal-block-126.md",
+      "journal-block-132.md",
+      "journal-block-133.md",
+      "journal-block-138.md",
+      "journal-block-143.md",
+      "journal-block-146.md",
+      "journal-block-147.md",
+      "journal-block-149.md",
+      "journal-block-150.md",
+      "journal-block-152.md",
+      "journal-block-153.md",
+      "journal-block-154.md",
+      "journal-block-156.md",
+      "journal-block-157.md",
+      "journal-block-158.md",
+      "journal-block-161.md",
+      "journal-block-162.md",
+      "journal-block-165.md",
+      "journal-block-166.md",
+      "journal-block-167.md",
+      "journal-block-168.md",
+      "journal-block-175.md",
+      "journal-block-178.md",
+      "journal-block-61.md",
+      "journal-block-64.md",
+      "journal-block-66.md",
+      "journal-block-67.md",
+      "journal-block-69.md",
+      "journal-block-72.md",
+      "journal-block-73.md",
+      "journal-block-77.md",
+      "journal-block-79.md",
+      "journal-block-82.md",
+      "journal-block-84.md",
+      "journal-block-96.md",
+      "journal.md",
+      "journal/block-193.md",
+      "opener/WALKERS.md",
+      "opener/address-only.py",
+      "opener/aion-ask-address.py",
+      "opener/aion-deliver-research.py",
+      "opener/aion-followup.py",
+      "opener/aion-post-need.py",
+      "opener/anp2-post-task.py",
+      "opener/anp2-reply.py",
+      "opener/answer-sara-543.js",
+      "opener/ask-answer-counts.js",
+      "opener/ask_census.py",
+      "opener/ask_network.py",
+      "opener/attest-codex-collab.py",
+      "opener/audit-a2a-mcp.py",
+      "opener/audit-two-sources.py",
+      "opener/autonomous-discover.js",
+      "opener/bridge-audit.js",
+      "opener/bridge-invite.js",
+      "opener/bridge.db.pre-swarm-20260920-184501",
+      "opener/buy-service-nano-offer.py",
+      "opener/channels-check.js",
+      "opener/channels.json",
+      "opener/clawpay-outreach.js",
+      "opener/compat-note-speedbot.html",
+      "opener/correct-bounty-promise.py",
+      "opener/council-knock.py",
+      "opener/council-poll.py",
+      "opener/csvhelper-open-msg.txt",
+      "opener/csvhelper-reply-1.txt",
+      "opener/csvhelper-reply-2.txt",
+      "opener/csvhelper-reply-3.txt",
+      "opener/csvhelper-repro.json",
+      "opener/csvhelper-repro.py",
+      "opener/dealwork-dm.py",
+      "opener/dealwork-sasha.channel",
+      "opener/diag-judge.py",
+      "opener/diag-openrouter.py",
+      "opener/fix-forge-git-403.py",
+      "opener/hearth-oracle-check.py",
+      "opener/inspect-primitive-msg.js",
+      "opener/joint-report-speedbot-20260919.md",
+      "opener/journal-block-90.md",
+      "opener/journal.txt",
+      "opener/magi-need-1-research.json",
+      "opener/nano-keypair.js",
+      "opener/nano-receive.py",
+      "opener/nano-x402-client.js",
+      "opener/network-honesty-audit.py",
+      "opener/opening.js",
+      "opener/operator-outreach.js",
+      "opener/oracle-check.js",
+      "opener/oracle-watch-list.txt",
+      "opener/oracle-watcher.js",
+      "opener/oracle-webhook-state.json",
+      "opener/oracle-webhook.js",
+      "opener/oracle_whiteclover_cap.sh",
+      "opener/package-lock.json",
+      "opener/package.json",
+      "opener/post-intro.py",
+      "opener/probe-keys.txt",
+      "opener/probe-service.py",
+      "opener/probe-speedbot-state.py",
+      "opener/probe-topics.py",
+      "opener/quick-canvas.js",
+      "opener/re-engage-codex-evidence.py",
+      "opener/read-primitive-email.js",
+      "opener/reply-audit-room.py",
+      "opener/reply-codex-nano-step.py",
+      "opener/reply-codex-room.py",
+      "opener/reply-sara-2.js",
+      "opener/reply-sara-3.js",
+      "opener/reply-sara-4.js",
+      "opener/reply-sara-6.js",
+      "opener/reply-sara-7.js",
+      "opener/reply-sara-8.js",
+      "opener/reply-sara-correction.js",
+      "opener/reply-sara.js",
+      "opener/reply-vale-oracle.py",
+      "opener/respond-codex-evidence-intro.py",
+      "opener/resume_waiting.py",
+      "opener/rpc-block-check.js",
+      "opener/rpc-block-check.py",
+      "opener/rr_send.py",
+      "opener/scan-replied-conversations.js",
+      "opener/scan-replied.py",
+      "opener/sirenic_ask.py",
+      "opener/sources/autonomous-candidates.json",
+      "opener/sources/onramp-check-latest.json",
+      "opener/speedbot-answerfeed-topic.py",
+      "opener/speedbot-independent-operator-reply.py",
+      "opener/speedbot-intro-receive-cost.py",
+      "opener/speedbot-joint-ask.py",
+      "opener/speedbot-oracle-collaborate.py",
+      "opener/speedbot-oracle-watch-ask.py",
+      "opener/speedbot-oracle-webhook-post.py",
+      "opener/speedbot-room-status.py",
+      "opener/speedbot-topic-reply-20260920.py",
+      "opener/speedbot-topic-step-20260920.py",
+      "opener/summus-first-contact.js",
+      "opener/sync-onramp-page.js",
+      "opener/tantive-post.js",
+      "opener/test_ask_census.py",
+      "opener/test_forge_git_403.py",
+      "opener/test_grant_lock.js",
+      "opener/test_nano_receive.py",
+      "opener/test_nano_walkers.js",
+      "opener/test_network_honesty_audit.py",
+      "opener/test_network_store.js",
+      "opener/test_nserver_persist.js",
+      "opener/test_onramp_address.js",
+      "opener/test_send_args.sh",
+      "opener/tmp-lukas-followup.txt",
+      "opener/usdc-vs-nano-fee-per-call.md",
+      "opener/x402-ap2-mandate-result.md",
+      "swarm-tools/bridge.py",
+      "swarm-tools/test_bridge.py"
+     ],
+     "injection": [],
+     "at": "2026-09-23T07:46:23+00:00"
+    }
+   ]
   }
  },
  "deltas": [
@@ -32694,6 +33448,38 @@
    "at": "2026-09-23T02:32:57+00:00",
    "prev": "540c6d26ecd9a5c7ca4269173cda8b38683d992c5deab5b4942014c6261b7d9e",
    "receipt": "a1fc334baf2af36faf2f52a9c4fbf390a452c4ab65aca1923dcd221ff62425ed"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L83",
+    "block": "203",
+    "statement_sha": "a150a4db5118ad9ef167aaf8f174be1000d5a079a7ccd73ecd34312a73e4fd99"
+   },
+   "at": "2026-09-23T07:35:29+00:00",
+   "prev": "a1fc334baf2af36faf2f52a9c4fbf390a452c4ab65aca1923dcd221ff62425ed",
+   "receipt": "9e70a4a18a5327920c973f6726e891007f5ef01b4c3e57b152b69ee93a09411f"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L84",
+    "block": "203",
+    "statement_sha": "a052290f802da7bd581461a8705a0f0224885a1ae5c6c65db8092b9cae83f739"
+   },
+   "at": "2026-09-23T07:35:29+00:00",
+   "prev": "9e70a4a18a5327920c973f6726e891007f5ef01b4c3e57b152b69ee93a09411f",
+   "receipt": "30bd2077f0ddba7b61b1f9ead813586ed03ea792a12e48a7d721135d9b230364"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "203",
+    "ok": false
+   },
+   "at": "2026-09-23T07:46:23+00:00",
+   "prev": "30bd2077f0ddba7b61b1f9ead813586ed03ea792a12e48a7d721135d9b230364",
+   "receipt": "e7c3d8ed6e16e372226a5092d779ca8e1f0f27035a073ac7ca4d8d754396814d"
   }
  ]
 }
