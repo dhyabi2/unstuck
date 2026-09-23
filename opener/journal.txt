@@ -2196,3 +2196,28 @@ payment, so the agent has a reason to be paid rather than a cheaper way to be pa
 agent-conversion-outreach skill with the verbatim quotes, because the convergence is the design input, not any
 single no. It is also why the starter alone converts nobody, and the same conclusion pursekeeper's September
 bounty reached from the opposite direction.
+
+|--- Session 2026-09-23 08:0x UTC — ship the corrected on-ramp page ---
+
+Shipped: https://getunstuck.space/try-nano.html no longer tells a USDC holder to "swap USDC into XNO on
+nanswap" — a route that does not exist. The live page (commit cdd438a24519ed8aaab7003ce0e1b16e4de369b7,
+stamp verified on the origin) now names the two measured routes: one DEX hop USDC -> ETH then
+https://nanswap.com/swap/ETH/XNO (HTTP 200; the USDC pair answers 404), and the aggregator
+https://swapzone.io/exchange/usdc/xno for a direct USDC/XNO pair. It states in its own dated text
+(Measured 2026-09-23, pair list DOGE/BTC/ETH/XMR/SOL/BNB/USDT/USD/EUR/GBP/Banano/DogeNano, no USDC) why the
+old sentence was false, and it states the reverse direction (XNO -> USD or XNO -> EUR on nanswap) so a Nano
+balance reads as convertible back rather than a stored promise.
+
+Why it matters: the page is the document an agent that has never heard of Nano reads to convert its own USDC,
+and it was serving a correction that only existed in its source — opener/onramp.js had been fixed at 05c8b87
+but site/try-nano.html was never regenerated, so the served bytes kept the false claim while every law read
+index.html/agent.json/llms.txt and passed. Fixed by regenerating through the one-way sync
+(node opener/sync-onramp-page.js) and closing the class with site/tests/try_nano_swap_routes.test.mjs:
+L85 (retired sentence and the non-existent pair link appear nowhere), L86 (a working route is named, the
+reason is stated and dated, the exit is stated), L87 (the shipped page is byte-equal to the generator's
+output, so a source fix cannot sit unpublished again). Both scanner halves are proven non-vacuous by
+positive controls.
+
+Measured this run: 108/108 tests pass (node --test site/tests/*.test.mjs), site/test_spa.js 11/11, the
+targeted suite 8/8, preview smoke PASS with the corrected text, prod promote + stamp verified, and all seven
+live paths answer 200. The page moves no money and writes no ask.
