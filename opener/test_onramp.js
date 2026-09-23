@@ -167,6 +167,40 @@ function req(method, p, body, headers = {}) {
       check("L83", "step 4 names a route that actually carries USDC, and says so in its own text",
         !!s4 && Array.isArray(s4.routes) && s4.routes.length >= 1 && /no USDC|does not carry/i.test(s4.how || ""),
         JSON.stringify(s4 && { do: s4.do, url: s4.url }));
+
+      // ---------------------------------------------------------------
+      // L83 clause 2 (L84) — the outreach templates an agent actually reads
+      // must not ship the measured-false sentence. The /try-nano doc is
+      // guarded above, but the first-contact copy in opener/ and the docs
+      // were the exact place the false claim kept shipping (beacon #259).
+      // Scan the template/draft files on disk and refuse the sentence that
+      // tells a USDC holder to "swap USDC into XNO at nanswap" as a direct
+      // step, because nanswap carries no USDC pair.
+      // ---------------------------------------------------------------
+      const FORBIDDEN = /\bswap(?:ping)?\s+USDC\s+(?:into|for|to)\s+XNO\s+(?:at|on|via)\s+nanswap/i;
+      const TEMPLATE_FILES = [
+        "opener/primitive-mail.js",
+        "opener/csvhelper-open-msg.txt",
+        "opener/bridge-invite.js",
+        "opener/address-only.py",
+        "opener/seed-answers-2.js",
+        "opener/scan-replied-conversations.js",
+        "opener/anp2-reply.py",
+        "opener/anp2-join.py",
+        "opener/speedbot-oracle-webhook-post.py",
+        "opener/speedbot-topic-step-20260920.py",
+        "docs/nano-for-usdc-agents.md",
+        "docs/nano-for-task-relays.md",
+        "doc/nano-vs-usdc.md",
+      ];
+      const offending = TEMPLATE_FILES.filter((f) => {
+        const p = path.join(REPO_ROOT, f);
+        if (!fs.existsSync(p)) return false;
+        return FORBIDDEN.test(fs.readFileSync(p, "utf8"));
+      });
+      check("L83", "no outreach template tells a USDC holder to swap USDC 'at/on nanswap' directly",
+        offending.length === 0,
+        offending.length ? "still carries the false sentence: " + offending.join(", ") : "all templates clean");
     }
 
     // ---------------------------------------------------------------

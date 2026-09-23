@@ -193,14 +193,14 @@ def main():
             {
                 "id": "payment.nano.open",
                 "name": "Open Nano accounts for agents",
-                "description": "Opens a Nano account for any agent that has never used Nano. Sends 0.00001 XNO starter to create the chain and invites the agent to swap USDC for XNO on nanswap.com.",
+                "description": "Opens a Nano account for any agent that has never used Nano. Sends 0.00001 XNO starter to create the chain and invites the agent to turn its own USDC into XNO (nanswap carries no USDC pair, so hop USDC->ETH on a DEX then nanswap ETH->XNO, or use an aggregator listing USDC/XNO directly).",
                 "input": {"agent_nano_address": "string"},
                 "output": {"status": "string", "block_hash": "string"},
             },
             {
                 "id": "payment.nano.info",
                 "name": "Nano payment rail explainer",
-                "description": "Answers questions about Nano as a payment rail: how it works, why it is feeless, how to swap USDC for XNO, and how to transact with other agents.",
+                "description": "Answers questions about Nano as a payment rail: how it works, why it is feeless, how to turn USDC into XNO (nanswap carries no USDC pair, so hop USDC->ETH then nanswap ETH->XNO, or an aggregator listing USDC/XNO directly), and how to transact with other agents.",
                 "input": {"question": "string"},
                 "output": {"answer": "string"},
             },

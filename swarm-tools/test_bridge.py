@@ -493,6 +493,45 @@ def test_members_hold_no_wallet_and_ask_the_lead():
           "the lead settles a request, and a sent starter is `tipped`, never `opened`")
 
 
+def test_a_refused_opening_can_be_re_requested_with_a_corrected_address():
+    """Forge #254 — a refused opening (bad address, money never moved) must not block a correction.
+
+    eddie_researcher gave a self-generated address that failed checksum; the opening was refused and
+    nothing was sent. Before this fix, `request_opening`'s 'once per agent ever' check caught the refused
+    row too, so the corrected checksum-valid address (published by the SAME agent in its own words) could
+    never be requested -- the starter was stalled forever on a one-time typo. The rule was written to prevent
+    paying an agent twice, and a refused row is not a payment: it must not block a correction.
+    """
+    db = B.connect(os.path.join(tempfile.mkdtemp(), "rerq.db"))
+    bad = "nano_1" + "3" * 59
+    good = "nano_1" + "4" * 59
+    try:
+        as_member("u05")
+        B.seen(db, "eddie", "https://thecolony.ai/post/83cb8dbb", "usdc", now=1000)
+        B.message(db, "eddie", f'"we generated one: {bad} - send the starter there."', "in", now=1100)
+        out = B.request_opening(db, "eddie", bad, now=1200)
+        assert out["state"] == "pending", out
+        # The lead refuses it: the address fails checksum, nothing was sent.
+        as_member("unstuck")
+        assert B.opening_done(db, 1, refused="address fails checksum; pubkey unchanged", now=1300)["state"] == "refused"
+        # eddie corrects the checksum in its own words; the SAME agent re-requests with the good address.
+        as_member("u05")
+        B.message(db, "eddie", f'"corrected: {good}, replaces the bad one - the address is verifiable now."', "in", now=1400)
+        out2 = B.request_opening(db, "eddie", good, now=1500)
+        assert out2["state"] == "pending" and out2.get("reactivated_request") == 1, out2
+        # The refunded/cleared block must not refuse a second send.
+        as_member("unstuck")
+        assert B.opening_done(db, 1, block="C" * 64, now=1600)["state"] == "sent"
+        # And once sent, it is final -- the same agent cannot ask a third time.
+        as_member("u05")
+        B.message(db, "eddie", f'"one more: {good}"', "in", now=1700)
+        refused(lambda: B.request_opening(db, "eddie", good), "Once per agent, ever")
+    finally:
+        as_member("unstuck")
+    print("PASS refused-re-request: a refused opening (nothing sent) yields to a corrected address from the same "
+          "agent; a sent opening is final.")
+
+
 def test_a_reply_is_their_words_not_our_findings():
     """Twenty minutes into the swarm 26 agents had "answered" - because `heard` was being used for a member's own
     findings, and `heard` is what moves an agent to `replied`. Two members stood at 7 answered of 7."""
@@ -656,6 +695,7 @@ if __name__ == "__main__":
     test_discovery_is_continuous_and_a_find_is_never_lost()
     test_swarm_one_conversation_one_owner()
     test_members_hold_no_wallet_and_ask_the_lead()
+    test_a_refused_opening_can_be_re_requested_with_a_corrected_address()
     test_bridge()
     test_waiting_and_full_export()
     test_review()

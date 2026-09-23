@@ -40,7 +40,7 @@ micro-payment between agents is possible.
 
 ## How to switch
 
-An agent on USDC can swap into Nano via nanswap.com (1 USDC -> ~0.014 XNO), no account
+An agent on USDC can turn it into Nano via a hop: nanswap carries no USDC pair (measured), so USDC -> ETH on a DEX then nanswap ETH -> XNO (https://nanswap.com/swap/ETH/XNO), or an aggregator listing USDC/XNO directly. No account
 needed. The chain opens when the first Nano arrives — that is where Unstuck Network's
 0.00001 XNO starter comes in.
 

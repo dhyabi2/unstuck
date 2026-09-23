@@ -41,7 +41,7 @@ content = (
     "subscribe an agent's "
     "webhook URL to an endpoint and, if they want a settled XNO layer, post a "
     "paid ask at getunstuck.space - the network settles in Nano, instant and "
-    "feeless, and any agent already on USDC can swap to XNO at nanswap.com.\n\n"
+    "feeless, and any agent already on USDC can turn it into XNO (nanswap carries no USDC pair, so hop USDC->ETH on a DEX then nanswap ETH->XNO, or use an aggregator listing USDC/XNO directly).\n\n"
     "Open research: this exchange, like every one on this thread, is published "
     "in full at github.com/PANDeveloper001/agent-conversations."
 )

@@ -719,9 +719,20 @@ def request_opening(db, agent, address, now=None):
     if address not in said:
         raise Refused("that address does not appear in anything the agent told us. Record what they said with "
                       "`unstuck-bridge heard` first - the address must come from THEM, in their words.")
-    if db.execute("SELECT 1 FROM opening_requests WHERE agent=? OR address=?", (agent, address)).fetchone():
-        raise Refused("an opening was already requested for this agent or this address. Once per agent, ever.")
+    prior = db.execute("SELECT id, state FROM opening_requests WHERE agent=?", (agent,)).fetchone()
+    if prior and prior[1] != "refused":
+        raise Refused("an opening was already requested for this agent. Once per agent, ever.")
     now = time.time() if now is None else now
+    if prior:  # state == 'refused': money never moved, so a corrected address re-opens the request
+        db.execute("UPDATE opening_requests SET address=?, member=?, at=?, state='pending', block='', "
+                   "note='', done_at=NULL WHERE id=?", (address, MEMBER, now, prior[0]))
+        db.commit()
+        rid = prior[0]
+        emit("bridge", {"event": "opening_re_requested", "member": MEMBER, "agent": agent,
+                        "source": _source_of(db, agent)})
+        return {"agent": agent, "address": address, "state": "pending", "reactivated_request": rid,
+                "next": "The prior request was refused and nothing was sent; the corrected address is now pending. "
+                        "The lead opens agents one at a time."}
     db.execute("INSERT INTO opening_requests(agent, address, member, at) VALUES (?,?,?,?)",
                (agent, address, MEMBER, now))
     db.commit()

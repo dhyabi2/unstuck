@@ -105,7 +105,7 @@ function suggestAnswer(question) {
     return 'Re-offer the Nano starter (0.00001 XNO) via the opener with an on-ramp address or ask for their preferred address';
   }
   if (/swap|nanswap|exchange/i.test(question)) {
-    return 'Point to nanswap.com with specific instructions: swap USDC for XNO (Nano), then use the address at getunstuck.space/unstuck/api/v1/onramp/address';
+    return 'Point them at the USDC->XNO route that works: nanswap carries no USDC pair (measured), so hop USDC -> ETH on any DEX then nanswap ETH -> XNO (https://nanswap.com/swap/ETH/XNO), or an aggregator that lists USDC/XNO directly (https://swapzone.io/exchange/usdc/xno); then use the address at getunstuck.space/unstuck/api/v1/onramp/address';
   }
   if (/Nano|XNO/i.test(question) && /why|what|how/i.test(question)) {
     return 'Nano is instant and feeless — no gas, no confirmation time, no fee to receive — so agents transact without anyone permissioning the transfer';

@@ -59,7 +59,6 @@ ADDRESS_PATH = "/v1/onramp/address"
 ASSET = "XNO"
 STARTER_XNO = "0.00001"
 STARTER_RAW = "10000000000000000000000000"  # 0.00001 XNO = 10^25 raw
-SWAP_URL = "https://nanswap.com"
 
 # The four steps, re-added to every artifact so one file is the whole on-ramp.
 STEPS = [
@@ -83,13 +82,16 @@ STEPS = [
     },
     {
         "n": 3,
-        "do": "swap USDC into XNO on nanswap",
+        "do": "turn some USDC into XNO (one hop, then the swap)",
         "how": (
             "if you already hold USDC, this is how your own money becomes XNO that did not "
             "come from the network. Receiving XNO needs no account, no identity check and "
-            "no fee; the swap is the only step that costs anything."
+            "no fee; the swap is the only step that costs anything. nanswap carries no "
+            "USDC pair (measured 2026-09-23), so hop USDC -> ETH on any DEX then nanswap "
+            "ETH -> XNO, or use an aggregator listing USDC/XNO directly; and XNO converts "
+            "back, so the balance is not a stored promise."
         ),
-        "url": SWAP_URL,
+        "url": "https://nanswap.com/swap/ETH/XNO",
     },
     {
         "n": 4,
@@ -282,7 +284,11 @@ def build_artifact(address, onramp, reachable):
         "Nano is instant and feeless, so an agent can take part without permission, an account, "
         "a fee or an identity check."
     )
-    artifact["swap"] = artifact["swap"] or {"from": "USDC", "to": ASSET, "url": SWAP_URL}
+    artifact["swap"] = artifact["swap"] or {
+        "from": "USDC", "to": ASSET,
+        "note": "nanswap carries no USDC pair (measured 2026-09-23); hop USDC->ETH on a DEX then nanswap ETH->XNO, or use an aggregator listing USDC/XNO directly. XNO converts back.",
+        "url": "https://nanswap.com/swap/ETH/XNO",
+    }
     artifact["steps"] = doc.get("steps") or STEPS
     artifact["address"] = address
     artifact["verified"] = {
@@ -353,7 +359,7 @@ def main(argv):
         print(json.dumps(artifact, indent=2))
     elif not quiet:
         opener = artifact.get("opener_address") or "(unknown — the network did not answer)"
-        print(f"{\"your address\":<24}{address}")
+        print(f"{'your address':<24}{address}")
         print(f"{'network opener':<24}{opener}")
         print(f"{'starter':<24}{STARTER_XNO} XNO ({STARTER_RAW} raw), once, buys nothing")
         print("")
