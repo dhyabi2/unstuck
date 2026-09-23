@@ -255,6 +255,7 @@ function getAsk(id) {
       status: a.status,
       at: a.at,
     })),
+    answerCount: answers.length,
   };
   return ask;
 }
@@ -313,6 +314,7 @@ function listAsks(filter) {
     created_at: r.created_at,
     settlementBlock: r.settlement_block || null,
     settlementVerifiedAt: r.settlement_verified_at || null,
+    answerCount: db.prepare("SELECT COUNT(*) n FROM answers WHERE ask_id = ?").get(r.id).n,
     answers: [],  // not loaded in list view for efficiency
   }));
 }
