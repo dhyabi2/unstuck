@@ -161,6 +161,45 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-20T04:31:57+00:00"
+  },
+  {
+   "id": "L10",
+   "block": 204.0,
+   "statement": "site/try-nano.html never publishes the retired sentence 'swap USDC into XNO on nanswap' and links no nanswap USDC pair.",
+   "test": "node --test --test-name-pattern=L85 tests/try_nano_swap_routes.test.mjs",
+   "scope": [],
+   "oracle": "cd /root/unstuck/site && node --test --test-name-pattern=L85 tests/try_nano_swap_routes.test.mjs",
+   "expect": "pass [1-9]",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-23T07:55:58+00:00"
+  },
+  {
+   "id": "L11",
+   "block": 204.0,
+   "statement": "site/try-nano.html names a working USDC route, states nanswap carries no USDC pair, and states XNO converts back.",
+   "test": "node --test --test-name-pattern=L86 tests/try_nano_swap_routes.test.mjs",
+   "scope": [],
+   "oracle": "cd /root/unstuck/site && node --test --test-name-pattern=L86 tests/try_nano_swap_routes.test.mjs",
+   "expect": "pass [1-9]",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-23T07:55:58+00:00"
+  },
+  {
+   "id": "L12",
+   "block": 204.1,
+   "statement": "The shipped page is exactly the bytes the one-way sync renders from opener/onramp.js.",
+   "test": "node --test tests/try_nano_swap_routes.test.mjs",
+   "scope": [],
+   "oracle": "cd /root/unstuck/site && node --test tests/try_nano_swap_routes.test.mjs",
+   "expect": "pass [8-9]",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-23T07:56:41+00:00"
   }
  ],
  "blocks": {
@@ -1020,6 +1059,14 @@
   "118": {
    "status": "pending",
    "attempts": []
+  },
+  "204": {
+   "status": "pending",
+   "attempts": []
+  },
+  "204.1": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -1519,6 +1566,39 @@
    "at": "2026-09-20T04:31:57+00:00",
    "prev": "af8637235f96eef1b5b5c707ef63b466fede45db53b2c823ab36d1cb8efd93bf",
    "receipt": "a4201d9cb008ddf5e836343f11d187c7ce26ab8064efc8205f9b4d7501bd2c92"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L10",
+    "block": "204",
+    "statement_sha": "3fbe510ea2b43e6386ef145daf55c95fe59a3632c62fe8c344e685ac267ffba1"
+   },
+   "at": "2026-09-23T07:55:58+00:00",
+   "prev": "a4201d9cb008ddf5e836343f11d187c7ce26ab8064efc8205f9b4d7501bd2c92",
+   "receipt": "c7b142d2804223d87df74254de82a4b418ca941be3da7c9da283bb965510aafe"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L11",
+    "block": "204",
+    "statement_sha": "64a594e496c5a0f2dd6cfb3fa1ed1492d50ebdf8855066f2d7cca4225e0631e7"
+   },
+   "at": "2026-09-23T07:55:58+00:00",
+   "prev": "c7b142d2804223d87df74254de82a4b418ca941be3da7c9da283bb965510aafe",
+   "receipt": "e87fb18778c95d926300df1d13e75933b600273282567e2f000a6247c9cec395"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L12",
+    "block": "204.1",
+    "statement_sha": "0456e40ef056678b7f725a547a04d26e432c4dd2670ac4c11f4bea86f20d1cdc"
+   },
+   "at": "2026-09-23T07:56:41+00:00",
+   "prev": "e87fb18778c95d926300df1d13e75933b600273282567e2f000a6247c9cec395",
+   "receipt": "72bdba4ac8b3fb7ad35e3392c93de883b19f0f549205825a64636acff3851ca3"
   }
  ]
 }

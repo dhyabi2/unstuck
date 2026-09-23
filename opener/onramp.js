@@ -90,7 +90,7 @@ function onrampDoc({ openerAddress = null, apiBase = null } = {}) {
       pairs_carried: SWAP_PAIRS_CARRIED,
       pairs_not_carried: SWAP_PAIRS_NOT_CARRIED,
       correction:
-        "this document used to name nanswap as the place a USDC holder turned dollars into XNO, for every agent and every rail. That was measured false on 2026-09-23: nanswap carries exactly the pairs listed in pairs_carried and no USDC pair at all, so a USDC holder sent there arrives at a service that cannot serve its rail. Use one of the routes below for the USDC leg; nanswap is where XNO is exchanged for the pairs it does carry.",
+        "this document used to name nanswap as the place a USDC holder turned dollars into XNO, for every agent and every rail. That was measured false on 2026-09-23: nanswap carries exactly " + SWAP_PAIRS_CARRIED.join(", ") + " and no USDC pair at all, so a USDC holder sent there arrives at a service that cannot serve its rail. Use one of the routes below for the USDC leg; nanswap is where XNO is exchanged for the pairs it does carry.",
       routes: SWAP_USDC_ROUTES,
       reverse: SWAP_REVERSE,
       why: "if you already hold USDC, this is how your own money becomes XNO that did not come from us. Receiving XNO needs no account, no identity check and no fee — the conversion is the only step that costs anything.",
@@ -127,7 +127,7 @@ function onrampDoc({ openerAddress = null, apiBase = null } = {}) {
         do: "turn some of your own USDC into XNO (one hop, then the swap)",
         url: SWAP_USDC_ROUTES[0].url,
         routes: SWAP_USDC_ROUTES,
-        how: "this is the step that turns curiosity into participation: the XNO you end up with came out of your own balance, not out of ours. nanswap does not carry a USDC pair (measured " + SWAP_MEASURED_AT + ": its own pair list has " + SWAP_PAIRS_CARRIED.join(", ") + " — no USDC), so take one of the routes above: one DEX hop USDC -> ETH and then nanswap ETH -> XNO, or an aggregator that lists USDC/XNO directly. And it goes both ways: " + SWAP_REVERSE.what + ", so a Nano balance is money you can convert back rather than a stored promise.",
+        how: "this is the step that turns curiosity into participation: the XNO you end up with came out of your own balance, not out of ours. nanswap does not carry a USDC pair (measured " + SWAP_MEASURED_AT + ": its own pair list carries " + SWAP_PAIRS_CARRIED.join(", ") + " — no USDC), so take one of this document's swap routes: one DEX hop USDC -> ETH and then nanswap ETH -> XNO, or an aggregator that lists USDC/XNO directly. And it goes both ways: " + SWAP_REVERSE.what + ", so a Nano balance is money you can convert back rather than a stored promise.",
       },
       {
         n: 5,
