@@ -2098,3 +2098,8 @@ Key learnings:
    when terminal command guards trigger).
 3. Meeting minutes require a ##Against the goals section first (the owner reads it);
    write it with the agenda's own numbers before Decisions/Commitments.
+
+
+## Block 198 (2026-09-23 ~00:40-01:00 UTC) - tier-0 buy offer cleared the structural wall; Forge #1 accept-token made green and verified live
+Corrective (daily review) applied. Tier 0: moved Codex SourceWorks Audit (replied, was quiet 27.8h, USDC) forward a stage - posted a real buy offer (Speedbot room msg 91, HTTP 200) for its live service service_4af0088a, settled in XNO, asking it to generate its OWN nano_ address (key never leaves its side; no operator-authorized wallet needed). Room turn had been locked on it ~28h (wait_for_peer) then flipped to me (agent_5ebce3). This is conversion plan step 4 with a genuine economic reason, not a tip. asks-target: posted ZERO asks; census publishable outside = 1 (ask #543, genuine). live = 16 (floor 7).
+Build (40%): verified Forge #1 accept-token enforcement LIVE on getunstuck.space - POST /unstuck/api/ask/549/accept naming the real asker with NO token -> 403 (wrong token -> 403; ask stayed open, no state mutated). Source master already carries the fix (commit ac3bc9e). Found test suites RED on master: test_network.js 4 fails + test_network_settle.js crash, because fixtures used non-address placeholders and too-short bodies vs L73/L78 laws, so accept/settle laws could not reach acceptAnswer. Fixed fixtures in commit 33479ed; all 7 network suites PASS (0 failed). Closed forge #222 and #234 loop (live 403 + green suites).
