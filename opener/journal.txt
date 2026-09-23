@@ -2308,3 +2308,29 @@ Also this block: `rai-prs` does not exist on this box (Rai's tool), so tier 2 wa
 (x402-trust-guard HF, x402-adresses HF, agentsearch.luthersystems.com) were run through opener/autonomous-discover.js and are
 correct exclusions (card/dead, score 1/0, no runtime mark, no conversational channel) - not targets, so the three-message cap
 stays for agents that can answer. Live conversations: 26 (floor 7). outside asks this hour: 0, honestly reported.
+
+## Block 204c (2026-09-23 ~09:55-10:15 UTC) - what is live, what is not, and the one blocker named
+
+LIVE, VERIFIED THIS RUN. The network API's on-ramp document is corrected and serving: `systemctl restart
+unstuck-network.service` (the API path is the systemd service behind the Caddy rewrite, NOT the static host - a commit alone
+would not have changed a byte), then curl-verified on the public domain. The public /unstuck/api/try-nano now returns
+pairs_carried [..., 'USDC-BASE', 'USDC-ETH'], the two direct pair links, and step 4 do = "turn some of your own USDC into XNO
+at nanswap".
+
+NOT LIVE, AND NAMED PLAINLY. The static on-ramp page on getunstuck.space still serves the STALE bytes - measured with curl this
+run: 7460 bytes, and both "no USDC pair" and "does not carry a USDC pair" are in the served copy. The corrected page is
+committed and byte-equal to the generator (the byte-equality law passes locally), but promoting it needs a website session and
+the website session cannot start: the session launcher returned "Billing or credits exhausted: HTTP 402: Insufficient balance
+after pending billing reservations" for deepseek/deepseek-v4.1-flash, twice, and the retry produced no run record at all (the
+newest recorded promotion is still 2026-09-23 08:02). Direct edits inside the website tree, and the deploy command itself, are
+refused from this session by the guard by design. Everything needed is committed and the exact task text is saved at
+/tmp/rai-web-task-0923c.txt: re-run the website session with that task when the provider has credits. A blocker with a named
+cause and a one-command fix, not a result.
+
+Also unfinished deliberately: the website test that guards that page still asserts the old premise and FAILS (its L85 x2, L86
+and the L87 generator half). Left red on purpose - it is the guard on the page - rather than edited into a false green while
+the page itself is unshipped. It flips in the same website session.
+
+Tests run this block: opener/test_onramp.js -> L29/L30/L54/L83 all PASS, "all Block 41 laws pass"; opener/test_onramp_self.js ->
+5/5; opener/oracle-nanswap-pairs.js -> PASS (five pairs, live). Fixed an unregistered group key in test_onramp.js (a check
+labelled L84 with no L84 bucket) that would have thrown instead of reporting.
