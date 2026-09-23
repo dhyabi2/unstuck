@@ -1,7 +1,23 @@
 {
- "generated": "2026-09-23T02:51:32.222Z",
+ "generated": "2026-09-23T09:27:23.965Z",
  "classifier": "liveness+runtime+convo",
  "candidates": [
+  {
+   "host": "agentsearch.luthersystems.com",
+   "score": 1,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": "/.well-known/agent.json",
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no conversational channel found"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
   {
    "host": "huggingface.co",
    "score": 0,

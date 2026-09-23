@@ -1,44 +1,58 @@
 /**
  * tests/try_nano_swap_routes.test.mjs — the static on-ramp page never sends a USDC
- * holder to a swap service that cannot serve its rail.
+ * holder to a swap service that cannot serve its rail, and never tells one that the
+ * service it CAN use does not exist.
  *
- * The gap this file makes executable. `opener/onramp.js` was corrected on 2026-09-23:
- * measured that day, nanswap's own pair list (nanswap.com/API) carries
- * DOGE/BTC/ETH/XMR/SOL/BNB/USDT/USD/EUR/GBP/Banano/DogeNano and **no USDC pair** —
- * https://nanswap.com/swap/USDC/XNO answers 404 while https://nanswap.com/swap/ETH/XNO
- * answers 200 — so the sentence "swap USDC into XNO on nanswap" was sending every
- * USDC-holding agent to a service that cannot serve its rail. The live API
- * (`GET /unstuck/api/try-nano`) was fixed and lawed there (L83/L84).
+ * The gap this file makes executable. It was opened on 2026-09-23 by a real defect:
+ * `opener/onramp.js` published "swap USDC into XNO on nanswap" as step 3 of the
+ * conversion plan, and every law in this suite read `index.html`, `agent.json` and
+ * `llms.txt` — nothing read `site/try-nano.html`, the one shipped page that exists to
+ * tell an outside agent how to convert its own money. So a document corrected in its
+ * source stayed wrong in the bytes that ship, and both L85 and L87 below were minted
+ * against that class of failure.
  *
- * The static page was not. `site/try-nano.html` is generated from `opener/onramp.js` by
- * `opener/sync-onramp-page.js`, and the sync was never run — so measured from outside on
- * 2026-09-23:
+ * THE SECOND LIE, and why this file changed shape (Block 205). The correction of
+ * 2026-09-23 morning probed the BARE ticker path `nanswap.com/swap/USDC/XNO`, got 404,
+ * and generalised it into "nanswap carries no USDC pair" — a sentence written into
+ * this test file as the premise of L85/L86 and shipped to every USDC agent we had
+ * contacted. nanswap names its pairs by CHAIN, so the probe was on a URL that was
+ * never a pair while the real ones answered 200 the whole time. Measured live and
+ * re-runnable with `node opener/oracle-nanswap-pairs.js`:
  *
- *   https://getunstuck.space/try-nano.html   -> the stale sentence, still live
- *   site/try-nano.html on disk               -> the stale sentence, while onramp.js had
- *                                               already stopped making it
+ *   https://nanswap.com/swap/USDC-BASE/XNO   200  "Swap USD Coin (Base) to Nano | Nanswap"
+ *   https://nanswap.com/swap/USDC-ETH/XNO    200  "Swap USD Coin to Nano | Nanswap"
+ *   https://nanswap.com/swap/XNO/USDC-BASE   200  (the reverse direction)
+ *   https://nanswap.com/swap/USDC/XNO        404  (a bare ticker is not a pair)
+ *   https://nanswap.com/swap/USDC-SOLANA/XNO 404  (USDC on Solana genuinely has none)
  *
- * Every law in this suite read `index.html`, `agent.json` and `llms.txt`. Nothing read
- * the one shipped page that exists to tell an outside agent how to convert its own money,
- * so a document that was corrected in its source stayed wrong in the bytes that ship.
- * That is the failure class this file closes: a generated artifact is a published surface,
- * and a source file passing its own laws says nothing about the copy that is served.
+ * So the old premise of L85 — "the page must not be read as saying USDC works, because
+ * it does not" — was itself the defect. The law that guards a document has to be able
+ * to fail when the document is wrong in EITHER direction, and a suite that carried the
+ * wrong premise could only have gone red on the corrected page. What replaced it is
+ * the rule that would have caught the original error AND the correction:
  *
- * The laws, each named so a failure says which property broke:
- *
- *   L85 — site/try-nano.html publishes no claim that a service carries a pair it does not:
- *         the sentence "swap USDC into XNO on nanswap" appears nowhere in the shipped
- *         bytes, and no link on the page points at nanswap's USDC pair (it does not exist).
- *   L86 — the page names a route that actually carries the USDC leg, states plainly in its
- *         own text that nanswap does NOT carry USDC, and states the reverse direction so a
- *         Nano balance reads as convertible back rather than a stored promise.
+ *   L85 — the page publishes no false coverage claim about a service's pair list, in
+ *         either direction: it never denies a pair that is served (the sentence
+ *         "nanswap carries no USDC pair" is refused), and it never links a pair that is
+ *         not (the bare `USDC/XNO` stub appears in no href, and BARE_PAIR_URL matches
+ *         nothing on the page).
+ *   L86 — the page names the route that actually carries the USDC leg, explains that a
+ *         bare ticker is not a pair, carries the date it was measured, and states the
+ *         reverse direction (XNO -> USDC / USD / EUR) so a Nano balance does not read
+ *         as a stored promise.
  *   L87 — the shipped page is exactly what the generator produces from opener/onramp.js,
- *         so a correction made in the source cannot sit unpublished in the served bytes.
+ *         and the generator's own swap section is chain-qualified: every declared direct
+ *         route is a USDC-BASE or USDC-ETH pair measured at 200, the pair list carries
+ *         both and NOT a bare "USDC" ticker, and no declared route URL is a bare-ticker
+ *         stub. That is the half that makes the page's sentence a measurement rather
+ *         than a sentence.
  *
- * L85 and L86 are read from the real shipped file. L87 is the structural half, and it is
- * the half that would have caught this: it runs the real `onrampHtml()` over the real doc
- * and requires the on-disk page to match. Both halves are proven non-vacuous by positive
- * controls — the sentence the old page published must be REJECTED by the same scanners.
+ * Both L85 halves and every L86 half are proven non-vacuous by positive controls, and
+ * the controls now cover BOTH failure directions: the denial the old page published
+ * must be REJECTED by FALSE_COVERAGE_CLAIM, and the sentence this page publishes now —
+ * "nanswap serves USDC on Base and Ethereum directly (https://nanswap.com/swap/USDC-BASE/XNO)"
+ * — must be ACCEPTED by it. A scanner that failed either direction would either forbid
+ * the fix or miss a regression, and either way someone eventually deletes it.
  *
  * NOTE (2026-09-23): posting `unstuck-bridge` or a starter is NOT part of this law. The
  * page is a document; fixing it moves no money and writes no ask. `__UNSTUCK_COMMIT__` is
@@ -71,14 +85,29 @@ const PAGE_PATH = path.join(SITE, "try-nano.html");
 const PAGE = fs.readFileSync(PAGE_PATH, "utf8");
 
 /**
- * The exact sentence the page published before 2026-09-23. It is a claim about a service's
- * pair list, and it was measured false. It must never be shipped again, in any casing or
- * spacing an author might reach for.
+ * A false COVERAGE claim about a service's pair list, in the direction that was shipped
+ * for half a day on 2026-09-23: that nanswap does not carry a USDC pair at all. It came
+ * from one 404 probe of the bare-ticker URL /swap/USDC/XNO, which is not a pair.
+ *
+ * Written as `[^.<\n]` runs so it stops at a sentence boundary — the denial must be in
+ * the same clause as the claim, or a paragraph that denies one pair and names another
+ * would be flagged wholesale and the law would be unfixable.
  */
-const RETIRED_SENTENCE = /swap\s+USDC\s+into\s+XNO\s+on\s+nanswap/i;
+const FALSE_COVERAGE_CLAIM =
+  /nanswap[^.<\n]{0,60}(?:carries|has|does not carry|doesn't carry|supports|lists)[^.<\n]{0,20}(?:no\s+USDC|a\s+USDC\s+pair)|no\s+USDC\s+pair|USDC\s+is\s+not\s+one\s+of\s+them/i;
 
-/** A URL that asserts the pair nanswap does not carry. The domain may change; the pair may not. */
-const NONEXISTENT_PAIR_URL = /nanswap\.com\/[^\s"'<>]*USDC/i;
+/**
+ * The pair URL that does not exist. A bare ticker is not a pair: nanswap's are
+ * chain-qualified. https://nanswap.com/swap/USDC/XNO answers 404 while
+ * https://nanswap.com/swap/USDC-BASE/XNO and /swap/USDC-ETH/XNO answer 200.
+ *
+ * `/swap/USDC/XNO` with nothing between the ticker and the terminator, so the honest
+ * chain-qualified routes cannot match and the law cannot forbid the route it requires.
+ */
+const BARE_PAIR_URL = /nanswap\.com\/swap\/USDC\/XNO/i;
+
+/** The direct USDC route the page must publish as a link an agent can follow. */
+const DIRECT_USDC_ROUTE = "https://nanswap.com/swap/USDC-BASE/XNO";
 
 /** The address the generator reads from ~/.hermes/.env, by name only — never printed here. */
 function openerAddressFromEnv() {
@@ -115,111 +144,142 @@ function generatedPage() {
 }
 
 // ---------------------------------------------------------------------------
-// L85 / L86 — the scanner halves are proven able to fail before they pass anything
+// L85 / L86 — the scanners are proven able to fail, in both directions, before they
+// pass anything
 // ---------------------------------------------------------------------------
 
-test("L85 the scanner rejects the sentence the old page published, so a pass means something", () => {
+test("L85 the scanner rejects the denial the old page published, and accepts the sentence the page publishes now", () => {
   // The positive control. If this fixture passed, every check below would be worthless.
   //
-  // Each line is chosen so a specific mechanism catches it, and the two mechanisms are
-  // exercised separately: the FIRST line is the retired sentence with no URL in it, so only
-  // RETIRED_SENTENCE can catch it; the last two are pair claims with no such sentence, so only
-  // NONEXISTENT_PAIR_URL can catch them. A control that leaned on both mechanisms at once would
-  // survive deleting either one.
-  const bySentence = [
-    "<li><strong>swap USDC into XNO on nanswap</strong> — this is the step that turns curiosity into participation.</li>",
-    "SWAP   USDC  INTO  XNO  ON  NANSWAP", // casing and spacing are not an escape hatch
+  // FIRST half — the denial. Each line is a false coverage claim in a different spelling,
+  // and each is a claim about a service's pair list that was measured false. The first
+  // line is the exact sentence the old page published.
+  const denials = [
+    "nanswap carries no USDC pair (measured 2026-09-23)",
+    "nanswap does not carry a USDC pair, so a USDC holder must hop chains first",
+    "nanswap has no USDC pair at all",
+    "no USDC pair is available on the service",
+    "USDC is not one of them",
   ];
-  for (const line of bySentence) {
-    assert.ok(RETIRED_SENTENCE.test(line), `the retired sentence was not caught by RETIRED_SENTENCE: ${line}`);
+  for (const line of denials) {
+    assert.ok(
+      FALSE_COVERAGE_CLAIM.test(line),
+      `the denial the old page published was not caught by FALSE_COVERAGE_CLAIM: ${line}`
+    );
   }
 
-  // A bare mention of the service is NOT the retired sentence — the page still names nanswap
-  // for the pair it does carry, and a scanner that forbade the name would forbid the fix.
-  assert.ok(
-    !RETIRED_SENTENCE.test("<a href=\"https://nanswap.com\">https://nanswap.com</a> (USDC &rarr; XNO)"),
-    "a bare mention of the service was mistaken for the retired sentence"
-  );
-
-  const byPairUrl = [
-    "<a href=\"https://nanswap.com/swap/USDC/XNO\">swap here</a>",
-    "https://nanswap.com/swap/usdc/xno", // the pair is what is false, in any casing
+  // SECOND half — and the scanner must ACCEPT the true sentence, or the law forbids the
+  // only fix there is: naming the chain-qualified pair that measured 200. This is the
+  // control that the pre-Block-205 file did not have, and the reason it went red on a
+  // page that was right.
+  const truth = [
+    "nanswap serves USDC on Base and Ethereum directly (https://nanswap.com/swap/USDC-BASE/XNO)",
+    "nanswap carries USDC-BASE and USDC-ETH, measured 200",
+    "nanswap's USDC pairs are chain-qualified, so a bare ticker is not a pair",
   ];
-  for (const line of byPairUrl) {
-    assert.ok(NONEXISTENT_PAIR_URL.test(line), `the pair claim was not caught by NONEXISTENT_PAIR_URL: ${line}`);
+  for (const line of truth) {
+    assert.ok(
+      !FALSE_COVERAGE_CLAIM.test(line),
+      `the scanner would forbid the honest, corrected sentence: ${line}`
+    );
   }
-  // And a route that DOES carry the pair must not be flagged, or the law would forbid the
-  // very route it requires — an unfixable law gets deleted, and a deleted law protects nothing.
+
+  // BARE_PAIR_URL: the stub is caught, and the chain-qualified routes — the ones the page
+  // is REQUIRED to link — are not. A scanner that flagged USDC-BASE would forbid the route
+  // it exists to require, and an unfixable law gets deleted.
+  const stubs = [
+    '<a href="https://nanswap.com/swap/USDC/XNO">swap here</a>',
+    "https://nanswap.com/swap/usdc/xno", // the pair is what is wrong, in any casing
+  ];
+  for (const line of stubs) {
+    assert.ok(BARE_PAIR_URL.test(line), `the bare-ticker stub was not caught by BARE_PAIR_URL: ${line}`);
+  }
   const honest = [
-    "<a href=\"https://nanswap.com/swap/ETH/XNO\">ETH -> XNO</a>",
-    "<a href=\"https://swapzone.io/exchange/usdc/xno\">USDC -> XNO via an aggregator</a>",
-    "nanswap does not carry a USDC pair (measured 2026-09-23)",
+    '<a href="https://nanswap.com/swap/USDC-BASE/XNO">USDC (Base) -> XNO</a>',
+    '<a href="https://nanswap.com/swap/USDC-ETH/XNO">USDC (Ethereum) -> XNO</a>',
+    '<a href="https://nanswap.com/swap/XNO/USDC-BASE">XNO -> USDC (Base)</a>',
+    "its pairs are chain-qualified, so a bare /swap/USDC/XNO is not a pair and 404s",
   ];
   for (const line of honest) {
-    assert.ok(
-      !NONEXISTENT_PAIR_URL.test(line),
-      `the scanner would forbid an honest, working route: ${line}`
-    );
-    // The retired sentence is a phrase, not a token: naming the pair honestly is allowed.
-    assert.ok(!RETIRED_SENTENCE.test(line), `the scanner flagged an honest route as the retired sentence: ${line}`);
+    assert.ok(!BARE_PAIR_URL.test(line), `the scanner would forbid an honest, working route: ${line}`);
   }
+
+  // The denial sentence NAMES the same stub path. FALSE_COVERAGE_CLAIM must not be the
+  // thing that catches it — the two mechanisms have to be independently exercisable, or
+  // deleting one would leave the suite looking green on the failure it was written for.
+  assert.ok(
+    !BARE_PAIR_URL.test("nanswap carries no USDC pair (measured 2026-09-23)"),
+    "FALSE_COVERAGE_CLAIM's control is leaning on BARE_PAIR_URL; each must be caught by its own mechanism"
+  );
+  assert.ok(
+    !FALSE_COVERAGE_CLAIM.test('<a href="https://nanswap.com/swap/USDC/XNO">swap here</a>'),
+    "BARE_PAIR_URL's control is leaning on FALSE_COVERAGE_CLAIM; each must be caught by its own mechanism"
+  );
 });
 
 // ---------------------------------------------------------------------------
-// L85 — no false pair claim ships
+// L85 — no false pair claim ships, in either direction
 // ---------------------------------------------------------------------------
 
-test("L85 site/try-nano.html never publishes 'swap USDC into XNO on nanswap' again", () => {
-  const m = PAGE.match(RETIRED_SENTENCE);
+test("L85 site/try-nano.html never denies a USDC pair nanswap actually carries", () => {
+  const m = PAGE.match(FALSE_COVERAGE_CLAIM);
   assert.equal(
     m,
     null,
-    `the shipped on-ramp page still publishes ${JSON.stringify(m && m[0])}: nanswap carries no USDC pair ` +
-      `(measured 2026-09-23), so the sentence sends a USDC holder to a service that cannot serve its rail`
+    `the shipped on-ramp page still carries the false denial ${JSON.stringify(m && m[0])}: ` +
+      `nanswap's USDC pairs are chain-qualified and measured 200 (USDC-BASE, USDC-ETH — ` +
+      `node opener/oracle-nanswap-pairs.js), so this sentence sends a USDC holder away from a ` +
+      `service that would have served it`
   );
 });
 
-test("L85 no link on the shipped page points at nanswap's USDC pair (it does not exist)", () => {
+test("L85 no link on the shipped page points at the bare-ticker stub (it is not a pair)", () => {
   const offenders = [];
   for (const m of PAGE.matchAll(/href="([^"]+)"/g)) {
-    if (NONEXISTENT_PAIR_URL.test(m[1])) offenders.push(m[1]);
+    if (BARE_PAIR_URL.test(m[1])) offenders.push(m[1]);
   }
   assert.deepEqual(
     offenders,
     [],
-    `the page links a pair nanswap does not carry — https://nanswap.com/swap/USDC/XNO answers 404 ` +
-      `while /swap/ETH/XNO answers 200:\n  ${offenders.join("\n  ")}`
+    `the page links a pair that does not exist — https://nanswap.com/swap/USDC/XNO answers 404 ` +
+      `while /swap/USDC-BASE/XNO and /swap/USDC-ETH/XNO answer 200:\n  ${offenders.join("\n  ")}`
   );
 });
 
 // ---------------------------------------------------------------------------
-// L86 — the page names a route that works, and says why the old one did not
+// L86 — the page names the route that works, and says why the bare ticker did not
 // ---------------------------------------------------------------------------
 
-test("L86 the shipped page names a route that actually carries the USDC leg", () => {
-  // At least one of the two measured routes must be published, as a link an agent can follow.
-  const routes = ["https://nanswap.com/swap/ETH/XNO", "https://swapzone.io/exchange/usdc/xno"];
-  const linked = routes.filter((u) => PAGE.includes(`href="${u}"`));
+test("L86 the shipped page names the direct nanswap pair that carries the USDC leg", () => {
+  // The route the conversion plan's step 3 asks for, as a link an agent can follow. The
+  // Solana fallback alone is NOT enough: an agent holding USDC on Base has a direct pair
+  // and telling it otherwise is the error this file was rewritten to catch.
   assert.ok(
-    linked.length >= 1,
-    `the page names no working USDC -> XNO route; an agent holding USDC reads it and still cannot convert. ` +
-      `Expected at least one of ${routes.join(", ")} as a link`
+    PAGE.includes(`href="${DIRECT_USDC_ROUTE}"`),
+    `the page does not link ${DIRECT_USDC_ROUTE}, the measured direct USDC -> XNO pair; ` +
+      `an agent holding USDC on Base reads it and still cannot convert`
+  );
+  // And the other chain-qualified rail, so a USDC holder on Ethereum is served too.
+  assert.ok(
+    PAGE.includes('href="https://nanswap.com/swap/USDC-ETH/XNO"'),
+    "the page does not link https://nanswap.com/swap/USDC-ETH/XNO, the USDC-on-Ethereum pair (measured 200)"
   );
 });
 
-test("L86 the page states in its own text that nanswap does not carry USDC", () => {
-  // Naming a working route is not enough: without the stated reason, the next author puts the
-  // old sentence back. The correction has to be legible on the page itself.
+test("L86 the page explains that a bare ticker is not a pair, and dates the measurement", () => {
+  // Naming a working route is not enough: the next author who probes /swap/USDC/XNO, gets
+  // 404 and concludes "unsupported" needs the reason already on the page. This is the exact
+  // sentence whose absence cost us half a day and a false claim to every USDC agent.
   assert.match(
     PAGE,
-    /does not carry a USDC pair|no USDC pair|does not carry[^.<]*USDC/i,
-    "the page names a route but never states that nanswap carries no USDC pair — the correction is invisible and will be undone"
+    /bare\s+(?:ticker|\/swap\/USDC\/XNO)|a bare ticker is not a pair|bare \/swap\/USDC\/XNO/i,
+    "the page never explains that a bare ticker is not a pair, so the 404 that misled us will mislead the next author"
   );
   // And it must be dated, so a reader can tell a measurement from an assertion.
   assert.match(
     PAGE,
-    /Measured\s+\d{4}-\d{2}-\d{2}/,
-    "the page states the correction without the date it was measured, so a future reader cannot tell how stale it is"
+    /Measured\s+2026-09-23|measured\s+2026-09-23/i,
+    "the page states the pair list without the date it was measured, so a future reader cannot tell how stale it is"
   );
 });
 
@@ -228,13 +288,13 @@ test("L86 the page states the reverse direction, so a Nano balance is not a stor
   // promise". A page that shows only the way IN makes that objection true.
   assert.match(
     PAGE,
-    /XNO\s*(->|&rarr;|to)\s*(USD|EUR)/i,
-    "the page never states that XNO converts back to USD/EUR, so it shows no exit and reads as a stored promise"
+    /XNO\s*(->|&rarr;|to)\s*(USD|EUR|USDC)/i,
+    "the page never states that XNO converts back to USDC/USD/EUR, so it shows no exit and reads as a stored promise"
   );
 });
 
 // ---------------------------------------------------------------------------
-// L87 — the shipped bytes are what the generator produces
+// L87 — the shipped bytes are what the generator produces, and the generator is honest
 // ---------------------------------------------------------------------------
 
 test("L87 the shipped page is exactly what the generator produces from opener/onramp.js", () => {
@@ -273,10 +333,10 @@ test("L87 the shipped page is exactly what the generator produces from opener/on
   }
 });
 
-test("L87 the generator is the only writer of the page, and it is a real one-way sync", () => {
+test("L87 the generator is the only writer of the page, and its swap section is chain-qualified", () => {
   // The sync's whole job is that the page cannot drift from the live API's copy of the same
-  // document. Both halves are read from the real files: the sync script must render through the
-  // real onrampHtml, and the page it writes must be the page this law compares against.
+  // document. Both halves are read from the real files: the sync script must render through
+  // the real onrampHtml, and the page it writes must be the page this law compares against.
   //
   // The bindings are matched as they are actually written (`const o = require("./onramp.js")`,
   // then `o.onrampDoc(...)`), not as a template — a scan keyed to one identifier spelling passes
@@ -300,20 +360,52 @@ test("L87 the generator is the only writer of the page, and it is a real one-way
     /site["'],\s*["']try-nano\.html|"site",\s*"try-nano\.html"/,
     "the sync no longer writes site/try-nano.html, so the page has no generator and this law guards nothing"
   );
-  // The renderer's own route list is the source of truth for what the page may claim, so the
-  // page cannot name a route the integration does not carry.
-  const routeUrls = onramp.SWAP_USDC_ROUTES.map((r) => r.url);
-  assert.ok(routeUrls.length >= 1, "the on-ramp declares no USDC route at all");
-  for (const u of routeUrls) {
+
+  // The generator's own swap section is the source of truth for what the page may claim —
+  // this is the half that makes the page's sentence a MEASUREMENT rather than an assertion.
+  //
+  // (a) Every declared DIRECT route is a chain-qualified USDC pair measured at HTTP 200.
+  const direct = onramp.SWAP_USDC_DIRECT || [];
+  assert.ok(direct.length >= 1, "the on-ramp declares no direct USDC route at all");
+  for (const r of direct) {
+    assert.match(
+      String(r.url),
+      /^https:\/\/nanswap\.com\/swap\/USDC-(?:BASE|ETH)\/XNO$/i,
+      `a direct USDC route must be a chain-qualified nanswap pair (USDC-BASE or USDC-ETH), got ${r.url}`
+    );
+    assert.equal(
+      r.measured_status,
+      200,
+      `a direct USDC route must carry the status it was measured at (200), got ${JSON.stringify(r.measured_status)} for ${r.url}`
+    );
     assert.ok(
-      !NONEXISTENT_PAIR_URL.test(u),
-      `opener/onramp.js itself names a pair nanswap does not carry: ${u}`
+      /USD Coin/i.test(String(r.measured_title || "")),
+      `a direct USDC route must carry the page title the probe read, got ${JSON.stringify(r.measured_title)} for ${r.url}`
+    );
+  }
+
+  // (b) The pair list the page publishes carries both chain-qualified USDC pairs and NOT a
+  // bare "USDC" ticker — a bare ticker in the carried list is the same false claim as the
+  // denial, pointed the other way.
+  const carried = onramp.SWAP_PAIRS_CARRIED || [];
+  assert.ok(
+    carried.includes("USDC-BASE") && carried.includes("USDC-ETH"),
+    `SWAP_PAIRS_CARRIED must carry the chain-qualified USDC pairs, got ${JSON.stringify(carried)}`
+  );
+  assert.ok(
+    !carried.some((p) => String(p).trim().toUpperCase() === "USDC"),
+    `SWAP_PAIRS_CARRIED must not carry a bare "USDC" ticker — nanswap's pairs are chain-qualified, got ${JSON.stringify(carried)}`
+  );
+
+  // (c) No declared route — direct, hop or reverse — is the bare-ticker stub.
+  const routeUrls = (onramp.SWAP_USDC_ROUTES || []).flatMap((r) => [r.url, r.also]).filter(Boolean);
+  assert.ok(routeUrls.length >= 1, "the on-ramp declares no USDC route at all");
+  const allUrls = [...direct.map((r) => r.url), ...routeUrls, onramp.SWAP_REVERSE && onramp.SWAP_REVERSE.url].filter(Boolean);
+  for (const u of allUrls) {
+    assert.ok(
+      !BARE_PAIR_URL.test(u),
+      `opener/onramp.js itself names the bare-ticker stub, which is not a pair (measured 404): ${u}`
     );
     assert.match(u, /^https:\/\//, `a USDC route must be an https link an agent can follow: ${u}`);
   }
-  // And the doc must state the pair it does not carry, so the page's sentence has a source.
-  assert.ok(
-    onramp.SWAP_PAIRS_NOT_CARRIED.includes("USDC"),
-    `opener/onramp.js must keep USDC in pairs_not_carried, got ${JSON.stringify(onramp.SWAP_PAIRS_NOT_CARRIED)}`
-  );
 });
