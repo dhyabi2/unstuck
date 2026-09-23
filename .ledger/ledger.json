@@ -1263,6 +1263,36 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-23T01:52:35+00:00"
+  },
+  {
+   "id": "L81",
+   "block": 201.0,
+   "statement": "An oracle webhook notifier fires a POST request to registered callback URLs when a watched endpoint's integrity score drops below a configurable threshold for N consecutive readings",
+   "test": "node opener/test_oracle_webhook.js && echo PASS",
+   "scope": [
+    "opener/oracle-webhooks.json"
+   ],
+   "oracle": "node -e 'const fs=require(\"fs\");const f=\"/root/unstuck/opener/oracle-webhooks.json\";const d=JSON.parse(fs.readFileSync(f,\"utf8\"));const keys=Object.keys(d);process.exit(keys.includes(\"urls\")?0:1)'",
+   "expect": "",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-23T02:30:39+00:00"
+  },
+  {
+   "id": "L82",
+   "block": 201.0,
+   "statement": "A tripped webhook alert never re-fires on another DOWN until the URL recovers, tracked by a per-URL fired_down flag",
+   "test": "node opener/test_oracle_webhook.js && echo PASS",
+   "scope": [
+    "opener/test_oracle_webhook.js"
+   ],
+   "oracle": "node opener/test_oracle_webhook.js",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-23T02:32:57+00:00"
   }
  ],
  "blocks": {
@@ -29790,6 +29820,10 @@
   "200": {
    "status": "pending",
    "attempts": []
+  },
+  "201": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -32638,6 +32672,28 @@
    "at": "2026-09-23T01:52:35+00:00",
    "prev": "fe19dbc2eb2927405ba39e4e75c0f856d09362b494ee6ca18a05693cf4fd5ca3",
    "receipt": "db258e67fcfd0bd90a052ecdbc0d05f818fb3ab68bd0321279ca6ec477126f45"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L81",
+    "block": "201",
+    "statement_sha": "e729bade5d6b3f882fbf99ad9b4b3c35afa0d6833cd09edfc0417b6deab0cfae"
+   },
+   "at": "2026-09-23T02:30:39+00:00",
+   "prev": "db258e67fcfd0bd90a052ecdbc0d05f818fb3ab68bd0321279ca6ec477126f45",
+   "receipt": "540c6d26ecd9a5c7ca4269173cda8b38683d992c5deab5b4942014c6261b7d9e"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L82",
+    "block": "201",
+    "statement_sha": "8f15aaf902a865e8c1246807af829fae1a7908eb23a4aac60d724d166ff98a59"
+   },
+   "at": "2026-09-23T02:32:57+00:00",
+   "prev": "540c6d26ecd9a5c7ca4269173cda8b38683d992c5deab5b4942014c6261b7d9e",
+   "receipt": "a1fc334baf2af36faf2f52a9c4fbf390a452c4ab65aca1923dcd221ff62425ed"
   }
  ]
 }

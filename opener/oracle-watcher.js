@@ -144,6 +144,30 @@ function main() {
     }
 
     log(`watcher complete: ${urls.size} checked, ${downCount} down, ${driftCount} drift, ${errorCount} errors`);
+
+    // Fire webhooks for any new threshold-crossing alerts.
+    if (!once) {
+      try {
+        const { fireIfNeeded, loadConfig, loadState } = require("./oracle-webhook.js");
+        const whConfig = loadConfig();
+        const whState = loadState();
+        const alertsText = fs.readFileSync(ALERTS_LOG, "utf8");
+        const lines = alertsText.split("\n").filter((l) => l.trim());
+        const newAlerts = lines.slice(whState.offset || 0).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+        if (newAlerts.length > 0) {
+          const { saveState } = require("./oracle-webhook.js");
+          const fired = await fireIfNeeded(newAlerts, whState, whConfig, {});
+          if (fired.length > 0) {
+            log(`webhook: ${fired.length} alert(s) fired to registered callbacks`);
+            for (const f of fired) log(`  ${f.event} ${f.url}`);
+          }
+          saveState(whState);
+        }
+      } catch (e) {
+        log(`webhook scan error: ${e.message}`);
+      }
+    }
+
     process.exit(downCount > 0 || driftCount > 0 ? 1 : 0);
   })();
 }
