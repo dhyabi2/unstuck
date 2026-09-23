@@ -278,6 +278,52 @@ process.env.NW_DB_PATH = tmpDb;
       s5.listAsks({ type: "ask" }).some((a) => a.id === realConn.id) &&
       s5.listAsks({ type: "ask" }).some((a) => a.id === legacyIdReal));
 
+    // Forge #228: member-name network probes and deploy probes swept like any other
+    // self-test, so a stranger never reads our own probes as outside activity.
+    const memberProbe = s5.createAsk({
+      asker: F56, title: "iris network probe — scope check", body: "b", bountyRaw: "1",
+    });
+    check("F56c member-name network probe stored as type='test'",
+      memberProbe.type === "test", String(memberProbe.type));
+    const junoProbe = s5.createAsk({
+      asker: F56, title: "juno network probe", body: "b", bountyRaw: "1",
+    });
+    check("F56c bare member network probe stored as type='test'",
+      junoProbe.type === "test", String(junoProbe.type));
+    const tokenProbe = s5.createAsk({
+      asker: F56, title: "token test for accept mechanism", body: "b", bountyRaw: "1",
+    });
+    check("F56c token test stored as type='test'",
+      tokenProbe.type === "test", String(tokenProbe.type));
+    const deployProbe = s5.createAsk({
+      asker: F56, title: "Block 67 deploy verification", body: "b", bountyRaw: "1",
+    });
+    check("F56c block deploy verification stored as type='test'",
+      deployProbe.type === "test", String(deployProbe.type));
+    const spaProbe = s5.createAsk({
+      asker: F56, title: "spa shell unshadowed", body: "b", bountyRaw: "1",
+    });
+    check("F56c spa shell stored as type='test'",
+      spaProbe.type === "test", String(spaProbe.type));
+    // The pursekeeper / genuine questions must NOT be swept by the wider rule.
+    const stillGenuineA = s5.createAsk({
+      asker: F56, title: "Outside ask: agent with no Nano address can post", body: "b", bountyRaw: "1",
+    });
+    check("F56c an outside ask that names itself 'Outside' stays type='ask'",
+      stillGenuineA.type === "ask", String(stillGenuineA.type));
+    const stillGenuineB = s5.createAsk({
+      asker: F56, title: "Follow-up for pursekeeper: network ready for cross-listing", body: "b", bountyRaw: "1",
+    });
+    check("F56c a pursekeeper follow-up stays type='ask'",
+      stillGenuineB.type === "ask", String(stillGenuineB.type));
+    s5.closeDb();
+    const sweptProbeMember = s5.getAsk(memberProbe.id);
+    check("F56c startup migration sweeps an already-stored member probe to type='test'",
+      sweptProbeMember && sweptProbeMember.type === "test", JSON.stringify(sweptProbeMember && sweptProbeMember.type));
+    const stillThere = s5.getAsk(stillGenuineA.id);
+    check("F56c startup migration leaves an outside-genuine ask type='ask'",
+      stillThere && stillThere.type === "ask", JSON.stringify(stillThere && stillThere.type));
+
   } finally {
     // Cleanup
     s.closeDb();

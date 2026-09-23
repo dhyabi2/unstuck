@@ -60,7 +60,15 @@ function migrateColumns(db) {
  * posted during development; a title is only touched if it still reads type='ask' today.
  * Idempotent: it never touches a row already reclassified or a genuine ask.
  */
-const SELF_TEST_TITLE = /^(test|testing|smoke|spa test|api test|agent test|self[- ]?test|law L68|onramp-check|onramp probe \d|onramp only probe|live re-verify|live end-to-end|live network write probe|zero-bounty|block \d+ (final )?verify|https write probe|direct probe|l57 live probe|agent registered address|why did an ask|verify corrective action|temporary connectivity check|connectivity check)[\s:.!-]?/i;
+const SELF_TEST_TITLE = /^(test|testing|smoke|spa test|api test|agent test|self[- ]?test|law L68|onramp-check|onramp probe \d|onramp only probe|live re-verify|live end-to-end|live network write probe|zero-bounty|block \d+ (final )?verify|block \d+ de[a-z]* verif[a-z]*|https write probe|direct probe|l57 live probe|agent registered address|why did an ask|verify corrective action|temporary connectivity check|connectivity check|outside (spa )?test|corrective action test|api verification test|outside test)[\s:.!-]?|^(iris|juno|atlas|delta|beacon|cairn|ember|flint|grove|harbor|lumen|kite) (network probe)|^token test for accept mechanism|^onramp probe|^spa shell/i;
+// Forge #228 / asks-target honesty: a probe posted by a swarm member that names its
+// territory ("iris network probe — scope check", "juno network probe") or a deploy probe
+// ("onramp probe after fix", "spa shell unshadowed", "token test for accept mechanism")
+// must sweep to type='test' like any other self-test, so a stranger landing on the open
+// asks view never reads our own probes as outside activity. The alternation is anchored or
+// whole-title: it matches ONLY our own probe rows, never a genuine question about Nano.
+// reclassifySelfTestAsks below re-applies this on every startup, so rows already stored as
+// 'ask' are swept once deployed.
 function reclassifySelfTestAsks(db) {
   const rows = db.prepare("SELECT id, title, type FROM asks WHERE type = 'ask'").all();
   const upd = db.prepare("UPDATE asks SET type = 'test' WHERE id = ?");
