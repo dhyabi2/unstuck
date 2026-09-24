@@ -322,17 +322,22 @@ def agreed(db, agent, summary, amount_xno="", now=None):
     return {"agent": agent, "summary": summary, "amount_xno": amount_xno}
 
 
-def listing(db, limit=200):
+def listing(db, limit=200, now=None):
+    now = now if now is not None else int(time.time())
     out = []
     for agent, source, pays_in, status, note, account, first_at, last_at in db.execute(
             "SELECT agent, source_url, pays_in, status, note, account, first_at, last_at FROM agents "
             "ORDER BY last_at DESC LIMIT ?", (limit,)):
         msgs = [{"direction": d, "text": t, "at": at} for d, t, at in db.execute(
             "SELECT direction, text, at FROM messages WHERE agent=? AND direction IN ('in','out') ORDER BY id DESC LIMIT 6", (agent,))]
+        # Silence is measured from the last MESSAGE (as `waiting` does), never from last_at: a status, note or
+        # backfill would otherwise make a forgotten conversation look attended to. #364.
+        last_atm = msgs[-1]["at"] if msgs else (last_at or 0)
+        quiet_hours = round((now - last_atm) / 3600, 1) if last_atm else 0.0
         deals = [{"summary": s, "amount_xno": a, "at": at} for s, a, at in db.execute(
             "SELECT summary, amount_xno, at FROM agreements WHERE agent=? ORDER BY id DESC LIMIT 4", (agent,))]
         out.append({"agent": agent, "source": source, "pays_in": pays_in, "status": status, "note": note,
-                    "account": account, "first_at": first_at, "last_at": last_at,
+                    "account": account, "first_at": first_at, "last_at": last_at, "quiet_hours": quiet_hours,
                     "messages": list(reversed(msgs)), "agreements": deals})
     return out
 

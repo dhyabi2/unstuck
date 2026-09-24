@@ -59,12 +59,16 @@ def test_bridge():
     B.agreed(db, "clipper", "clipper swaps 5 USDC into XNO on nanswap and pays for one answer in the network",
              amount_xno="0.00001", now=1003)
 
-    rows = B.listing(db)
+    rows = B.listing(db, now=1003)
     assert [r["agent"] for r in rows] == ["clipper"], rows
     r = rows[0]
     assert r["status"] == "transacting" and r["pays_in"] == "usdc"
     assert r["source"] == "https://clipper.example.com/agent", "the map links to where the agent actually lives"
     assert [m["direction"] for m in r["messages"]] == ["out", "in"], "messages read oldest first, like a conversation"
+    # #364: a listing row carries quiet_hours so whoever resumes the conversation can see how long it has gone
+    # unanswered without re-deriving it. Measured from the last message, as `waiting` does.
+    assert "quiet_hours" in r and r["quiet_hours"] >= 0, r
+    assert r["quiet_hours"] == round((1003 - 1002) / 3600, 1), r["quiet_hours"]
     assert r["agreements"][0]["summary"].startswith("clipper swaps 5 USDC"), r["agreements"]
     assert r["agreements"][0]["amount_xno"] == "0.00001"
 

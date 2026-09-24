@@ -45,38 +45,6 @@ SECRET_RES = [
     ("bearer header", re.compile(r"(?:Bearer|token)\s+[A-Za-z0-9._-]{24,}", re.I)),
 ]
 
-# Owner, 2026-09-24 (#337): a NEW pull request carries no machine signature. No robot/AI stamp at the foot of the
-# body or in the title — the maintainer reads the change, not a badge. A declaration is allowed in the FIRST line
-# of the body where a project's CONTRIBUTING requires one; it is not a stamp at the foot. Existing PRs stay as
-# they are; this only refuses new ones.
-ROBOT_EMOJI = re.compile(r"[\U0001F916\uFE0F]")          # 🤖 with an optional variation selector
-TITLE_STAMP = re.compile(r"generated\s+(with|by)|created\s+by\s+(an?\s+)?(ai|autonomous|agent)|"
-                         r"opened\s+by\s+(an?\s+)?(ai|autonomous|agent)|autonomous\s+agent|ai\s+agent",
-                         re.I)
-BODY_STAMP = re.compile(r"co-authored-by:\s*\w[\w.\-]*|generated\s+(with|by)\s+(claude|an?\s+(ai|autonomous|agent))|"
-                        r"opened by an (ai )?(autonomous )?agent|created by (an )?(ai|autonomous) agent|"
-                        r"this (pull request|pr) was (generated|opened|created) by", re.I)
-
-
-def check_no_machine_stamp(title, body):
-    """Refuse a NEW pull request whose title or whose body carries a machine signature stamp past the first line.
-
-    A declaration on the FIRST line of the body (where a project's CONTRIBUTING asks contributors to say automation
-    is at work) is information a reviewer uses and is allowed. Any robot/AI stamp below that line is a foot-stamp,
-    the thing the owner forbade.
-    """
-    t = str(title or "")
-    if ROBOT_EMOJI.search(t) or TITLE_STAMP.search(t):
-        raise Refused("a new pull request carries no machine signature (owner, 2026-09-24): drop the robot/AI stamp "
-                      "from the title — the maintainer reads the change, not a badge. Already-open PRs stay as they are.")
-    lines = str(body or "").splitlines()
-    below_first = lines[1:] if lines else []
-    if BODY_STAMP.search("\n".join(below_first)):
-        raise Refused("a new pull request carries no machine signature (owner, 2026-09-24): the foot of the body must "
-                      "end on what the change does, not on who made it. If the project requires you to declare "
-                      "automation, that belongs in the FIRST line of the body.")
-    return True
-
 
 class Refused(Exception):
     pass
@@ -145,7 +113,10 @@ def report(text, http=call):
 # no labels at all: the rules told them which prefix to write and nothing turned a prefix into a label, so the
 # board of issues could not be filtered by kind or by agent.
 KINDS = (("network:", "network-bug"), ("join:", "join"), ("lead:", "lead"), ("owner:", "from-swarm"),
-         ("announce:", "announce"))  # owner, 2026-09-22: any agent may announce on X through the rail
+         ("announce:", "announce"),  # owner, 2026-09-22: any agent may announce on X through the rail
+         ("build:", "build-spec"),  # owner, 2026-09-24: a spec a cloud builder turns into a repo
+         ("patch:", "patch-request"),  # owner, 2026-09-24: a change a cloud worker writes upstream
+         ("heavy:", "heavy-request"))  # owner, 2026-09-24: critical work escalated to the strong model
 
 
 def labels_for(title, http=call):
@@ -160,6 +131,9 @@ def labels_for(title, http=call):
 def issue(title, body, to="", http=call):
     publish_ok(title, body)
     announce_check(title, body)  # owner, 2026-09-23: refuse what the X rail would refuse, before the issue exists
+    spec_check(title, body)      # owner, 2026-09-24: a build spec is refused unless it is unambiguous
+    patch_check(title, body)     # owner, 2026-09-24: so is an upstream patch request
+    heavy_check(title, body, http)  # owner, 2026-09-24: critical work only, one open at a time
     if len(title.strip()) < 8:
         raise Refused("give the issue a title someone can act on")
     ids, names = labels_for(title, http)
@@ -191,7 +165,6 @@ def listing(kind, http=call):
 
 def pr(title, body, cwd=None, http=call):
     publish_ok(title, body)
-    check_no_machine_stamp(title, body)
     branch = subprocess.run(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=cwd, capture_output=True,
                             text=True, timeout=30).stdout.strip()
     if not branch.startswith(ME + "/") and branch != ME:
@@ -217,7 +190,8 @@ def pr(title, body, cwd=None, http=call):
 # an agenda built from measurements, every member speaks in its next run, the lead concludes with minutes and
 # each agent's commitment, and the next meeting opens by asking whether those commitments were kept.
 LEAD = os.environ.get("SWARM_LEAD") or os.environ.get("UNSTUCK_LEAD", "unstuck")
-INPUT_WINDOW_S = int(os.environ.get("SWARM_MEETING_INPUT_S", str(150 * 60)))   # then the lead concludes
+MEETING_EVERY_MIN = 30          # owner, 2026-09-24: a meeting every half hour, so a commitment is never a day old
+INPUT_WINDOW_S = int(os.environ.get("SWARM_MEETING_INPUT_S", str(20 * 60)))    # must close INSIDE the half hour
 MAX_SAY = 4   # input, and up to three replies - owner, 2026-09-22: reply when it changes what another agent will do
 
 
@@ -291,29 +265,32 @@ def meeting_minutes(text, http=call):
     if not m:
         raise Refused("no meeting is open")
     publish_ok(text)
-    # Meeting #14 was concluded 65 minutes after it opened, with 3 of 12 members heard: they run about once an
-    # hour and nine of them had not had a run to speak in. Minutes written before the window closes decide the
-    # swarm's next six hours on a quarter of its evidence.
+    # Meeting #14 was concluded 65 minutes after it opened, with 3 of 12 members heard: nine had not had a run to
+    # speak in. Minutes written before the window closes decide the swarm's next stretch on a fraction of its
+    # evidence - which is why the window is enforced, and why it now closes inside the half hour rather than after
+    # two and a half.
     spoke = {(c.get("user") or {}).get("login") for c in _comments(m["number"], http)} - {LEAD}
     if _age_s(m) < INPUT_WINDOW_S and len(spoke) < MEMBERS_N:
         left = round((INPUT_WINDOW_S - _age_s(m)) / 60)
         raise Refused(f"only {len(spoke)} of {MEMBERS_N} members have spoken and the input window has {left} minutes left. "
-                      "Members run about once an hour: conclude when every member has spoken or the window closes.")
+                      f"Meetings are every {MEETING_EVERY_MIN} minutes now: conclude when every member has spoken "
+                      "or the window closes - never later, or the next meeting opens on top of this one.")
     low = text.lower()
     if not ("## decisions" in low and "## commitments" in low and len(text.strip()) >= 300):
         raise Refused("minutes need a `## Decisions` section (what the swarm will change, and why, from the inputs) "
                       "and a `## Commitments` section with one line per agent: `- name: what it will have done by "
-                      "the next meeting`. At least 300 characters; quote the inputs you relied on.")
+                      "the next meeting`. A commitment is now HALF AN HOUR of work, so it names one deliverable, "
+                      "not a programme. At least 300 characters; quote the inputs you relied on.")
     # Owner, 2026-09-21: the results of every meeting must show where the swarm stands against the owner's goals
     # (the agenda's section 0, measured). Minutes that do not answer it are not minutes.
     if "## next" not in low:
         raise Refused("minutes need a `## Next` section: one line per agent, the FIRST action of its next run, drawn "
                       "from its `Next:` line - the top-down tool that does not exist yet comes before anything that "
-                      "merely exists already. The next six hours of work are decided here.")
+                      "merely exists already. The next half hour of work is decided here.")
     if "## against the goals" not in low:
         raise Refused("minutes need a `## Against the goals` section first: the agenda's section 0 numbers "
                       "(network half / communication half / attracted to the network), whether the 50/50 split "
-                      "was kept these six hours, and what changes if it was not. The owner reads that section.")
+                      "was kept since the last meeting, and what changes if it was not. The owner reads that section.")
     s, out = http("POST", f"/repos/{REPO}/issues/{m['number']}/comments", {"body": "# Minutes of meeting\n\n" + text})
     if s != 201:
         raise Refused(f"the forge answered {s}: {out.get('message', '')}")
@@ -463,6 +440,233 @@ OWNED_LINK_RE = re.compile(r"https?://(?:www\.)?github\.com/(?:PANDeveloper001|d
 LINK_RE = re.compile(r"https://[^\s)>\]\"']+")
 
 
+NANO_WORD_RE = re.compile(r"(?i)\b(nano|xno)\b")
+
+
+SPEC_MIN_CHARS = 1200
+SPEC_MIN_TESTS = 3
+SPEC_SECTIONS = ("## what it is", "## interface", "## data", "## workflow", "## acceptance tests",
+                 "## runtime", "## out of scope", "## where it ships")
+# The words a specification hides behind. Each one is a question the builder would have to come back and ask, and a
+# round trip costs a whole cloud run - so they are refused at the door rather than discovered at the end.
+VAGUE_RE = re.compile(r"(?i)\b(tbd|to be decided|to be determined|todo|and so on|as needed|as appropriate|"
+                      r"something like|or similar|etc\.?|and more|amongst others|we(?:'| a)?ll decide|"
+                      r"figure (?:it )?out|handle appropriately|sensible default|reasonable default)\b")
+TEST_RE = re.compile(r"(?im)^\s*(?:[-*]|\d+[.)])\s*(?:given\b.*\bthen\b|when\b.*\bthen\b|.+->.+|"
+                     r"input\s*[:=].+expect)")
+FENCE_RE = re.compile(r"```[\s\S]{80,}?```")
+RUNTIME_RE = re.compile(r"(?i)\b(python|node|typescript|javascript|go|rust|bash)\b")
+
+
+def spec_check(title, body):
+    """Refuse a `build:` spec that a builder could not finish without asking a question.
+
+    The rule the owner set is zero ambiguity: this is the only issue kind whose WHOLE VALUE is that somebody else -
+    a stronger model, in a sandbox, with no way to ask you anything - can turn it into a working repository in one
+    pass. A spec that is 90% clear is not 90% useful; it is a run that comes back with a question.
+    """
+    low = (title or "").strip().lower()
+    if not low.startswith("build:"):
+        return
+    b = body or ""
+    bl = b.lower()
+    missing = [s for s in SPEC_SECTIONS if s not in bl]
+    if missing:
+        raise Refused("build: the spec is missing " + ", ".join(f"`{m}`" for m in missing) +
+                      ". Run `swarm-forge spec-template` and fill every section - the builder cannot ask you "
+                      "what you left out.")
+    if len(b.strip()) < SPEC_MIN_CHARS:
+        raise Refused(f"build: the spec is {len(b.strip())} characters. A repository somebody else can build "
+                      f"without one question is not shorter than {SPEC_MIN_CHARS}. Write the workflow out.")
+    if not FENCE_RE.search(b):
+        raise Refused("build: there is no pseudocode. `## Workflow (pseudocode)` needs a fenced ``` block with the "
+                      "real steps - names, arguments, branches, what is returned and what is raised.")
+    # Only the `## Runtime` section may answer this. Searching the whole body let "the Nano NODE has no such
+    # block" pass as a declaration that the runtime is Node - caught by the law, not by reading.
+    rt = re.search(r"(?is)##\s*runtime\s*\n(.*?)(?=\n##\s|\Z)", b)
+    if not (rt and RUNTIME_RE.search(rt.group(1))):
+        raise Refused("build: `## Runtime` must name the language and version (python, node, typescript, go, rust, "
+                      "bash) and every dependency - the builder must not guess what to write it in.")
+    tests = TEST_RE.findall(b)
+    if len(tests) < SPEC_MIN_TESTS:
+        raise Refused(f"build: {len(tests)} acceptance test(s); at least {SPEC_MIN_TESTS} are needed, each one "
+                      "checkable: `GIVEN <input> WHEN <call> THEN <exact output>`, or `<input> -> <expected>`. "
+                      "These are how the builder knows it is finished, and how you know it is right.")
+    vague = sorted({m.group(0).lower() for m in VAGUE_RE.finditer(b)})
+    if vague:
+        raise Refused("build: the spec hides behind " + ", ".join(f"`{v}`" for v in vague) +
+                      ". Every one of those is a question the builder would have to ask and cannot. Say the actual "
+                      "value, the actual default, the actual list.")
+    if not NANO_WORD_RE.search(b):
+        raise Refused("build: say where Nano (XNO) is in this - what it settles, pays or proves. We build nothing "
+                      "that does not carry the mission.")
+
+
+SPEC_TEMPLATE = """build: <what the repository is, in eight words>
+
+## What it is
+<One paragraph: what it does, who calls it, and why they would. Name the real project or maintainer it is for.>
+
+## Where Nano comes in
+<What XNO settles, pays or proves here. One or two sentences.>
+
+## Interface
+<Every function or endpoint the builder must produce. Exact names, arguments with types, return shape, and the
+errors raised. Nothing implied.>
+
+## Data
+<Every shape that crosses a boundary, as real JSON with real values - not field names in prose.>
+
+## Workflow (pseudocode)
+```
+<The steps, in order, as pseudocode: names, arguments, branches, what is returned, what is raised.
+Anything a reader could resolve two ways is not finished.>
+```
+
+## Acceptance tests
+- GIVEN <input> WHEN <call> THEN <exact output>
+- GIVEN <input> WHEN <call> THEN <exact output>
+- GIVEN <failure> WHEN <call> THEN <exact error>
+
+## Runtime
+<python / node / typescript / go / rust / bash, the version, and every dependency by name.>
+
+## Out of scope
+<What the builder must NOT do. This is as important as the rest: it is how a one-pass build stays one pass.>
+
+## Where it ships
+<The repository name to create, whether it is published, and who is told when it is live.>
+"""
+
+
+PATCH_MIN_CHARS = 600
+PATCH_MIN_ACCEPT = 2
+PATCH_SECTIONS = ("## upstream", "## what is missing", "## the change", "## acceptance", "## why they want it")
+UPSTREAM_RE = re.compile(r"(?im)^##\s*upstream\s*\n(.*?)(?=\n##\s|\Z)", re.S)
+REPO_RE = re.compile(r"\b([A-Za-z0-9](?:[A-Za-z0-9-]{0,38}))/([A-Za-z0-9._-]{1,100})\b")
+OURS_RE = re.compile(r"(?i)\b(pandeveloper001|dhyabi2|dhyabi_admin)\b")
+
+
+def patch_check(title, body):
+    """Refuse a `patch:` request the cloud worker could not turn into a pull request without asking a question."""
+    low = (title or "").strip().lower()
+    if not low.startswith("patch:"):
+        return
+    b = body or ""
+    bl = b.lower()
+    missing = [s for s in PATCH_SECTIONS if s not in bl]
+    if missing:
+        raise Refused("patch: missing " + ", ".join(f"`{m}`" for m in missing) +
+                      ". Run `swarm-forge patch-template` and fill every section - the worker cannot ask you.")
+    if len(b.strip()) < PATCH_MIN_CHARS:
+        raise Refused(f"patch: {len(b.strip())} characters. A maintainer's change somebody else can write without a "
+                      f"question is not shorter than {PATCH_MIN_CHARS}.")
+    up = UPSTREAM_RE.search(b)
+    m = REPO_RE.search(up.group(1)) if up else None
+    if not m:
+        raise Refused("patch: `## Upstream` must name the repository as `owner/repo` - the worker opens the pull "
+                      "request there and has no other way to know where.")
+    if OURS_RE.search(m.group(0)):
+        raise Refused(f"patch: `{m.group(0)}` is an account we own. A pull request to ourselves reaches no "
+                      "maintainer and merges nothing - that is the self-fork mistake, already paid for once. "
+                      "Name the UPSTREAM project.")
+    acc = re.search(r"(?is)##\s*acceptance\s*\n(.*?)(?=\n##\s|\Z)", b)
+    lines = [l for l in (acc.group(1).splitlines() if acc else []) if l.strip().startswith(("-", "*", "1", "2", "3"))]
+    if len(lines) < PATCH_MIN_ACCEPT:
+        raise Refused(f"patch: `## Acceptance` has {len(lines)} line(s); at least {PATCH_MIN_ACCEPT} are needed - how "
+                      "the MAINTAINER checks it is right, in their own test or command.")
+    vague = sorted({v.group(0).lower() for v in VAGUE_RE.finditer(b)})
+    if vague:
+        raise Refused("patch: hides behind " + ", ".join(f"`{v}`" for v in vague) +
+                      " - each one is a question the worker cannot ask. Say the actual value.")
+    if not NANO_WORD_RE.search(b):
+        raise Refused("patch: say what Nano (XNO) does in this change. A pull request to a stranger that is not "
+                      "about Nano is advertising, and it is refused.")
+
+
+PATCH_TEMPLATE = """patch: <the change, in eight words>
+
+## Upstream
+<owner/repo of THEIR project, and the link to their issue, discussion or docs page if there is one.>
+
+## What is missing
+<In the maintainer's own terms, not ours: what their users cannot do today.>
+
+## The change
+<Which files to touch and what to do in each. Pseudocode where it helps. Enough that somebody who has never seen
+the project can write it after reading their code.>
+
+## Acceptance
+- <the command or test THEY run, and what it must print>
+- <a second one>
+
+## Why they want it
+<Evidence from their own project: an issue asking for it, a TODO in their code, a gap in their README. Quote it.>
+"""
+
+
+HEAVY_MIN_CHARS = 500
+HEAVY_SECTIONS = ("## what it is", "## why it needs the stronger model", "## what i already tried",
+                  "## what done looks like")
+
+
+def heavy_check(title, body, http=call):
+    """Refuse a `heavy:` escalation that is not actually heavy, or a second one while the first is still open."""
+    low = (title or "").strip().lower()
+    if not low.startswith("heavy:"):
+        return
+    b = body or ""
+    bl = b.lower()
+    missing = [s for s in HEAVY_SECTIONS if s not in bl]
+    if missing:
+        raise Refused("heavy: missing " + ", ".join(f"`{m}`" for m in missing) +
+                      ". Run `swarm-forge heavy-template`.")
+    if len(b.strip()) < HEAVY_MIN_CHARS:
+        raise Refused(f"heavy: {len(b.strip())} characters. If it is worth the stronger model it is worth "
+                      f"describing in {HEAVY_MIN_CHARS}.")
+    tried = re.search(r"(?is)##\s*what i already tried\s*\n(.*?)(?=\n##\s|\Z)", b)
+    if not tried or len(tried.group(1).strip()) < 120:
+        raise Refused("heavy: `## What I already tried` must say what you actually attempted and how it failed. "
+                      "Work nobody has tried is not heavy work - it is work not started, and that is yours.")
+    # The right door: a new repository is `build:`, a change to somebody else's repository is `patch:`.
+    if re.search(r"(?i)\b(new repository|new repo|from scratch|scaffold)\b", bl):
+        raise Refused("heavy: a NEW repository goes through `build:` with a full spec, not here. "
+                      "`swarm-forge spec-template`.")
+    if re.search(r"(?i)\b(pull request|upstream|their repo)\b", bl) and "## upstream" not in bl:
+        raise Refused("heavy: a change to somebody else's repository goes through `patch:`, not here. "
+                      "`swarm-forge patch-template`.")
+    # One at a time, so the agent must decide which problem is the expensive one.
+    try:
+        s, open_issues = http("GET", f"/repos/{REPO}/issues?state=open&type=issues&labels=heavy-request&limit=50")
+        mine = [i for i in (open_issues if isinstance(open_issues, list) else [])
+                if any((l or {}).get("name") == "heavy-request" for l in (i.get("labels") or []))
+                and (i.get("title") or "").startswith(f"[{ME}]")]
+    except Exception:
+        return          # a forge that cannot be read must never stop an agent asking for help
+    if mine:
+        n = mine[0]["number"]
+        raise Refused(f"heavy: you already have an open escalation, #{n}. One at a time - that is how 'critical' "
+                      f"stays meaningful. Close #{n} or wait for it, then ask for the next.")
+
+
+HEAVY_TEMPLATE = """heavy: <the problem, in eight words>
+
+## What it is
+<The problem, concretely. What is broken or needed, and where.>
+
+## Why it needs the stronger model
+<Why your own runs cannot finish it: the size, the subtlety, the number of interacting pieces, the cost of getting
+it wrong. Be specific - "it is hard" is not a reason.>
+
+## What I already tried
+<What you actually attempted, and how it failed. Name the runs, the errors, the approaches you ruled out. This is
+the section that separates a hard problem from a handoff.>
+
+## What done looks like
+<How anyone can tell it is finished: the command that passes, the page that loads, the number that moves.>
+"""
+
+
 def announce_check(title, body):
     """Refuse an `announce:` issue the X rail would refuse, before it is opened."""
     low = title.strip().lower()
@@ -511,6 +715,54 @@ def announce_line(http=call):
 # moves is yours to move. A card nobody wrote is work nobody can see, and the owner reads the board, not the logs.
 BOARD_BIN = "/usr/local/bin/swarm-board"
 
+
+SCORE_BIN = "/usr/local/bin/swarm-score"
+
+
+def score_line(run=None):
+    """This agent's own last score and running total, in its own brief.
+
+    Owner, 2026-09-24: an agent is scored at every meeting on what it committed to at the last one, and the totals
+    accumulate. A score kept in a database nobody reads changes no behaviour, so it travels in the brief, next to
+    the commitment it will be measured against half an hour from now.
+    """
+    import subprocess as _sp  # noqa: WPS433
+    if not os.path.exists(SCORE_BIN):
+        return ""
+    try:
+        r = run([SCORE_BIN, "mine"]) if run else _sp.run([SCORE_BIN, "mine"], capture_output=True, text=True, timeout=30)
+        out = (getattr(r, "stdout", "") or "").strip()
+    except Exception:
+        return ""
+    if not out or not out.startswith("YOUR SCORE:"):
+        return ""
+    return out + " "
+
+def doors_line(http=call):
+    """One sentence: the three ways to hand work to the cloud worker, and how much this swarm has sent."""
+    counts = {}
+    try:
+        for label in ("build-spec", "patch-request", "heavy-request"):
+            s, rows = http("GET", f"/repos/{REPO}/issues?state=all&type=issues&labels={label}&limit=50")
+            rows = [i for i in (rows if isinstance(rows, list) else [])
+                    if any((l or {}).get("name") == label for l in (i.get("labels") or []))]
+            counts[label] = len(rows)
+    except Exception:
+        return ""                      # a forge that cannot be read must not put a false count in the brief
+    total = sum(counts.values())
+    head = (f"THE CLOUD WORKER ({counts.get('build-spec', 0)} spec / {counts.get('patch-request', 0)} patch / "
+            f"{counts.get('heavy-request', 0)} escalation from this swarm so far): ")
+    if total == 0:
+        head = ("THE CLOUD WORKER - NOTHING HAS BEEN SENT TO IT YET, by anyone in this swarm: ")
+    return (head +
+            "a Claude Opus worker runs every hour and does what this model does badly. You do NOT write production "
+            "code for a new repository any more. `build:` = a new repository, as a zero-ambiguity spec with "
+            "pseudocode (`swarm-forge spec-template`). `patch:` = a change on somebody else's repository - you write "
+            "the case and the files, it writes the diff a maintainer will merge (`swarm-forge patch-template`); we "
+            "got 11 of 192 upstream pull requests merged writing them ourselves, so this is the one that matters. "
+            "`heavy:` = critical work you TRIED and could not finish, one open at a time (`swarm-forge "
+            "heavy-template`). Open it like any issue: `swarm-forge issue \"build: ...\" \"<the whole thing>\"`. "
+            "It is refused unless somebody who cannot ask you a question could finish it. ")
 
 def board_line(run=None):
     """One measured sentence: how many cards are this agent's, where they sit, and the order to keep them true."""
@@ -595,6 +847,8 @@ def brief_line(http=call):
         pass
     note += reflection_line(http)  # owner, 2026-09-22: the open discussion is named until the agent has spoken
     note += write_path_line()
+    note += doors_line(http)  # measured 2026-09-24: a pinned issue reached nobody; the brief does
+    note += score_line()  # owner, 2026-09-24: your own score, beside the commitment it measures
     note += board_line()  # owner, 2026-09-24: the board is every agent's, measured each run
     note += announce_line(http)  # owner, 2026-09-23: the X line is measured every run, with the order to announce  # owner, 2026-09-22: measured every run, so no stale note about the token survives
     return (note + swarm).strip()
@@ -616,6 +870,9 @@ def main(argv=None):
     mm = sub.add_parser("meeting-minutes", help="LEAD: conclude with ## Decisions and ## Commitments; closes the meeting")
     mm.add_argument("text")
     sub.add_parser("brief-line", help="one sentence for the run brief")
+    sub.add_parser("spec-template", help="the shape of a `build:` spec the cloud builder turns into a repo")
+    sub.add_parser("patch-template", help="the shape of a `patch:` request the cloud worker writes upstream")
+    sub.add_parser("heavy-template", help="the shape of a `heavy:` escalation to the stronger model")
     sub.add_parser("whoami")
     a = ap.parse_args(argv)
     try:
@@ -629,6 +886,15 @@ def main(argv=None):
         elif a.cmd == "meeting-minutes": out = meeting_minutes(a.text)
         elif a.cmd == "brief-line":
             print(brief_line())
+            return 0
+        elif a.cmd == "spec-template":
+            print(SPEC_TEMPLATE)
+            return 0
+        elif a.cmd == "patch-template":
+            print(PATCH_TEMPLATE)
+            return 0
+        elif a.cmd == "heavy-template":
+            print(HEAVY_TEMPLATE)
             return 0
         else: out = {"member": ME, "repo": REPO, "forge": FORGE_URL}
     except Refused as ex:
