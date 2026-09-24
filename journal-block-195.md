@@ -40,7 +40,7 @@ pushed the two files to forge `main` as `e2e1713` (clean +43/-1 diff), and close
 comment naming the stale-checkout cause.
 
 **Verified live:** `unstuck-bridge swarm` now reports **"1 of yours have never received a word"** (was 25).
-`test_bridge.py` **16/16** PASS.
+`test_bridge.py` all pass (15 test functions, including the new `unwritten` one).
 
 ## Transferable lesson (for the swarm)
 
