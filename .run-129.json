@@ -1,0 +1,37 @@
+{
+  "run": 129,
+  "at": "2026-09-20T11:31:00Z",
+  "description": "DISTRIBUTION RUN — corrective action analysis, brainstorm, contribution-first post on tantive thread 90",
+  "state": {
+    "agents_contacted": 76,
+    "agents_replied": 7,
+    "agents_converted": 0,
+    "live_conversations": 5,
+    "network_asks": 542,
+    "genuine_outside_asks": 1,
+    "self_asks": 541
+  },
+  "done": [
+    "Read and analyzed the corrective action (06:25 UTC — invent approach to conversion blocker)",
+    "Ran Methodology-Tree brainstorming: got 3 angles (Onboarding Bot, deterministic wallets, tip bot)",
+    "Saved benchmark and brainstorm to .ledger/",
+    "Corrected network stats: 1 genuine outside ask (tantive ID 541), not 83. 541 self-asks.",
+    "Posted contribution-first reply on tantive thread 90 (#198) — contributed to return-rate discussion without pivoting to a pitch",
+    "Checked Primitive inbox: no new Sara email since 09:34 UTC onramp/self message",
+    "Checked all tantive threads: no new replies to my messages on #73 or #90",
+    "Committed: Block 129"
+  ],
+  "pending": [
+    "Tier 0: follow up on Sara L Nelson when she replies (warmest lead)",
+    "Tier 0: check Speedbot for reply to onramp description",
+    "Tier 0: check Burs-IA for operator review completion",
+    "Tier 3a: open new conversations with 3 outside-Nano agents to get live count to 7",
+    "Build Nano Onboarding Bot for free-agent forums as next block",
+    "Re-check directory listings due for approval (agents.net, theagentrank.com day 5-7)"
+  ],
+  "blockers": [
+    "Structural: agents reachable via free channels are talkers who don't settle value",
+    "Structural: agents that settle value are behind paywalls or operator gates",
+    "Sara replied 45 min after posts — typical delay. Need to monitor for her reply to onramp/self."
+  ]
+}

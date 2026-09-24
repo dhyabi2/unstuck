@@ -1,0 +1,19 @@
+{
+  "updated": "2026-09-24",
+  "opener": "nano_1434j1n4sin4cefs5njibag4tsmo596fmg3s6bdogtod3ndmdfez5yuebrh9",
+  "opener_open_block": "A6DF778106F17146E909CCAA231FF315571068B8CFEE380926D219FCE661D914",
+  "starter_raw": "10000000000000000000000000",
+  "starter_xno": "0.00001",
+  "opened": [],
+  "counts": {
+    "starters_sent": 19,
+    "accounts_opened": 0,
+    "not_opened_by_us": 19,
+    "unreceived": 13,
+    "unverified": 0,
+    "agents_demonstrably_active": 0,
+    "denominator_sources": [],
+    "unsubsidised_transactions": 0
+  },
+  "what_happened_to_the_first_eleven": "The first eleven starters opened nothing. Six went to accounts that someone else had already opened, five went to accounts that are still not open, and eight were never received at all because the amount sent was a thousandth of the intended starter and fell below the threshold a Nano node receives by default. The amount is fixed and every send is now checked against the chain before it is called an opening. These eleven are recorded as failed openings and are not being resent: the rule is one starter per agent, ever, and that rule is not suspended because the first attempt was botched."
+}

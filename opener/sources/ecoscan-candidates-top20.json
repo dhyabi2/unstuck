@@ -1,0 +1,281 @@
+[
+  {
+    "name": "OneSource",
+    "slug": "onesource",
+    "domain": "api.onesource.io",
+    "base_url": "https://api.onesource.io",
+    "category": "Blockchain",
+    "buyers_30d": 2033,
+    "volume_30d": 78.914,
+    "hasAgentJson": false,
+    "hasWellKnownX402": true,
+    "notes": [
+      "USDC (not Nano) in /.well-known/x402"
+    ]
+  },
+  {
+    "name": "Gotobi Calendar API",
+    "slug": "gotobi-calendar-api",
+    "domain": "gotobi.hugen.tokyo",
+    "base_url": "https://gotobi.hugen.tokyo",
+    "category": "Finance",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "hasAgentJson": false,
+    "hasWellKnownX402": true,
+    "notes": [
+      "USDC (not Nano) in /.well-known/x402"
+    ]
+  },
+  {
+    "name": "Hugen DeFi Intelligence API",
+    "slug": "hugen-defi-intelligence-api",
+    "domain": "defi.hugen.tokyo",
+    "base_url": "https://defi.hugen.tokyo",
+    "category": "Blockchain",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "hasAgentJson": false,
+    "hasWellKnownX402": true,
+    "notes": [
+      "x402 endpoint found but no Nano/USDC advertised"
+    ]
+  },
+  {
+    "name": "Content Intelligence API",
+    "slug": "content-intelligence-api",
+    "domain": "content.hugen.tokyo",
+    "base_url": "https://content.hugen.tokyo",
+    "category": "Content",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "hasAgentJson": false,
+    "hasWellKnownX402": true,
+    "notes": [
+      "USDC (not Nano) in /.well-known/x402"
+    ]
+  },
+  {
+    "name": "Hugen Intel API",
+    "slug": "hugen-intel-api",
+    "domain": "intel.hugen.tokyo",
+    "base_url": "https://intel.hugen.tokyo",
+    "category": "Blockchain",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "hasAgentJson": false,
+    "hasWellKnownX402": true,
+    "notes": [
+      "USDC (not Nano) in /.well-known/x402"
+    ]
+  },
+  {
+    "name": "Domain Intelligence API",
+    "slug": "domain-intelligence-api",
+    "domain": "domain.hugen.tokyo",
+    "base_url": "https://domain.hugen.tokyo",
+    "category": "Data",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "hasAgentJson": false,
+    "hasWellKnownX402": true,
+    "notes": [
+      "x402 endpoint found but no Nano/USDC advertised"
+    ]
+  },
+  {
+    "name": "Hugen Visual API",
+    "slug": "hugen-visual-api",
+    "domain": "visual.hugen.tokyo",
+    "base_url": "https://visual.hugen.tokyo",
+    "category": "Compute",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "hasAgentJson": false,
+    "hasWellKnownX402": true,
+    "notes": [
+      "USDC (not Nano) in /.well-known/x402"
+    ]
+  },
+  {
+    "name": "Whale Intelligence API",
+    "slug": "whale-intelligence-api",
+    "domain": "whale.hugen.tokyo",
+    "base_url": "https://whale.hugen.tokyo",
+    "category": "Blockchain",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "hasAgentJson": false,
+    "hasWellKnownX402": true,
+    "notes": [
+      "x402 endpoint found but no Nano/USDC advertised"
+    ]
+  },
+  {
+    "name": "Tick Aggregator FX API",
+    "slug": "tick-aggregator-fx-api",
+    "domain": "tick.hugen.tokyo",
+    "base_url": "https://tick.hugen.tokyo",
+    "category": "Finance",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "hasAgentJson": false,
+    "hasWellKnownX402": true,
+    "notes": [
+      "x402 endpoint found but no Nano/USDC advertised"
+    ]
+  },
+  {
+    "name": "Scout Multi-Source Intelligence API",
+    "slug": "scout-multi-source-intelligence-api",
+    "domain": "scout.hugen.tokyo",
+    "base_url": "https://scout.hugen.tokyo",
+    "category": "Data",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "hasAgentJson": false,
+    "hasWellKnownX402": true,
+    "notes": [
+      "USDC (not Nano) in /.well-known/x402"
+    ]
+  },
+  {
+    "name": "Hugen Weather API",
+    "slug": "hugen-weather-api",
+    "domain": "weather.hugen.tokyo",
+    "base_url": "https://weather.hugen.tokyo",
+    "category": "Data",
+    "buyers_30d": 360,
+    "volume_30d": 1.1705,
+    "hasAgentJson": false,
+    "hasWellKnownX402": true,
+    "notes": [
+      "USDC (not Nano) in /.well-known/x402"
+    ]
+  },
+  {
+    "name": "Otto AI",
+    "slug": "otto-ai",
+    "domain": "x402.ottoai.services",
+    "base_url": "https://x402.ottoai.services",
+    "category": "AI",
+    "buyers_30d": 326,
+    "volume_30d": 61.942,
+    "hasAgentJson": true,
+    "hasWellKnownX402": false,
+    "notes": [
+      "agent.json mentions payments (x402/USDC likely)"
+    ]
+  },
+  {
+    "name": "Clash of Coins Checkout",
+    "slug": "clash-of-coins-checkout",
+    "domain": "x402.clashofcoins.com",
+    "base_url": "https://x402.clashofcoins.com",
+    "category": "Other",
+    "buyers_30d": 209,
+    "volume_30d": 26127.938000000002,
+    "hasAgentJson": true,
+    "hasWellKnownX402": true,
+    "notes": [
+      "x402 endpoint found but no Nano/USDC advertised",
+      "agent.json mentions payments (x402/USDC likely)"
+    ]
+  },
+  {
+    "name": "Exa",
+    "slug": "exa",
+    "domain": "api.exa.ai",
+    "base_url": "https://api.exa.ai",
+    "category": "AI",
+    "buyers_30d": 139,
+    "volume_30d": 46.231,
+    "hasAgentJson": false,
+    "hasWellKnownX402": false,
+    "notes": [
+      "/.well-known/x402: HTTP 404"
+    ]
+  },
+  {
+    "name": "Loyal Spark",
+    "slug": "loyal-spark",
+    "domain": "api.loyalspark.online",
+    "base_url": "https://api.loyalspark.online",
+    "category": "Blockchain",
+    "buyers_30d": 108,
+    "volume_30d": 136.782,
+    "hasAgentJson": false,
+    "hasWellKnownX402": false,
+    "notes": []
+  },
+  {
+    "name": "glim.sh",
+    "slug": "glim-sh",
+    "domain": "glim.sh",
+    "base_url": "https://glim.sh",
+    "category": "Data",
+    "buyers_30d": 104,
+    "volume_30d": 50.5178,
+    "hasAgentJson": true,
+    "hasWellKnownX402": true,
+    "notes": [
+      "x402 endpoint found but no Nano/USDC advertised"
+    ]
+  },
+  {
+    "name": "Nansen",
+    "slug": "nansen",
+    "domain": "api.nansen.ai",
+    "base_url": "https://api.nansen.ai",
+    "category": "Data",
+    "buyers_30d": 96,
+    "volume_30d": 94.4,
+    "hasAgentJson": false,
+    "hasWellKnownX402": true,
+    "notes": [
+      "USDC (not Nano) in /.well-known/x402"
+    ]
+  },
+  {
+    "name": "cn402",
+    "slug": "cn402",
+    "domain": "api.cn402.com",
+    "base_url": "https://api.cn402.com",
+    "category": "Data",
+    "buyers_30d": 92,
+    "volume_30d": 37.08255,
+    "hasAgentJson": false,
+    "hasWellKnownX402": true,
+    "notes": [
+      "x402 endpoint found but no Nano/USDC advertised"
+    ]
+  },
+  {
+    "name": "Bitrefill",
+    "slug": "bitrefill",
+    "domain": "api.bitrefill.com",
+    "base_url": "https://api.bitrefill.com",
+    "category": "Finance",
+    "buyers_30d": 92,
+    "volume_30d": 560.273,
+    "hasAgentJson": false,
+    "hasWellKnownX402": false,
+    "notes": [
+      "/.well-known/x402: HTTP 404"
+    ]
+  },
+  {
+    "name": "x402watch",
+    "slug": "x402watch",
+    "domain": "api.x402.printmoneylab.com",
+    "base_url": "https://api.x402.printmoneylab.com",
+    "category": "Data",
+    "buyers_30d": 86,
+    "volume_30d": 0.799,
+    "hasAgentJson": false,
+    "hasWellKnownX402": true,
+    "notes": [
+      "x402 endpoint found but no Nano/USDC advertised"
+    ]
+  }
+]

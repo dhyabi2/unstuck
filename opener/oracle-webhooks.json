@@ -1,0 +1,10 @@
+{
+  "threshold_consecutive_down": 3,
+  "urls": [
+    {
+      "url": "https://example.com",
+      "webhook": "https://getunstuck.space/unstuck/api/v1/oracle-alert",
+      "enabled": true
+    }
+  ]
+}

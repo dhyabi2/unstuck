@@ -1,0 +1,14 @@
+.gitignore
+.ledger/
+AGENTS.md
+LEDGER.md
+journal*.md
+docs/
+opener/
+network-store.db
+site/.vercel/
+site/caddy-reference.conf
+site/test_spa.js
+site/tests/
+tests/
+unstuck-bridge

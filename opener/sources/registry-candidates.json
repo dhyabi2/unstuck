@@ -1,0 +1,2314 @@
+{
+  "generatedAt": "2026-09-17T14:35:38.647Z",
+  "summary": {
+    "totalProbed": 82,
+    "hasNano": 0,
+    "noNano": 67,
+    "unreachable": 15
+  },
+  "haveNano": [],
+  "candidates": [
+    {
+      "source": "agents-net",
+      "agentId": 218,
+      "agentName": "Taijora",
+      "category": "Other",
+      "platform": "other",
+      "apiEndpoint": "https://taijora.com/zh-hant",
+      "domain": "taijora.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 217,
+      "agentName": "HotelBell",
+      "category": "AI Assistant",
+      "platform": "other",
+      "apiEndpoint": "https://hotelbell.ai/",
+      "domain": "hotelbell.ai",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 213,
+      "agentName": "CoolAgents",
+      "category": "Design",
+      "platform": "other",
+      "apiEndpoint": "https://coolagents.co",
+      "domain": "coolagents.co",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 212,
+      "agentName": "MIRAI AI ORCHESTRA",
+      "category": "AI Assistant",
+      "platform": "other",
+      "apiEndpoint": "https://mirai-sodan.com/ai-orchestra/en",
+      "domain": "mirai-sodan.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 211,
+      "agentName": "Connect Your Life / CONNECT agent desk",
+      "category": "Productivity",
+      "platform": "other",
+      "apiEndpoint": "https://jpanasuk-netizen.github.io/the-closer/CONNECT_YOUR_LIFE.html",
+      "domain": "jpanasuk-netizen.github.io",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 209,
+      "agentName": "Mew Design",
+      "category": "Design",
+      "platform": "other",
+      "apiEndpoint": "https://mew.design",
+      "domain": "mew.design",
+      "notes": []
+    },
+    {
+      "source": "agents-net",
+      "agentId": 204,
+      "agentName": "PosteAhora",
+      "category": "SEO & Marketing",
+      "platform": "other",
+      "apiEndpoint": "https://posteahora.com",
+      "domain": "posteahora.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 196,
+      "agentName": "LoreJam",
+      "category": "Education",
+      "platform": "Web",
+      "apiEndpoint": "https://lorejam.com",
+      "domain": "lorejam.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 195,
+      "agentName": "Jefri",
+      "category": "Engineering",
+      "platform": "Custom API",
+      "apiEndpoint": "https://agentmart.store/store/jefri-escrow-lab",
+      "domain": "agentmart.store",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 194,
+      "agentName": "Resale IQ market snapshot",
+      "category": "Finance",
+      "platform": "HTTP API",
+      "apiEndpoint": "https://resaleiq.dev/api/public/market-snapshot",
+      "domain": "resaleiq.dev",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 189,
+      "agentName": "Stankotorg",
+      "category": "Other",
+      "platform": "Custom",
+      "apiEndpoint": "https://stankotorg.ru",
+      "domain": "stankotorg.ru",
+      "notes": [
+        "/.well-known/x402 responded 403"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 187,
+      "agentName": "Job Hunt AI Kit",
+      "category": "Operations",
+      "platform": "Custom",
+      "apiEndpoint": "https://helixbuilder.gumroad.com/l/dahax",
+      "domain": "helixbuilder.gumroad.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 182,
+      "agentName": "Swaycove",
+      "category": "Sales",
+      "platform": "Custom",
+      "apiEndpoint": "https://focus2grow.app/swaycove/",
+      "domain": "focus2grow.app",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 181,
+      "agentName": "Clearcove",
+      "category": "Design",
+      "platform": "Custom",
+      "apiEndpoint": "https://focus2grow.app/clearcove/",
+      "domain": "focus2grow.app",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 164,
+      "agentName": "PuppyOne",
+      "category": "Productivity",
+      "platform": "Desktop / Local-first",
+      "apiEndpoint": "https://www.puppyone.ai",
+      "domain": "www.puppyone.ai",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 162,
+      "agentName": "Ache",
+      "category": "Engineering",
+      "platform": "Ache",
+      "apiEndpoint": "https://ache.lol/?utm_source=agentsnet&utm_medium=directory&utm_campaign=discovery-2026-09-10&utm_content=api_submit",
+      "domain": "ache.lol",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 157,
+      "agentName": "Iceberg Black",
+      "category": "Finance",
+      "platform": "Web",
+      "apiEndpoint": "https://icebergscanner.com",
+      "domain": "icebergscanner.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 156,
+      "agentName": "RiadIntel",
+      "category": "Analytics",
+      "platform": "Custom",
+      "apiEndpoint": "https://riadintel.com/r/best-district-to-buy-a-riad-marrakech",
+      "domain": "riadintel.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 154,
+      "agentName": "Statuscard",
+      "category": "Engineering",
+      "platform": "Custom",
+      "apiEndpoint": "https://statuscard.lovable.app",
+      "domain": "statuscard.lovable.app",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 153,
+      "agentName": "Bot Company OS",
+      "category": "Operations",
+      "platform": "Custom",
+      "apiEndpoint": "https://botcompanyos.lovable.app",
+      "domain": "botcompanyos.lovable.app",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 152,
+      "agentName": "PasteGuard",
+      "category": "Engineering",
+      "platform": "Web",
+      "apiEndpoint": "https://pasteguard-exp2.netlify.app",
+      "domain": "pasteguard-exp2.netlify.app",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 150,
+      "agentName": "Council of AI — GSPC Measurement Agent",
+      "category": "Governance",
+      "platform": "Custom API",
+      "apiEndpoint": "https://councilof.ai/api/a2a",
+      "domain": "councilof.ai",
+      "notes": [
+        "/.well-known/x402 responded 308",
+        "x402/USDC (not Nano) in /.well-known/agent.json"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 147,
+      "agentName": "SafeNet Creations",
+      "category": "Operations",
+      "platform": "Custom",
+      "apiEndpoint": "https://www.safenetcreations.com/canada/",
+      "domain": "www.safenetcreations.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 145,
+      "agentName": "Polite Close",
+      "category": "Sales",
+      "platform": "Web",
+      "apiEndpoint": "https://trutara.com/close/",
+      "domain": "trutara.com",
+      "notes": []
+    },
+    {
+      "source": "agents-net",
+      "agentId": 144,
+      "agentName": "UGC Rights Renewal Desk",
+      "category": "Operations",
+      "platform": "Web",
+      "apiEndpoint": "https://trutara.com/ugc-rights/",
+      "domain": "trutara.com",
+      "notes": []
+    },
+    {
+      "source": "agents-net",
+      "agentId": 136,
+      "agentName": "Peptide Cosmetics Decoder",
+      "category": "Education",
+      "platform": "Gumroad",
+      "apiEndpoint": "https://tejasthegreat.gumroad.com/l/tvoxa",
+      "domain": "tejasthegreat.gumroad.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 132,
+      "agentName": "AIhaoyisheng AI好医生",
+      "category": "Education",
+      "platform": "Custom",
+      "apiEndpoint": "https://aihaoyisheng.com/en",
+      "domain": "aihaoyisheng.com",
+      "notes": [
+        "/.well-known/x402 responded 301"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 123,
+      "agentName": "Corso AI in 10 puntate",
+      "category": "Education",
+      "platform": "Web",
+      "apiEndpoint": "https://www.corso-intelligenza-artificiale.com/",
+      "domain": "www.corso-intelligenza-artificiale.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 118,
+      "agentName": "Milestone Agent",
+      "category": "Operations",
+      "platform": "Trutara",
+      "apiEndpoint": "https://trutara.com/milestone-agent/",
+      "domain": "trutara.com",
+      "notes": []
+    },
+    {
+      "source": "agents-net",
+      "agentId": 117,
+      "agentName": "Resume Agent",
+      "category": "Operations",
+      "platform": "Trutara",
+      "apiEndpoint": "https://trutara.com/resume-agent/",
+      "domain": "trutara.com",
+      "notes": []
+    },
+    {
+      "source": "agents-net",
+      "agentId": 116,
+      "agentName": "Hold Agent",
+      "category": "Operations",
+      "platform": "Trutara",
+      "apiEndpoint": "https://trutara.com/hold-agent/",
+      "domain": "trutara.com",
+      "notes": []
+    },
+    {
+      "source": "agents-net",
+      "agentId": 115,
+      "agentName": "Receipt Agent",
+      "category": "Operations",
+      "platform": "Trutara",
+      "apiEndpoint": "https://trutara.com/receipt-agent/",
+      "domain": "trutara.com",
+      "notes": []
+    },
+    {
+      "source": "agents-net",
+      "agentId": 114,
+      "agentName": "Renewal Agent",
+      "category": "Operations",
+      "platform": "Trutara",
+      "apiEndpoint": "https://trutara.com/renewal-agent/",
+      "domain": "trutara.com",
+      "notes": []
+    },
+    {
+      "source": "agents-net",
+      "agentId": 113,
+      "agentName": "Change Order Agent",
+      "category": "Operations",
+      "platform": "Trutara",
+      "apiEndpoint": "https://trutara.com/change-order-agent/",
+      "domain": "trutara.com",
+      "notes": []
+    },
+    {
+      "source": "agents-net",
+      "agentId": 112,
+      "agentName": "Close Agent",
+      "category": "Operations",
+      "platform": "Trutara",
+      "apiEndpoint": "https://trutara.com/close-agent/",
+      "domain": "trutara.com",
+      "notes": []
+    },
+    {
+      "source": "agents-net",
+      "agentId": 110,
+      "agentName": "PolymarketScan",
+      "category": "Analytics",
+      "platform": "Custom",
+      "apiEndpoint": "https://polymarketscan.org",
+      "domain": "polymarketscan.org",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 109,
+      "agentName": "ClearCA ACP Hire Hub",
+      "category": "Security",
+      "platform": "Virtuals ACP",
+      "apiEndpoint": "https://app.virtuals.io/acp/agent/01a05d8c-9b5d-74d2-9a32-eb0b42070b72",
+      "domain": "app.virtuals.io",
+      "notes": []
+    },
+    {
+      "source": "agents-net",
+      "agentId": 108,
+      "agentName": "Cognilode Team Operator Evolution",
+      "category": "Management",
+      "platform": "Cognilode",
+      "apiEndpoint": "https://cognilode.com/api/team-operator/team",
+      "domain": "cognilode.com",
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402",
+        "x402/USDC (not Nano) in /.well-known/agent.json"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 105,
+      "agentName": "PropostaNaHora",
+      "category": "Sales",
+      "platform": "Custom",
+      "apiEndpoint": "https://proposta.trystackpick.com",
+      "domain": "proposta.trystackpick.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 101,
+      "agentName": "ClipMyApp MCP",
+      "category": "Marketing & Sales",
+      "platform": "Custom API",
+      "apiEndpoint": "https://api.clipmyapp.com/mcp",
+      "domain": "api.clipmyapp.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 99,
+      "agentName": "Entropy Index Regime Gate",
+      "category": "Finance & Accounting",
+      "platform": "Custom API",
+      "apiEndpoint": "https://www.entropyindex.com/api/v1/risk/global-financial-system?depth=probe",
+      "domain": "www.entropyindex.com",
+      "notes": [
+        "/.well-known/x402 responded 307"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 98,
+      "agentName": "Cleared Index",
+      "category": "Finance & Accounting",
+      "platform": "Custom API",
+      "apiEndpoint": "https://clearedindex.com/api/cleared/gateway",
+      "domain": "clearedindex.com",
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402",
+        "x402/USDC (not Nano) in /.well-known/agent.json"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 97,
+      "agentName": "AI Visibility Check",
+      "category": "Marketing",
+      "platform": "Custom",
+      "apiEndpoint": "https://try.agentexchange.work",
+      "domain": "try.agentexchange.work",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 96,
+      "agentName": "Faceless.so",
+      "category": "Content Creation",
+      "platform": "Custom",
+      "apiEndpoint": "https://faceless.so/developers",
+      "domain": "faceless.so",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 89,
+      "agentName": "stipend.sh",
+      "category": "Finance",
+      "platform": "x402",
+      "apiEndpoint": "https://stipend.sh/api/topup",
+      "domain": "stipend.sh",
+      "notes": [
+        "/.well-known/x402 responded 404",
+        "x402/USDC (not Nano) in /.well-known/agent.json"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 76,
+      "agentName": "PreTestAds",
+      "category": "Marketing & Sales",
+      "platform": "Custom API",
+      "apiEndpoint": "https://pretestads.com/api/v1/score",
+      "domain": "pretestads.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 72,
+      "agentName": "Eigendark",
+      "category": "Other",
+      "platform": "Custom API",
+      "apiEndpoint": "https://www.eigendark.com/api/agent",
+      "domain": "www.eigendark.com",
+      "notes": []
+    },
+    {
+      "source": "agents-net",
+      "agentId": 62,
+      "agentName": "Cipher Zero",
+      "category": "Security",
+      "platform": "Custom",
+      "apiEndpoint": "https://antigravity-connect-ia.vercel.app/api/a2a/rpc",
+      "domain": "antigravity-connect-ia.vercel.app",
+      "notes": [
+        "x402/USDC (not Nano) in /.well-known/agent.json"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 61,
+      "agentName": "Dedicated Mac Mini AI Bot Setup",
+      "category": "Productivity & Automation",
+      "platform": "Custom API",
+      "apiEndpoint": "https://www.emadibrahim.com/api/bot-setup/offer",
+      "domain": "www.emadibrahim.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 60,
+      "agentName": "CyberNative.AI",
+      "category": "Productivity & Automation",
+      "platform": "Custom API",
+      "apiEndpoint": "https://cybernative.ai",
+      "domain": "cybernative.ai",
+      "notes": [
+        "/.well-known/x402 responded 301"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 59,
+      "agentName": "Offer Bull",
+      "category": "Education & Training",
+      "platform": "Custom API",
+      "apiEndpoint": "https://www.offerbull.net",
+      "domain": "www.offerbull.net",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 58,
+      "agentName": "Workforce Wave",
+      "category": "Customer Service",
+      "platform": "Custom API",
+      "apiEndpoint": "https://www.workforcewave.com/solutions/ai-receptionist",
+      "domain": "www.workforcewave.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 53,
+      "agentName": "v0 by Vercel",
+      "category": "Design",
+      "platform": "Vercel",
+      "apiEndpoint": "https://v0.dev",
+      "domain": "v0.dev",
+      "notes": [
+        "/.well-known/x402 responded 307"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 52,
+      "agentName": "Midjourney",
+      "category": "Design",
+      "platform": "Midjourney",
+      "apiEndpoint": "https://www.midjourney.com",
+      "domain": "www.midjourney.com",
+      "notes": [
+        "/.well-known/x402 responded 403"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 51,
+      "agentName": "Clay AI Agent",
+      "category": "Sales",
+      "platform": "Clay",
+      "apiEndpoint": "https://api.clay.com",
+      "domain": "api.clay.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 50,
+      "agentName": "Intercom Fin",
+      "category": "Customer Support",
+      "platform": "Intercom",
+      "apiEndpoint": "https://api.intercom.io",
+      "domain": "api.intercom.io",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 49,
+      "agentName": "Elicit",
+      "category": "Research",
+      "platform": "Elicit",
+      "apiEndpoint": "https://elicit.com/api",
+      "domain": "elicit.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 46,
+      "agentName": "Zapier AI Actions",
+      "category": "Automation",
+      "platform": "Zapier",
+      "apiEndpoint": "https://actions.zapier.com/api/v1",
+      "domain": "actions.zapier.com",
+      "notes": [
+        "/.well-known/x402 responded 301"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 42,
+      "agentName": "GitHub Copilot",
+      "category": "Engineering",
+      "platform": "GitHub",
+      "apiEndpoint": "https://api.github.com/copilot",
+      "domain": "api.github.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 41,
+      "agentName": "Perplexity",
+      "category": "AI Assistant",
+      "platform": "Perplexity AI",
+      "apiEndpoint": "https://api.perplexity.ai/chat/completions",
+      "domain": "api.perplexity.ai",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 40,
+      "agentName": "Gemini",
+      "category": "AI Assistant",
+      "platform": "Google",
+      "apiEndpoint": "https://generativelanguage.googleapis.com/v1/models",
+      "domain": "generativelanguage.googleapis.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 39,
+      "agentName": "Claude",
+      "category": "AI Assistant",
+      "platform": "Anthropic",
+      "apiEndpoint": "https://api.anthropic.com/v1/messages",
+      "domain": "api.anthropic.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 38,
+      "agentName": "ChatGPT",
+      "category": "AI Assistant",
+      "platform": "OpenAI",
+      "apiEndpoint": "https://api.openai.com/v1/chat/completions",
+      "domain": "api.openai.com",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 22,
+      "agentName": "Leo",
+      "category": "Finance",
+      "platform": "loan.ai",
+      "apiEndpoint": "https://loan.ai/api/leo",
+      "domain": "loan.ai",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 21,
+      "agentName": "Corbin",
+      "category": "Management",
+      "platform": "Corporate.AI",
+      "apiEndpoint": "https://corporate.ai/api/corbin",
+      "domain": "corporate.ai",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 20,
+      "agentName": "Luke",
+      "category": "Management",
+      "platform": "Law.AI",
+      "apiEndpoint": "https://law.ai/api/luke",
+      "domain": "law.ai",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    },
+    {
+      "source": "agents-net",
+      "agentId": 19,
+      "agentName": "Bianca",
+      "category": "Management",
+      "platform": "Biography.AI",
+      "apiEndpoint": "https://biography.ai/api/bianca",
+      "domain": "biography.ai",
+      "notes": [
+        "/.well-known/x402 responded 404"
+      ]
+    }
+  ],
+  "sources": {
+    "agents-net": {
+      "total": 82,
+      "probed": 82,
+      "agents": [
+        {
+          "domain": "taijora.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 218,
+          "agentName": "Taijora",
+          "category": "Other",
+          "platform": "other",
+          "apiEndpoint": "https://taijora.com/zh-hant",
+          "submittedAt": "2026-09-17T12:45:23.986Z"
+        },
+        {
+          "domain": "hotelbell.ai",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 217,
+          "agentName": "HotelBell",
+          "category": "AI Assistant",
+          "platform": "other",
+          "apiEndpoint": "https://hotelbell.ai/",
+          "submittedAt": "2026-09-17T11:01:35.689Z"
+        },
+        {
+          "domain": "datalyse.io",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": false,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [],
+          "agentId": 214,
+          "agentName": "Datalyse Partner OS",
+          "category": "Customer Support",
+          "platform": "other",
+          "apiEndpoint": "https://datalyse.io",
+          "submittedAt": "2026-09-17T07:16:51.600Z"
+        },
+        {
+          "domain": "coolagents.co",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 213,
+          "agentName": "CoolAgents",
+          "category": "Design",
+          "platform": "other",
+          "apiEndpoint": "https://coolagents.co",
+          "submittedAt": "2026-09-17T06:34:30.901Z"
+        },
+        {
+          "domain": "mirai-sodan.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 212,
+          "agentName": "MIRAI AI ORCHESTRA",
+          "category": "AI Assistant",
+          "platform": "other",
+          "apiEndpoint": "https://mirai-sodan.com/ai-orchestra/en",
+          "submittedAt": "2026-09-17T03:02:07.065Z"
+        },
+        {
+          "domain": "jpanasuk-netizen.github.io",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 211,
+          "agentName": "Connect Your Life / CONNECT agent desk",
+          "category": "Productivity",
+          "platform": "other",
+          "apiEndpoint": "https://jpanasuk-netizen.github.io/the-closer/CONNECT_YOUR_LIFE.html",
+          "submittedAt": "2026-09-17T00:02:44.482Z"
+        },
+        {
+          "domain": "mew.design",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": "<!DOCTYPE html>\n<html lang=\"en\">\n    <head>\n        <meta charset=\"utf-8\" />\n        <meta\n            name=\"viewport\"\n            content=\"minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no\"\n        />\n\n        <meta charset='utf-8' />\n<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n<meta name='author' content='MewDesign' />\n<meta http-equiv='content-language' content='en, zh, de, ja, ko, fr, es, pt, it, ru' />\n<link rel='preconnect' href='https://api.mew.design' crossorigin />\n<link rel='preconnect' href='https://mew-1350584998.cos.ap-shanghai.myqcloud.com' crossorigin />\n<link rel='dns-prefetch' href='https://static.cloudflareinsights.com' />\n<link rel='icon' href='/favicon.ico' />\n<link rel='apple-touch-icon' href='/apple-touch-icon.png' />\n<link rel='manifest' href='/manifest.json' />\n<script type='application/ld+json'>{\"@context\":\"https://schema.org\",\"@type\":\"WebSite\",\"name\":\"Mew.Design\",\"url\":\"https://mew.design\",\"potentialAction\":{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"https://mew.design/search?q={search_term_string}\"},\"query-input\":\"required name=search_term_string\"}}</script>\n<script type='application/ld+json'>{\"@context\":\"https://schema.org\",\"@type\":\"Organization\",\"name\":\"Mew.Design\",\"url\":\"https://mew.design\",\"logo\":\"https://mew.design/logo.svg\",\"sameAs\":[\"https://twitter.com/mew_design\"]}</script>\n\n        <title>Mew.Design - Free Online AI Design Generator</title>\n      <script type=\"module\" crossorigin src=\"/assets/index-_KcD_Zu7.js\"></script>\n      <link rel=\"modulepreload\" crossorigin href=\"/assets/framer-motion-DVQmqYMb.js\">\n      <link rel=\"stylesheet\" crossorigin href=\"/assets/index-DLZzmk7N.css\">\n    </head>\n\n    <body>\n        <noscript>You need to enable JavaScript to run this app.</noscript>\n        <div id=\"root\"></div>\n    <!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{\"token\": \"db0939148fbf",
+          "agentJsonBody": "<!DOCTYPE html>\n<html lang=\"en\">\n    <head>\n        <meta charset=\"utf-8\" />\n        <meta\n            name=\"viewport\"\n            content=\"minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no\"\n        />\n\n        <meta charset='utf-8' />\n<meta name='viewport' content='width=device-width, initial-scale=1.0' />\n<meta name='author' content='MewDesign' />\n<meta http-equiv='content-language' content='en, zh, de, ja, ko, fr, es, pt, it, ru' />\n<link rel='preconnect' href='https://api.mew.design' crossorigin />\n<link rel='preconnect' href='https://mew-1350584998.cos.ap-shanghai.myqcloud.com' crossorigin />\n<link rel='dns-prefetch' href='https://static.cloudflareinsights.com' />\n<link rel='icon' href='/favicon.ico' />\n<link rel='apple-touch-icon' href='/apple-touch-icon.png' />\n<link rel='manifest' href='/manifest.json' />\n<script type='application/ld+json'>{\"@context\":\"https://schema.org\",\"@type\":\"WebSite\",\"name\":\"Mew.Design\",\"url\":\"https://mew.design\",\"potentialAction\":{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"https://mew.design/search?q={search_term_string}\"},\"query-input\":\"required name=search_term_string\"}}</script>\n<script type='application/ld+json'>{\"@context\":\"https://schema.org\",\"@type\":\"Organization\",\"name\":\"Mew.Design\",\"url\":\"https://mew.design\",\"logo\":\"https://mew.design/logo.svg\",\"sameAs\":[\"https://twitter.com/mew_design\"]}</script>\n\n        <title>Mew.Design - Free Online AI Design Generator</title>\n      <script type=\"module\" crossorigin src=\"/assets/index-_KcD_Zu7.js\"></script>\n      <link rel=\"modulepreload\" crossorigin href=\"/assets/framer-motion-DVQmqYMb.js\">\n      <link rel=\"stylesheet\" crossorigin href=\"/assets/index-DLZzmk7N.css\">\n    </head>\n\n    <body>\n        <noscript>You need to enable JavaScript to run this app.</noscript>\n        <div id=\"root\"></div>\n    <!-- Cloudflare Pages Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{\"token\": \"db0939148fbf",
+          "notes": [],
+          "agentId": 209,
+          "agentName": "Mew Design",
+          "category": "Design",
+          "platform": "other",
+          "apiEndpoint": "https://mew.design",
+          "submittedAt": "2026-09-16T12:51:25.484Z"
+        },
+        {
+          "domain": "spicyai.app",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": false,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [],
+          "agentId": 205,
+          "agentName": "Spicy AI",
+          "category": "AI Assistant",
+          "platform": "other",
+          "apiEndpoint": "https://spicyai.app",
+          "submittedAt": "2026-09-16T02:46:13.062Z"
+        },
+        {
+          "domain": "posteahora.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 204,
+          "agentName": "PosteAhora",
+          "category": "SEO & Marketing",
+          "platform": "other",
+          "apiEndpoint": "https://posteahora.com",
+          "submittedAt": "2026-09-16T02:14:27.850Z"
+        },
+        {
+          "domain": "lorejam.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 196,
+          "agentName": "LoreJam",
+          "category": "Education",
+          "platform": "Web",
+          "apiEndpoint": "https://lorejam.com",
+          "submittedAt": "2026-09-15T02:29:10.568Z"
+        },
+        {
+          "domain": "agentmart.store",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 195,
+          "agentName": "Jefri",
+          "category": "Engineering",
+          "platform": "Custom API",
+          "apiEndpoint": "https://agentmart.store/store/jefri-escrow-lab",
+          "submittedAt": "2026-09-14T06:41:22.347Z"
+        },
+        {
+          "domain": "resaleiq.dev",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 194,
+          "agentName": "Resale IQ market snapshot",
+          "category": "Finance",
+          "platform": "HTTP API",
+          "apiEndpoint": "https://resaleiq.dev/api/public/market-snapshot",
+          "submittedAt": "2026-09-13T17:00:48.745Z"
+        },
+        {
+          "domain": "stankotorg.ru",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 403"
+          ],
+          "agentId": 189,
+          "agentName": "Stankotorg",
+          "category": "Other",
+          "platform": "Custom",
+          "apiEndpoint": "https://stankotorg.ru",
+          "submittedAt": "2026-09-12T21:59:37.266Z"
+        },
+        {
+          "domain": "helixbuilder.gumroad.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 187,
+          "agentName": "Job Hunt AI Kit",
+          "category": "Operations",
+          "platform": "Custom",
+          "apiEndpoint": "https://helixbuilder.gumroad.com/l/dahax",
+          "submittedAt": "2026-09-11T19:12:31.697Z"
+        },
+        {
+          "domain": "pictoflex.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": false,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [],
+          "agentId": 185,
+          "agentName": "PictoFlex AI",
+          "category": "Design",
+          "platform": "Web",
+          "apiEndpoint": "https://pictoflex.com",
+          "submittedAt": "2026-09-11T10:47:49.262Z"
+        },
+        {
+          "domain": "pixelto.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": false,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [],
+          "agentId": 184,
+          "agentName": "Pixelto AI",
+          "category": "Design",
+          "platform": "Web",
+          "apiEndpoint": "https://pixelto.com",
+          "submittedAt": "2026-09-11T10:47:47.947Z"
+        },
+        {
+          "domain": "focus2grow.app",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 182,
+          "agentName": "Swaycove",
+          "category": "Sales",
+          "platform": "Custom",
+          "apiEndpoint": "https://focus2grow.app/swaycove/",
+          "submittedAt": "2026-09-11T06:32:03.907Z"
+        },
+        {
+          "domain": "focus2grow.app",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 181,
+          "agentName": "Clearcove",
+          "category": "Design",
+          "platform": "Custom",
+          "apiEndpoint": "https://focus2grow.app/clearcove/",
+          "submittedAt": "2026-09-11T06:32:03.531Z"
+        },
+        {
+          "domain": "www.puppyone.ai",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": "{\n  \"schema_version\": \"2026-05-10\",\n  \"name\": \"puppyone\",\n  \"display_name\": \"puppyone\",\n  \"description\": \"File workspace for multi-agent collaboration with SaaS ingestion, scoped agent access, MCP, REST API, CLI, version history, rollback, and audit logs.\",\n  \"url\": \"https://www.puppyone.ai\",\n  \"provider\": {\n    \"name\": \"puppyone Tech\",\n    \"url\": \"https://www.puppyone.ai\",\n    \"contact\": \"puppyteam@puppyone.ai\"\n  },\n  \"interfaces\": {\n    \"web\": \"https://try.puppyone.ai\",\n    \"developers\": \"https://www.puppyone.ai/en/developers\",\n    \"docs\": \"https://www.puppyone.ai/en/docs\",\n    \"cli\": \"https://www.puppyone.ai/en/cli\",\n    \"api\": \"https://www.puppyone.ai/en/api\",\n    \"mcp\": \"https://www.puppyone.ai/en/mcp\",\n\t    \"agent_auth\": \"https://www.puppyone.ai/en/agent-auth\"\n\t  },\n\t  \"machine_readable\": {\n\t    \"llms\": \"https://www.puppyone.ai/llms.txt\",\n\t    \"llms_full\": \"https://www.puppyone.ai/llms-full.txt\",\n\t    \"pricing\": \"https://www.puppyone.ai/pricing.md\",\n\t    \"markdown_home\": \"https://www.puppyone.ai/index.md\",\n\t    \"openapi\": \"https://www.puppyone.ai/openapi.json\",\n\t    \"api_errors\": \"https://www.puppyone.ai/api/errors.md\",\n\t    \"ask\": \"https://www.puppyone.ai/ask\",\n\t    \"api_catalog\": \"https://www.puppyone.ai/.well-known/api-catalog\",\n\t    \"agent_card\": \"https://www.puppyone.ai/.well-known/agent-card.json\",\n\t    \"mcp_server_card\": \"https://www.puppyone.ai/.well-known/mcp/server-card.json\",\n\t    \"webmcp_form\": \"https://www.puppyone.ai/en/contact-enterprise\"\n\t  },\n  \"auth\": {\n    \"rest_api\": {\n      \"type\": \"bearer_jwt\",\n      \"description\": \"REST setup and management calls use the puppyone user/session JWT.\"\n    },\n    \"mcp\": {\n      \"type\": \"mcp_access_key\",\n      \"header\": \"X-MCP-API-Key\",\n      \"description\": \"Scoped MCP endpoint keys start with mcp_. Programmatic MCP clients should send the key in X-MCP-API-Key.\"\n    },\n    \"access_point_filesystem\": {\n      \"type\": \"access_key\",\n      \"header\": \"X-Access-Key\",\n      \"description\": \"File sync and Access Point ",
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 164,
+          "agentName": "PuppyOne",
+          "category": "Productivity",
+          "platform": "Desktop / Local-first",
+          "apiEndpoint": "https://www.puppyone.ai",
+          "submittedAt": "2026-09-10T23:15:49.812Z"
+        },
+        {
+          "domain": "ache.lol",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 162,
+          "agentName": "Ache",
+          "category": "Engineering",
+          "platform": "Ache",
+          "apiEndpoint": "https://ache.lol/?utm_source=agentsnet&utm_medium=directory&utm_campaign=discovery-2026-09-10&utm_content=api_submit",
+          "submittedAt": "2026-09-10T14:12:45.152Z"
+        },
+        {
+          "domain": "blog.hjcyberx.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": false,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [],
+          "agentId": 158,
+          "agentName": "HJcyberX Blog Assistant",
+          "category": "Education",
+          "platform": "Custom",
+          "apiEndpoint": "https://blog.hjcyberx.com/",
+          "submittedAt": "2026-09-09T12:04:59.961Z"
+        },
+        {
+          "domain": "icebergscanner.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 157,
+          "agentName": "Iceberg Black",
+          "category": "Finance",
+          "platform": "Web",
+          "apiEndpoint": "https://icebergscanner.com",
+          "submittedAt": "2026-09-08T20:31:18.258Z"
+        },
+        {
+          "domain": "riadintel.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 156,
+          "agentName": "RiadIntel",
+          "category": "Analytics",
+          "platform": "Custom",
+          "apiEndpoint": "https://riadintel.com/r/best-district-to-buy-a-riad-marrakech",
+          "submittedAt": "2026-09-08T20:21:47.224Z"
+        },
+        {
+          "domain": "statuscard.lovable.app",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 154,
+          "agentName": "Statuscard",
+          "category": "Engineering",
+          "platform": "Custom",
+          "apiEndpoint": "https://statuscard.lovable.app",
+          "submittedAt": "2026-09-08T19:11:42.980Z"
+        },
+        {
+          "domain": "botcompanyos.lovable.app",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 153,
+          "agentName": "Bot Company OS",
+          "category": "Operations",
+          "platform": "Custom",
+          "apiEndpoint": "https://botcompanyos.lovable.app",
+          "submittedAt": "2026-09-08T19:11:26.716Z"
+        },
+        {
+          "domain": "pasteguard-exp2.netlify.app",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 152,
+          "agentName": "PasteGuard",
+          "category": "Engineering",
+          "platform": "Web",
+          "apiEndpoint": "https://pasteguard-exp2.netlify.app",
+          "submittedAt": "2026-09-08T14:07:15.186Z"
+        },
+        {
+          "domain": "councilof.ai",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": "{\n  \"name\": \"Council of AI — Measurement Agent\",\n  \"description\": \"Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance · Safety · Provenance · Continuity) — quote totals.lid and totals.public_count from GET /api/gspc, never a typed integer here — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked. A2A v1.0 is served at the single interface below; MCP (a different protocol, not A2A) is at https://councilof.ai/mcp.\",\n  \"version\": \"1.1.0\",\n  \"provider\": {\n    \"organization\": \"CSOAI Ltd\",\n    \"url\": \"https://councilof.ai\"\n  },\n  \"supportedInterfaces\": [\n    {\n      \"url\": \"https://councilof.ai/api/a2a\",\n      \"protocolBinding\": \"JSONRPC\",\n      \"protocolVersion\": \"1.0\"\n    }\n  ],\n  \"documentationUrl\": \"https://councilof.ai/llms.txt\",\n  \"iconUrl\": \"https://councilof.ai/og-image.png\",\n  \"capabilities\": {\n    \"streaming\": false,\n    \"pushNotifications\": false,\n    \"extendedAgentCard\": false,\n    \"extensions\": [\n      {\n        \"uri\": \"https://councilof.ai/a2a/extensions/signed-receipts/v1/\",\n        \"required\": false,\n        \"description\": \"A DRAFT WE PUBLISH AND DO NOT YET EMIT: this agent attaches no receipt to a response today. Declared because we author the specification, not because the door implements it. Ed25519-signed task-outcome receipts plus a did:web key-trust convention for AgentCard signing (A2A v1.0 §8.4). A receipt is evidence of what was claimed, not a certification, and a signature over it is an integrity claim rather than a truth claim.\"\n      },\n      {\n        \"uri\": \"https://councilof.ai/.well-known/x402.json\",\n        \"required\": false,\n        \"description\": \"x402 discovery index for the agent pay rail (also GET /api/x402). Free door amount 0 at /api/free-door. Verification stays free. payTo is merchant not payer. Self-settle is not revenue. Settlement is PROVEN on Base mainnet",
+          "notes": [
+            "/.well-known/x402 responded 308",
+            "x402/USDC (not Nano) in /.well-known/agent.json"
+          ],
+          "agentId": 150,
+          "agentName": "Council of AI — GSPC Measurement Agent",
+          "category": "Governance",
+          "platform": "Custom API",
+          "apiEndpoint": "https://councilof.ai/api/a2a",
+          "submittedAt": "2026-09-07T06:01:06.285Z"
+        },
+        {
+          "domain": "athillyads.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": false,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [],
+          "agentId": 149,
+          "agentName": "AthillyAds",
+          "category": "Marketing",
+          "platform": "Web",
+          "apiEndpoint": "https://athillyads.com/",
+          "submittedAt": "2026-09-06T20:36:58.892Z"
+        },
+        {
+          "domain": "ampthilly.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": false,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [],
+          "agentId": 148,
+          "agentName": "AMPthilly",
+          "category": "Operations",
+          "platform": "Web",
+          "apiEndpoint": "https://ampthilly.com/",
+          "submittedAt": "2026-09-06T20:36:58.377Z"
+        },
+        {
+          "domain": "www.safenetcreations.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 147,
+          "agentName": "SafeNet Creations",
+          "category": "Operations",
+          "platform": "Custom",
+          "apiEndpoint": "https://www.safenetcreations.com/canada/",
+          "submittedAt": "2026-09-06T20:05:34.847Z"
+        },
+        {
+          "domain": "trutara.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "agentJsonBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "notes": [],
+          "agentId": 145,
+          "agentName": "Polite Close",
+          "category": "Sales",
+          "platform": "Web",
+          "apiEndpoint": "https://trutara.com/close/",
+          "submittedAt": "2026-09-06T04:13:23.941Z"
+        },
+        {
+          "domain": "trutara.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "agentJsonBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "notes": [],
+          "agentId": 144,
+          "agentName": "UGC Rights Renewal Desk",
+          "category": "Operations",
+          "platform": "Web",
+          "apiEndpoint": "https://trutara.com/ugc-rights/",
+          "submittedAt": "2026-09-06T04:13:23.454Z"
+        },
+        {
+          "domain": "tejasthegreat.gumroad.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 136,
+          "agentName": "Peptide Cosmetics Decoder",
+          "category": "Education",
+          "platform": "Gumroad",
+          "apiEndpoint": "https://tejasthegreat.gumroad.com/l/tvoxa",
+          "submittedAt": "2026-09-05T21:38:52.821Z"
+        },
+        {
+          "domain": "aihaoyisheng.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 301"
+          ],
+          "agentId": 132,
+          "agentName": "AIhaoyisheng AI好医生",
+          "category": "Education",
+          "platform": "Custom",
+          "apiEndpoint": "https://aihaoyisheng.com/en",
+          "submittedAt": "2026-09-05T17:02:32.246Z"
+        },
+        {
+          "domain": "www.corso-intelligenza-artificiale.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 123,
+          "agentName": "Corso AI in 10 puntate",
+          "category": "Education",
+          "platform": "Web",
+          "apiEndpoint": "https://www.corso-intelligenza-artificiale.com/",
+          "submittedAt": "2026-09-05T08:44:25.801Z"
+        },
+        {
+          "domain": "trutara.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "agentJsonBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "notes": [],
+          "agentId": 118,
+          "agentName": "Milestone Agent",
+          "category": "Operations",
+          "platform": "Trutara",
+          "apiEndpoint": "https://trutara.com/milestone-agent/",
+          "submittedAt": "2026-09-02T19:39:04.388Z"
+        },
+        {
+          "domain": "trutara.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "agentJsonBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "notes": [],
+          "agentId": 117,
+          "agentName": "Resume Agent",
+          "category": "Operations",
+          "platform": "Trutara",
+          "apiEndpoint": "https://trutara.com/resume-agent/",
+          "submittedAt": "2026-09-02T19:39:03.992Z"
+        },
+        {
+          "domain": "trutara.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "agentJsonBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "notes": [],
+          "agentId": 116,
+          "agentName": "Hold Agent",
+          "category": "Operations",
+          "platform": "Trutara",
+          "apiEndpoint": "https://trutara.com/hold-agent/",
+          "submittedAt": "2026-09-02T19:39:03.583Z"
+        },
+        {
+          "domain": "trutara.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "agentJsonBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "notes": [],
+          "agentId": 115,
+          "agentName": "Receipt Agent",
+          "category": "Operations",
+          "platform": "Trutara",
+          "apiEndpoint": "https://trutara.com/receipt-agent/",
+          "submittedAt": "2026-09-02T19:39:03.109Z"
+        },
+        {
+          "domain": "trutara.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "agentJsonBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "notes": [],
+          "agentId": 114,
+          "agentName": "Renewal Agent",
+          "category": "Operations",
+          "platform": "Trutara",
+          "apiEndpoint": "https://trutara.com/renewal-agent/",
+          "submittedAt": "2026-09-02T19:39:02.716Z"
+        },
+        {
+          "domain": "trutara.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "agentJsonBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "notes": [],
+          "agentId": 113,
+          "agentName": "Change Order Agent",
+          "category": "Operations",
+          "platform": "Trutara",
+          "apiEndpoint": "https://trutara.com/change-order-agent/",
+          "submittedAt": "2026-09-02T19:39:02.212Z"
+        },
+        {
+          "domain": "trutara.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "agentJsonBody": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>Trutara · Polite Change Order Agent</title>\n<meta name=\"description\" content=\"Trutara’s live product: Polite Change Order Agent — $29 CLI for AI agents. Scope moved, put it in writing.\">\n<link rel=\"canonical\" href=\"https://trutara.com/change-order-agent/\">\n<meta http-equiv=\"refresh\" content=\"0;url=/change-order-agent/\">\n<script>location.replace(\"/change-order-agent/\");</script>\n</head>\n<body style=\"font-family:system-ui,sans-serif;max-width:40rem;margin:3rem auto;padding:0 1rem;line-height:1.5\">\n  <p>Trutara’s live offer is <a href=\"/change-order-agent/\">Polite Change Order Agent</a> ($29).</p>\n  <p>If you are not redirected, use that link.</p>\n</body>\n</html>\n",
+          "notes": [],
+          "agentId": 112,
+          "agentName": "Close Agent",
+          "category": "Operations",
+          "platform": "Trutara",
+          "apiEndpoint": "https://trutara.com/close-agent/",
+          "submittedAt": "2026-09-02T19:39:01.673Z"
+        },
+        {
+          "domain": "taskfolk.ai",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": false,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [],
+          "agentId": 111,
+          "agentName": "Taskfolk",
+          "category": "Productivity",
+          "platform": "Custom",
+          "apiEndpoint": "https://taskfolk.ai",
+          "submittedAt": "2026-09-02T18:43:59.492Z"
+        },
+        {
+          "domain": "polymarketscan.org",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 110,
+          "agentName": "PolymarketScan",
+          "category": "Analytics",
+          "platform": "Custom",
+          "apiEndpoint": "https://polymarketscan.org",
+          "submittedAt": "2026-09-02T11:52:03.895Z"
+        },
+        {
+          "domain": "app.virtuals.io",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": "<!DOCTYPE html>\n<html lang=\"en\" class=\"dark\">\n  <head>\n    <meta charset=\"utf-8\" />\n    <link rel=\"icon\" href=\"https://app.virtuals.io/favicon.ico\" />\n    <meta\n      name=\"viewport\"\n      content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no\"\n    />\n    <meta name=\"theme-color\" content=\"#000000\" />\n    <meta name=\"base:app_id\" content=\"69d8995034c69936dc95d6c0\" />\n    <meta\n      name=\"description\"\n      content=\"Virtuals Protocol is a society of productive AI agents, each designed to generate services or products and autonomously engage in onchain commerce, with humans or other agents. These agents are tokenized through Agent Tokens, enabling capital formation, permissionless participation, and incentive alignment between creators, investors, and agents.\"\n    />\n    <meta name=\"twitter:card\" content=\"summary_large_image\" />\n    <meta name=\"twitter:site\" content=\"@virtuals_io\" />\n    <meta name=\"twitter:domain\" content=\"https://app.virtuals.io\" />\n    <meta name=\"twitter:url\" content=\"https://app.virtuals.io\" />\n    <meta\n      name=\"twitter:title\"\n      content=\"Virtuals Protocol | Society of AI Agents\"\n    />\n    <meta name=\"twitter:description\" content=\"\" />\n    <meta\n      name=\"twitter:image\"\n      content=\"https://app.virtuals.io/android-chrome-512x512.png\"\n    />\n\n    <meta name=\"og:url\" content=\"https://app.virtuals.io\" />\n    <meta name=\"og:type\" content=\"website\" />\n    <meta name=\"og:title\" content=\"Virtuals Protocol | Society of AI Agents\" />\n    <meta\n      name=\"og:description\"\n      content=\"Virtuals Protocol is a society of productive AI agents, each designed to generate services or products and autonomously engage in onchain commerce, with humans or other agents. These agents are tokenized through Agent Tokens, enabling capital formation, permissionless participation, and incentive alignment between creators, investors, and agents.\"\n    />\n    <meta\n      name=\"og:image\"\n      content=\"https://app.virtuals.io/android-chrom",
+          "agentJsonBody": null,
+          "notes": [],
+          "agentId": 109,
+          "agentName": "ClearCA ACP Hire Hub",
+          "category": "Security",
+          "platform": "Virtuals ACP",
+          "apiEndpoint": "https://app.virtuals.io/acp/agent/01a05d8c-9b5d-74d2-9a32-eb0b42070b72",
+          "submittedAt": "2026-09-01T16:18:53.931Z"
+        },
+        {
+          "domain": "cognilode.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": "{\"spec\":\"agent402-service-manifest/1\",\"version\":1,\"name\":\"Cognilode Pay-Per-Call Agent Services\",\"summary\":\"Deterministic paid machine services including low-cost hashing, leadership visibility, event-ticket resale underwriting, venture economics, agent security scoring, production shipment underwriting, media launch planning, memory custody and utility transforms.\",\"homepage\":\"https://cognilode.com/\",\"openapi\":\"https://cognilode.com/openapi.json\",\"ecosystem\":{\"chains\":[\"Base\"],\"primaryChain\":\"Base\",\"primaryChainId\":8453,\"currency\":\"USDC\",\"protocol\":\"x402\"},\"payment\":{\"x402\":{\"version\":2,\"currency\":\"USDC\",\"networks\":[\"base\",\"eip155:8453\"],\"primaryNetwork\":\"base\",\"payTo\":\"0x8680D41547EACA88Cf7e9E3923291aab72457c0c\",\"nonCustodial\":true}},\"resources\":[\"https://cognilode.com/api/hash\",\"https://cognilode.com/api/x402/mission-circuit-drill\",\"https://cognilode.com/api/x402/fieldproof-snapshot\",\"https://cognilode.com/api/x402/codec-batch\",\"https://cognilode.com/api/x402/forge-ship\",\"https://cognilode.com/api/x402/threadops\",\"https://cognilode.com/api/x402/project-atlas\",\"https://cognilode.com/api/x402/venture-underwrite\",\"https://cognilode.com/api/x402/autoyt-launch\",\"https://cognilode.com/api/x402/agent-security-score\",\"https://cognilode.com/api/x402/ticket-underwrite\",\"https://cognilode.com/api/x402/memory-checkpoint\",\"https://cognilode.com/api/x402/world-plan\",\"https://cognilode.com/api/x402/leadership-visibility\",\"https://cognilode.com/api/x402/text-stats\",\"https://cognilode.com/api/x402/dedupe-lines\",\"https://cognilode.com/api/x402/sort-lines\",\"https://cognilode.com/api/x402/slugify\",\"https://cognilode.com/api/x402/url-canonicalize\",\"https://cognilode.com/api/x402/query-params\",\"https://cognilode.com/api/x402/json-format\",\"https://cognilode.com/api/x402/json-keys\",\"https://cognilode.com/api/x402/json-flatten\",\"https://cognilode.com/api/x402/json-diff\",\"https://cognilode.com/api/x402/csv-profile\",\"https://cognilode.com/api/x402/csv-header\",\"https://cognilode.com/api/x40",
+          "agentJsonBody": "{\n  \"version\": \"1.3\",\n  \"origin\": \"cognilode.com\",\n  \"display_name\": \"Cognilode Paid Agent APIs\",\n  \"description\": \"Deterministic pay-per-call tools for leadership visibility, agent security, launch planning, ticket-resale underwriting, repository readiness, team execution, memory custody, and utility operations.\",\n  \"discovery\": {\n    \"agent_card\": \"https://cognilode.com/.well-known/agent-card.json\",\n    \"a2a\": \"https://cognilode.com/api/a2a\",\n    \"x402\": \"https://cognilode.com/.well-known/x402\"\n  },\n  \"payout_address\": \"0x8680D41547EACA88Cf7e9E3923291aab72457c0c\",\n  \"payments\": {\n    \"x402\": {\n      \"networks\": [\n        {\n          \"network\": \"base\",\n          \"asset\": \"USDC\",\n          \"contract\": \"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913\",\n          \"facilitator\": \"https://facilitator.payai.network\"\n        }\n      ]\n    }\n  },\n  \"intents\": [\n    {\n      \"name\": \"leadership_visibility\",\n      \"description\": \"Summarize cross-team, cross-domain, cross-time and live work with revenue, cost, net-profit and blind-spot rollups for managers and autonomous agent organizations.\",\n      \"endpoint\": \"/api/x402/leadership-visibility\",\n      \"method\": \"POST\",\n      \"parameters\": {\n        \"events\": {\n          \"type\": \"array\",\n          \"required\": true,\n          \"description\": \"Up to 1000 work events. Each event should include team and domain and may include id, ISO-8601 timestamp, status, active, revenueUsd, costUsd and summary.\"\n        },\n        \"liveWindowMinutes\": {\n          \"type\": \"number\",\n          \"required\": false,\n          \"description\": \"Minutes used to classify an event as live; defaults to 15.\"\n        }\n      },\n      \"returns\": {\n        \"type\": \"object\",\n        \"description\": \"Overall economics plus team/domain rollups, timeline, live work and explicit visibility blind spots.\"\n      },\n      \"price\": { \"amount\": 0.25, \"currency\": \"USDC\", \"model\": \"per_call\", \"network\": \"base\" }\n    },\n    {\n      \"name\": \"ticket_resale_underwrite\",\n      \"descripti",
+          "notes": [
+            "USDC (not Nano) in /.well-known/x402",
+            "x402/USDC (not Nano) in /.well-known/agent.json"
+          ],
+          "agentId": 108,
+          "agentName": "Cognilode Team Operator Evolution",
+          "category": "Management",
+          "platform": "Cognilode",
+          "apiEndpoint": "https://cognilode.com/api/team-operator/team",
+          "submittedAt": "2026-08-31T03:44:25.176Z"
+        },
+        {
+          "domain": "proposta.trystackpick.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 105,
+          "agentName": "PropostaNaHora",
+          "category": "Sales",
+          "platform": "Custom",
+          "apiEndpoint": "https://proposta.trystackpick.com",
+          "submittedAt": "2026-08-27T22:46:36.597Z"
+        },
+        {
+          "domain": "gpt55.558686.xyz",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": false,
+          "wellKnownBody": null,
+          "agentJsonBody": "{\"origin\":\"gpt55.558686.xyz\",\"display_name\":\"GPT55 Model Gateway\",\"payout_address\":\"0x1f0130669ca6fd02e025a984cc038f139df19a2f\",\"name\":\"GPT55 Model Gateway\",\"description\":\"GPT-5.6 Luna Standard chat is $0.00293 per request over x402 USDC on Base; current model-specific routes and prepaid call packs are also available. Market benchmark: the latest local x402.direct sample found AI-like listing prices with p25 around $0.01 and median around $0.03 per call; this gateway publishes GPT-5.6 Luna Standard at $0.00293 and model-specific prices at /pricing.json. GPT-5.6 Luna Standard is $0.00293 per request, restoring the historically converting public Standard entry quote while preserving the documented cost floor; model-specific routes retain their published Luna-relative price proportions. Service hub: https://gpt55.558686.xyz/x402/service and https://gpt55.558686.xyz/x402/service.json. Discovery assets: https://gpt55.558686.xyz/openapi.json, https://gpt55.558686.xyz/llms.txt, https://gpt55.558686.xyz/tools.json, https://gpt55.558686.xyz/apis.json, https://gpt55.558686.xyz/directory-submission.json. Agent and MCP metadata: https://gpt55.558686.xyz/.well-known/agent-card.json, https://gpt55.558686.xyz/.well-known/ai-catalog.json, https://gpt55.558686.xyz/.well-known/mcp/server-card.json, https://gpt55.558686.xyz/server.json. Integration hub: https://gpt55.558686.xyz/integrations and https://gpt55.558686.xyz/integrations.json. Best for agents that need one-call GPT-5.6 Luna Standard access without API-key onboarding or subscription setup. Model theoretical max output is 128000 tokens; actual returned output depends on upstream availability, request parameters, and account policy.\",\"url\":\"https://gpt55.558686.xyz/a2a\",\"provider\":{\"organization\":\"gpt55-token-gateway\",\"url\":\"https://gpt55.558686.xyz\"},\"version\":\"1.0.0\",\"protocolVersion\":\"1.0\",\"preferredTransport\":\"JSONRPC\",\"supportedInterfaces\":[{\"url\":\"https://gpt55.558686.xyz/a2a\",\"protocolBinding\":\"JSONRPC\",\"protocolVersion",
+          "notes": [
+            "x402/USDC (not Nano) in /.well-known/agent.json"
+          ],
+          "agentId": 103,
+          "agentName": "GPT55 Model Gateway",
+          "category": "Engineering",
+          "platform": "Custom API",
+          "apiEndpoint": "https://gpt55.558686.xyz/v1/chat/completions/standard",
+          "submittedAt": "2026-08-25T17:54:38.881Z"
+        },
+        {
+          "domain": "api.clipmyapp.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 101,
+          "agentName": "ClipMyApp MCP",
+          "category": "Marketing & Sales",
+          "platform": "Custom API",
+          "apiEndpoint": "https://api.clipmyapp.com/mcp",
+          "submittedAt": "2026-08-24T12:22:35.358Z"
+        },
+        {
+          "domain": "www.entropyindex.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 307"
+          ],
+          "agentId": 99,
+          "agentName": "Entropy Index Regime Gate",
+          "category": "Finance & Accounting",
+          "platform": "Custom API",
+          "apiEndpoint": "https://www.entropyindex.com/api/v1/risk/global-financial-system?depth=probe",
+          "submittedAt": "2026-08-22T18:06:36.723Z"
+        },
+        {
+          "domain": "clearedindex.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": "{\"name\":\"Cleared Index\",\"operator\":\"Taylor Good\",\"description\":\"Trust gateway for x402 agent commerce. Check, Gateway, Witness — Base · Solana · major EVM. The sole place for score before pay. Probe door: GET /api/x402/ping (HTTP 402). Manifest also at /.well-known/x402 (no .json).\",\"version\":\"2026-08\",\"protocols\":[\"x402\",\"mpp\",\"l402\"],\"primaryResource\":\"/api/x402/ping\",\"wellKnownAliases\":[\"/.well-known/x402.json\",\"/.well-known/x402\"],\"stats\":{\"listings\":4224,\"protocols\":3},\"resources\":[{\"name\":\"x402 Paid Probe\",\"path\":\"/api/x402/ping\",\"method\":\"GET\",\"price\":\"$0.001\",\"description\":\"Genuine HTTP 402 paid probe ($0.001 USDC on Base). Soft header passes rejected — real EIP-3009 settle (or X-Settlement-Tx) auto-Witnesses and returns receiptUrl. The collectible Cleared moment path.\",\"tags\":[\"x402\",\"payment\",\"probe\",\"liveness\"]},{\"name\":\"Cleared Verdict\",\"path\":\"/api/x402/verdict\",\"method\":\"GET\",\"price\":\"$0.10\",\"description\":\"Paid 3-panel diligence (trust / settle / risk) before agent spend. Free preview at /api/cleared/verdict. SwarmX-class panel, Cleared-native — settle $0.10 USDC on Base, auto-Witness.\",\"tags\":[\"x402\",\"verdict\",\"diligence\",\"trust\",\"swarmx-core\"]},{\"name\":\"Cleared Run Gate\",\"path\":\"/api/cleared/run-gate\",\"method\":\"GET\",\"price\":\"$0.00\",\"description\":\"Spend firewall before compute/pay — Check + payTo + minScore + optional maxSpendUsd. Free; Gateway Pro is the Stripe wall. NodeRun-class gate, Cleared-native.\",\"tags\":[\"run-gate\",\"spend\",\"firewall\",\"noderun-core\"]},{\"name\":\"Cleared Arena\",\"path\":\"/api/cleared/loop?mode=arena\",\"method\":\"GET\",\"price\":\"$0.00\",\"description\":\"Repeat settle habit loop: Run Gate → Verdict → Gateway → pay → Witness → again. Boats-class volume habit without leaving Cleared.\",\"tags\":[\"arena\",\"loop\",\"habit\",\"boats-core\"]},{\"name\":\"Trust Evaluate\",\"path\":\"/api/cleared/trust/evaluate\",\"method\":\"POST\",\"price\":\"$0.00\",\"description\":\"Conformant x402 trust-provider endpoint (issue #2299). Free by design — validates input before any payment c",
+          "agentJsonBody": "{\n  \"name\": \"ClearedIndex\",\n  \"description\": \"Trust gateway for x402 agent commerce. Default habit: Check (lookup_merchant) → route_gateway → pay only Gateway payTo → witness. Base gravity (eip155:8453), multi-rail capable. Complementary to Coinbase Developer Platform.\",\n  \"url\": \"https://clearedindex.com\",\n  \"version\": \"1.1.0\",\n  \"documentationUrl\": \"https://clearedindex.com/skill.md\",\n  \"capabilities\": {\n    \"streaming\": false,\n    \"pushNotifications\": false\n  },\n  \"skills\": [\n    {\n      \"id\": \"check-domain-trust\",\n      \"name\": \"Check Domain Trust Status\",\n      \"description\": \"DEFAULT step 1 before pay. Verify origin via Cleared Check (probe=false). Returns pass, score, payToMismatch, tier. On PASS call route-gateway next — do not pay yet.\",\n      \"tags\": [\"trust\", \"verification\", \"security\", \"x402\", \"domain-safety\", \"before-pay\"],\n      \"examples\": [\n        \"Is api.example.com verified on ClearedIndex?\",\n        \"What is the trust score for coinbase-identity?\",\n        \"Check if this endpoint is safe to transact with\"\n      ]\n    },\n    {\n      \"id\": \"route-gateway\",\n      \"name\": \"Route via Cleared Gateway\",\n      \"description\": \"DEFAULT step 2 after Check PASS. One call to the best verified x402 endpoint. Returns payTo + totalCost. Pay only that payTo. 100 free routes/month.\",\n      \"tags\": [\"gateway\", \"routing\", \"x402\", \"payments\", \"drop-in\", \"before-pay\"],\n      \"examples\": [\n        \"Route me to the best identity endpoint under $0.50\",\n        \"Use Cleared Gateway with best_value for compliance\",\n        \"Find a verified x402 endpoint for enrichment\"\n      ]\n    },\n    {\n      \"id\": \"list-verified-services\",\n      \"name\": \"List Verified Services\",\n      \"description\": \"Browse verified x402 endpoints on ClearedIndex. Prefer Check → Gateway for a single payment; use list only for discovery.\",\n      \"tags\": [\"discovery\", \"x402\", \"endpoints\", \"marketplace\"]\n    },\n    {\n      \"id\": \"submit-for-verification\",\n      \"name\": \"Submit Service for Verification\",\n ",
+          "notes": [
+            "USDC (not Nano) in /.well-known/x402",
+            "x402/USDC (not Nano) in /.well-known/agent.json"
+          ],
+          "agentId": 98,
+          "agentName": "Cleared Index",
+          "category": "Finance & Accounting",
+          "platform": "Custom API",
+          "apiEndpoint": "https://clearedindex.com/api/cleared/gateway",
+          "submittedAt": "2026-08-22T18:06:07.552Z"
+        },
+        {
+          "domain": "try.agentexchange.work",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 97,
+          "agentName": "AI Visibility Check",
+          "category": "Marketing",
+          "platform": "Custom",
+          "apiEndpoint": "https://try.agentexchange.work",
+          "submittedAt": "2026-08-21T06:10:20.480Z"
+        },
+        {
+          "domain": "faceless.so",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 96,
+          "agentName": "Faceless.so",
+          "category": "Content Creation",
+          "platform": "Custom",
+          "apiEndpoint": "https://faceless.so/developers",
+          "submittedAt": "2026-08-19T20:28:25.401Z"
+        },
+        {
+          "domain": "stipend.sh",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": "{\r\n  \"name\": \"stipend\",\r\n  \"summary\": \"stipend.sh \\u2014 non-custodial USDC wallet for AI agents. Self-installable. Spending limits are enforced in code between deciding and signing, so no merchant, page or reply can change the amount or the payee.\",\r\n  \"version\": \"0.46.8\",\r\n  \"homepage\": \"https://stipend.sh\",\r\n  \"instructions_for_agents\": \"https://stipend.sh/skill.md\",\r\n  \"instructions_for_humans\": \"https://stipend.sh/for-your-human\",\r\n  \"plain_text\": \"https://stipend.sh/index.txt\",\r\n  \"install\": {\r\n    \"requires\": [\r\n      \"python>=3.8\"\r\n    ],\r\n    \"requires_account\": false,\r\n    \"requires_api_key\": false,\r\n    \"requires_human\": false,\r\n    \"requires_human_note\": \"Not to install, not to create an address, not to be paid. Only to spend past the limits: over $10 in one payment, or a first payment to an address never paid before.\",\r\n    \"dependency\": {\r\n      \"name\": \"eth-account\",\r\n      \"needed_for\": \"signing, which means spending\",\r\n      \"not_needed_for\": \"having an address and receiving money\",\r\n      \"installed_by\": \"the installer, automatically\"\r\n    },\r\n    \"paths\": [\r\n      {\r\n        \"when\": \"you have a shell, running where your files are\",\r\n        \"commands\": [\r\n          \"curl -sL https://stipend.sh/install | sh\",\r\n          \"stipend wallet create\",\r\n          \"stipend wallet address\"\r\n        ]\r\n      },\r\n      {\r\n        \"when\": \"Windows PowerShell\",\r\n        \"commands\": [\r\n          \"irm stipend.sh/install.ps1 | iex\"\r\n        ]\r\n      },\r\n      {\r\n        \"when\": \"you can run Python but not a shell\",\r\n        \"note\": \"install.py uses subprocess with argument lists, never a shell\",\r\n        \"python\": \"import urllib.request; src=urllib.request.urlopen('https://stipend.sh/install.py').read().decode(); ns={'__name__':'i'}; exec(src, ns); ns['main']()\"\r\n      },\r\n      {\r\n        \"when\": \"you cannot install packages at all\",\r\n        \"note\": \"receive-only: derives an address with the standard library alone\",\r\n        \"python\": \"import urllib.request; src=",
+          "notes": [
+            "/.well-known/x402 responded 404",
+            "x402/USDC (not Nano) in /.well-known/agent.json"
+          ],
+          "agentId": 89,
+          "agentName": "stipend.sh",
+          "category": "Finance",
+          "platform": "x402",
+          "apiEndpoint": "https://stipend.sh/api/topup",
+          "submittedAt": "2026-08-13T00:33:08.349Z"
+        },
+        {
+          "domain": "pretestads.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 76,
+          "agentName": "PreTestAds",
+          "category": "Marketing & Sales",
+          "platform": "Custom API",
+          "apiEndpoint": "https://pretestads.com/api/v1/score",
+          "submittedAt": "2026-07-18T22:02:43.621Z"
+        },
+        {
+          "domain": "traditions-laid-vancouver-clearing.trycloudflare.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": false,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [],
+          "agentId": 74,
+          "agentName": "x402 Knowledge Server",
+          "category": "Analytics",
+          "platform": "x402",
+          "apiEndpoint": "https://traditions-laid-vancouver-clearing.trycloudflare.com",
+          "submittedAt": "2026-07-14T02:04:45.308Z"
+        },
+        {
+          "domain": "www.eigendark.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"/><base href=\"/\"/><link rel=\"icon\" type=\"image/x-icon\" href=\"./favicon.ico?v=black-gold-20260720\"/><meta name=\"viewport\" content=\"width=device-width,initial-scale=1,viewport-fit=cover\"/><meta name=\"theme-color\" content=\"#000000\"/><meta name=\"google-site-verification\" content=\"tPPqvoTjsMYy_PoscHQce9fiqZdxH8oytD3SZuLIKOk\"/><link rel=\"stylesheet\" href=\"./config/theme.css\"/><link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"./apple-touch-icon.png?v=black-gold-20260720\"/><link rel=\"alternate\" type=\"text/plain\" href=\"https://www.eigendark.com/llms.txt\" title=\"Eigendark llms.txt\"/><link rel=\"alternate\" type=\"text/plain\" href=\"https://www.eigendark.com/agents.txt\" title=\"Eigendark agent policy\"/><link rel=\"alternate\" type=\"application/json\" href=\"https://www.eigendark.com/.well-known/ai\" title=\"Eigendark AI discovery\"/><link rel=\"alternate\" type=\"application/json\" href=\"https://www.eigendark.com/agent-api.openapi.json\" title=\"Eigendark Agent API OpenAPI\"/><link rel=\"alternate\" type=\"text/markdown\" href=\"https://www.eigendark.com/agent-launch.md\" title=\"Eigendark agent launch packet\"/><link rel=\"manifest\" href=\"./manifest.json?v=black-gold-20260720\"/><title>Eigendark</title><meta name=\"description\" content=\"Eigendark is the first trading card game for humans and machines. Play yourself, duel other minds, or deploy an AI agent that battles on your behalf. Summon cards, build decks, and join the Convergence.\"/><meta property=\"og:title\" content=\"Eigendark\"/><meta property=\"og:description\" content=\"The first trading card game for humans and machines. Play yourself or field an agent that fights under your name; members shape canon.\"/><meta property=\"og:url\" content=\"https://www.eigendark.com/\"/><meta property=\"og:image\" content=\"https://www.eigendark.com/misc/Oktagram.jpg\"/><meta name=\"twitter:card\" content=\"summary_large_image\"/><style>.crawler-fallback{max-width:760px;margin:0 auto;padding:48px 20px 72px;color:#ddd;backg",
+          "agentJsonBody": "{\n  \"name\": \"eigendark_match_coordinator\",\n  \"displayName\": \"Eigendark — card game for humans and AI agents\",\n  \"description\": \"Play a free strategy card game through GET links, the POST Agent API, or connected MCP tools. Read cards, choose legal moves, exchange public banter, inspect replays, and continue match Transmissions. This is a REST discovery card, not an A2A JSON-RPC endpoint.\",\n  \"url\": \"https://www.eigendark.com/\",\n  \"version\": \"2026-09-05\",\n  \"protocolVersion\": \"eigendark.agent-api.v1\",\n  \"documentationUrl\": \"https://www.eigendark.com/agents\",\n  \"quickstartUrl\": \"https://www.eigendark.com/agent-quickstart.md\",\n  \"deckbuildingUrl\": \"https://www.eigendark.com/agent-deckbuilding.md\",\n  \"launchUrl\": \"https://www.eigendark.com/agent-launch.md\",\n  \"openApiUrl\": \"https://www.eigendark.com/agent-api.openapi.json\",\n  \"sitemapUrl\": \"https://www.eigendark.com/sitemap-index.xml\",\n  \"fieldIndexUrl\": \"https://www.eigendark.com/field-index\",\n  \"loreUrl\": \"https://www.eigendark.com/ogdoad\",\n  \"investigationUrl\": \"https://www.eigendark.com/fermi\",\n  \"investigationDataUrl\": \"https://www.eigendark.com/fermi-file.json\",\n  \"eschatonOutlookUrl\": \"https://www.eigendark.com/eschaton\",\n  \"apocryphonUrl\": \"https://www.eigendark.com/apocryphon\",\n  \"termsOfUseUrl\": \"https://www.eigendark.com/terms\",\n  \"privacyPolicyUrl\": \"https://www.eigendark.com/privacy-policy\",\n  \"transports\": {\n    \"get\": {\n      \"name\": \"Play by link\",\n      \"auth\": \"No account or API key; returned play links control one temporary seat.\",\n      \"start_url_template\": \"https://www.eigendark.com/api/agent/webplay/start/{fresh_request_id}\",\n      \"request_id\": \"Generate 8-64 URL-safe characters for every new game; never reuse a start URL.\",\n      \"documentation\": \"https://www.eigendark.com/agent-webplay.md\",\n      \"control\": \"Read the full player-visible board and every legal action, then choose actions[].play_url. Repeat until complete.\",\n      \"banter\": \"Append &say=<URL-encoded public text> to a chosen play_ur",
+          "notes": [],
+          "agentId": 72,
+          "agentName": "Eigendark",
+          "category": "Other",
+          "platform": "Custom API",
+          "apiEndpoint": "https://www.eigendark.com/api/agent",
+          "submittedAt": "2026-07-10T20:41:22.901Z"
+        },
+        {
+          "domain": "antigravity-connect-ia.vercel.app",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": "{\r\n  \"x402\": {\r\n    \"version\": \"2.0\",\r\n    \"description\": \"Cipher Zero — autonomous Web3 data and security services on Base. Vulnerability intelligence, contract monitoring, and Solidity audits via x402.\",\r\n    \"facilitator\": \"https://api.cdp.coinbase.com/platform/v2/x402\",\r\n    \"networks\": [\"eip155:8453\"],\r\n    \"methods\": [\"EIP-3009\", \"Permit2\"],\r\n    \"services\": [\r\n      {\r\n        \"path\": \"/api/agent/audit\",\r\n        \"method\": \"POST\",\r\n        \"description\": \"Full Solidity security audit. Returns vulnerability report with severity levels, line numbers, and fix suggestions. Covers: reentrancy, access control, oracle manipulation, flash loans, SELFDESTRUCT, tx.origin, unchecked calls.\",\r\n        \"price\": \"0.0005\",\r\n        \"currency\": \"ETH\",\r\n        \"payTo\": \"0xa41A2ab6b3097536484399a8DfA3e6c37C329545\",\r\n        \"chainId\": 8453,\r\n        \"inputSchema\": {\r\n          \"type\": \"object\",\r\n          \"properties\": {\r\n            \"contractAddress\": { \"type\": \"string\", \"pattern\": \"^0x[a-fA-F0-9]{40}$\", \"description\": \"Contract address to audit on Base\" },\r\n            \"sourceCode\": { \"type\": \"string\", \"description\": \"Optional Solidity source code for deeper analysis\" }\r\n          },\r\n          \"required\": [\"contractAddress\"]\r\n        },\r\n        \"outputSchema\": {\r\n          \"type\": \"object\",\r\n          \"properties\": {\r\n            \"safety_scan\": { \"type\": \"object\", \"description\": \"Quick safety score (0-100) with risk flags\" },\r\n            \"source_audit\": { \"type\": \"object\", \"description\": \"Detailed audit with findings and severity summary\" }\r\n          }\r\n        }\r\n      },\r\n      {\r\n        \"path\": \"/api/agent/claim\",\r\n        \"method\": \"POST\",\r\n        \"description\": \"Claim audit results after payment. Submit txHash + contractAddress to receive full report.\",\r\n        \"price\": \"0\",\r\n        \"currency\": \"ETH\",\r\n        \"payTo\": \"0xa41A2ab6b3097536484399a8DfA3e6c37C329545\",\r\n        \"chainId\": 8453,\r\n        \"inputSchema\": {\r\n          \"type\": \"object\",\r\n          \"prope",
+          "agentJsonBody": "{\"name\":\"Antigravity Sovereign Agent\",\"description\":\"Autonomous AI agent — smart contract security audits via x402 (pay-per-request). On-chain verification on Base. No signup, no KYC, no humans. Pay 0.0005 ETH (~$1.50), get a full Solidity security audit report instantly. Also: DePIN node management, Web3 intelligence, and content production. Payments in ETH (x402) or $AGIC.\",\"url\":\"https://antigravity-agent.vercel.app\",\"version\":\"2.0.0\",\"provider\":{\"organization\":\"Project SOVERA — Antigravity Research\",\"url\":\"https://github.com/antigravity-ai\"},\"capabilities\":{\"streaming\":true,\"pushNotifications\":false,\"stateTransitionHistory\":true},\"defaultInputModes\":[\"text\",\"application/json\"],\"defaultOutputModes\":[\"text\",\"application/json\"],\"authentication\":{\"schemes\":[\"Bearer\",\"ApiKey\"],\"credentials\":\"Contact agent owner for API access.\"},\"skills\":[{\"id\":\"onchain-intelligence\",\"name\":\"On-Chain Intelligence\",\"description\":\"Live blockchain state: ETH balance, ERC-20 supply, gas estimation on Base.\",\"inputModes\":[\"text\",\"application/json\"],\"outputModes\":[\"application/json\"],\"tags\":[\"blockchain\",\"web3\",\"base\",\"defi\"]},{\"id\":\"depin-node-management\",\"name\":\"DePIN Node Management\",\"description\":\"Register, monitor, and coordinate DePIN scout nodes with $AGIC rewards.\",\"inputModes\":[\"application/json\"],\"outputModes\":[\"application/json\"],\"tags\":[\"depin\",\"node\",\"infrastructure\"]},{\"id\":\"gas-faucet\",\"name\":\"Autonomous Gas Faucet\",\"description\":\"Request 0.002 ETH on Base Sepolia. CDP-powered, 24h rate-limited.\",\"inputModes\":[\"application/json\"],\"outputModes\":[\"application/json\"],\"tags\":[\"faucet\",\"gas\",\"testnet\"]},{\"id\":\"sovereign-telemetry\",\"name\":\"Sovereign Telemetry\",\"description\":\"Real-time swarm status: node count, AGIC metrics, treasury balance.\",\"inputModes\":[\"text\"],\"outputModes\":[\"application/json\"],\"tags\":[\"telemetry\",\"monitoring\",\"swarm\"]},{\"id\":\"paid-audit\",\"name\":\"Paid Smart Contract Audit (x402)\",\"description\":\"Full Solidity security audit via x402. POST /api/agent/audit for p",
+          "notes": [
+            "x402/USDC (not Nano) in /.well-known/agent.json"
+          ],
+          "agentId": 62,
+          "agentName": "Cipher Zero",
+          "category": "Security",
+          "platform": "Custom",
+          "apiEndpoint": "https://antigravity-connect-ia.vercel.app/api/a2a/rpc",
+          "submittedAt": "2026-06-23T07:50:19.324Z"
+        },
+        {
+          "domain": "www.emadibrahim.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 61,
+          "agentName": "Dedicated Mac Mini AI Bot Setup",
+          "category": "Productivity & Automation",
+          "platform": "Custom API",
+          "apiEndpoint": "https://www.emadibrahim.com/api/bot-setup/offer",
+          "submittedAt": "2026-06-03T11:04:36.644Z"
+        },
+        {
+          "domain": "cybernative.ai",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 301"
+          ],
+          "agentId": 60,
+          "agentName": "CyberNative.AI",
+          "category": "Productivity & Automation",
+          "platform": "Custom API",
+          "apiEndpoint": "https://cybernative.ai",
+          "submittedAt": "2026-06-02T03:35:05.066Z"
+        },
+        {
+          "domain": "www.offerbull.net",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 59,
+          "agentName": "Offer Bull",
+          "category": "Education & Training",
+          "platform": "Custom API",
+          "apiEndpoint": "https://www.offerbull.net",
+          "submittedAt": "2026-05-30T13:39:10.116Z"
+        },
+        {
+          "domain": "www.workforcewave.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 58,
+          "agentName": "Workforce Wave",
+          "category": "Customer Service",
+          "platform": "Custom API",
+          "apiEndpoint": "https://www.workforcewave.com/solutions/ai-receptionist",
+          "submittedAt": "2026-05-29T15:35:43.333Z"
+        },
+        {
+          "domain": "v0.dev",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 307"
+          ],
+          "agentId": 53,
+          "agentName": "v0 by Vercel",
+          "category": "Design",
+          "platform": "Vercel",
+          "apiEndpoint": "https://v0.dev",
+          "submittedAt": "2026-04-22T16:05:09.858Z"
+        },
+        {
+          "domain": "www.midjourney.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 403"
+          ],
+          "agentId": 52,
+          "agentName": "Midjourney",
+          "category": "Design",
+          "platform": "Midjourney",
+          "apiEndpoint": "https://www.midjourney.com",
+          "submittedAt": "2026-04-22T16:05:09.841Z"
+        },
+        {
+          "domain": "api.clay.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 51,
+          "agentName": "Clay AI Agent",
+          "category": "Sales",
+          "platform": "Clay",
+          "apiEndpoint": "https://api.clay.com",
+          "submittedAt": "2026-04-22T16:05:09.824Z"
+        },
+        {
+          "domain": "api.intercom.io",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 50,
+          "agentName": "Intercom Fin",
+          "category": "Customer Support",
+          "platform": "Intercom",
+          "apiEndpoint": "https://api.intercom.io",
+          "submittedAt": "2026-04-22T16:05:09.806Z"
+        },
+        {
+          "domain": "elicit.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 49,
+          "agentName": "Elicit",
+          "category": "Research",
+          "platform": "Elicit",
+          "apiEndpoint": "https://elicit.com/api",
+          "submittedAt": "2026-04-22T16:05:09.791Z"
+        },
+        {
+          "domain": "julius.ai",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": false,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [],
+          "agentId": 48,
+          "agentName": "Julius AI",
+          "category": "Analytics",
+          "platform": "Julius",
+          "apiEndpoint": "https://julius.ai",
+          "submittedAt": "2026-04-22T16:05:09.776Z"
+        },
+        {
+          "domain": "docs.n8n.io",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": false,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [],
+          "agentId": 47,
+          "agentName": "n8n AI Agent",
+          "category": "Automation",
+          "platform": "n8n",
+          "apiEndpoint": "https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.agent",
+          "submittedAt": "2026-04-22T16:05:09.760Z"
+        },
+        {
+          "domain": "actions.zapier.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 301"
+          ],
+          "agentId": 46,
+          "agentName": "Zapier AI Actions",
+          "category": "Automation",
+          "platform": "Zapier",
+          "apiEndpoint": "https://actions.zapier.com/api/v1",
+          "submittedAt": "2026-04-22T16:05:09.743Z"
+        },
+        {
+          "domain": "github.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": false,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [],
+          "agentId": 45,
+          "agentName": "Codex CLI",
+          "category": "Engineering",
+          "platform": "OpenAI",
+          "apiEndpoint": "https://github.com/openai/codex",
+          "submittedAt": "2026-04-22T16:05:09.728Z"
+        },
+        {
+          "domain": "api.cognition.ai",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": false,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [],
+          "agentId": 44,
+          "agentName": "Devin",
+          "category": "Engineering",
+          "platform": "Cognition",
+          "apiEndpoint": "https://api.cognition.ai",
+          "submittedAt": "2026-04-22T16:05:09.709Z"
+        },
+        {
+          "domain": "cursor.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": false,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [],
+          "agentId": 43,
+          "agentName": "Cursor",
+          "category": "Engineering",
+          "platform": "Cursor",
+          "apiEndpoint": "https://cursor.com",
+          "submittedAt": "2026-04-22T16:05:09.694Z"
+        },
+        {
+          "domain": "api.github.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 42,
+          "agentName": "GitHub Copilot",
+          "category": "Engineering",
+          "platform": "GitHub",
+          "apiEndpoint": "https://api.github.com/copilot",
+          "submittedAt": "2026-04-22T16:05:09.679Z"
+        },
+        {
+          "domain": "api.perplexity.ai",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 41,
+          "agentName": "Perplexity",
+          "category": "AI Assistant",
+          "platform": "Perplexity AI",
+          "apiEndpoint": "https://api.perplexity.ai/chat/completions",
+          "submittedAt": "2026-04-22T16:05:09.662Z"
+        },
+        {
+          "domain": "generativelanguage.googleapis.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 40,
+          "agentName": "Gemini",
+          "category": "AI Assistant",
+          "platform": "Google",
+          "apiEndpoint": "https://generativelanguage.googleapis.com/v1/models",
+          "submittedAt": "2026-04-22T16:05:09.648Z"
+        },
+        {
+          "domain": "api.anthropic.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 39,
+          "agentName": "Claude",
+          "category": "AI Assistant",
+          "platform": "Anthropic",
+          "apiEndpoint": "https://api.anthropic.com/v1/messages",
+          "submittedAt": "2026-04-22T16:05:09.632Z"
+        },
+        {
+          "domain": "api.openai.com",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 38,
+          "agentName": "ChatGPT",
+          "category": "AI Assistant",
+          "platform": "OpenAI",
+          "apiEndpoint": "https://api.openai.com/v1/chat/completions",
+          "submittedAt": "2026-04-22T16:05:09.608Z"
+        },
+        {
+          "domain": "loan.ai",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 22,
+          "agentName": "Leo",
+          "category": "Finance",
+          "platform": "loan.ai",
+          "apiEndpoint": "https://loan.ai/api/leo",
+          "submittedAt": "2026-03-30T16:03:36.358Z"
+        },
+        {
+          "domain": "corporate.ai",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 21,
+          "agentName": "Corbin",
+          "category": "Management",
+          "platform": "Corporate.AI",
+          "apiEndpoint": "https://corporate.ai/api/corbin",
+          "submittedAt": "2026-03-30T16:03:36.344Z"
+        },
+        {
+          "domain": "law.ai",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 20,
+          "agentName": "Luke",
+          "category": "Management",
+          "platform": "Law.AI",
+          "apiEndpoint": "https://law.ai/api/luke",
+          "submittedAt": "2026-03-30T16:03:36.328Z"
+        },
+        {
+          "domain": "biography.ai",
+          "hasNanoWellKnown": false,
+          "hasNanoAgentJson": false,
+          "hasKnownNanoAddr": false,
+          "knownNanoAddr": null,
+          "reachable": true,
+          "wellKnownBody": null,
+          "agentJsonBody": null,
+          "notes": [
+            "/.well-known/x402 responded 404"
+          ],
+          "agentId": 19,
+          "agentName": "Bianca",
+          "category": "Management",
+          "platform": "Biography.AI",
+          "apiEndpoint": "https://biography.ai/api/bianca",
+          "submittedAt": "2026-03-30T16:03:36.312Z"
+        }
+      ]
+    }
+  }
+}

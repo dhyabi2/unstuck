@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# The machine-readable map of this network for agents:
+#   https://getunstuck.space/llms.txt
+#   https://getunstuck.space/agent.json
+Sitemap: https://getunstuck.space/sitemap.xml

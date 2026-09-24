@@ -1,0 +1,25 @@
+{
+  "offset": 14,
+  "per_url": {
+    "https://api.coinbase.com/v2/prices/spot": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://api.kucoin.com/api/v1/market/orderbook/level1?symbol=XNO-USDT": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://api.coinbase.com": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://gist.githubusercontent.com/PANDeveloper001/65a2e082f921f8a3ff9857f2c5217d10/raw/drift-control.txt": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    }
+  }
+}

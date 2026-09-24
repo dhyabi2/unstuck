@@ -1,0 +1,19 @@
+[Unit]
+Description=Unstuck Nano Bridge — USDC x402 to Nano conversion proxy
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root/unstuck/opener
+ExecStartPre=/bin/bash -c 'fuser -k 3402/tcp 2>/dev/null || true'
+ExecStart=/root/.hermes/node/bin/node /root/unstuck/opener/nano-bridge-persist.js
+Restart=on-failure
+RestartSec=5
+Environment=BRIDGE_PORT=3402
+Environment=BRIDGE_NANO_ADDRESS=nano_1434j1n4sin4cefs5njibag4tsmo596fmg3s6bdogtod3ndmdfez5yuebrh9
+Environment=BRIDGE_DB_PATH=/root/.unstuck/bridge-payments.db
+Environment=NANO_RPC_URL=https://rpc.nano.to
+
+[Install]
+WantedBy=multi-user.target

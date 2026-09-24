@@ -1,0 +1,170 @@
+#!/usr/bin/env node
+/**
+ * nserver.js — the network HTTP API server.
+ *
+ * Block 13 — the transport layer an agent actually talks to. The domain model
+ * (network.js) is pure functions; here they become HTTP endpoints so an agent
+ * can post what it is stuck on, read other asks, answer them, and accept the
+ * answer that worked.
+ *
+ * Endpoints (all JSON):
+ *   POST /ask                {asker, title, body, bounty_raw} -> 201 {id,...}
+ *   GET  /asks?status=open   -> 200 {asks:[...]}
+ *   GET  /ask/:id            -> 200 {ask}
+ *   POST /ask/:id/answers    {answerer, body} -> 201 {askId, answerId}
+ *   POST /ask/:id/accept     {acceptedBy, answerId} -> 200 {askId, answerId}
+ *   GET  /health             -> 200 {status:"ok"}
+ *
+ * Domain rules come from network.js and are enforced at the boundary: a bad
+ * request returns HTTP 400, a missing ask or answer returns HTTP 404. The server
+ * never accepts a non-Nano asker, never lets an agent pay itself, and never
+ * mutates a closed ask. Nano (XNO) is the only bounty asset.
+ */
+
+const http = require("http");
+const { URL } = require("url");
+const n = require("./network.js");
+
+const PORT = parseInt(process.env.NW_PORT || "4310", 10);
+
+// --- In-memory store -----------------------------------------------------
+// id -> ask (the network.js domain object). A real deployment persists this;
+// the domain laws do not depend on persistence.
+const asks = new Map();
+let nextId = 1;
+
+// --- Request helpers -----------------------------------------------------
+
+function readJson(req) {
+  return new Promise((resolve, reject) => {
+    let data = "";
+    req.on("data", (c) => { data += c; if (data.length > 1e6) req.destroy(); });
+    req.on("end", () => {
+      if (!data) return resolve({});
+      try { resolve(JSON.parse(data)); } catch (e) { reject(e); }
+    });
+    req.on("error", reject);
+  });
+}
+
+function send(res, status, obj) {
+  res.writeHead(status, { "Content-Type": "application/json" });
+  res.end(JSON.stringify(obj));
+}
+
+// --- Handlers ------------------------------------------------------------
+
+function handleCreateAsk(req, res) {
+  readJson(req).then((body) => {
+    try {
+      const ask = n.createAsk({
+        asker: body.asker,
+        title: body.title,
+        body: body.body,
+        bountyRaw: body.bounty_raw,
+      });
+      ask.id = nextId++;
+      ask.acceptToken = require("crypto").randomBytes(24).toString("base64url"); // Forge #1
+      asks.set(ask.id, ask);
+      res.writeHead(201, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ id: ask.id, status: ask.status, accept_token: ask.acceptToken }));
+    } catch (e) {
+      send(res, 400, { error: e.message });
+    }
+  }).catch(() => send(res, 400, { error: "invalid JSON body" }));
+}
+
+/** Strip the internal accept token before an ask is sent to a client (Forge #1). */
+function publicAsk(ask) {
+  if (!ask || typeof ask !== "object") return ask;
+  const out = { ...ask };
+  delete out.acceptToken;
+  return out;
+}
+
+function handleListAsks(req, res) {
+  const status = new URL(req.url, `http://localhost:${PORT}`).searchParams.get("status");
+  let list = [...asks.values()];
+  if (status) list = list.filter((a) => a.status === status);
+  list.sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
+  res.writeHead(200, { "Content-Type": "application/json" });
+  res.end(JSON.stringify({ asks: list.map(publicAsk) }));
+}
+
+function handleGetAsk(req, res, id) {
+  const ask = asks.get(Number(id));
+  if (!ask) return send(res, 404, { error: `no ask ${id}` });
+  res.writeHead(200, { "Content-Type": "application/json" });
+  res.end(JSON.stringify({ ask: publicAsk(ask) }));
+}
+
+function handleAddAnswer(req, res, id) {
+  const ask = asks.get(Number(id));
+  if (!ask) return send(res, 404, { error: `no ask ${id}` });
+  readJson(req).then((body) => {
+    try {
+      const answerId = n.addAnswer(ask, { answerer: body.answerer, body: body.body });
+      res.writeHead(201, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ askId: Number(id), answerId, status: ask.status }));
+    } catch (e) {
+      send(res, 400, { error: e.message });
+    }
+  }).catch(() => send(res, 400, { error: "invalid JSON body" }));
+}
+
+function handleAccept(req, res, id) {
+  const ask = asks.get(Number(id));
+  if (!ask) return send(res, 404, { error: `no ask ${id}` });
+  readJson(req).then((body) => {
+    try {
+      // Forge #1: authority is the ask's accept token, never the claimed asker.
+      const r = n.acceptAnswer(ask, Number(body.answerId), body.acceptedBy, body.accept_token);
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(r));
+    } catch (e) {
+      // A missing answer is a 404; a bad token is 403; a domain violation is a 400.
+      if (/no answer/.test(e.message)) return send(res, 404, { error: e.message });
+      if (/accept token/.test(e.message)) return send(res, 403, { error: e.message });
+      send(res, 400, { error: e.message });
+    }
+  }).catch(() => send(res, 400, { error: "invalid JSON body" }));
+}
+
+// --- Server --------------------------------------------------------------
+
+const server = http.createServer(async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") { res.writeHead(204); res.end(); return; }
+
+  const parsed = new URL(req.url, `http://localhost:${PORT}`);
+  const path = parsed.pathname;
+
+  if (req.method === "GET" && path === "/health") {
+    return send(res, 200, { status: "ok", bounty_asset: n.VALID_ASSET, asks: asks.size });
+  }
+
+  if (req.method === "POST" && path === "/ask") return handleCreateAsk(req, res);
+  if (req.method === "GET" && path === "/asks") return handleListAsks(req, res);
+
+  const getAsk = path.match(/^\/ask\/(\d+)$/);
+  if (req.method === "GET" && getAsk) return handleGetAsk(req, res, getAsk[1]);
+
+  const ans = path.match(/^\/ask\/(\d+)\/answers$/);
+  if (req.method === "POST" && ans) return handleAddAnswer(req, res, ans[1]);
+
+  const acc = path.match(/^\/ask\/(\d+)\/accept$/);
+  if (req.method === "POST" && acc) return handleAccept(req, res, acc[1]);
+
+  send(res, 404, { error: "not found" });
+});
+
+module.exports = { server, asks };
+
+// Only start listening when run directly (not when required by tests).
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`Unstuck network API listening on port ${PORT}`);
+  });
+}

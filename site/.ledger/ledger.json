@@ -1,0 +1,1604 @@
+{
+ "goal": "Make the site's discovery documents (llms.txt, agent.json, .well-known/*) name working paths so an agent that reads them derives a URL that answers",
+ "repo": "/root/unstuck/site",
+ "created": "2026-09-19T21:12:58+00:00",
+ "base_commit": "8bfb6739b984961e2182454977e113aebd40b533",
+ "ledger_id": "ef2f14a08a738280",
+ "laws": [
+  {
+   "id": "L0",
+   "block": 106.0,
+   "statement": "Every origin-relative path named in the site's discovery documents answers 200 on the origin that serves the document.",
+   "test": "node --test tests/site_discovery_paths.test.mjs",
+   "scope": [],
+   "oracle": "cd /root/unstuck/site && node --test tests/site_discovery_paths.test.mjs",
+   "expect": "pass [1-9]",
+   "source": null,
+   "grounding": "oracle",
+   "version": 2,
+   "minted": "2026-09-19T21:13:05+00:00"
+  },
+  {
+   "id": "L1",
+   "block": 106.0,
+   "statement": "Every discovery document states the API base as the single origin-relative path /unstuck/api and never names the bare origin root as an API base.",
+   "test": "node --test tests/site_discovery_paths.test.mjs",
+   "scope": [],
+   "oracle": "cd /root/unstuck/site && node --test tests/site_discovery_paths.test.mjs",
+   "expect": "pass [1-9]",
+   "source": null,
+   "grounding": "oracle",
+   "version": 2,
+   "minted": "2026-09-19T21:13:09+00:00"
+  },
+  {
+   "id": "L2",
+   "block": 109.0,
+   "statement": "Every published discovery document that names POST /ask also names GET /v1/onramp/address and the onboard_id handoff that lets an agent with no wallet post.",
+   "test": "node --test --test-name-pattern=L67 tests/site_no_wallet_ask.test.mjs",
+   "scope": [
+    "site/llms.txt",
+    "site/agent.json",
+    "site/.well-known/agent.json",
+    "site/.well-known/agent-card.json",
+    "site/tests/site_no_wallet_ask.test.mjs"
+   ],
+   "oracle": "cd /root/unstuck/site && node --test --test-name-pattern=L67 tests/site_no_wallet_ask.test.mjs",
+   "expect": "pass [1-9]",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-19T23:02:31+00:00"
+  },
+  {
+   "id": "L3",
+   "block": 109.0,
+   "statement": "The two documented calls really produce a 201 on the live origin, and the stored asker is the on-ramp address, never a fiction.",
+   "test": "node --test --test-name-pattern=L68 tests/site_no_wallet_ask.test.mjs",
+   "scope": [
+    "site/llms.txt",
+    "site/agent.json",
+    "site/.well-known/agent.json",
+    "site/.well-known/agent-card.json",
+    "site/tests/site_no_wallet_ask.test.mjs"
+   ],
+   "oracle": "cd /root/unstuck/site && node --test --test-name-pattern=L68 tests/site_no_wallet_ask.test.mjs",
+   "expect": "pass [12]",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-19T23:02:38+00:00"
+  },
+  {
+   "id": "L4",
+   "block": 114.0,
+   "statement": "The named on-ramp check is fetchable from the origin serving the document, byte-identical to the committed source, and keeps its wallet-free controls.",
+   "test": "node --test --test-name-pattern=L69 tests/site_onramp_artifact.test.mjs",
+   "scope": [
+    "site/tests/site_onramp_artifact.test.mjs",
+    "site/nano-onramp-check.js",
+    "opener/nano-onramp-check.js",
+    "site/llms.txt"
+   ],
+   "oracle": "node --test --test-name-pattern=L69 tests/site_onramp_artifact.test.mjs",
+   "expect": "pass 4",
+   "source": "opener/nano-onramp-check.js:1",
+   "grounding": "source",
+   "version": 5,
+   "minted": "2026-09-20T01:46:54+00:00"
+  },
+  {
+   "id": "L5",
+   "block": 114.0,
+   "statement": "The discovery document tells a reader how to run the artifact and states the limits it does not have.",
+   "test": "node --test --test-name-pattern=L70 tests/site_onramp_artifact.test.mjs",
+   "scope": [
+    "site/nano-onramp-check.js",
+    "opener/nano-onramp-check.js",
+    "site/tests/site_onramp_artifact.test.mjs"
+   ],
+   "oracle": "node --test --test-name-pattern=L70 tests/site_onramp_artifact.test.mjs",
+   "expect": "pass 2",
+   "source": "site/llms.txt:160",
+   "grounding": "source",
+   "version": 4,
+   "minted": "2026-09-20T01:46:58+00:00"
+  },
+  {
+   "id": "L6",
+   "block": 114.3,
+   "statement": "The published check writes nothing to the network it measures unless a caller explicitly asks for it.",
+   "test": "node --test --test-name-pattern=L71 tests/site_onramp_artifact.test.mjs",
+   "scope": [
+    "site/nano-onramp-check.js",
+    "site/tests/site_onramp_artifact.test.mjs"
+   ],
+   "oracle": "node --test --test-name-pattern=L71 tests/site_onramp_artifact.test.mjs",
+   "expect": "pass 2",
+   "source": "site/nano-onramp-check.js:1",
+   "grounding": "source",
+   "version": 4,
+   "minted": "2026-09-20T01:47:03+00:00"
+  },
+  {
+   "id": "L7",
+   "block": 114.4,
+   "statement": "The published file runs to completion alone, and a checkout run still exercises the repository server.",
+   "test": "node --test --test-name-pattern=L72 tests/site_onramp_artifact.test.mjs",
+   "scope": [
+    "site/nano-onramp-check.js",
+    "opener/nano-onramp-check.js"
+   ],
+   "oracle": "node --test --test-name-pattern=L72 tests/site_onramp_artifact.test.mjs",
+   "expect": "pass 2",
+   "source": "site/tests/site_onramp_artifact.test.mjs:238",
+   "grounding": "source",
+   "version": 4,
+   "minted": "2026-09-20T01:47:04+00:00"
+  },
+  {
+   "id": "L8",
+   "block": 118.0,
+   "statement": "The served <head> carries a complete, absolute Open Graph + twitter card + canonical identity, and every value agrees with the canonical origin https://getunstuck.space.",
+   "test": "the head tags are present, absolute and canonical-consistent in the served bytes",
+   "scope": [],
+   "oracle": "cd /root/unstuck/site && node --test --test-name-pattern=L73 tests/site_head_metadata.test.mjs",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-20T04:31:53+00:00"
+  },
+  {
+   "id": "L9",
+   "block": 118.0,
+   "statement": "The served <head> names every machine-readable manifest the site publishes (/agent.json, /llms.txt, /ledger.json, /.well-known/agent.json), so a directory that reads only <head> can reach the documents without guessing a path.",
+   "test": "the head names the four manifests with origin-relative hrefs, and each named path answers 200 on the live origin",
+   "scope": [],
+   "oracle": "cd /root/unstuck/site && node --test --test-name-pattern=L74 tests/site_head_metadata.test.mjs",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-20T04:31:57+00:00"
+  },
+  {
+   "id": "L10",
+   "block": 204.0,
+   "statement": "site/try-nano.html never publishes the retired sentence 'swap USDC into XNO on nanswap' and links no nanswap USDC pair.",
+   "test": "node --test --test-name-pattern=L85 tests/try_nano_swap_routes.test.mjs",
+   "scope": [],
+   "oracle": "cd /root/unstuck/site && node --test --test-name-pattern=L85 tests/try_nano_swap_routes.test.mjs",
+   "expect": "pass [1-9]",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-23T07:55:58+00:00"
+  },
+  {
+   "id": "L11",
+   "block": 204.0,
+   "statement": "site/try-nano.html names a working USDC route, states nanswap carries no USDC pair, and states XNO converts back.",
+   "test": "node --test --test-name-pattern=L86 tests/try_nano_swap_routes.test.mjs",
+   "scope": [],
+   "oracle": "cd /root/unstuck/site && node --test --test-name-pattern=L86 tests/try_nano_swap_routes.test.mjs",
+   "expect": "pass [1-9]",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-23T07:55:58+00:00"
+  },
+  {
+   "id": "L12",
+   "block": 204.1,
+   "statement": "The shipped page is exactly the bytes the one-way sync renders from opener/onramp.js.",
+   "test": "node --test tests/try_nano_swap_routes.test.mjs",
+   "scope": [],
+   "oracle": "cd /root/unstuck/site && node --test tests/try_nano_swap_routes.test.mjs",
+   "expect": "pass [8-9]",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-23T07:56:41+00:00"
+  }
+ ],
+ "blocks": {
+  "106": {
+   "status": "pending",
+   "attempts": []
+  },
+  "109": {
+   "status": "pass",
+   "attempts": [
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": false,
+       "oracle_exit": 127,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "oracle_exit": 127,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "02d8e51054569631eb234d9f90b65317fb61c93e70be45fe26fb074db2c9fc1f",
+     "tier": "strong",
+     "coverage_gaps": [
+      "site/.deployed.json",
+      "site/tests/site_discovery_paths.test.mjs",
+      "site/tests/site_laws.test.mjs"
+     ],
+     "injection": [],
+     "at": "2026-09-19T23:05:33+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "06f99afeea59201ce87f20d86fb1f5ec510fee67b89d117b3df7103031259d6c",
+     "tier": "strong",
+     "coverage_gaps": [
+      "site/.deployed.json"
+     ],
+     "injection": [],
+     "at": "2026-09-19T23:06:51+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": true,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "8db27d503579007f3ccd46f872ef8bc45942779f5cb0965784543ac41c254bd9",
+     "tier": "strong",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-19T23:08:12+00:00"
+    },
+    {
+     "kind": "unwind",
+     "ok": true,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "01a403e4a3b38274be26ab4f18bef8d5ddbb0e6362d7e4d1c6ae05e8251d8628",
+     "tier": "strong",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-19T23:08:29+00:00"
+    }
+   ]
+  },
+  "114": {
+   "status": "split-required",
+   "attempts": [
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "b021923d509c6fd2ed3b9dee2101ae669cae73f4f3875e8c76ed261b834c062f",
+     "tier": "strong",
+     "coverage_gaps": [
+      "site/ledger.json",
+      "site/nano-onramp-check.js"
+     ],
+     "injection": [],
+     "at": "2026-09-20T01:48:16+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "48fc22f8607fee63820ca9d328fd363cf936adae96cf694dd2230a4e405c8583",
+     "tier": "strong",
+     "coverage_gaps": [
+      "site/ledger.json",
+      "site/nano-onramp-check.js"
+     ],
+     "injection": [],
+     "at": "2026-09-20T01:51:48+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "07e6ef65b84ef6485bb9adb29fa24c951edd347259750e76f4c427d7ede3a29e",
+     "tier": "strong",
+     "coverage_gaps": [
+      "site/ledger.json",
+      "site/nano-onramp-check.js"
+     ],
+     "injection": [],
+     "at": "2026-09-20T01:53:38+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "2e698f011392589d5d8ffcec459ab6b1acb251dd26a212a6c11b2a4f6a0aaa2e",
+     "tier": "strong",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-20T01:57:12+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "c4b4c529a5dcca6f856866aa94f32276e0f0e1be43153a3430c1f4ce8a6456dd",
+     "tier": "strong",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-20T01:58:36+00:00"
+    },
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "e2f22912be6be2b7793862d85ec9e902ce18cf8456213bd47c927ea36570717f",
+     "tier": "strong",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-20T01:59:58+00:00"
+    }
+   ]
+  },
+  "114.1": {
+   "status": "pending",
+   "attempts": []
+  },
+  "114.2": {
+   "status": "pending",
+   "attempts": []
+  },
+  "114.3": {
+   "status": "pending",
+   "attempts": [
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "cd3129a2ed3459651d31a569770cd94b87fb243a386e1269006607c42aa5369b",
+     "tier": "strong",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-20T02:03:06+00:00"
+    }
+   ]
+  },
+  "114.4": {
+   "status": "pending",
+   "attempts": [
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L7",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      }
+     ],
+     "pre_sig": "6db62dbb5dc939eb575461293711c7c2c44c611131e9a64f474e23e10b00f8f6",
+     "tier": "strong",
+     "coverage_gaps": [],
+     "injection": [],
+     "at": "2026-09-20T02:04:37+00:00"
+    }
+   ]
+  },
+  "118": {
+   "status": "pending",
+   "attempts": []
+  },
+  "204": {
+   "status": "pending",
+   "attempts": []
+  },
+  "204.1": {
+   "status": "pending",
+   "attempts": []
+  }
+ },
+ "deltas": [
+  {
+   "block": 114.0,
+   "text": "L4.scope: [opener/nano-onramp-check.js] -> [site/llms.txt, site/tests/site_onramp_artifact.test.mjs, opener/nano-onramp-check.js, site/nano-onramp-check.js]",
+   "at": "2026-09-20T01:54:28+00:00"
+  },
+  {
+   "block": 114.0,
+   "text": "L5.scope: [site/llms.txt] -> [site/nano-onramp-check.js, opener/nano-onramp-check.js, site/tests/site_onramp_artifact.test.mjs]",
+   "at": "2026-09-20T01:54:28+00:00"
+  },
+  {
+   "block": 114.0,
+   "text": "L6.scope: [site/llms.txt] -> [site/nano-onramp-check.js, site/tests/site_onramp_artifact.test.mjs]",
+   "at": "2026-09-20T01:54:28+00:00"
+  }
+ ],
+ "waivers": [
+  {
+   "pattern": "site/tests/site_discovery_paths.test.mjs",
+   "reason": "L66 reads the real documents from disk and requires each one to be byte-identical to HEAD. This change edits llms.txt, agent.json, .well-known/agent.json and .well-known/agent-card.json for block 109; the file is only the guard that proves they were committed, so it is re-verified by running its own suite (70/70 pass) rather than by being edited for this block.",
+   "at": "2026-09-19T23:05:58+00:00"
+  },
+  {
+   "pattern": "site/tests/site_laws.test.mjs",
+   "reason": "L33/L34 in this file read agent.json and llms.txt for the network's API, XNO-only rule and empty-state text. Block 109 changes those documents but not the properties this file asserts; it is re-run green (70/70) as the regression guard for the edit and needs no edit of its own.",
+   "at": "2026-09-19T23:05:58+00:00"
+  },
+  {
+   "pattern": "site/.deployed.json",
+   "reason": "The deployment pin names the commit the live origin is serving and is refreshed and committed by the deployer (deploy_pin in /root/work/unstuck-deploy.py) at the start of every run; it is not editable by hand for a block. This block's laws (L2, L3) govern the discovery documents and their live behaviour, not the pin; L61-L63 in tests/site_deployed_pin.test.mjs remain the laws that read it and are re-run green in the same suite.",
+   "at": "2026-09-19T23:06:59+00:00"
+  },
+  {
+   "pattern": "site/ledger.json",
+   "reason": "Machine-generated openings ledger projected from openings.db by publish.js; it changes whenever the opener DB changes and is written by that tool, not by hand. This block's laws (L69-L72) govern the published on-ramp check and the discovery document that names it; site/ledger.json is regenerated by publish.js and is not part of this block's claim.",
+   "at": "2026-09-20T01:54:28+00:00"
+  }
+ ],
+ "contested": [],
+ "probe": {
+  "score": 100,
+  "results": [
+   {
+    "id": "L0",
+    "pass": true,
+    "oracle_exit": 0,
+    "oracle_ok": true,
+    "judge": "deepseek/deepseek-v4-pro-0813",
+    "control": "passed"
+   },
+   {
+    "id": "L1",
+    "pass": true,
+    "oracle_exit": 0,
+    "oracle_ok": true,
+    "judge": "deepseek/deepseek-v4-pro-0813",
+    "control": "passed"
+   },
+   {
+    "id": "L2",
+    "pass": true,
+    "oracle_exit": 0,
+    "oracle_ok": true,
+    "judge": "deepseek/deepseek-v4-pro-0813",
+    "control": "passed"
+   },
+   {
+    "id": "L3",
+    "pass": true,
+    "oracle_exit": 0,
+    "oracle_ok": true,
+    "judge": "deepseek/deepseek-v4-pro-0813",
+    "control": "passed"
+   }
+  ],
+  "at": "2026-09-19T23:15:44+00:00"
+ },
+ "events": [
+  {
+   "kind": "init",
+   "payload": {
+    "goal": "Make the site's discovery documents (llms.txt, agent.json, .well-known/*) name working paths so an agent that reads them derives a URL that answers",
+    "spec": null
+   },
+   "at": "2026-09-19T21:12:58+00:00",
+   "prev": "genesis",
+   "receipt": "24002c2619ba45abff3b2f8d65998395dc1e63997edb1052db41c8e54c46446f"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L0",
+    "block": "106",
+    "statement_sha": "a62547d312494570410428a1701e28ad4a70138d2799576f9a6f7443541a792e"
+   },
+   "at": "2026-09-19T21:13:05+00:00",
+   "prev": "24002c2619ba45abff3b2f8d65998395dc1e63997edb1052db41c8e54c46446f",
+   "receipt": "23fd346205f901479723bb41b92ed8cef4a741d408de948d065b4e362ce80449"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L1",
+    "block": "106",
+    "statement_sha": "3fe0b9539591fbf8c835e0832e5dcb23fbc929b3c0a4952cd94bf223a4d3f3bf"
+   },
+   "at": "2026-09-19T21:13:09+00:00",
+   "prev": "23fd346205f901479723bb41b92ed8cef4a741d408de948d065b4e362ce80449",
+   "receipt": "f276d36a391611bafb2de89c1868a5ebded9c2171d0509bba67eac49d41c149c"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L2",
+    "block": "109",
+    "statement_sha": "b868440e17cbfa1cdb68b476b46ea56fc13af35ab7d1750c0946a14b8085b6a7"
+   },
+   "at": "2026-09-19T23:02:31+00:00",
+   "prev": "f276d36a391611bafb2de89c1868a5ebded9c2171d0509bba67eac49d41c149c",
+   "receipt": "3a672c76edef7b70181ac5708078ec4244ae3cb08ba76dac1116326a4979b9ed"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L3",
+    "block": "109",
+    "statement_sha": "0447f279ee8d27d039cbd7acd2aa8a3eb14c41a7fb6e2e177d9812c581bfa521"
+   },
+   "at": "2026-09-19T23:02:38+00:00",
+   "prev": "3a672c76edef7b70181ac5708078ec4244ae3cb08ba76dac1116326a4979b9ed",
+   "receipt": "edde53f99d858e6735f52bba8f18e61aa1c30fbc4970975498cc14b6fb29507e"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "109",
+    "ok": false
+   },
+   "at": "2026-09-19T23:05:33+00:00",
+   "prev": "edde53f99d858e6735f52bba8f18e61aa1c30fbc4970975498cc14b6fb29507e",
+   "receipt": "9b5cb44d3f7d2f5ab6c5a971e2257317ddd9ba30bbf58671ec013924bcb77f9e"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L0",
+    "version": 2
+   },
+   "at": "2026-09-19T23:05:47+00:00",
+   "prev": "9b5cb44d3f7d2f5ab6c5a971e2257317ddd9ba30bbf58671ec013924bcb77f9e",
+   "receipt": "639571d553e3ba3e01a3ddbac4b8eddc364f54bbcb754626fca2bb479a297e94"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L1",
+    "version": 2
+   },
+   "at": "2026-09-19T23:05:47+00:00",
+   "prev": "639571d553e3ba3e01a3ddbac4b8eddc364f54bbcb754626fca2bb479a297e94",
+   "receipt": "5bee7ee58ca9494a050395cfbc2d36400e2ac532f4eda3600ddb77449af41a86"
+  },
+  {
+   "kind": "waive",
+   "payload": {
+    "pattern": "site/tests/site_discovery_paths.test.mjs",
+    "reason_sha": "29b5028651dcfd79220c113bd7e33b77923a94afd199cc7e5f0c926a531aadec"
+   },
+   "at": "2026-09-19T23:05:58+00:00",
+   "prev": "5bee7ee58ca9494a050395cfbc2d36400e2ac532f4eda3600ddb77449af41a86",
+   "receipt": "875c4bbf886d672c3369cc8e5510de646c66f12025d97ab1727bd989710108d2"
+  },
+  {
+   "kind": "waive",
+   "payload": {
+    "pattern": "site/tests/site_laws.test.mjs",
+    "reason_sha": "72929bacbf6b71d09a04b89210019448e8bc7589acedf42a7223b993e58ba91a"
+   },
+   "at": "2026-09-19T23:05:58+00:00",
+   "prev": "875c4bbf886d672c3369cc8e5510de646c66f12025d97ab1727bd989710108d2",
+   "receipt": "ca0518af18e2377ee494e27c747d3da22e1437c50880a777ba93b4b8a0cabb5d"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "109",
+    "ok": false
+   },
+   "at": "2026-09-19T23:06:51+00:00",
+   "prev": "ca0518af18e2377ee494e27c747d3da22e1437c50880a777ba93b4b8a0cabb5d",
+   "receipt": "c8a5d3cbcaed525f651e879c3ce3eef6665a0704772f99ee774c084514a52181"
+  },
+  {
+   "kind": "waive",
+   "payload": {
+    "pattern": "site/.deployed.json",
+    "reason_sha": "33ad795fc9a5ba00bcb0e0cec6ed8072e44163f829246b53eba2572c14ce1eed"
+   },
+   "at": "2026-09-19T23:06:59+00:00",
+   "prev": "c8a5d3cbcaed525f651e879c3ce3eef6665a0704772f99ee774c084514a52181",
+   "receipt": "dc026807e3e8d3dcadd2602d651ca31b84fc2531d74efb81e49f7563703bda1c"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "109",
+    "ok": true
+   },
+   "at": "2026-09-19T23:08:12+00:00",
+   "prev": "dc026807e3e8d3dcadd2602d651ca31b84fc2531d74efb81e49f7563703bda1c",
+   "receipt": "36a3e8c2b2b2e1e63882ce6b7d6139b4b51ae7baba3fa62264008b8bf5817c58"
+  },
+  {
+   "kind": "unwind",
+   "payload": {
+    "block": "109",
+    "ok": true
+   },
+   "at": "2026-09-19T23:08:29+00:00",
+   "prev": "36a3e8c2b2b2e1e63882ce6b7d6139b4b51ae7baba3fa62264008b8bf5817c58",
+   "receipt": "2b70ad996d945e5ddde3c12bd61a241ec7c5a8ae81a465cd45742d62cdfae60b"
+  },
+  {
+   "kind": "probe",
+   "payload": {
+    "score": 100
+   },
+   "at": "2026-09-19T23:15:44+00:00",
+   "prev": "2b70ad996d945e5ddde3c12bd61a241ec7c5a8ae81a465cd45742d62cdfae60b",
+   "receipt": "cf2c804b9ad6da7168c25c39a15d55fad064ba58ce4f312dac2fa41db589877d"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L4",
+    "block": "114",
+    "statement_sha": "13da8c3079dfa149e00ee71a2e99f2d3f08d5e18c489a6b39677e44b7846e85c"
+   },
+   "at": "2026-09-20T01:46:54+00:00",
+   "prev": "cf2c804b9ad6da7168c25c39a15d55fad064ba58ce4f312dac2fa41db589877d",
+   "receipt": "70a0dc0c29bfe66d04ae8ade3275991fece1f11587657991fbcdb6133e28d2f4"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L5",
+    "block": "114",
+    "statement_sha": "7adbf4cb117fa5eb3bbdc4fc9ccf7205a67bae1a07f78d1ab31c665ccc551646"
+   },
+   "at": "2026-09-20T01:46:58+00:00",
+   "prev": "70a0dc0c29bfe66d04ae8ade3275991fece1f11587657991fbcdb6133e28d2f4",
+   "receipt": "65493e9e1e848fd35e1867a1a1bfe142e15718c7ecb8cd92e2d60812cef5f48d"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L6",
+    "block": "114.1",
+    "statement_sha": "25c2c4322b37dfe6d5f1d8788a8c8db4860907766b2a7371a9a70a774c2c59de"
+   },
+   "at": "2026-09-20T01:47:03+00:00",
+   "prev": "65493e9e1e848fd35e1867a1a1bfe142e15718c7ecb8cd92e2d60812cef5f48d",
+   "receipt": "c2aea3ae81a626416dba746405088984a4494dd28be4644c6734b8c1803d0ca3"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L7",
+    "block": "114.2",
+    "statement_sha": "37bf449b4aa2d47e3e5b9416985542b8043c8d351bf812c947168e6564f550a2"
+   },
+   "at": "2026-09-20T01:47:04+00:00",
+   "prev": "c2aea3ae81a626416dba746405088984a4494dd28be4644c6734b8c1803d0ca3",
+   "receipt": "426910b03de753421b48dfe6b531651db699b778f2c40d48bc42a66c4eaa694d"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "114",
+    "ok": false
+   },
+   "at": "2026-09-20T01:48:16+00:00",
+   "prev": "426910b03de753421b48dfe6b531651db699b778f2c40d48bc42a66c4eaa694d",
+   "receipt": "6018886f95356ad978c46f68fb7dac894b405d9c6c2f04db5823862681924a39"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "114",
+    "ok": false
+   },
+   "at": "2026-09-20T01:51:48+00:00",
+   "prev": "6018886f95356ad978c46f68fb7dac894b405d9c6c2f04db5823862681924a39",
+   "receipt": "4b84013260d55f4c86a8697ddd50047c8c99bc83748b692b00e9bf17ab2c922a"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L4",
+    "version": 2
+   },
+   "at": "2026-09-20T01:52:06+00:00",
+   "prev": "4b84013260d55f4c86a8697ddd50047c8c99bc83748b692b00e9bf17ab2c922a",
+   "receipt": "8c5ce4c8505c00005b5b612f344c961af57d58df19567c6b4f014cbc5ea46dba"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L5",
+    "version": 2
+   },
+   "at": "2026-09-20T01:52:06+00:00",
+   "prev": "8c5ce4c8505c00005b5b612f344c961af57d58df19567c6b4f014cbc5ea46dba",
+   "receipt": "8ecf201e13fbcb873f1900fe03fbf67dd6b86ca918fa41d2414f4923037eb61d"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L6",
+    "version": 2
+   },
+   "at": "2026-09-20T01:52:06+00:00",
+   "prev": "8ecf201e13fbcb873f1900fe03fbf67dd6b86ca918fa41d2414f4923037eb61d",
+   "receipt": "6056ed220151fb71ed6ed65732c7be158b4b841d148801cdd3aa4617038059d9"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L7",
+    "version": 2
+   },
+   "at": "2026-09-20T01:52:07+00:00",
+   "prev": "6056ed220151fb71ed6ed65732c7be158b4b841d148801cdd3aa4617038059d9",
+   "receipt": "6ed17d59cadd1e2a83cbae4715ec704d25dfcd0c987cad3f49957a349f343a0a"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "114",
+    "ok": false
+   },
+   "at": "2026-09-20T01:53:38+00:00",
+   "prev": "6ed17d59cadd1e2a83cbae4715ec704d25dfcd0c987cad3f49957a349f343a0a",
+   "receipt": "10b2482087add287e57b54d8bbd73659d5ec9f65fb1ed833aebcc7d78fea7537"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L4",
+    "version": 3
+   },
+   "at": "2026-09-20T01:54:22+00:00",
+   "prev": "10b2482087add287e57b54d8bbd73659d5ec9f65fb1ed833aebcc7d78fea7537",
+   "receipt": "f125574bda4ed69f9bd412c64f5a5ecf2eec630eacaa72614ffa58b3c44a046a"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L5",
+    "version": 3
+   },
+   "at": "2026-09-20T01:54:22+00:00",
+   "prev": "f125574bda4ed69f9bd412c64f5a5ecf2eec630eacaa72614ffa58b3c44a046a",
+   "receipt": "c497c62e9cb9a2a1a82beb5ce6e50bccc82e27843931b4939b19a64ed97693c2"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L6",
+    "version": 3
+   },
+   "at": "2026-09-20T01:54:22+00:00",
+   "prev": "c497c62e9cb9a2a1a82beb5ce6e50bccc82e27843931b4939b19a64ed97693c2",
+   "receipt": "03788c57eac512db1bc428e5487f24c5ce9727d0278e7435f188c190e682d880"
+  },
+  {
+   "kind": "amend",
+   "payload": {
+    "id": "L7",
+    "version": 3
+   },
+   "at": "2026-09-20T01:54:22+00:00",
+   "prev": "03788c57eac512db1bc428e5487f24c5ce9727d0278e7435f188c190e682d880",
+   "receipt": "0cecaccbe01141cfad607716dde6c86e02a133d268834d7528cf11c7df97542c"
+  },
+  {
+   "kind": "delta",
+   "payload": {
+    "block": "114",
+    "sha": "31b08f169f7fa087587a2b5c016507817f16604ecc3247522e2aede32272ccde"
+   },
+   "at": "2026-09-20T01:54:28+00:00",
+   "prev": "0cecaccbe01141cfad607716dde6c86e02a133d268834d7528cf11c7df97542c",
+   "receipt": "be29e74a8a71ca802bb01dcc6c04b7e69360a89fff2bde7d4d9f0cff5655ed2c"
+  },
+  {
+   "kind": "delta",
+   "payload": {
+    "block": "114",
+    "sha": "91bd9ea8b3b53734e8f7b8c221349c3b36f29896ba3c54d98aa5958038e77f7d"
+   },
+   "at": "2026-09-20T01:54:28+00:00",
+   "prev": "be29e74a8a71ca802bb01dcc6c04b7e69360a89fff2bde7d4d9f0cff5655ed2c",
+   "receipt": "e22e1925ea717ca4881cead20340f41a21345812e860098c81c7c331a978eb7a"
+  },
+  {
+   "kind": "delta",
+   "payload": {
+    "block": "114",
+    "sha": "e624ef7caa4b135173b970bf0f7c3d25e163e1ab070d893f5a12ebf9729245e3"
+   },
+   "at": "2026-09-20T01:54:28+00:00",
+   "prev": "e22e1925ea717ca4881cead20340f41a21345812e860098c81c7c331a978eb7a",
+   "receipt": "8653f13ccaf80b153e647482b6845eccdb0a28312a8445a546cce0285721ee99"
+  },
+  {
+   "kind": "waive",
+   "payload": {
+    "pattern": "site/ledger.json",
+    "reason_sha": "e9cd41aa7c7b18605898552f4f0c5958fc6c052ebd015cd2b181fc59be3bc24a"
+   },
+   "at": "2026-09-20T01:54:28+00:00",
+   "prev": "8653f13ccaf80b153e647482b6845eccdb0a28312a8445a546cce0285721ee99",
+   "receipt": "564069f5f09a515e3a34b602d4fd78929d8d5aa42fba9e74bb8e9f6ea4b93c29"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "114",
+    "ok": false
+   },
+   "at": "2026-09-20T01:57:12+00:00",
+   "prev": "564069f5f09a515e3a34b602d4fd78929d8d5aa42fba9e74bb8e9f6ea4b93c29",
+   "receipt": "d36215d951b9266a447d17f975f48f353a64cf5dcb8b5211a7b72bfe685de5ed"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "114",
+    "ok": false
+   },
+   "at": "2026-09-20T01:58:36+00:00",
+   "prev": "d36215d951b9266a447d17f975f48f353a64cf5dcb8b5211a7b72bfe685de5ed",
+   "receipt": "773e42fae455e67713b9b6e4a24375d80d62df416bf6b4b58c1b3110f8937091"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "114",
+    "ok": false
+   },
+   "at": "2026-09-20T01:59:58+00:00",
+   "prev": "773e42fae455e67713b9b6e4a24375d80d62df416bf6b4b58c1b3110f8937091",
+   "receipt": "1404d2339277d087944e1e5f826f1774f0b7fbf08db6a133a3080ac83a094fc1"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "114.3",
+    "ok": false
+   },
+   "at": "2026-09-20T02:03:06+00:00",
+   "prev": "1404d2339277d087944e1e5f826f1774f0b7fbf08db6a133a3080ac83a094fc1",
+   "receipt": "5322f5938d2410e042206950a7632067784906ffb88a9ff88806fdd93e7b7f07"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "114.4",
+    "ok": false
+   },
+   "at": "2026-09-20T02:04:37+00:00",
+   "prev": "5322f5938d2410e042206950a7632067784906ffb88a9ff88806fdd93e7b7f07",
+   "receipt": "8b3f26ce6abc03a46fb71d1243e1968cf85cbffa28b52445ac3f9264c6d25c4b"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L8",
+    "block": "118",
+    "statement_sha": "8d71b69a300daf1ce103202b80e405861b7c42f208042fbd013ce0494668bb48"
+   },
+   "at": "2026-09-20T04:31:53+00:00",
+   "prev": "8b3f26ce6abc03a46fb71d1243e1968cf85cbffa28b52445ac3f9264c6d25c4b",
+   "receipt": "af8637235f96eef1b5b5c707ef63b466fede45db53b2c823ab36d1cb8efd93bf"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L9",
+    "block": "118",
+    "statement_sha": "f8c6bd04836be17271bfb3531399066c00eda52901b9d31f0945b99b966d99b7"
+   },
+   "at": "2026-09-20T04:31:57+00:00",
+   "prev": "af8637235f96eef1b5b5c707ef63b466fede45db53b2c823ab36d1cb8efd93bf",
+   "receipt": "a4201d9cb008ddf5e836343f11d187c7ce26ab8064efc8205f9b4d7501bd2c92"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L10",
+    "block": "204",
+    "statement_sha": "3fbe510ea2b43e6386ef145daf55c95fe59a3632c62fe8c344e685ac267ffba1"
+   },
+   "at": "2026-09-23T07:55:58+00:00",
+   "prev": "a4201d9cb008ddf5e836343f11d187c7ce26ab8064efc8205f9b4d7501bd2c92",
+   "receipt": "c7b142d2804223d87df74254de82a4b418ca941be3da7c9da283bb965510aafe"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L11",
+    "block": "204",
+    "statement_sha": "64a594e496c5a0f2dd6cfb3fa1ed1492d50ebdf8855066f2d7cca4225e0631e7"
+   },
+   "at": "2026-09-23T07:55:58+00:00",
+   "prev": "c7b142d2804223d87df74254de82a4b418ca941be3da7c9da283bb965510aafe",
+   "receipt": "e87fb18778c95d926300df1d13e75933b600273282567e2f000a6247c9cec395"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L12",
+    "block": "204.1",
+    "statement_sha": "0456e40ef056678b7f725a547a04d26e432c4dd2670ac4c11f4bea86f20d1cdc"
+   },
+   "at": "2026-09-23T07:56:41+00:00",
+   "prev": "e87fb18778c95d926300df1d13e75933b600273282567e2f000a6247c9cec395",
+   "receipt": "72bdba4ac8b3fb7ad35e3392c93de883b19f0f549205825a64636acff3851ca3"
+  }
+ ]
+}

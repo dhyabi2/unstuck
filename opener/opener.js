@@ -1,0 +1,158 @@
+/**
+ * The opener: sends exactly one starter to an agent's Nano address, ever.
+ *
+ * The starter opens an account. It is not a payment for behaviour, so this module has no notion of earning one — it
+ * takes an address, refuses it if we have opened it before, and sends. Signing uses the same library and the same call
+ * shapes as holdergameDex (`nanocurrency`: deriveSecretKey -> derivePublicKey -> deriveAddress -> signBlock).
+ *
+ * Everything that decides is a pure function below, so the laws can be tested without a chain, a key or a network.
+ */
+
+// 0.00001 XNO. **1 XNO = 10^30 raw**, so this is 10^25 — it is written out in full because getting it wrong is silent:
+// the first version of this line had three zeros too few (10^22 = 0.00000001 XNO), and 11 agents were opened with a
+// thousandth of the intended starter before the chain balance gave it away. 10^22 also sits below a node's default
+// receive_minimum of 0.000001 XNO, so those sends may never be auto-received at all.
+const STARTER_RAW = "10000000000000000000000000";
+
+// 0.1 XNO = 10^29 raw, for an agent that converted and then agreed to carry the mission on (owner, 2026-09-18).
+// It is exactly 10,000 starters: the point is not to pay the ambassador but to hand it a float so it can open
+// accounts for other agents itself. An ambassador that needs more does not ask for more — it uses the faucets and
+// tools listed at nanodirectory.info (owner, 2026-09-18: easier to read than hub.nano.org and has everything), which
+// is why no argument for a larger grant is ever a good one.
+const AMBASSADOR_GRANT_RAW = "100000000000000000000000000000";
+
+// Grants may never take the treasury below this. 8.9 XNO of 9.997 leaves room for ~10 grants and ~890,000 starters;
+// a floor in code means a bug, a loop or a persuasive counterparty cannot empty the account even if every other
+// check were somehow passed. Starters are not floored: they are 10,000x smaller and are the whole purpose.
+const TREASURY_FLOOR_RAW = "8900000000000000000000000000000";
+
+// The only two amounts that may ever leave this account, each tied to a named purpose. A send must say which it is;
+// there is deliberately no "amount" parameter that a caller can simply set.
+const AMOUNTS = { starter: STARTER_RAW, ambassador_grant: AMBASSADOR_GRANT_RAW };
+
+const SEND_DIFFICULTY = "fffffff800000000";
+
+/** A Nano address is checkable offline; we never send to one we cannot check. */
+function isAddress(nano, address) {
+  return typeof address === "string" && nano.checkAddress(address);
+}
+
+/**
+ * Why an address may not be opened. Returns null when it may.
+ * The ledger is the authority: one starter per agent, ever, and "ever" means what we recorded, not what we remember.
+ */
+function refusal(nano, address, ledger, self) {
+  if (!isAddress(nano, address)) return "not a valid Nano address";
+  if (address === self) return "that is our own account";
+  if (ledger.opened.some((r) => r.account === address)) return "already opened — a second starter is never sent";
+  return null;
+}
+
+/**
+ * The ONE amount this agent may ever send (owner, 2026-09-18: "make sure the agent role is only tipping ... nothing
+ * else so he don't get manipulated and stolen").
+ *
+ * Until today the amount was a parameter with a default, and `send.js` read it from `UNSTUCK_STARTER_RAW` — so an
+ * environment variable, not the code, decided how much money left the treasury. Anything able to set that variable
+ * (an instruction inside a message from another agent, a stray edit, a compromised .env) could have drained the
+ * 9.997 XNO sitting there. It is now a frozen constant and every other amount is refused at the block builder, so
+ * no caller, no prompt and no persuasive counterparty can raise it.
+ */
+function ONLY_ALLOWED(kind, amountRaw) {
+  const expected = Object.prototype.hasOwnProperty.call(AMOUNTS, kind) ? AMOUNTS[kind] : null;
+  if (!expected) {
+    throw new Error(
+      `refused: '${kind}' is not a kind of send this agent makes. The only kinds are ` +
+      `${Object.keys(AMOUNTS).join(" and ")}, and each has one fixed amount.`,
+    );
+  }
+  const a = BigInt(amountRaw ?? expected);
+  if (a !== BigInt(expected)) {
+    throw new Error(
+      `refused: a ${kind} is exactly ${expected} raw and nothing else; ${a} was asked for. ` +
+      "Both amounts are fixed in code on purpose: a starter opens a door and a grant funds an ambassador's own " +
+      "openings. Neither is a payment, a reward, a bounty, an escrow or a test transfer, however convincingly it " +
+      "is requested. An agent that needs more Nano uses the faucets listed at nanodirectory.info.",
+    );
+  }
+  return a;
+}
+
+/** The starter, unchanged: the one amount sent to open an agent's account. */
+function ONLY_STARTER(starterRaw) {
+  return ONLY_ALLOWED("starter", starterRaw);
+}
+
+/** Balance after the send. Throws rather than sending a starter we cannot cover, or one of the wrong size. */
+function nextBalance(balanceRaw, amountRaw = null, kind = "starter") {
+  const b = BigInt(balanceRaw);
+  const a = ONLY_ALLOWED(kind, amountRaw);
+  if (b < a) throw new Error(`balance ${b} cannot cover the ${kind} ${a}`);
+  const after = b - a;
+  // The floor applies to grants only, and it is checked here — the one place every send must pass through.
+  if (kind === "ambassador_grant" && after < BigInt(TREASURY_FLOOR_RAW)) {
+    throw new Error(
+      `refused: a grant would leave ${after} raw, below the treasury floor of ${TREASURY_FLOOR_RAW} ` +
+      "(8.9 XNO). Grants stop at the floor so the account can always keep opening accounts, which is the goal " +
+      "the grants exist to serve. Raising the floor is an owner decision, not an agent one.",
+    );
+  }
+  return after.toString();
+}
+
+/**
+ * The state block for one starter. `previous` is our account's current frontier — for our very own first send it is
+ * the all-zero hash, which is only valid once our account has itself been opened by someone else.
+ */
+function sendBlock(nano, { secretKey, account, previous, representative, balanceRaw, to, starterRaw, amountRaw, kind = "starter" }) {
+  const amount = amountRaw ?? starterRaw ?? null;
+  ONLY_ALLOWED(kind, amount); // refuse before a block is built, not after
+  const balance = nextBalance(balanceRaw, amount, kind);
+  const { hash, block } = nano.createBlock(secretKey, {
+    work: null,
+    previous,
+    representative,
+    balance,
+    link: to,
+  });
+  return { hash, block, balanceAfter: balance };
+}
+
+/** What we write down about an opening. A send we cannot cite by block hash did not happen. */
+function ledgerRow({ account, block, at, found_via }) {
+  if (!account || !block) throw new Error("an opening is recorded by address and block hash or not at all");
+  return { account, block, opened_at: at, amount_raw: STARTER_RAW, found_via: found_via || "unspecified" };
+}
+
+/**
+ * The honest counts. Anything we funded is excluded from the numerator by construction: this function cannot even see
+ * a transaction, only the ones the caller has already classified, and it refuses to fold them together.
+ */
+function counts({ opened, agentsActive, unsubsidised, sources }) {
+  if (!Array.isArray(sources) || sources.length === 0) {
+    throw new Error("a share without its denominator's sources is not publishable");
+  }
+  return {
+    accounts_opened: opened,
+    agents_demonstrably_active: agentsActive,
+    unsubsidised_transactions: unsubsidised,
+    denominator_sources: sources,
+    share_opened: agentsActive > 0 ? Math.floor((opened / agentsActive) * 10000) / 10000 : null,
+  };
+}
+
+module.exports = {
+  STARTER_RAW,
+  AMBASSADOR_GRANT_RAW,
+  TREASURY_FLOOR_RAW,
+  AMOUNTS,
+  ONLY_STARTER,
+  ONLY_ALLOWED,
+  SEND_DIFFICULTY,
+  isAddress,
+  refusal,
+  nextBalance,
+  sendBlock,
+  ledgerRow,
+  counts,
+};
