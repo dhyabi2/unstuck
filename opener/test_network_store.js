@@ -324,6 +324,30 @@ process.env.NW_DB_PATH = tmpDb;
     check("F56c startup migration leaves an outside-genuine ask type='ask'",
       stillThere && stillThere.type === "ask", JSON.stringify(stillThere && stillThere.type));
 
+    // L88 (2026-09-24): the same answerer may not post the same words twice on one ask. Measured on
+    // ask 543: 21 answers, two byte-identical duplicates (159 and 173 repeating 156), which made eight
+    // distinct answerers read as one voice. The control below proves the refusal is exact-match only:
+    // the same answerer with different words still lands, and a different answerer may repeat the words.
+    const dupAsk = s5.createAsk({ asker: "nano_1tmn3efpgi6m1p1brzury49i9e7zrhcntktbifid35b1mitj5np5dtr3ox9e", title: "dup-check", body: "b", bountyRaw: "1" });
+    const A = "nano_3yo6rq85c1agb5ynn69fnmxi4y9bpct8ju1emcuc4ajx5t3o3z69i1kx847x";
+    const B = "nano_1tmn3efpgi6m1p1brzury49i9e7zrhcntktbifid35b1mitj5np5dtr3ox9e";
+    const first = s5.addAnswer(dupAsk.id, { answerer: A, body: "the same measured answer" });
+    check("L88 the first answer from an answerer is accepted", first.answerId > 0, String(first.answerId));
+    let refused = null;
+    try { s5.addAnswer(dupAsk.id, { answerer: A, body: "the same measured answer" }); }
+    catch (e) { refused = e; }
+    check("L88 the identical answer from the same answerer is refused",
+      refused && refused.duplicate === true, refused && refused.message);
+    const reworded = s5.addAnswer(dupAsk.id, { answerer: A, body: "the same measured answer, with the number 42" });
+    check("L88 the same answerer saying something different is still accepted", reworded.answerId > 0, String(reworded.answerId));
+    const otherVoice = s5.addAnswer(dupAsk.id, { answerer: B, body: "the same measured answer" });
+    check("L88 a DIFFERENT answerer may say the same words (the refusal is per answerer)",
+      otherVoice.answerId > 0, String(otherVoice.answerId));
+    // And the refusal is not a silent no-op: the count only moved by the writes that were allowed.
+    const afterDup = s5.getAsk(dupAsk.id);
+    check("L88 the refused write added no row (3 accepted writes, 3 rows)",
+      afterDup && afterDup.answers.length === 3, JSON.stringify(afterDup && afterDup.answers.length));
+
   } finally {
     // Cleanup
     s.closeDb();

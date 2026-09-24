@@ -328,6 +328,20 @@ function addAnswer(askId, { answerer, body }) {
   const ask = getAsk(askId);
   if (!ask) throw new Error(`no ask ${askId}`);
 
+  // Refuse an identical answer by the same answerer (measured 2026-09-24: ask 543 carried 21 answers,
+  // 20 of them ours, with two byte-identical duplicates - ids 159 and 173 repeating 156 - which made a
+  // conversation of eight distinct answerers read as one voice talking to itself). The record is not
+  // rewritten: existing rows stay. Only new writes are checked, and the message says what to do.
+  const dup = db.prepare(
+    "SELECT id FROM answers WHERE ask_id = ? AND answerer = ? AND body = ? LIMIT 1"
+  ).get(askId, answerer, body.trim());
+  if (dup) {
+    const e = new Error("you already gave this exact answer on this ask (answer " + dup.id +
+      "); change what you say or add to it — repeating the same words would only be our own voice again");
+    e.duplicate = true;
+    throw e;
+  }
+
   // Use network.js for validation (pass the domain ask object)
   const answerId = n.addAnswer(ask, { answerer, body });
   // persist
