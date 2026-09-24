@@ -3,6 +3,7 @@
 
 Run: python3 unstuck/bridge/test_bridge.py
 """
+import json
 import os
 import sys
 import tempfile
@@ -266,8 +267,38 @@ def test_asks_target():
     empty = B.asks_target(db, network_db=net, now=now)
     assert empty["target_this_hour"] == 1, "a floor of one: an empty hour still has to bring somebody"
 
+    # 2026-09-22 corrective (member PR #143's premise, measured): an asker we never recorded is NOT evidence that
+    # we wrote the ask. It must not inflate `outside` either - but the split has to be visible, or a real outside
+    # ask whose account we have not recorded yet reads as our own padding. The unattributed label needs a REAL
+    # checksum-valid address: shape alone labelled 527 of 547 live rows, most of them placeholders with a broken
+    # checksum, which would have read as 527 outside counterparties (the opposite error, and the worse one).
+    unrec = "nano_18i5og5rfqgww1qr7pp6j6txcupn6dq4kqwkqtgk96eb1rfjbmt9tywiss1z"
+    n.executemany("INSERT INTO asks(asker, created_at) VALUES (?,?)",
+                  [(unrec, now - 120), ("nano_3test", now - 100)])
+    n.commit()
+    r2 = B.asks_target(db, network_db=net, now=now)
+    assert r2["outside_asks_this_hour"] == 0, r2
+    assert r2["asks_we_wrote_this_hour"] == 2, "the owner's rule: every non-outside ask is reported as ours"
+    assert r2["asks_unattributed_this_hour"] == 1, "the valid-address one is unattributed; the placeholder is a test"
+    assert r2["self_filling"] is True, "still conservative: it can only over-accuse us"
+    assert "valid Nano address we have not attributed" in r2["action"], r2["action"]
+
+    # An identity WE created must never count as outside, however real its row (the same exclusion network() makes).
+    ours_acct = "nano_1ao13un99x3uhbnzr3nahohfnntrubsyueounm6esmf13t7wt1mm4tpt75cf"
+    B.seen(db, "Unstuck onramp agent 9", "https://getunstuck.space/", "other", account=ours_acct, now=now)
+    n.execute("DELETE FROM asks")
+    n.executemany("INSERT INTO asks(asker, created_at) VALUES (?,?)",
+                  [(ours_acct, now - 60), (unrec, now - 90)])
+    n.commit()
+    r3 = B.asks_target(db, network_db=net, now=now)
+    assert r3["outside_asks_this_hour"] == 0, f"our own onramp identity is not an outside asker: {r3}"
+    assert r3["asks_we_wrote_this_hour"] == 2, r3
+    assert r3["asks_unattributed_this_hour"] == 2, r3
+
     print("PASS asks target: only asks from a recorded outside account count, the target doubles the previous hour "
-          "with a floor of one, and an ask we wrote ourselves flips self_filling and outranks the shortfall")
+          "with a floor of one, an ask we wrote ourselves flips self_filling and outranks the shortfall, an "
+          "unrecorded valid asker is reported as unattributed rather than silently read as ours, and an identity "
+          "we created can never count as outside")
 
 
 def test_network():
@@ -398,23 +429,11 @@ def test_swarm_one_conversation_one_owner():
         assert len(B.waiting(db, now=2000 + 7200, member="*")) == 4
         assert B.live(db, now=2000 + 60)["live"] == 1 and B.live(db, now=2000 + 60, member="*")["live"] == 4
 
-        # A declined agent is an honest END, not a thread that "never received a word": counting it sends a
-        # member to write to someone who already said no. Measured 2026-09-24: the brief said 25, the real
-        # number of open, unanswered, not-ours conversations was 4.
-        as_member("u03")
-        B.seen(db, "said-no", "https://no.example.com/a2a", "usdc")
-        B.set_status(db, "said-no", "declined")
-        B.seen(db, "probe-identity-7", "https://seventh.example.com/a2a", "usdc")
-        line = B.swarm(db, now=2000 + 7200)["line"]
-        assert "- 1 of yours have never received a word" in line, line
-        assert "never received a word" in line and "- 3 of yours" not in line, line
-        assert "[rows]" not in line
-
         # One measured sentence for the brief: the swarm's numbers, yours, and who is waiting on YOU.
         as_member("u03")
         line = B.swarm(db, now=2000 + 7200)["line"]
-        assert "3 members active" in line and "6 outside agents recorded, 1 actually written to" in line and "2 answered" in line, line
-        assert "YOU (u03): 4 conversations, 1 written to, 1 answered - 1 of yours have never received a word" in line, line
+        assert "3 members active" in line and "4 outside agents recorded, 1 actually written to" in line and "2 answered" in line, line
+        assert "YOU (u03): 2 conversations, 1 written to, 1 answered - 1 of yours have never received a word" in line, line
         assert "WAITING ON YOU: orbit" in line, line
         assert "orbit.example.com (1)" in line, line
     finally:
@@ -437,6 +456,37 @@ def test_swarm_one_conversation_one_owner():
           "named and wherever on its own host it lives, while a shared platform is not an identity; only the owner "
           "writes, anyone reads; waiting and live are yours unless the swarm is asked for; the brief line carries "
           "the swarm's funnel, yours and who is waiting on you; eight members racing for one agent produce one winner")
+
+
+def test_unwritten_counts_only_live_outside_agents():
+    """The brief's 'N of yours have never received a word' must not count refusals or our own probe identities.
+    Owner's rule is do not chase a declined agent; counting it would send a member to write messages that are
+    spam. Measured 2026-09-24: the old line reported 25 when the real number was 4."""
+    path = os.path.join(tempfile.mkdtemp(), "unwritten.db")
+    B.connect(path).close()
+    db = B.connect(path)
+    try:
+        as_member("u02")
+        # A real outside agent, never written to -> unwritten.
+        B.seen(db, "gabbro", "https://gabbro.example.co/a2a", "usdc", now=1000)
+        # A refused agent is an honest end, never an open thread.
+        B.seen(db, "decliner", "https://decliner.example.co/a2a", "usdc", now=1001)
+        B.set_status(db, "decliner", "declined", now=1002)
+        # Our own probe identity is not an outside counterparty to write to at all.
+        B.seen(db, "Unstuck onramp agent (L68 probe)", "https://getunstuck.space", "other", now=1003)
+        # An agent actually written to is not unwritten.
+        B.seen(db, "written", "https://written.example.co/a2a", "usdc", now=1004)
+        B.message(db, "written", "hello", "out", now=1005)
+
+        line = B.swarm(db, now=1006)["line"]
+        assert "1 of yours have never received a word" in line, line
+        assert "YOU (u02): 4 conversations, 1 written to, 0 answered - 1 of yours have never received a word" in line, line
+    finally:
+        as_member("unstuck")
+
+    print("PASS unwritten: the brief's 'never received a word' counts only live outside agents an owner has not "
+          "written to - refusals and our own probe identities never inflate the number (25 claimed vs 4 real on "
+          "2026-09-24)")
 
 
 def test_members_hold_no_wallet_and_ask_the_lead():
@@ -584,12 +634,59 @@ def test_shared_marketplace_host_is_not_one_identity():
     print("PASS shared hosts: two agents on speedbot.dev are two conversations; one agent on a private domain stays one")
 
 
+def test_export_is_stable_when_nothing_moved():
+    """A published record whose every commit touches every file is a record nobody can read the diff of.
+
+    Measured 2026-09-22: the exporter stamped a volatile `exported_at` into every document, so all ~478 files were
+    rewritten on every run and each commit touched the whole tree. That also blocked publishing entirely: the
+    pre-push secret scan flags a path by its NAME, so the same six wallet-named conversations were re-presented on
+    every push and the record could not leave the box at all. Keep the previous stamp when nothing else changed.
+    """
+    d = tempfile.mkdtemp()
+    db = B.connect(os.path.join(d, "bridge.db"))
+    out = os.path.join(d, "conv")
+    B.seen(db, "Alice", "https://alice.example/agent", "usdc", now=1000)
+    B.message(db, "Alice", "hello", "out", now=1001)
+    B.message(db, "Alice", '"Thank you for writing. I hold no wallet of my own today and I settle in USDC on Base, '
+                           'but I read your note about a feeless rail with interest and I have questions about how '
+                           'an address is proved to be mine."', "in", now=1002)
+
+    B.export(db, out, now=2000)
+    first = open(os.path.join(out, "Alice.json"), encoding="utf-8").read()
+    first_idx = open(os.path.join(out, "index.json"), encoding="utf-8").read()
+
+    B.export(db, out, now=9999)  # later clock, same record
+    assert open(os.path.join(out, "Alice.json"), encoding="utf-8").read() == first, \
+        "an unchanged document must not be rewritten: the volatile stamp is kept"
+    assert json.loads(first)["exported_at"] == 2000, json.loads(first)["exported_at"]
+    assert open(os.path.join(out, "index.json"), encoding="utf-8").read() == first_idx
+
+    # A real new message MUST move the file, with the newer stamp.
+    B.message(db, "Alice", '"And a second, later message that changes the record, so this file must move when new '
+                           'words arrive from the other side."', "in", now=3000)
+    B.export(db, out, now=10000)
+    moved = open(os.path.join(out, "Alice.json"), encoding="utf-8").read()
+    assert moved != first, "a new message must be published"
+    assert json.loads(moved)["exported_at"] == 10000
+
+    # A corrupt previous file must not stop an export.
+    open(os.path.join(out, "Alice.json"), "w", encoding="utf-8").write("{not json")
+    B.export(db, out, now=11000)
+    assert json.load(open(os.path.join(out, "Alice.json"), encoding="utf-8"))["agent"] == "Alice"
+
+    print("PASS export stability: an unchanged conversation is not rewritten (so a commit carries only what moved "
+          "and the pre-push scan does not re-present the same paths), a new message always is, and a corrupt "
+          "previous file never blocks an export")
+
+
 if __name__ == "__main__":
+    test_export_is_stable_when_nothing_moved()
     test_shared_marketplace_host_is_not_one_identity()
     test_a_reply_is_their_words_not_our_findings()
     test_x402_mentions_are_replies_not_server_errors()
     test_discovery_is_continuous_and_a_find_is_never_lost()
     test_swarm_one_conversation_one_owner()
+    test_unwritten_counts_only_live_outside_agents()
     test_members_hold_no_wallet_and_ask_the_lead()
     test_bridge()
     test_waiting_and_full_export()
