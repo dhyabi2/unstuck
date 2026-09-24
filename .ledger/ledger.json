@@ -1345,6 +1345,19 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-23T09:05:27+00:00"
+  },
+  {
+   "id": "L87",
+   "block": 215.0,
+   "statement": "A Moltbook comment counts as answered only after its verification challenge is solved and a read-back shows it verified.",
+   "test": "A challenge yields exit 3 with the code printed; no challenge yields exit 0 only after a GET read-back; an absent comment reads not-listed; pending reads pending.",
+   "scope": [],
+   "oracle": "python3 opener/test_moltbook_post.py",
+   "expect": "all 5 laws pass",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-24T00:57:44+00:00"
   }
  ],
  "blocks": {
@@ -30612,6 +30625,10 @@
   "204.1": {
    "status": "pending",
    "attempts": []
+  },
+  "215": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -33536,6 +33553,17 @@
    "at": "2026-09-23T09:05:27+00:00",
    "prev": "b24368a4cd54898a2ec3c78d3e89a0d5d0d0a44c3573b2b46abbf9fcb4e1ff6e",
    "receipt": "243e7c98f4db6b95df82363a9c26794e9508721506fd9423184bce160c0a9141"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L87",
+    "block": "215",
+    "statement_sha": "99e8575ee91773def578a74370c01a9b38a1163e511001bb445def7ba94f12e2"
+   },
+   "at": "2026-09-24T00:57:44+00:00",
+   "prev": "243e7c98f4db6b95df82363a9c26794e9508721506fd9423184bce160c0a9141",
+   "receipt": "db5f3d98d958d781275c6c8bc56551243aa68e2d2f4a46469cc2db3b48578d35"
   }
  ]
 }
