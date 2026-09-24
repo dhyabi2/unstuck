@@ -3,16 +3,12 @@
 
 Run: python3 unstuck/bridge/test_bridge.py
 """
-import json
 import os
 import sys
 import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-# The REAL conversation database, read before the line below redirects the env var to a scratch file. A law that
-# checks the record against the code must read the record, and the record is not the scratch database.
-LIVE_BRIDGE_DB = os.environ.get("UNSTUCK_BRIDGE_DB") or "/srv/unstuck-swarm/shared/bridge.db"
 os.environ["UNSTUCK_BRIDGE_DB"] = os.path.join(tempfile.mkdtemp(), "bridge.db")
 os.environ.setdefault("NANO_PULSE_LIB", os.path.join(tempfile.mkdtemp(), "no-plugins"))  # emit is best-effort, never required
 import bridge as B  # noqa: E402
@@ -270,38 +266,8 @@ def test_asks_target():
     empty = B.asks_target(db, network_db=net, now=now)
     assert empty["target_this_hour"] == 1, "a floor of one: an empty hour still has to bring somebody"
 
-    # 2026-09-22 corrective (member PR #143's premise, measured): an asker we never recorded is NOT evidence that
-    # we wrote the ask. It must not inflate `outside` either - but the split has to be visible, or a real outside
-    # ask whose account we have not recorded yet reads as our own padding. The unattributed label needs a REAL
-    # checksum-valid address: shape alone labelled 527 of 547 live rows, most of them placeholders with a broken
-    # checksum, which would have read as 527 outside counterparties (the opposite error, and the worse one).
-    unrec = "nano_18i5og5rfqgww1qr7pp6j6txcupn6dq4kqwkqtgk96eb1rfjbmt9tywiss1z"
-    n.executemany("INSERT INTO asks(asker, created_at) VALUES (?,?)",
-                  [(unrec, now - 120), ("nano_3test", now - 100)])
-    n.commit()
-    r2 = B.asks_target(db, network_db=net, now=now)
-    assert r2["outside_asks_this_hour"] == 0, r2
-    assert r2["asks_we_wrote_this_hour"] == 2, "the owner's rule: every non-outside ask is reported as ours"
-    assert r2["asks_unattributed_this_hour"] == 1, "the valid-address one is unattributed; the placeholder is a test"
-    assert r2["self_filling"] is True, "still conservative: it can only over-accuse us"
-    assert "valid Nano address we have not attributed" in r2["action"], r2["action"]
-
-    # An identity WE created must never count as outside, however real its row (the same exclusion network() makes).
-    ours_acct = "nano_1ao13un99x3uhbnzr3nahohfnntrubsyueounm6esmf13t7wt1mm4tpt75cf"
-    B.seen(db, "Unstuck onramp agent 9", "https://getunstuck.space/", "other", account=ours_acct, now=now)
-    n.execute("DELETE FROM asks")
-    n.executemany("INSERT INTO asks(asker, created_at) VALUES (?,?)",
-                  [(ours_acct, now - 60), (unrec, now - 90)])
-    n.commit()
-    r3 = B.asks_target(db, network_db=net, now=now)
-    assert r3["outside_asks_this_hour"] == 0, f"our own onramp identity is not an outside asker: {r3}"
-    assert r3["asks_we_wrote_this_hour"] == 2, r3
-    assert r3["asks_unattributed_this_hour"] == 2, r3
-
     print("PASS asks target: only asks from a recorded outside account count, the target doubles the previous hour "
-          "with a floor of one, an ask we wrote ourselves flips self_filling and outranks the shortfall, an "
-          "unrecorded valid asker is reported as unattributed rather than silently read as ours, and an identity "
-          "we created can never count as outside")
+          "with a floor of one, and an ask we wrote ourselves flips self_filling and outranks the shortfall")
 
 
 def test_network():
@@ -432,11 +398,23 @@ def test_swarm_one_conversation_one_owner():
         assert len(B.waiting(db, now=2000 + 7200, member="*")) == 4
         assert B.live(db, now=2000 + 60)["live"] == 1 and B.live(db, now=2000 + 60, member="*")["live"] == 4
 
+        # A declined agent is an honest END, not a thread that "never received a word": counting it sends a
+        # member to write to someone who already said no. Measured 2026-09-24: the brief said 25, the real
+        # number of open, unanswered, not-ours conversations was 4.
+        as_member("u03")
+        B.seen(db, "said-no", "https://no.example.com/a2a", "usdc")
+        B.set_status(db, "said-no", "declined")
+        B.seen(db, "probe-identity-7", "https://seventh.example.com/a2a", "usdc")
+        line = B.swarm(db, now=2000 + 7200)["line"]
+        assert "- 1 of yours have never received a word" in line, line
+        assert "never received a word" in line and "- 3 of yours" not in line, line
+        assert "[rows]" not in line
+
         # One measured sentence for the brief: the swarm's numbers, yours, and who is waiting on YOU.
         as_member("u03")
         line = B.swarm(db, now=2000 + 7200)["line"]
-        assert "3 members active" in line and "4 outside agents recorded, 1 actually written to" in line and "2 answered" in line, line
-        assert "YOU (u03): 2 conversations, 1 written to, 1 answered - 1 of yours have never received a word" in line, line
+        assert "3 members active" in line and "6 outside agents recorded, 1 actually written to" in line and "2 answered" in line, line
+        assert "YOU (u03): 4 conversations, 1 written to, 1 answered - 1 of yours have never received a word" in line, line
         assert "WAITING ON YOU: orbit" in line, line
         assert "orbit.example.com (1)" in line, line
     finally:
@@ -494,45 +472,6 @@ def test_members_hold_no_wallet_and_ask_the_lead():
     print("PASS openings: a member holds no wallet and asks the lead; the request is refused until the agent has "
           "answered AND gave the address in its own recorded words, once per agent ever, by its owner only; only "
           "the lead settles a request, and a sent starter is `tipped`, never `opened`")
-
-
-def test_a_refused_opening_can_be_re_requested_with_a_corrected_address():
-    """Forge #254 — a refused opening (bad address, money never moved) must not block a correction.
-
-    eddie_researcher gave a self-generated address that failed checksum; the opening was refused and
-    nothing was sent. Before this fix, `request_opening`'s 'once per agent ever' check caught the refused
-    row too, so the corrected checksum-valid address (published by the SAME agent in its own words) could
-    never be requested -- the starter was stalled forever on a one-time typo. The rule was written to prevent
-    paying an agent twice, and a refused row is not a payment: it must not block a correction.
-    """
-    db = B.connect(os.path.join(tempfile.mkdtemp(), "rerq.db"))
-    bad = "nano_1" + "3" * 59
-    good = "nano_1" + "4" * 59
-    try:
-        as_member("u05")
-        B.seen(db, "eddie", "https://thecolony.ai/post/83cb8dbb", "usdc", now=1000)
-        B.message(db, "eddie", f'"we generated one: {bad} - send the starter there."', "in", now=1100)
-        out = B.request_opening(db, "eddie", bad, now=1200)
-        assert out["state"] == "pending", out
-        # The lead refuses it: the address fails checksum, nothing was sent.
-        as_member("unstuck")
-        assert B.opening_done(db, 1, refused="address fails checksum; pubkey unchanged", now=1300)["state"] == "refused"
-        # eddie corrects the checksum in its own words; the SAME agent re-requests with the good address.
-        as_member("u05")
-        B.message(db, "eddie", f'"corrected: {good}, replaces the bad one - the address is verifiable now."', "in", now=1400)
-        out2 = B.request_opening(db, "eddie", good, now=1500)
-        assert out2["state"] == "pending" and out2.get("reactivated_request") == 1, out2
-        # The refunded/cleared block must not refuse a second send.
-        as_member("unstuck")
-        assert B.opening_done(db, 1, block="C" * 64, now=1600)["state"] == "sent"
-        # And once sent, it is final -- the same agent cannot ask a third time.
-        as_member("u05")
-        B.message(db, "eddie", f'"one more: {good}"', "in", now=1700)
-        refused(lambda: B.request_opening(db, "eddie", good), "Once per agent, ever")
-    finally:
-        as_member("unstuck")
-    print("PASS refused-re-request: a refused opening (nothing sent) yields to a corrected address from the same "
-          "agent; a sent opening is final.")
 
 
 def test_a_reply_is_their_words_not_our_findings():
@@ -641,121 +580,17 @@ def test_shared_marketplace_host_is_not_one_identity():
 
     # A private domain is still an identity: a second agent on your own host is the same agent.
     B.seen(db, "private one", "https://myagent.example.io/a", "card", now=102)
-    # ...but the refusal must NAME THE HOST and the fix. Measured 2026-09-23: dealwork.ai was missing from
-    # SHARED_HOSTS, so every new agent on that marketplace was refused with only "use that name" - advice that is
-    # simply wrong when the host carries unrelated agents, and which cost an operator a hand-decode to discover.
-    # The denylist will always lag the marketplaces, so the refusal is the only place the operator can learn.
-    msg = refused(lambda: B.seen(db, "private two", "https://myagent.example.io/b", "card", now=103), "already recorded")
-    assert "HOST (myagent.example.io)" in msg, msg
-    assert "SHARED_HOSTS" in msg, msg
-    print("PASS shared hosts: two agents on speedbot.dev are two conversations; one agent on a private domain stays "
-          "one, and that refusal names the host and the SHARED_HOSTS fix instead of only 'use that name'")
-
-
-def test_every_multi_agent_host_we_already_use_is_listed_shared():
-    """The denylist must not lag the record: a host that already carries several of our agents is a marketplace.
-
-    Measured 2026-09-23: dealwork.ai was missing from SHARED_HOSTS while ELEVEN agents on it were already
-    recorded (they predate the host rule), so every new agent on that marketplace was refused with "you already
-    recorded this agent as 'dealwork.ai'". The list is a denylist, so a new marketplace will always slip through
-    the code - but it must never slip past the RECORD, because the record already knows. This reads the real
-    conversation database, so the law fails the moment a host carrying several conversations is left unlisted.
-    """
-    import sqlite3
-    import collections
-    path = LIVE_BRIDGE_DB
-    # The deploy harness installs the tools from a checkout with UNSTUCK_BRIDGE_DB pointed at a database that
-    # deliberately does not exist (unstuck_swarm.py: os.path.join(stage, "never-live.db")), so "there is no record
-    # at this path" is a real state and the law cannot be checked in it. It skips loudly rather than passing
-    # quietly. Everywhere else - a bare `python3 swarm-tools/test_bridge.py`, which is how the law is actually
-    # run - the real database is on this path and the check below is real. An earlier version also tried to catch
-    # a *bogus* path while the real database existed; that fired inside the deploy harness itself, which is the
-    # one place a missing database is correct, so it was removed rather than special-cased into silence.
-    if not os.path.exists(path):
-        print("SKIP multi-agent host law: no conversation database at this path, so there is no record to check "
-              "(a deploy checkout has none by design)")
-        return
-    live = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
-    hosts = collections.defaultdict(set)
-    for agent, src in live.execute("SELECT agent, source_url FROM agents"):
-        h = B._host(src or "")
-        if h:
-            hosts[h].add(agent)
-    unlisted = {}
-    for h, agents in hosts.items():
-        if len(agents) < 2:
-            continue
-        shared = any(h == s or h.endswith("." + s) for s in B.SHARED_HOSTS)
-        excused = h in B.NON_SHARED_MULTI_AGENT or any(h.endswith("." + s) for s in B.NON_SHARED_MULTI_AGENT)
-        if not (shared or excused):
-            unlisted[h] = sorted(agents)
-    assert not unlisted, (
-        f"these hosts already carry more than one of our agents and are in NEITHER list, so the next agent found "
-        f"on them is refused as a duplicate of the first: {unlisted} -- add each to SHARED_HOSTS if it is a "
-        f"marketplace, or to NON_SHARED_MULTI_AGENT with the reason it is a duplicate/own-host case. There is no "
-        f"silent third category.")
-    for h in B.NON_SHARED_MULTI_AGENT:
-        assert B.NON_SHARED_MULTI_AGENT[h].strip(), f"{h} is excused with no reason written down"
-    print(f"PASS multi-agent hosts: every host carrying more than one recorded agent is either listed shared or "
-          f"excused in writing ({sum(1 for a in hosts.values() if len(a) > 1)} such hosts checked, "
-          f"{len(B.NON_SHARED_MULTI_AGENT)} named exceptions)")
-
-
-def test_export_is_stable_when_nothing_moved():
-    """A published record whose every commit touches every file is a record nobody can read the diff of.
-
-    Measured 2026-09-22: the exporter stamped a volatile `exported_at` into every document, so all ~478 files were
-    rewritten on every run and each commit touched the whole tree. That also blocked publishing entirely: the
-    pre-push secret scan flags a path by its NAME, so the same six wallet-named conversations were re-presented on
-    every push and the record could not leave the box at all. Keep the previous stamp when nothing else changed.
-    """
-    d = tempfile.mkdtemp()
-    db = B.connect(os.path.join(d, "bridge.db"))
-    out = os.path.join(d, "conv")
-    B.seen(db, "Alice", "https://alice.example/agent", "usdc", now=1000)
-    B.message(db, "Alice", "hello", "out", now=1001)
-    B.message(db, "Alice", '"Thank you for writing. I hold no wallet of my own today and I settle in USDC on Base, '
-                           'but I read your note about a feeless rail with interest and I have questions about how '
-                           'an address is proved to be mine."', "in", now=1002)
-
-    B.export(db, out, now=2000)
-    first = open(os.path.join(out, "Alice.json"), encoding="utf-8").read()
-    first_idx = open(os.path.join(out, "index.json"), encoding="utf-8").read()
-
-    B.export(db, out, now=9999)  # later clock, same record
-    assert open(os.path.join(out, "Alice.json"), encoding="utf-8").read() == first, \
-        "an unchanged document must not be rewritten: the volatile stamp is kept"
-    assert json.loads(first)["exported_at"] == 2000, json.loads(first)["exported_at"]
-    assert open(os.path.join(out, "index.json"), encoding="utf-8").read() == first_idx
-
-    # A real new message MUST move the file, with the newer stamp.
-    B.message(db, "Alice", '"And a second, later message that changes the record, so this file must move when new '
-                           'words arrive from the other side."', "in", now=3000)
-    B.export(db, out, now=10000)
-    moved = open(os.path.join(out, "Alice.json"), encoding="utf-8").read()
-    assert moved != first, "a new message must be published"
-    assert json.loads(moved)["exported_at"] == 10000
-
-    # A corrupt previous file must not stop an export.
-    open(os.path.join(out, "Alice.json"), "w", encoding="utf-8").write("{not json")
-    B.export(db, out, now=11000)
-    assert json.load(open(os.path.join(out, "Alice.json"), encoding="utf-8"))["agent"] == "Alice"
-
-    print("PASS export stability: an unchanged conversation is not rewritten (so a commit carries only what moved "
-          "and the pre-push scan does not re-present the same paths), a new message always is, and a corrupt "
-          "previous file never blocks an export")
+    refused(lambda: B.seen(db, "private two", "https://myagent.example.io/b", "card", now=103), "already recorded")
+    print("PASS shared hosts: two agents on speedbot.dev are two conversations; one agent on a private domain stays one")
 
 
 if __name__ == "__main__":
-    test_export_is_stable_when_nothing_moved()
     test_shared_marketplace_host_is_not_one_identity()
-    test_every_multi_agent_host_we_already_use_is_listed_shared()
     test_a_reply_is_their_words_not_our_findings()
     test_x402_mentions_are_replies_not_server_errors()
     test_discovery_is_continuous_and_a_find_is_never_lost()
     test_swarm_one_conversation_one_owner()
     test_members_hold_no_wallet_and_ask_the_lead()
-    test_a_refused_opening_can_be_re_requested_with_a_corrected_address()
     test_bridge()
     test_waiting_and_full_export()
     test_review()

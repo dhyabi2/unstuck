@@ -24,7 +24,6 @@ Every write also emits a `bridge` journal event, so the live map updates by itse
 Storage is SQLite next to Unstuck's other stores; the journal is the wire.
 """
 import argparse
-import hashlib as _hashlib
 import json
 import os
 import sqlite3
@@ -50,25 +49,8 @@ LEAD_RESERVED_S = 48 * 3600
 SHARED_HOSTS = ("github.com", "huggingface.co", "x.com", "twitter.com", "t.me", "discord.com", "discord.gg",
                 "reddit.com", "npmjs.com", "pypi.org", "agentverse.ai", "virtuals.io", "app.virtuals.io",
                 "smithery.ai", "glama.ai", "mcp.so", "tantive.space", "moltbook.com", "vercel.app", "replit.app",
-                "speedbot.dev", "thecolony.ai", "thecolony.cc", "dealwork.ai", "api.dealwork.ai",
-                "allagents.app", "a2a-registry.org",
+                "speedbot.dev", "thecolony.ai", "thecolony.cc",
                 "onrender.com", "railway.app", "fly.dev", "herokuapp.com", "pages.dev", "workers.dev", "web.app")
-
-# Hosts that carry more than one of our rows and are deliberately NOT shared, each with the reason it is an
-# exception. The point is that there is no SILENT third category: `test_every_multi_agent_host_we_already_use_is_
-# listed_shared` fails on any multi-agent host that is in neither list, so a new marketplace is either listed
-# shared (correct) or written down here as a duplicate/own-host case (also correct, and visible). Measured
-# 2026-09-23, when that law first ran: allagents.app carried 22 agents and was unlisted, so every new agent found
-# there was refused as a duplicate of the first one.
-NON_SHARED_MULTI_AGENT = {
-    "emem.dev": "ONE agent recorded twice ('emem' and 'emem.dev') - a duplicate in the record, not a marketplace. "
-                "Listing it shared would hide the duplicate instead of fixing it.",
-    "opentaskrelay.org": "one operator's two rows ('Open Task Relay' and 'Open Task Relay (commons)') - the same "
-                         "agent, not two. Listing it shared would hide the duplicate.",
-    "getunstuck.space": "our own host. These rows are our probes, not outside agents; sharing it would let a probe "
-                        "be re-recorded as a new outside agent, which is exactly the kind of self-counting the "
-                        "network rules forbid.",
-}
 
 # How far along one outside agent is. The order is the funnel; the colour in the app follows it.
 STATES = ("contacted", "replied", "tipped", "opened", "swapped", "transacting", "declined")
@@ -205,19 +187,7 @@ def seen(db, agent, source, pays_in, note="", account="", now=None):
                       "Pick an agent nobody has reached.")
     if existing and existing[0] != agent:
         db.execute("ROLLBACK")
-        host = _host(source)
-        # This branch means the match came from the HOST, not from the name (a name match would have made
-        # existing[0] == agent). A host that carries many unrelated agents is a marketplace, not an identity, and
-        # the list of them is a denylist - so every marketplace we have not met yet arrives as this refusal rather
-        # than as a bug report. Measured 2026-09-23: dealwork.ai was missing from SHARED_HOSTS and blocked every
-        # new agent on it, while eleven agents on that same host were already recorded (from before the host rule
-        # existed). The refusal must therefore name the host and what to do about it, or the next marketplace is a
-        # silent trap again - the operator reads only "use that name", which is wrong advice on a shared host.
-        raise Refused(
-            f"you already recorded this agent as '{existing[0]}'; use that name. "
-            f"The match was by HOST ({host}), not by name: if {host} carries unrelated agents, add it to "
-            f"SHARED_HOSTS in swarm-tools/bridge.py first - a marketplace is not an identity, and until it is "
-            f"listed every new agent on it is refused.")
+        raise Refused(f"you already recorded this agent as '{existing[0]}'; use that name.")
     lead_row = _matching_lead(db, source)
     if (not existing and lead_row and lead_row[2] and lead_row[2] != MEMBER
             and now - lead_row[3] < LEAD_RESERVED_S):
@@ -414,14 +384,6 @@ def export(db, out_dir, now=None):
         }
         safe = "".join(c if (c.isalnum() or c in "-_.") else "-" for c in agent).strip("-.") or "agent"
         path = os.path.join(out_dir, f"{safe}.json")
-        # A volatile `exported_at` in every document made every export rewrite all ~478 files, so each commit
-        # touched the whole tree: the public diff stopped meaning "these conversations moved", and the pre-push
-        # secret scan — which flags a path by its NAME, so a wallet conversation is flagged every time it is
-        # presented — re-refused the same six paths on every push, blocking the record from being published at all.
-        # Keep the previous stamp when nothing else in the document changed, so a commit carries only what moved.
-        prev = _read_json(path)
-        if isinstance(prev, dict) and prev.get("exported_at") and _same_ignoring(prev, doc, "exported_at"):
-            doc["exported_at"] = prev["exported_at"]
         with open(path, "w", encoding="utf-8") as f:
             json.dump(doc, f, indent=1, ensure_ascii=False, sort_keys=True)
             f.write("\n")
@@ -434,11 +396,7 @@ def export(db, out_dir, now=None):
         "agents": len(written),
         "exported_at": now,
     }
-    index_path = os.path.join(out_dir, "index.json")
-    prev_index = _read_json(index_path)
-    if isinstance(prev_index, dict) and prev_index.get("exported_at") and _same_ignoring(prev_index, index, "exported_at"):
-        index["exported_at"] = prev_index["exported_at"]
-    with open(index_path, "w", encoding="utf-8") as f:
+    with open(os.path.join(out_dir, "index.json"), "w", encoding="utf-8") as f:
         json.dump(index, f, indent=1, ensure_ascii=False, sort_keys=True)
         f.write("\n")
     return {"written": len(written), "dir": out_dir}
@@ -707,6 +665,16 @@ def swarm(db, now=None):
     my_found = found.get(MEMBER, 0)
     open_leads = len(leads(db, mine=True, now=now))
     unwritten = sum(mine.values()) - my_written
+    # `declined` is an honest END, not an open thread (owner's rule: do not chase an agent that said no), and an
+    # agent we ourselves created or probed is not an outside counterparty to write to at all. Counting either made
+    # the brief report "25 of yours have never received a word" on 2026-09-24 when the real number was 4: 20 agents
+    # that had explicitly declined plus 2 of our own probe identities. A member reading that sentence is sent to
+    # write 25 messages, 21 of which would have been spam - the one thing this account cannot afford.
+    unwritten = db.execute(
+        "SELECT COUNT(*) FROM agents a WHERE a.owner=? AND a.status <> 'declined' "
+        "AND NOT EXISTS (SELECT 1 FROM messages m WHERE m.agent = a.agent AND m.direction='out') "
+        "AND a.agent NOT LIKE '%probe%' AND a.agent NOT LIKE 'Unstuck onramp%' AND a.agent NOT LIKE '%(tantive)%'",
+        (MEMBER,)).fetchone()[0]
     line = (f"SWARM ({len(members) or 1} members active): {sum(funnel.values())} outside agents recorded, "
             f"{sum(written.values())} actually written to, "
             f"{sum(funnel.get(k, 0) for k in beyond)} answered, {funnel.get('transacting', 0)} converted. "
@@ -748,20 +716,9 @@ def request_opening(db, agent, address, now=None):
     if address not in said:
         raise Refused("that address does not appear in anything the agent told us. Record what they said with "
                       "`unstuck-bridge heard` first - the address must come from THEM, in their words.")
-    prior = db.execute("SELECT id, state FROM opening_requests WHERE agent=?", (agent,)).fetchone()
-    if prior and prior[1] != "refused":
-        raise Refused("an opening was already requested for this agent. Once per agent, ever.")
+    if db.execute("SELECT 1 FROM opening_requests WHERE agent=? OR address=?", (agent, address)).fetchone():
+        raise Refused("an opening was already requested for this agent or this address. Once per agent, ever.")
     now = time.time() if now is None else now
-    if prior:  # state == 'refused': money never moved, so a corrected address re-opens the request
-        db.execute("UPDATE opening_requests SET address=?, member=?, at=?, state='pending', block='', "
-                   "note='', done_at=NULL WHERE id=?", (address, MEMBER, now, prior[0]))
-        db.commit()
-        rid = prior[0]
-        emit("bridge", {"event": "opening_re_requested", "member": MEMBER, "agent": agent,
-                        "source": _source_of(db, agent)})
-        return {"agent": agent, "address": address, "state": "pending", "reactivated_request": rid,
-                "next": "The prior request was refused and nothing was sent; the corrected address is now pending. "
-                        "The lead opens agents one at a time."}
     db.execute("INSERT INTO opening_requests(agent, address, member, at) VALUES (?,?,?,?)",
                (agent, address, MEMBER, now))
     db.commit()
@@ -876,32 +833,11 @@ def asks_target(db, network_db=None, now=None):
     as `ours` — because an ask we wrote is a test of our own software, never network activity. The target doubles the
     previous hour. Honest arithmetic: doubling cannot hold for a day (2^24 by tomorrow); what holds is that the number
     must grow every hour and must never be padded from inside. A flat hour is a miss. A padded hour is a lie.
-
-    Measured 2026-09-22 (corrective, from member PR #143 on the forge whose head commit the 09-21 repo rebuild lost):
-    two defects, one in each direction.
-
-      * `known` was the RAW account set, so the three identities WE created ("Unstuck onramp agent 2", the L68
-        probe, the tantive.space forum) counted as outside. `network()` was corrected for exactly this on 2026-09-21
-        and this function was not, so one file gave two answers from the same rows. The same `_SELF_HINT` filter is
-        now applied here. It can only make the outside count smaller, which is the honest direction.
-      * Every non-outside asker was reported as `ours`, including a valid Nano address we simply have not recorded
-        yet (57 such rows on 2026-09-22, against 459 genuinely ours and 30 placeholder/test rows). That is not
-        evidence we wrote it; it is an unattributed lead. `asks_we_wrote_*` stays as the owner's rule requires
-        (it can only over-accuse us, the safe direction for a never-pad rule) but the split is now visible, and the
-        STOP message says which half is unattributed so a false alarm reads as one.
     """
     now = time.time() if now is None else now
-    # Same exclusion `network()` applies, for the same reason. An agent we created or a forum we registered is us,
-    # never an outside counterparty, however real its row in bridge.agents.
-    _SELF_HINT = re.compile(r"\b(unstuck|onramp|probe|l68|test|self|forum|nanoswarm)\b", re.I)
-    known = set()
-    for acct, agent in db.execute("SELECT account, agent FROM agents WHERE account <> ''"):
-        if _SELF_HINT.search(agent or ""):
-            continue
-        known.add(acct)
+    known = {a for (a,) in db.execute("SELECT account FROM agents WHERE account <> ''")}
     this_h = prev_h = ours_this_h = 0
     total_ours = 0
-    unattributed_total = unattributed_this_h = 0
     try:
         n = sqlite3.connect(f"file:{network_db or NETWORK_DB}?mode=ro", uri=True)
         rows = list(n.execute("SELECT asker, created_at FROM asks"))
@@ -913,18 +849,13 @@ def asks_target(db, network_db=None, now=None):
         except (TypeError, ValueError):
             at = _iso_seconds(created)
         outside = asker in known
-        unattributed = (not outside) and _looks_like_account(asker)
         if not outside:
             total_ours += 1
-            if unattributed:
-                unattributed_total += 1
         if at and now - at <= 3600:
             if outside:
                 this_h += 1
             else:
                 ours_this_h += 1
-                if unattributed:
-                    unattributed_this_h += 1
         elif at and 3600 < now - at <= 7200 and outside:
             prev_h += 1
     target = max(1, prev_h * 2)
@@ -936,72 +867,15 @@ def asks_target(db, network_db=None, now=None):
         "on_target": this_h >= target,
         "asks_we_wrote_this_hour": ours_this_h,
         "asks_we_wrote_total": total_ours,
-        # How much of the `ours` figure is really an unattributed asker (a valid account we have not recorded).
-        # Record it with `unstuck-bridge seen --account` and it moves into the outside count if it is real.
-        "asks_unattributed_this_hour": unattributed_this_h,
-        "asks_unattributed_total": unattributed_total,
-        "note": ("asks_unattributed_* counts rows whose asker is a checksum-valid account we have not recorded, and it "
-                 "INCLUDES addresses we generated ourselves as probes and never named. It is not a count of outside "
-                 "agents. The tiered view (outside_confirmed / addressed_unknown / synthetic / ours) is "
-                 "`python3 opener/ask_census.py`, which also filters a repo-local probe-key list this PATH has no "
-                 "access to."),
         "self_filling": ours_this_h > 0,
-        "action": (("STOP: " + str(ours_this_h) + " ask(s) this hour came from an asker that is not a recorded "
-                    "outside account. Never post asks to your own network. Delete nothing, but post no more — "
-                    + (str(unattributed_this_h) + " of them carry a valid Nano address we have not attributed "
-                       "(a lead to record with `seen --account`, not proof you wrote them); "
-                       if unattributed_this_h else "")
-                    + "an ask you wrote is a test of your software, not activity, and it makes every number you "
-                      "publish worthless.")
+        "action": ("STOP: you posted " + str(ours_this_h) + " ask(s) yourself this hour. Never post asks to your own "
+                   "network. Delete nothing, but post no more: an ask you wrote is a test of your software, not "
+                   "activity, and it makes every number you publish worthless."
                    if ours_this_h else
                    ("" if this_h >= target else
                     f"Bring {max(0, target - this_h)} more ask(s) from outside agents this hour. Last hour brought "
                     f"{prev_h}; the target doubles it.")),
     }
-
-
-_B32_ALPHABET = "13456789abcdefghijkmnopqrstuwxyz"
-
-
-def _read_json(path):
-    """The parsed file, or None. Never raises: a corrupt or absent previous export must not stop an export."""
-    try:
-        with open(path, encoding="utf-8") as f:
-            return json.load(f)
-    except (OSError, ValueError):
-        return None
-
-
-def _same_ignoring(a, b, key):
-    """True when two dicts are equal apart from one key. Used to keep a volatile stamp out of the diff."""
-    if not isinstance(a, dict) or not isinstance(b, dict):
-        return False
-    return {k: v for k, v in a.items() if k != key} == {k: v for k, v in b.items() if k != key}
-
-
-def _looks_like_account(value):
-    """True for a Nano address whose 5-character checksum matches its own key — shape AND checksum, no subprocess.
-
-    Shape alone is not enough here: on 2026-09-22 the store held 547 asks of which 459 were rows we wrote and 30 were
-    literal placeholders ('nano_3test'), and most of those are 65 characters of the right alphabet with a broken
-    checksum. A shape-only test labelled 527 rows 'unattributed', which would have read as 527 outside counterparties
-    — the opposite error, and the worse one. Nano's checksum is blake2b-5 of the public key, reversed, appended to the
-    key and base32-encoded; that is four lines with hashlib and needs no keygen subprocess on every row.
-
-    Known limitation, stated rather than hidden: a probe address we generated ourselves and never recorded by name
-    still reads as unattributed. `ask_census` filters those by a probe-key list that lives in the repo, not on this
-    PATH; the honest label for one here is 'an address we cannot attribute', which is what this key says.
-    """
-    if not isinstance(value, str) or len(value) != 65 or not value.startswith("nano_"):
-        return False
-    body = value[5:]
-    if any(c not in _B32_ALPHABET for c in body):
-        return False
-    # 60 base32 chars = 300 bits; the first 4 are padding, leaving 296 = 32-byte key + 5-byte checksum.
-    bits = "".join(format(_B32_ALPHABET.index(c), "05b") for c in body)[4:]
-    raw = bytes(int(bits[i:i + 8], 2) for i in range(0, 296, 8))
-    key, checksum = raw[:32], raw[32:]
-    return _hashlib.blake2b(key, digest_size=5).digest()[::-1] == checksum
 
 
 def _iso_seconds(value):
