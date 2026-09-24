@@ -368,11 +368,12 @@ function acceptAnswer(askId, answerId, acceptedBy, acceptToken) {
   if (!ask) throw new Error(`no ask ${askId}`);
 
   // Validate via network.js — this checks everything, including the accept token
-  n.acceptAnswer(ask, answerId, acceptedBy, acceptToken);
+  const res = n.acceptAnswer(ask, answerId, acceptedBy, acceptToken);
 
-  // Persist: update ask status and accepted answer
-  db.prepare("UPDATE asks SET status = 'paid', accepted_answer_id = ? WHERE id = ?")
-    .run(answerId, askId);
+  // Persist: update ask status (paid for a funded ask, closed for a resolved
+  // zero-bounty ask) and the accepted answer
+  db.prepare("UPDATE asks SET status = ?, accepted_answer_id = ? WHERE id = ?")
+    .run(ask.status, answerId, askId);
   db.prepare("UPDATE answers SET status = 'accepted' WHERE id = ? AND ask_id = ?")
     .run(answerId, askId);
 

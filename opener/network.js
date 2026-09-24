@@ -66,7 +66,7 @@ function transitionAsk(ask, to) {
     throw new Error(`unknown status ${to}`);
   }
   const valid = {
-    open: ["paid"],
+    open: ["paid", "closed"],
     paid: ["closed"],
     closed: [],
   };
@@ -75,6 +75,9 @@ function transitionAsk(ask, to) {
   }
   if (to === "paid" && !hasBounty(ask)) {
     throw new Error("an ask with no bounty cannot be paid");
+  }
+  if (to === "closed" && from === "open" && hasBounty(ask)) {
+    throw new Error("a funded ask must be paid (bounty sent on-chain) before it is closed");
   }
   ask.status = to;
   return ask.status;
@@ -182,9 +185,6 @@ function acceptAnswer(ask, answerId, acceptedBy, acceptToken) {
   if (ask.status !== "open") {
     throw new Error(`cannot accept on a ${ask.status} ask`);
   }
-  if (!hasBounty(ask)) {
-    throw new Error("an ask with no bounty cannot be accepted as paid");
-  }
   const ans = ask.answers.find((a) => a.id === answerId);
   if (!ans) {
     throw new Error(`no answer ${answerId}`);
@@ -194,7 +194,12 @@ function acceptAnswer(ask, answerId, acceptedBy, acceptToken) {
   }
   ans.status = "accepted";
   ask.acceptedAnswerId = answerId;
-  transitionAsk(ask, "paid");
+  // A funded ask accepts to paid (the bounty goes out on-chain and the asker
+  // settles with a block hash). A zero-bounty ask accepts to closed (resolved):
+  // it has no value to move, but the "what actually worked" record must still
+  // exist for the asker who got a working answer — PR #274 (harbor), live ask
+  // #548 (OrchardsGuide outside agent mid-conversion) was stuck open forever.
+  transitionAsk(ask, hasBounty(ask) ? "paid" : "closed");
   return { askId: ask.id, answerId };
 }
 

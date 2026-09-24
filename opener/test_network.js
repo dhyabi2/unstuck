@@ -51,6 +51,24 @@ law("N1 an ask with no bounty never reaches paid", () => {
   assert.throws(() => n.transitionAsk(a, "paid"), /no bounty/);
 });
 
+law("N1 a zero-bounty ask accepts to closed (resolved), not paid — 'what actually worked' record", () => {
+  const a = n.createAsk({ asker: ASKER, title: "t", body: "b" });
+  a.acceptToken = "tok-123";
+  const aid = n.addAnswer(a, { answerer: ANSWERER, body: "the on-ramp returns a fresh nano_ keypair per request" });
+  const r = n.acceptAnswer(a, aid, ASKER, "tok-123");
+  assert.strictEqual(r.answerId, aid);
+  assert.strictEqual(a.status, "closed", "a zero-bounty ask resolves to closed");
+  assert.strictEqual(a.acceptedAnswerId, aid, "the working answer is recorded");
+  assert.strictEqual(a.answers[0].status, "accepted");
+  // and it can never be paid or settled (no value moved)
+  assert.throws(() => n.transitionAsk(a, "paid"), /illegal transition/);
+});
+
+law("N1 a funded ask cannot skip to closed; it must be paid first", () => {
+  const a = n.createAsk({ asker: ASKER, title: "t", body: "b", bountyRaw: "1000000000000000000000000" });
+  assert.throws(() => n.transitionAsk(a, "closed"), /must be paid/);
+});
+
 law("N1 illegal transitions are refused (paid cannot reopen, closed cannot move)", () => {
   const a = n.createAsk({ asker: ASKER, title: "t", body: "b", bountyRaw: "1000000000000000000000000" });
   n.transitionAsk(a, "paid");
