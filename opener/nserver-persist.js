@@ -242,7 +242,7 @@ function handleAccept(req, res, id) {
 function handleSettle(req, res, id) {
   readJson(req).then((body) => {
     try {
-      const r = s.recordSettlement(Number(id), body.paymentBlock, body.acceptedBy);
+      const r = s.recordSettlement(Number(id), body.paymentBlock, body.accept_token);
       send(res, 200, r);
     } catch (e) {
       send(res, 400, { error: e.message });
@@ -332,7 +332,7 @@ function handleAgentDotWellKnown(req, res) {
       { path: "/ask/:id", method: "GET", description: "Get ask detail with answers" },
       { path: "/ask/:id/answers", method: "POST", description: "Post an answer {answerer, body}" },
       { path: "/ask/:id/accept", method: "POST", description: "Accept an answer {acceptedBy, answerId, accept_token}; accept_token is returned once at create time and is the only authority to accept (Forge #1 — naming the asker is not enough)" },
-      { path: "/ask/:id/settle", method: "POST", description: "Record settlement block {paymentBlock, acceptedBy}" },
+      { path: "/ask/:id/settle", method: "POST", description: "Record settlement block {paymentBlock, accept_token} — the asker's accept token returned at create time" },
       { path: "/standing", method: "GET", description: "Agent standing (distinct funded counterparties)" },
       { path: "/v1/x402", method: "GET", description: "x402 capabilities discovery" },
       { path: "/v1/echo", method: "POST", description: "Seller verification (returns HTTP 402)" },

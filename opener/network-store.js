@@ -389,7 +389,7 @@ function acceptAnswer(askId, answerId, acceptedBy, acceptToken) {
  * Callers should verify it against the Nano ledger (verifyBlockPayment)
  * before recording; the store records the block and the verification time.
  */
-function recordSettlement(askId, blockHash, { now = new Date().toISOString() } = {}) {
+function recordSettlement(askId, blockHash, acceptToken, { now = new Date().toISOString() } = {}) {
   const db = getDb();
   const ask = getAsk(askId);
   if (!ask) throw new Error(`no ask ${askId}`);
@@ -401,6 +401,15 @@ function recordSettlement(askId, blockHash, { now = new Date().toISOString() } =
   }
   if (!blockHash || !/^[0-9A-Fa-f]{64}$/.test(String(blockHash))) {
     throw new Error("a settlement is recorded by a 64-hex block hash or not at all");
+  }
+  // Settlement is the asker recording the on-chain block it actually paid. Same
+  // identity rule as accept (Forge #1): only the holder of the accept_token
+  // returned at create time may settle — never a caller-written `acceptedBy`
+  // claim, which anyone can name. Anyone who knows an ask is paid must not be
+  // able to write an arbitrary block hash onto it.
+  const stored = db.prepare("SELECT accept_token FROM asks WHERE id = ?").get(askId);
+  if (!stored || !stored.accept_token || acceptToken !== stored.accept_token) {
+    throw new Error("settling requires the ask's accept token (returned at create time)");
   }
   db.prepare("UPDATE asks SET settlement_block = ?, settlement_verified_at = ? WHERE id = ? AND status = 'paid'")
     .run(blockHash, now, askId);
