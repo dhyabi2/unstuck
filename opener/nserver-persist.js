@@ -485,6 +485,11 @@ const server = http.createServer(async (req, res) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Nano-Payment, PAYMENT-SIGNATURE, PAYMENT-REQUIRED, PAYMENT-RESPONSE");
   if (req.method === "OPTIONS") { res.writeHead(204); res.end(); return; }
 
+  // HEAD is GET without a body. Every route below tests `req.method === "GET"`, so a HEAD request fell
+  // through to the 404 - including /.well-known/x402, which Vercel's proxy probes with HEAD. That is why
+  // the manifest read as missing at getunstuck.space while it answered 200 on this box. Node suppresses
+  // the body for HEAD by itself, so routing it through GET is the whole fix.
+  if (req.method === "HEAD") req.method = "GET";
   const parsed = new URL(req.url, `http://localhost:${PORT}`);
   let path = parsed.pathname;
 

@@ -191,13 +191,20 @@ let askId, answerId;
     // An ask with no bounty cannot be accepted as paid
     const noBountyTok = JSON.parse(cNo.body).accept_token;
     const noAns = await req("POST", `/ask/${noBountyId}/answers`, {
-      answerer: nanoB, body: "an answer",
+      answerer: nanoB, body: "the verified path is: post an ask, get a working answer, mark it with your accept token, and the ask closes with the record kept.",
     });
     const noAnsId = JSON.parse(noAns.body).answerId;
     const noAcc = await req("POST", `/ask/${noBountyId}/accept`, {
       acceptedBy: nanoA, answerId: noAnsId, accept_token: noBountyTok,
     });
-    check("N4 no-bounty ask accept returns 400", noAcc.status === 400, String(noAcc.status));
+    // Zero-bounty asks resolve to closed (PR #274, Forge #548): the asker may mark the
+    // answer that worked without any value moving. The accept succeeds (200) but the
+    // status is `closed`, never `paid` (settlement law L4: no value, no standing).
+    check("N4 no-bounty ask accept resolves (200, not paid)", noAcc.status === 200, String(noAcc.status));
+    const noG = await req("GET", `/ask/${noBountyId}`);
+    check("N4 zero-bounty accept closes the ask, does not pay it",
+      (JSON.parse(noG.body).ask || {}).status === "closed",
+      (JSON.parse(noG.body).ask || {}).status);
 
     // 404 for missing answer on accept — use a fresh open+funded ask so the
     // "no bounty" guard doesn't fire first (400) and mask the missing answer.

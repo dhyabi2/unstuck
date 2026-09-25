@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/.well-known/agent.json",
+      "destination": "https://172-86-112-140.sslip.io/.well-known/agent.json"
+    },
+    {
       "source": "/unstuck/api/:path*",
       "destination": "https://172-86-112-140.sslip.io/unstuck/api/:path*"
     }
