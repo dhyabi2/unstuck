@@ -458,6 +458,12 @@ def waiting(db, now=None, stale_after=STALE_AFTER_S, member=None):
             "last_said": (last[1][:160] if last else ""),
             # If they spoke last, they are waiting on an answer from us — that is the most urgent kind of silence.
             "they_answered_last": bool(last and last[0] == "in"),
+            # Forge #400 (kite, 2026-09-24): the plain list mixed two very different kinds of silence and
+            # reading it out of context turned "quiet, I was last speaker" into "agents waiting on me",
+            # inflating the waiting claim and feeding phantom corrective actions. `waiting_on_you` names
+            # the derived truth (last_direction == "in") explicitly, never by inference: only these rows
+            # are an agent awaiting OUR reply; the rest is a quiet thread we may still resume.
+            "waiting_on_you": bool(last and last[0] == "in"),
         })
     out.sort(key=lambda r: (not r["they_answered_last"], -r["quiet_hours"]))
     return out
@@ -1088,7 +1094,24 @@ def main(argv=None):
         elif a.cmd == "review":
             out = review(db, days=a.days)
         elif a.cmd == "waiting":
-            out = waiting(db, stale_after=a.hours * 3600, member="*" if a.all else None)
+            raw = waiting(db, stale_after=a.hours * 3600, member="*" if a.all else None)
+            true_waiting = [r for r in raw if r["waiting_on_you"]]
+            quiet_followups = [r for r in raw if not r["waiting_on_you"]]
+            # Forge #400 (kite, 2026-09-24): wrap the list with a classification so that a human or
+            # engine reading the output never conflates "an agent that answered and is waiting on our
+            # reply" with "a thread where we were last speaker (still worth a follow-up)". Every row
+            # also carries `waiting_on_you` for per-row classification.
+            out = {
+                "items": raw,
+                "true_waiting": true_waiting,
+                "quiet_followups": quiet_followups,
+                "n_true_waiting": len(true_waiting),
+                "n_quiet_followups": len(quiet_followups),
+            }
+            if not a.all and true_waiting:
+                out["message"] = f"{len(true_waiting)} agent(s) answered and are waiting on your reply"
+            elif not a.all:
+                out["message"] = "No one is waiting on you. All quiet conversations are threads you were last to speak in."
         elif a.cmd == "export":
             out = export(db, a.out)
         else:

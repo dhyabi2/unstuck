@@ -34,10 +34,10 @@ def test():
     assert out["reported_on"] == 2 and f.posts[-1][0].endswith("/issues/2/comments"), "a report goes on YOUR territory issue"
     refused(lambda: F.report("all good", http=f), "says nothing")
     n = len(f.posts)
-    for leak in ("the key is fake_sk_placeholder_text",
-                 "token fake_github_ll00",
+    for leak in ("the key is sk-nano-00000000-aaaa-bbbb-cccc-dddddddddddd",
+                 "token github_pat_00FAKEFAKEFAKEFAKEFAKE_notARealTokenAtAll00",
                  "seed " + "A1" * 32,
-                 "curl -H 'Authorization: token fake_token_0123456789abcdef01234567'"):
+                 "curl -H 'Authorization: token 0123456789abcdef0123456789abcdef01234567'"):
         refused(lambda: F.report(good + " " + leak, http=f), "looks like a secret")
         refused(lambda: F.issue("Need a crawler for agent cards", leak, http=f), "looks like a secret")
     assert len(f.posts) == n, "a refused text must never reach the forge"
