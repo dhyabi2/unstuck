@@ -20,6 +20,11 @@
       "down": 0,
       "fired_down": false,
       "fired_recovery": false
+    },
+    "http://neverssl.com": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
     }
   }
 }
