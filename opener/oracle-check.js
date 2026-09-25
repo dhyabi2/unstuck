@@ -138,6 +138,11 @@ function fetchOnce(url, timeoutMs, hop = 0, chain = []) {
     try { u = new URL(url); } catch { return resolve({ error: "not a URL" }); }
     const isTls = u.protocol === "https:";
     const mod = isTls ? require("https") : require("http");
+    // Capture the TLS certificate at handshake time (secureConnect), not from res.socket
+    // at response time, because res.socket.getPeerCertificate() may return {} when the
+    // connection comes from an agent pool with reused sessions (reproduced on the live
+    // network server: example.com returned tls.valid=false 100% of the time via res.socket).
+    let tlsCert = null;
     const req = mod.request(
       {
         method: "GET",
@@ -152,8 +157,10 @@ function fetchOnce(url, timeoutMs, hop = 0, chain = []) {
       (res) => {
         const status = res.statusCode || 0;
         const location = res.headers.location;
-        const socket = res.socket || {};
-        const cert = socket.getPeerCertificate ? socket.getPeerCertificate() : null;
+        // Prefer the certificate captured at secureConnect; fall back to res.socket if that
+        // somehow did not fire (the import is still bound to request time, not response time).
+        const cert = tlsCert || (res.socket && res.socket.getPeerCertificate ?
+          res.socket.getPeerCertificate() : null);
 
         // Follow up to MAX_HOPS, re-checking the target each time.
         if (status >= 300 && status < 400 && location && hop < MAX_HOPS) {
@@ -197,6 +204,15 @@ function fetchOnce(url, timeoutMs, hop = 0, chain = []) {
         res.on("error", (e) => resolve({ error: e.message, final_url: url, final_status: status, latency_ms: Date.now() - started, tls: certInfo(cert, isTls) }));
       }
     );
+    req.on("socket", (sock) => {
+      if (!isTls || !sock) return;
+      sock.on("secureConnect", () => {
+        try {
+          const c = sock.getPeerCertificate();
+          if (c && c.valid_to) tlsCert = c;
+        } catch (e) { /* ignore — fall back to res.socket */ }
+      });
+    });
     req.on("timeout", () => { req.destroy(new Error(`timeout after ${timeoutMs}ms`)); });
     req.on("error", (e) => resolve({ error: e.message, final_url: url, latency_ms: Date.now() - started }));
     req.end();
