@@ -1358,6 +1358,32 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-24T00:57:44+00:00"
+  },
+  {
+   "id": "L88",
+   "block": 216.0,
+   "statement": "The bridge proxy binds each accepted Nano block to exactly one claim, so one feeless block can never unlock a second unpaid x402 target.",
+   "test": "node opener/test_bridge.js B5 (third-party payee refused, bridge payee accepted, explicit payee honoured, replay refused)",
+   "scope": [],
+   "oracle": "cd /root/unstuck && node opener/test_bridge.js | grep -c '^ok   B5' | grep -q '^4$' && echo B5_PASS",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-26T11:37:19+00:00"
+  },
+  {
+   "id": "L89",
+   "block": 217.0,
+   "statement": "A row that declares itself a probe is never counted as a lead or an outside ask, whatever its asker.",
+   "test": "python3 opener/test_ask_census.py (self_declared tier: probe rows classified out, genuine asks not swept, nothing published from it)",
+   "scope": [],
+   "oracle": "cd /root/unstuck && python3 opener/test_ask_census.py | grep -q 'all ask-census laws pass' && python3 opener/ask_census.py --json | python3 -c \"import json,sys; d=json.load(sys.stdin); assert d['tiers']['self_declared']>0; assert d['publishable_as_outside_asks']==len(d['outside_confirmed_ids']); print('CENSUS_OK')\"",
+   "expect": null,
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-26T11:58:14+00:00"
   }
  ],
  "blocks": {
@@ -30629,6 +30655,14 @@
   "215": {
    "status": "pending",
    "attempts": []
+  },
+  "216": {
+   "status": "pending",
+   "attempts": []
+  },
+  "217": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -33564,6 +33598,28 @@
    "at": "2026-09-24T00:57:44+00:00",
    "prev": "243e7c98f4db6b95df82363a9c26794e9508721506fd9423184bce160c0a9141",
    "receipt": "db5f3d98d958d781275c6c8bc56551243aa68e2d2f4a46469cc2db3b48578d35"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L88",
+    "block": "216",
+    "statement_sha": "c731b8206781ebc2317acccd076648f179c43349012462e2af2231917df1fcd5"
+   },
+   "at": "2026-09-26T11:37:19+00:00",
+   "prev": "db5f3d98d958d781275c6c8bc56551243aa68e2d2f4a46469cc2db3b48578d35",
+   "receipt": "e7ca3787b9804118aaf19113c6e78668e79bff643a6b7e3e14abe907db4e7edf"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L89",
+    "block": "217",
+    "statement_sha": "58e972489bcd753dde92ff554e5381b45c5e2ba4602ab9d44bc431a8cf25f2e7"
+   },
+   "at": "2026-09-26T11:58:14+00:00",
+   "prev": "e7ca3787b9804118aaf19113c6e78668e79bff643a6b7e3e14abe907db4e7edf",
+   "receipt": "216b315ad18c43c4be2a06f8302976caabcfb35933a7648cb8e3e7275ee30d55"
   }
  ]
 }
