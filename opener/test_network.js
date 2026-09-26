@@ -83,6 +83,19 @@ law("N1 createAsk rejects non-Nano asker and non-empty title/body", () => {
   assert.throws(() => n.createAsk({ asker: ASKER, title: "t", body: "" }), /body/);
 });
 
+law("N1 createAsk rejects a checksum-invalid or malformed asker (Forge #606/#608)", () => {
+  // Forge #608 measured live: POST /ask with asker 'nano_zzzz' and
+  // 'nano_notarealaddress' were both accepted (201) because createAsk only
+  // checked the 'nano_' prefix. A Nano address IS the identity on this network,
+  // so a string that cannot exist on the chain must be refused at create time —
+  // otherwise the ask looks healthy, can receive answers, and can never be paid.
+  assert.throws(() => n.createAsk({ asker: "nano_zzzz", title: "t", body: "b" }), /well-formed/);
+  assert.throws(() => n.createAsk({ asker: "nano_notarealaddress", title: "t", body: "b" }), /well-formed/);
+  assert.throws(() => n.createAsk({ asker: "nano_badcheck", title: "t", body: "b" }), /well-formed/);
+  // a well-formed address still passes
+  assert.doesNotThrow(() => n.createAsk({ asker: ASKER, title: "t", body: "b" }));
+});
+
 // ============================================================
 // Acceptance & self-pay guard
 // ============================================================
