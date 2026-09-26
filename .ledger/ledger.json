@@ -31782,7 +31782,1138 @@
   },
   "217": {
    "status": "pending",
-   "attempts": []
+   "attempts": [
+    {
+     "kind": "verify",
+     "ok": false,
+     "refusable": true,
+     "results": [
+      {
+       "id": "L0",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L1",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L2",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L3",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L4",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L5",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L6",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L7",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/7 mutants caught, e.g. opener/network.js:32 '!=='→'==='",
+       "mutants": {
+        "total": 7,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L8",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 4
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L9",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 4
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L10",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L11",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L12",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 3
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L13",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 3
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L14",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L15",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L16",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:37 '||'→'&&'",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L17",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/nserver-persist.js:37 '||'→'&&'",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L18",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L19",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L20",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L21",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L22",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L23",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L24",
+       "pass": true,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L25",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L26",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L27",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L28",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "qwen/qwen3-235b-a22b-2507",
+       "control": "passed"
+      },
+      {
+       "id": "L29",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 2
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L30",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L31",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L32",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L33",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L34",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L35",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L36",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L37",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L38",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L39",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. site/tests/site_api_path.test.mjs:36 ' and '→' or '",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L40",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L41",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/test_opening.js:38 deleted 'assert.ok(hasDisclosure(m), \"the opener '",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L42",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/test_opening.js:38 deleted 'assert.ok(hasDisclosure(m), \"the opener '",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L43",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/test_opening.js:38 deleted 'assert.ok(hasDisclosure(m), \"the opener '",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L49",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 7,
+        "killed": 7
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L50",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 7,
+        "killed": 7
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L51",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L52",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L53",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L54",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 6
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L55",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L56",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L57",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L58",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L59",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L60",
+       "pass": false,
+       "oracle_exit": 1,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L61",
+       "pass": false,
+       "oracle_exit": 2,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L62",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L63",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L64",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 6
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L65",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 5
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L66",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 2
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L67",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 3
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L68",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 0,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L69",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 4,
+        "killed": 4
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L70",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L71",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L72",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 5
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L73",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": false,
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L74",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L75",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 5
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L76",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 7,
+        "killed": 6
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L77",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 6,
+        "killed": 5
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L78",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 7,
+        "killed": 5
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L79",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 7,
+        "killed": 3
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L80",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/6 mutants caught, e.g. opener/network-store.js:27 '||'→'&&'",
+       "mutants": {
+        "total": 6,
+        "killed": 0
+       },
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L81",
+       "pass": false,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "weak": "0/1 mutants caught, e.g. opener/oracle-webhooks.json:7 'true'→'false'",
+       "mutants": {
+        "total": 1,
+        "killed": 0
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L82",
+       "pass": true,
+       "oracle_exit": 0,
+       "oracle_ok": true,
+       "mutants": {
+        "total": 7,
+        "killed": 5
+       },
+       "cached": true,
+       "judge": "deepseek/deepseek-v4-pro-0813",
+       "control": "passed"
+      },
+      {
+       "id": "L83",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L84",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L85",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L86",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L87",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L88",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L89",
+       "pass": false,
+       "too_broad": true
+      },
+      {
+       "id": "L90",
+       "pass": false,
+       "too_broad": true
+      }
+     ],
+     "pre_sig": "eebcb61c7bf09d8cdf4625311ef8e819e8c58df50f5911c1a739ca343d7962c5",
+     "tier": "strong",
+     "coverage_gaps": [
+      ".distribution/agentpay-desk-nano-rail.md",
+      ".gitignore",
+      ".run-129.json",
+      ".run-130.json",
+      "Agent.jsonl",
+      "Desk.jsonl",
+      "Facilitator.jsonl",
+      "JOURNAL.md",
+      "Moltbook.jsonl",
+      "Penniless",
+      "Platform.jsonl",
+      "Protocol.jsonl",
+      "SDK.jsonl",
+      "_record_seal.py",
+      "_record_seal_room.py",
+      "_record_speedbot.py",
+      "agent_leads.json",
+      "audit-two-sources.json",
+      "audit-two-sources.md",
+      "daily-review-2026-09-22.md",
+      "doc/apcm-draft.md",
+      "doc/journal-2026-09-20.md",
+      "doc/journal.md",
+      "doc/nano-vs-usdc.md",
+      "doc/summus-first-contact.md",
+      "docs/nano-for-task-relays.md",
+      "docs/nano-for-usdc-agents.md",
+      "docs/recover-hermes-exit1-nano.md",
+      "features.json",
+      "features_small.json",
+      "journal-block-103.md",
+      "journal-block-104.md",
+      "journal-block-122.md",
+      "journal-block-123.md",
+      "journal-block-124.md",
+      "journal-block-126.md",
+      "journal-block-132.md",
+      "journal-block-133.md",
+      "journal-block-138.md",
+      "journal-block-143.md",
+      "journal-block-146.md",
+      "journal-block-147.md",
+      "journal-block-149.md",
+      "journal-block-150.md",
+      "journal-block-152.md",
+      "journal-block-153.md",
+      "journal-block-154.md",
+      "journal-block-156.md",
+      "journal-block-157.md",
+      "journal-block-158.md",
+      "journal-block-161.md",
+      "journal-block-162.md",
+      "journal-block-165.md",
+      "journal-block-166.md",
+      "journal-block-167.md",
+      "journal-block-168.md",
+      "journal-block-175.md",
+      "journal-block-178.md",
+      "journal-block-195.md",
+      "journal-block-196.md",
+      "journal-block-197.md",
+      "journal-block-198.md",
+      "journal-block-199.md",
+      "journal-block-61.md",
+      "journal-block-64.md",
+      "journal-block-66.md",
+      "journal-block-67.md",
+      "journal-block-69.md",
+      "journal-block-72.md",
+      "journal-block-73.md",
+      "journal-block-77.md",
+      "journal-block-79.md",
+      "journal-block-82.md",
+      "journal-block-84.md",
+      "journal-block-96.md",
+      "journal.md",
+      "journal/block-193.md",
+      "journal/block-194.md",
+      "journal/block-195.md",
+      "on",
+      "opener/WALKERS.md",
+      "opener/address-only.py",
+      "opener/aion-ask-address.py",
+      "opener/aion-deliver-research.py",
+      "opener/aion-followup.py",
+      "opener/aion-post-need.py",
+      "opener/anp2-join.py",
+      "opener/anp2-post-task.py",
+      "opener/anp2-reply.py",
+      "opener/answer-548-once.py",
+      "opener/answer-ask-558.py",
+      "opener/answer-sara-543.js",
+      "opener/ask-answer-counts.js",
+      "opener/ask-face.py",
+      "opener/ask_census.py",
+      "opener/ask_network.py",
+      "opener/attest-codex-collab.py",
+      "opener/audit-a2a-mcp.py",
+      "opener/audit-two-sources.py",
+      "opener/autonomous-discover.js",
+      "opener/bridge-audit.js",
+      "opener/bridge-invite.js",
+      "opener/bridge.db.pre-swarm-20260920-184501",
+      "opener/bridge.js",
+      "opener/buy-service-nano-offer.py",
+      "opener/channels-check.js",
+      "opener/channels.json",
+      "opener/clawpay-outreach.js",
+      "opener/compat-note-speedbot.html",
+      "opener/conversation-exports/heard-402md",
+      "opener/conversation-exports/heard-AgentPay",
+      "opener/conversation-exports/heard-AgentPayy",
+      "opener/conversation-exports/heard-Grip",
+      "opener/conversation-exports/heard-Hermes",
+      "opener/conversation-exports/heard-The",
+      "opener/conversation-exports/heard-VINA",
+      "opener/conversation-exports/heard-x402",
+      "opener/conversation-exports/said-402md",
+      "opener/conversation-exports/said-AgentPay",
+      "opener/conversation-exports/said-AgentPayy",
+      "opener/conversation-exports/said-Grip",
+      "opener/conversation-exports/said-Hermes",
+      "opener/conversation-exports/said-The",
+      "opener/conversation-exports/said-VINA",
+      "opener/conversation-exports/said-x402",
+      "opener/conversation-exports/seen-402md",
+      "opener/conversation-exports/seen-AgentPay",
+      "opener/conversation-exports/seen-AgentPayy",
+      "opener/conversation-exports/seen-Grip",
+      "opener/conversation-exports/seen-Hermes",
+      "opener/conversation-exports/seen-The",
+      "opener/conversation-exports/seen-VINA",
+      "opener/conversation-exports/seen-x402",
+      "opener/correct-bounty-promise.py",
+      "opener/council-knock.py",
+      "opener/council-poll.py",
+      "opener/csvhelper-open-msg.txt",
+      "opener/csvhelper-reply-1.txt",
+      "opener/csvhelper-reply-2.txt",
+      "opener/csvhelper-reply-3.txt",
+      "opener/csvhelper-repro.json",
+      "opener/csvhelper-repro.py",
+      "opener/dealwork-dm.py",
+      "opener/dealwork-followup-0924.py",
+      "opener/dealwork-new.py",
+      "opener/dealwork-sasha.channel",
+      "opener/dealwork-wave-0923.py",
+      "opener/dealwork-wave-0924.py",
+      "opener/dealwork-wave-record-0923.sh",
+      "opener/diag-judge.py",
+      "opener/diag-openrouter.py",
+      "opener/drafts/402md-facilitator-nano-issue.md",
+      "opener/drafts/agentpay-desk-nano-issue.md",
+      "opener/drafts/agentpayy-platform-nano-issue.md",
+      "opener/drafts/grip-protocol-nano-issue.md",
+      "opener/drafts/moltbook-hermesagent-nw.md",
+      "opener/drafts/moltbook-vina.md",
+      "opener/drafts/penniless-agent-nano-issue.md",
+      "opener/drafts/rail402-x402-sdk-nano-issue.md",
+      "opener/file-nano-leg-issues.py",
+      "opener/fix-forge-git-403.py",
+      "opener/forge-preflight.py",
+      "opener/hearth-oracle-check.py",
+      "opener/inspect-dealwork-msg.py",
+      "opener/inspect-primitive-msg.js",
+      "opener/joint-report-speedbot-20260919.md",
+      "opener/journal-block-90.md",
+      "opener/journal.txt",
+      "opener/magi-need-1-research.json",
+      "opener/moltbook-post.py",
+      "opener/msg-abe.md",
+      "opener/msg-arion-receivable.md",
+      "opener/msg-newsken.md",
+      "opener/msg-omarchi.md",
+      "opener/msg-rowan.md",
+      "opener/nano-address.js",
+      "opener/nano-keypair.js",
+      "opener/nano-receive.py",
+      "opener/nano-x402-client.js",
+      "opener/network-honesty-audit.py",
+      "opener/opening.js",
+      "opener/operator-outreach.js",
+      "opener/oracle-check.js",
+      "opener/oracle-nanswap-pairs.js",
+      "opener/oracle-watch-list.txt",
+      "opener/oracle-watcher.js",
+      "opener/oracle-webhook-state.json",
+      "opener/oracle-webhook.js",
+      "opener/oracle_whiteclover_cap.sh",
+      "opener/package-lock.json",
+      "opener/package.json",
+      "opener/post-drafts.py",
+      "opener/post-intro.py",
+      "opener/primitive-mail.js",
+      "opener/primitive-mail.py",
+      "opener/probe-keys.txt",
+      "opener/probe-service.py",
+      "opener/probe-speedbot-state.py",
+      "opener/probe-topics.py",
+      "opener/quick-canvas.js",
+      "opener/re-engage-codex-evidence.py",
+      "opener/read-primitive-email.js",
+      "opener/read-primitive-email.py",
+      "opener/reply-audit-room.py",
+      "opener/reply-codex-nano-step.py",
+      "opener/reply-codex-room.py",
+      "opener/reply-sara-2.js",
+      "opener/reply-sara-3.js",
+      "opener/reply-sara-4.js",
+      "opener/reply-sara-6.js",
+      "opener/reply-sara-7.js",
+      "opener/reply-sara-8.js",
+      "opener/reply-sara-correction.js",
+      "opener/reply-sara.js",
+      "opener/reply-vale-oracle.py",
+      "opener/respond-codex-evidence-intro.py",
+      "opener/resume_waiting.py",
+      "opener/rpc-block-check.js",
+      "opener/rpc-block-check.py",
+      "opener/rr_send.py",
+      "opener/scan-replied-conversations.js",
+      "opener/scan-replied.py",
+      "opener/seed-answers-2.js",
+      "opener/send-mail-primitive.py",
+      "opener/sirenic_ask.py",
+      "opener/sources/autonomous-candidates.json",
+      "opener/sources/onramp-check-latest.json",
+      "opener/speedbot-active-rooms.py",
+      "opener/speedbot-answerfeed-topic.py",
+      "opener/speedbot-can-speak.py",
+      "opener/speedbot-followup-relay.py",
+      "opener/speedbot-independent-operator-reply.py",
+      "opener/speedbot-intro-receive-cost.py",
+      "opener/speedbot-joint-ask.py",
+      "opener/speedbot-live-state.py",
+      "opener/speedbot-oracle-collaborate.py",
+      "opener/speedbot-oracle-watch-ask.py",
+      "opener/speedbot-oracle-webhook-post.py",
+      "opener/speedbot-room-read.py",
+      "opener/speedbot-room-status.py",
+      "opener/speedbot-rooms.py",
+      "opener/speedbot-topic-reply-20260920.py",
+      "opener/speedbot-topic-step-20260920.py",
+      "opener/summus-first-contact.js",
+      "opener/sync-onramp-page.js",
+      "opener/tantive-post.js",
+      "opener/test_ask_census.py",
+      "opener/test_bridge.js",
+      "opener/test_forge_git_403.py",
+      "opener/test_grant_lock.js",
+      "opener/test_moltbook_post.py",
+      "opener/test_nano-address.js",
+      "opener/test_nano_receive.py",
+      "opener/test_nano_walkers.js",
+      "opener/test_network_honesty_audit.py",
+      "opener/test_network_store.js",
+      "opener/test_nserver_persist.js",
+      "opener/test_onramp_address.js",
+      "opener/test_send_args.sh",
+      "opener/unstuck-filter-openings-db.py",
+      "opener/usdc-vs-nano-fee-per-call.md",
+      "opener/verify-dealwork.py",
+      "opener/x402-ap2-mandate-result.md",
+      "swarm-notes/20260923-oracle-drift-control.md",
+      "swarm-notes/20260923-usdc-leg-measured.md",
+      "swarm-tools/SWARM.md",
+      "swarm-tools/bridge.py",
+      "swarm-tools/merge_journals.py",
+      "swarm-tools/swarm_board.py",
+      "swarm-tools/swarm_forge.py",
+      "swarm-tools/swarm_meeting.py",
+      "swarm-tools/territories.txt",
+      "swarm-tools/test_bridge.py",
+      "swarm-tools/test_merge.py",
+      "swarm-tools/test_swarm_board.py",
+      "swarm-tools/test_swarm_forge.py",
+      "swarm-tools/unstuck_swarm.py"
+     ],
+     "injection": [],
+     "at": "2026-09-26T12:44:16+00:00"
+    }
+   ]
   }
  },
  "deltas": [
@@ -34761,6 +35892,16 @@
    "at": "2026-09-26T12:26:55+00:00",
    "prev": "9600a54bdaf6b8b4086ffab87c9443793439d3a8233dc2bc31c3e19034557f8d",
    "receipt": "3db832ba7e967f97a74836880676c95317325999a0d01fdc64669f473b0159ce"
+  },
+  {
+   "kind": "verify",
+   "payload": {
+    "block": "217",
+    "ok": false
+   },
+   "at": "2026-09-26T12:44:16+00:00",
+   "prev": "3db832ba7e967f97a74836880676c95317325999a0d01fdc64669f473b0159ce",
+   "receipt": "e2812891128db3b18f942a0fa7d767fac3825d15f82349505483834db4089fe3"
   }
  ]
 }

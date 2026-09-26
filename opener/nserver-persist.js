@@ -31,6 +31,7 @@ const path = require("path");
 const c = require("crypto");
 const s = require("./network-store.js");
 const n = require("./network.js");
+const { isValidNanoAddress } = require("./nano-address.js");
 const onramp = require("./onramp.js");
 // The oracle-integrity scorecard (Block 186). Required lazily inside the handler so a failure to
 // load it cannot stop the ask/answer network from serving — the network is the thing that matters.
@@ -100,7 +101,20 @@ function handleListAsks(req, res) {
   const status = url.searchParams.get("status") || null;
   const type = url.searchParams.get("type") || null;
   const list = s.listAsks({ status, type });
-  send(res, 200, { asks: list.map(publicAsk) });
+  // Forge #614 (flint): the default open-ask view led with the swarm's own probe rows
+  // (nano_1zzz, nano_111111..., 'notarealaddress'), because the board held them exactly
+  // like a real ask. New asks cannot have a non-address asker any more (L90), but the
+  // rows written before the fix are still on the board. Deleting them would be
+  // rewriting the record; labelling each row with whether its asker is a REAL Nano
+  // account is honest and lets any consumer (the site, the census, an outsider) drop
+  // the probes without us pretending they never existed.
+  send(res, 200, {
+    asks: list.map((a) => {
+      const pub = publicAsk(a);
+      pub.valid_asker = isValidNanoAddress(a.asker);
+      return pub;
+    }),
+  });
 }
 
 function handleGetAsk(req, res, id) {
