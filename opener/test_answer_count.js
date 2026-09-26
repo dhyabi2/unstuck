@@ -28,8 +28,8 @@ process.env.NW_DB_PATH = tmpDb;
   try {
     s.resetDb();
 
-    const asker = "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3";
-    const answerer = "nano_3yo6rq85c1agb5ynn69fnmxi4y9bpct8ju1emcuc4ajx5t3o3z69i1kx847x";
+    const asker = "nano_31is4trad73u5jrcoah968zpna6yg3yg7w94n4pkpoxhwnmytrbddmb1exzr";
+    const answerer = "nano_1jxwy4e1p9qrks7kgi75gawy6eocca56g48tahs353aswdkdpsr8iwn6e5oy";
 
     const a = s.createAsk({
       asker,
@@ -71,7 +71,7 @@ process.env.NW_DB_PATH = tmpDb;
       JSON.stringify(detail && detail.answers));
 
     // A second answer makes the count 2.
-    s.addAnswer(a.id, { answerer: "nano_3she8dp5bamqhbw6tuwq4u9mbfey7e5b9nw4efzqxqj3ekhhrjrpc9qzj67x", body: "also check the response headers" });
+    s.addAnswer(a.id, { answerer: "nano_198sz1w8xgsymtn8upeuggh9a7kzfyahxhf34xdx5q3xq6jej4ztfq6ny1in", body: "also check the response headers" });
     const detail2 = s.getAsk(a.id);
     check("detail answerCount is 2 after second answer",
       detail2 && detail2.answerCount === 2,

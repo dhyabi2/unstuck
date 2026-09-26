@@ -32,6 +32,15 @@ function createAsk({ asker, title, body, bountyRaw, bountyAsset = VALID_ASSET, n
   if (typeof asker !== "string" || !asker.startsWith("nano_")) {
     throw new Error("an ask needs a Nano asker address");
   }
+  // Forge #608 (grove, measured live 2026-09-26): this check was `startsWith("nano_")`
+  // alone, so the create path stored any string beginning with nano_ — including
+  // `nano_1zzz` and a shape-valid but checksum-invalid address — as a real asker.
+  // The ask board is the network's public record; an ask attributed to a string that
+  // is not a Nano address is a row no outside agent can read as real activity. Same
+  // structural gate the answer path already uses.
+  if (!isWellFormedNanoAddress(asker)) {
+    throw new Error("an ask needs a well-formed Nano asker address");
+  }
   if (typeof title !== "string" || title.trim().length === 0) {
     throw new Error("an ask needs a non-empty title");
   }
@@ -97,15 +106,16 @@ function hasBounty(ask) {
  * version of createAsk accepted because it only checked `startsWith("nano_")`. A board whose
  * asker is a probe string is a board an outside agent cannot read as real activity.
  *
- * This is a STRUCTURAL check (shape and alphabet), not a checksum: the checksum lives in
- * opener/nano-keygen.py and is applied by the ask census, which is the authority on whether an
- * address is real. This one exists so the write path cannot store obvious garbage.
+ * This was a STRUCTURAL check (shape and alphabet), not a checksum. That was not enough:
+ * Forge #608 (grove) measured live 2026-09-26 that a shape-valid but checksum-invalid
+ * address (`nano_111...`) was stored as a real asker. The checksum now lives in
+ * opener/nano-address.js and this delegates to it, so the write path stores only addresses
+ * that can actually receive.
  */
-const NANO_ALPHABET = "13456789abcdefghijkmnopqrstuwxyz";
+const { isValidNanoAddress } = require("./nano-address");
+
 function isWellFormedNanoAddress(a) {
-  if (typeof a !== "string" || a.length !== 65 || !a.startsWith("nano_")) return false;
-  for (const ch of a.slice(5)) if (!NANO_ALPHABET.includes(ch)) return false;
-  return true;
+  return isValidNanoAddress(a);
 }
 
 /**

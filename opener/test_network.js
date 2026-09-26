@@ -12,13 +12,13 @@
 const assert = require("assert");
 const n = require("./network.js");
 
-// Well-formed Nano addresses (65 chars, nano_ prefix, valid Base32 alphabet) for
-// domain-logic fixtures. addAnswer (L73/L78) refuses any answerer that is not a
-// well-formed Nano address, so the old one-letter placeholders can no longer reach
-// acceptAnswer — answerers must be real addresses.
-const ASKER = "nano_a6i9zwyrf8z3ru1wjg8n3331rfu3gwzgpggxk3t8dk9ouemkzs4yhstdqq7w";
-const ANSWERER = "nano_577qcmif4cusqwj43qxnrucdhg3dndaqdwtqpqwcsxhzjzpxxpxzgncjymmt";
-const INTRUDER = "nano_336t1jj7sgnfc1nxm45hxxpn8mywd5sixtzf3x4bik5n38df9pui378i36st";
+// Real Nano addresses (valid checksum) for domain-logic fixtures. addAnswer (L73/L78)
+// and, since Forge #608, createAsk itself refuse any address whose checksum does not
+// match its key, so the old alphabet-soup placeholders can no longer be used. These
+// three are derived from random keys but are genuine, self-consistent addresses.
+const ASKER = "nano_3yckpg1bhe4je1bc445j3x5m13s6qwuyt39pit5n55dernm5pprcz6fgpq4h";
+const ANSWERER = "nano_3g8ygc9yautjzhmwo886yfr7wgqm9e9tb59szgr9zg66a7et9px841sh39dw";
+const INTRUDER = "nano_39kwkihzeqmrx1wunkxoairmcmq7uc1zmo1oz8zki8mqrn7ruaqgjk76bcj9";
 
 let failed = 0;
 const law = (nm, fn) => {

@@ -1384,6 +1384,19 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-26T11:58:14+00:00"
+  },
+  {
+   "id": "L90",
+   "block": 217.0,
+   "statement": "L90: the ask write path accepts an asker only when the address is a real Nano account, checksum included.",
+   "test": "node opener/test_nano-address.js",
+   "scope": [],
+   "oracle": "opener/nano-address.js",
+   "expect": "10 passed, 0 failed",
+   "source": null,
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-26T12:26:55+00:00"
   }
  ],
  "blocks": {
@@ -34737,6 +34750,17 @@
    "at": "2026-09-26T12:09:26+00:00",
    "prev": "216b315ad18c43c4be2a06f8302976caabcfb35933a7648cb8e3e7275ee30d55",
    "receipt": "9600a54bdaf6b8b4086ffab87c9443793439d3a8233dc2bc31c3e19034557f8d"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L90",
+    "block": "217",
+    "statement_sha": "aaf8cd89f1e0ea360c1c60457c83679d1fd526f7f2283d17aece7f4056756116"
+   },
+   "at": "2026-09-26T12:26:55+00:00",
+   "prev": "9600a54bdaf6b8b4086ffab87c9443793439d3a8233dc2bc31c3e19034557f8d",
+   "receipt": "3db832ba7e967f97a74836880676c95317325999a0d01fdc64669f473b0159ce"
   }
  ]
 }

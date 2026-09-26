@@ -29,9 +29,9 @@ function check(name, cond, detail = "") {
   else { failed++; console.log(`FAIL ${name} ${detail ? ": " + detail : ""}`); }
 }
 
-const nanoA = "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3";
-const nanoB = "nano_3yo6rq85c1agb5ynn69fnmxi4y9bpct8ju1emcuc4ajx5t3o3z69i1kx847x";
-const nanoC = "nano_3zqdw3qf1z8k3jx8jintaiwpo3yz7zqh1me4ph5j439ts8hsppx8dzy4xcsz";
+const nanoA = "nano_3ppzytmqf6gfhd84wipe61owb5nmw919dz4m8oop4msz7cr9ofs3cza4zibj";
+const nanoB = "nano_3on5iz7bfg44zhqgapdme6zp7yun4yk37kofukctyiiefhfhfjh45eihgdk1";
+const nanoC = "nano_3sxqbj4d5bet7uczwo8b8y9pghhn5kgi51axhuor1j8bxjf17sh3tt4kr9ua";
 const bounty = "1000000000000000000000000";
 const HASH = "A".repeat(64);
 const HASH2 = "B".repeat(64);
