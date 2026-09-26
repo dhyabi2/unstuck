@@ -25,6 +25,26 @@
       "down": 0,
       "fired_down": false,
       "fired_recovery": false
+    },
+    "https://en.wikipedia.org": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://expired.badssl.com": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://self-signed.badssl.com": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://wrong.host.badssl.com": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
     }
   }
 }

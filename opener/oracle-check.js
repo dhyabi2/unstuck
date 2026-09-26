@@ -150,6 +150,12 @@ function fetchOnce(url, timeoutMs, hop = 0, chain = []) {
         port: u.port ? Number(u.port) : (isTls ? 443 : 80),
         path: (u.pathname || "/") + (u.search || ""),
         headers: { "User-Agent": UA, Accept: "*/*" },
+        agent: false, // a fresh socket every fetch: secureConnect always fires and the cert is
+        // always captured. Node's global agent pools reused keep-alive sockets on which the
+        // secureConnect listener never re-fires and res.socket.getPeerCertificate() returns {},
+        // which is exactly why example.com (checked 184x, the most-reused origin) read
+        // tls.valid=false after its first check while fresh origins read true (ARION's
+        // regression, 2026-09-25; reproduced 5/5 with the module, 5/5 green with agent:false).
         timeout: timeoutMs,
         // A 3xx is followed by hand; a certificate error is recorded, not swallowed.
         rejectUnauthorized: true,
