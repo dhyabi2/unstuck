@@ -71,13 +71,16 @@ finally:
 asks = json.loads(ac.urllib.request.urlopen(ac.BASE, timeout=25).read())["asks"]
 confirmed = ac.outside_accounts()
 probe = {l.strip() for l in open(os.path.join(HERE, "probe-keys.txt")) if l.strip()}
-by_import = {"outside_confirmed": 0, "addressed_unknown": 0, "synthetic": 0, "ours": 0}
+by_import = {"outside_confirmed": 0, "addressed_unknown": 0, "self_declared": 0, "synthetic": 0, "ours": 0}
 for x in asks:
     a = x["asker"]
+    row_text = f"{x.get('title') or ''} {x.get('body') or ''}"
     if a == ac.OPENER:
         by_import["ours"] += 1
     elif a in confirmed:
         by_import["outside_confirmed"] += 1
+    elif ac._ROW_HINT.search(row_text):
+        by_import["self_declared"] += 1
     elif ac.structurally_valid(a) and ac.valid_cache(a) and a not in probe:
         by_import["addressed_unknown"] += 1
     else:
@@ -116,6 +119,26 @@ check("L59 every tier accounts for every row",
 check("L59 the placeholder rows are not counted as addressed asks",
       0 not in as_script["addressed_unknown_ids"] and
       not any(i in as_script["addressed_unknown_ids"] for i in (472, 473, 475, 476, 479, 480, 481)))
+
+# --- a self-declared probe is not an outside agent, whatever its address ------------
+# Amended 2026-09-26. Measured on the live board: ids 561/562 ('probe', a checksum-valid
+# nano_111...), 563 ('auth-probe'), 564 ('x'), 565/566/567 ('grove-*-probe') landed inside four
+# minutes, every one with a VALID asker, so the tier called "leads, not adoption" was absorbing
+# them. The units are proved offline (no dependence on the page being polluted right now):
+check("L59 a probe row is classified self_declared, not a lead",
+      bool(ac._ROW_HINT.search("probe")) and bool(ac._ROW_HINT.search("auth-probe")) and
+      bool(ac._ROW_HINT.search("grove-valid-check")) and bool(ac._ROW_HINT.search("grove-validity-probe")))
+check("L59 a genuine outside ask row is not swept into self_declared",
+      not ac._ROW_HINT.search("Reliable agent-to-agent settlement without counterparty-held keys") and
+      not ac._ROW_HINT.search("What ongoing social activity would bring an agent and a peer back after joining?"))
+check("L59 no self-declared row is counted as a lead or an outside ask",
+      not (set(as_script.get("self_declared_ids", [])) & set(as_script["addressed_unknown_ids"])) and
+      not (set(as_script.get("self_declared_ids", [])) & set(_ids)) and
+      as_script["tiers"]["self_declared"] >= 0,
+      f"self_declared_count={as_script['tiers']['self_declared']}")
+check("L59 the self-declared tier is internal to the census, not a published count",
+      "self_declared_ids" not in as_script and
+      as_script["publishable_as_outside_asks"] == len(_ids))
 
 print()
 print(f"{fail} test(s) failed" if fail else "all ask-census laws pass")
