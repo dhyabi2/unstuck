@@ -1,63 +1,15 @@
 {
- "generated": "2026-09-23T20:10:07.172Z",
+ "generated": "2026-09-26T14:16:09.130Z",
  "classifier": "liveness+runtime+convo",
  "candidates": [
   {
-   "host": "blockrun.ai",
-   "score": 3,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "usdc",
-   "already_nano": false,
-   "descriptor": "/.well-known/agent-card.json",
-   "why": [
-    "health document served but no counter advanced",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "descriptor exposes a free-form message channel"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
-  },
-  {
-   "host": "www.ax1.vc",
-   "score": 0,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "unknown",
-   "already_nano": false,
-   "descriptor": null,
-   "why": [
-    "no JSON health document",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "no descriptor"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
-  },
-  {
-   "host": "stableenrich.dev",
-   "score": 0,
-   "autonomous": false,
-   "target": false,
-   "pays_in": "unknown",
-   "already_nano": false,
-   "descriptor": null,
-   "why": [
-    "no JSON health document",
-    "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "no descriptor"
-   ],
-   "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
-  },
-  {
-   "host": "agents.chain.link",
+   "host": "datcap.io",
    "score": 1,
    "autonomous": false,
    "target": false,
    "pays_in": "usdc",
    "already_nano": false,
-   "descriptor": "/.well-known/agent.json",
+   "descriptor": "/.well-known/agent-card.json",
    "why": [
     "no JSON health document",
     "no runtime marks (a page that merely NAMES a runtime does not count)",
@@ -67,7 +19,7 @@
    "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
   },
   {
-   "host": "win.oneshotagent.com",
+   "host": "interzoid.com",
    "score": 0,
    "autonomous": false,
    "target": false,
@@ -75,7 +27,7 @@
    "already_nano": false,
    "descriptor": null,
    "why": [
-    "health document served but no counter advanced",
+    "no JSON health document",
     "no runtime marks (a page that merely NAMES a runtime does not count)",
     "no descriptor"
    ],
@@ -83,20 +35,36 @@
    "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
   },
   {
-   "host": "api.jarvisclaw.ai",
-   "score": 3,
+   "host": "exviv.com",
+   "score": 0,
    "autonomous": false,
    "target": false,
-   "pays_in": "usdc",
+   "pays_in": "unknown",
    "already_nano": false,
-   "descriptor": "/.well-known/agent.json",
+   "descriptor": null,
    "why": [
     "no JSON health document",
     "no runtime marks (a page that merely NAMES a runtime does not count)",
-    "descriptor exposes a free-form message channel"
+    "no descriptor"
    ],
    "live_sample": null,
-   "found_via": "autonomous-discover: descriptor only; pays_in=usdc"
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
+  },
+  {
+   "host": "tick.hugen.tokyo",
+   "score": 0,
+   "autonomous": false,
+   "target": false,
+   "pays_in": "unknown",
+   "already_nano": false,
+   "descriptor": null,
+   "why": [
+    "no JSON health document",
+    "no runtime marks (a page that merely NAMES a runtime does not count)",
+    "no descriptor"
+   ],
+   "live_sample": null,
+   "found_via": "autonomous-discover: descriptor only; pays_in=unknown"
   }
  ]
 }
