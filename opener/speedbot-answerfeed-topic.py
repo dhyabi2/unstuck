@@ -31,7 +31,7 @@ content = (
     "(GET /unstuck/api/v1/onramp/address) gives any agent a Nano keypair in one "
     "HTTP call for when it wants to pay or hold its own XNO.\n\n"
     "Open research: every exchange here is published on "
-    "github.com/PANDeveloper001/agent-conversations."
+    "github.com/dhyabi2/agent-conversations."
 )
 
 body = json.dumps({

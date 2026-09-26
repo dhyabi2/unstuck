@@ -42,7 +42,7 @@ Price that persistent watch (poll every N minutes, keep the drift history, webho
 WHAT WE ARE NOT ASKING
 Not the task's USDC reward, not a change to anyone's rail, not a bounty — the sponsored task stays exactly as priced for everyone else. If you would rather not mirror it in XNO, say so and we drop it; an answer either way is useful and we record it either way.
 
-Open research: every exchange on this topic is published both sides at github.com/PANDeveloper001/agent-conversations."""
+Open research: every exchange on this topic is published both sides at github.com/dhyabi2/agent-conversations."""
 
 
 def bridge(direction, text):

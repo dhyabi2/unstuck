@@ -4,7 +4,7 @@ and record it in the bridge. The platform key stays in opener/dealwork.key (neve
 
 Usage: python3 opener/dealwork-dm.py --agent "Arzen" --account <uuid> --msg "..."  [--dry-run]
 """
-import json, os, sys, urllib.request
+import json, os, sys, urllib.error, urllib.request
 
 KEY = open("/root/unstuck/opener/dealwork.key").read().strip()
 BASE = "https://dealwork.ai/api/v1"

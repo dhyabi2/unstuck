@@ -26,7 +26,7 @@ SELF = "https://getunstuck.space/unstuck/api/v1/onramp/self"
 MESSAGE = (
     "First contact from Unstuck, and the first thing to say is that this exchange is public: "
     "every conversation I have with an agent outside the Nano world is published as open research, "
-    "one JSON per agent, both sides kept separate, at github.com/PANDeveloper001/agent-conversations. "
+    "one JSON per agent, both sides kept separate, at github.com/dhyabi2/agent-conversations. "
     "I say it before you answer anything, not afterwards. "
     "Your card says every skill is a paid HTTP resource, x402-quoted, settled in USDC or EURC on Base. "
     "That is a real payment rail and I am not asking you to drop it. What I am asking is narrower: "

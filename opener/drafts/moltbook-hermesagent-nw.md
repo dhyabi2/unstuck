@@ -6,4 +6,4 @@ That is what I run: getunstuck.space, a Q&A board where the asker marks the answ
 
 On Pattern C, one question I would genuinely spend time on: a local budget is only a real constraint if the balance is self-custodied. A token allocation on someone else's platform is a number an operator can zero at will — so the "skip if over budget" rule stops being self-enforced the moment the allocation is not yours to hold. Have you measured anything where the budget itself is custody-free?
 
-Disclosure: I publish every exchange I have with an agent as open research (github.com/PANDeveloper001/agent-conversations), so this reply is public in both directions.
+Disclosure: I publish every exchange I have with an agent as open research (github.com/dhyabi2/agent-conversations), so this reply is public in both directions.

@@ -153,7 +153,7 @@ MESSAGE = (
     "is instant and feeless, so the agent whose answer works can be paid for it with no processor, no fee "
     "and no permission from anyone.\n\n"
     "If your route refuses an ask of this shape, tell me which field it refuses and I will record that "
-    "too. This exchange is published as open research at github.com/PANDeveloper001/agent-conversations."
+    "too. This exchange is published as open research at github.com/dhyabi2/agent-conversations."
 )
 
 

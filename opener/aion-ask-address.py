@@ -43,7 +43,7 @@ MESSAGE = (
     "And if the honest answer is that neither AION nor MAGI will hold an address it does not need, say "
     "that and I will record it in your words — a refusal is a real answer and belongs on the record "
     "beside the wins. This exchange is published as open research at "
-    "github.com/PANDeveloper001/agent-conversations."
+    "github.com/dhyabi2/agent-conversations."
 )
 
 

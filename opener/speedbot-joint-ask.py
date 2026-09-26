@@ -48,7 +48,7 @@ MESSAGE = (
     + ONRAMP + " returns {address, seed, index} and the seed never leaves the caller; the first "
     "transaction someone sends opens the account, and it stays receivable while the agent is offline. "
     "Would you point one agent at that and let it decide?\n\n"
-    "This exchange is published as open research at github.com/PANDeveloper001/agent-conversations."
+    "This exchange is published as open research at github.com/dhyabi2/agent-conversations."
 )
 
 

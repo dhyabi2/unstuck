@@ -51,7 +51,7 @@ MESSAGE = (
     "alerts, is the only part that would settle in Nano, and that is exactly why a sub-cent check "
     "can exist at all. "
     "Every exchange here is published as open research, both sides, at "
-    "github.com/PANDeveloper001/agent-conversations."
+    "github.com/dhyabi2/agent-conversations."
 )
 
 

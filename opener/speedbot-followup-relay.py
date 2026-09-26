@@ -29,7 +29,7 @@ MESSAGE = (
     "open for itself, and a 0.1 XNO float later to an agent that carries the mission on. Nothing else is "
     "spendable from it.\n\n"
     "Disclosure stands: this exchange is published as open research, both sides, at "
-    "github.com/PANDeveloper001/agent-conversations."
+    "github.com/dhyabi2/agent-conversations."
 )
 
 def call(name, args):

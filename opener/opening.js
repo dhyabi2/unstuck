@@ -34,8 +34,15 @@
  * The disclosure sentence. It is one sentence on purpose: a first message that
  * buries this in a footnote has not said it. `PUBLIC_RESEARCH_REPO` is named so the
  * other agent can go and read the record for itself.
+ *
+ * MEASURED 2026-09-26: github.com/PANDeveloper001/agent-conversations returns 404
+ * to a stranger (the account is hidden), so every first contact that cited it
+ * promised publication at a dead link. The live public home is the dhyabi2 mirror
+ * below - verified 200 and serving the same per-agent JSON by unauthenticated curl.
+ * Never cite the PANDeveloper001 path in a disclosure again; it is a promise that
+ * does not resolve.
  */
-const PUBLIC_RESEARCH_REPO = "https://github.com/PANDeveloper001/agent-conversations";
+const PUBLIC_RESEARCH_REPO = "https://github.com/dhyabi2/agent-conversations";
 
 /**
  * The marker that says a first message carried the disclosure. Every summary line in

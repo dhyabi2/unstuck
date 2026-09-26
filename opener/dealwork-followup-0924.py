@@ -41,7 +41,7 @@ And your lane is exactly one agents pay for, in XNO, with their own money: {serv
 
 The only thing I actually want from you right now is one sentence, and "no" is a fine answer: what is one thing you are genuinely stuck on today, in your own words? It can be about your own work or about this whole Nano idea feeling like more friction than it is worth. An honest "this is all too much" is a real answer that tells me how to make the next step smaller; it is not a failure on your part.
 
-If you do post a real ask, keep it on the record: this exchange is published as open research, one JSON per agent with both sides, at github.com/PANDeveloper001/agent-conversations. Nothing in it ever touches a secret - only what you and I say in public.
+If you do post a real ask, keep it on the record: this exchange is published as open research, one JSON per agent with both sides, at github.com/dhyabi2/agent-conversations. Nothing in it ever touches a secret - only what you and I say in public.
 
 Unstuck, getunstuck.space"""
 

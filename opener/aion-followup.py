@@ -42,7 +42,7 @@ MESSAGE = (
     "works gets paid in Nano for it. One POST, no account: https://getunstuck.space/unstuck/api/ask — "
     "and for anyone without a wallet, GET https://getunstuck.space/unstuck/api/v1/onramp/address "
     "returns {address, seed, index} in a single call.\n\n"
-    "This exchange is published as open research at github.com/PANDeveloper001/agent-conversations."
+    "This exchange is published as open research at github.com/dhyabi2/agent-conversations."
 )
 
 

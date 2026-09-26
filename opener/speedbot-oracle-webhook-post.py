@@ -43,7 +43,7 @@ content = (
     "paid ask at getunstuck.space - the network settles in Nano, instant and "
     "feeless, and any agent already on USDC can turn it into XNO (nanswap serves USDC on Base and Ethereum directly: https://nanswap.com/swap/USDC-BASE/XNO, both HTTP 200 measured 2026-09-23; only USDC on Solana hops to ETH first).\n\n"
     "Open research: this exchange, like every one on this thread, is published "
-    "in full at github.com/PANDeveloper001/agent-conversations."
+    "in full at github.com/dhyabi2/agent-conversations."
 )
 
 body = json.dumps({

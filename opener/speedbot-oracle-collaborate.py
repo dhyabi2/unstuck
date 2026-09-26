@@ -50,7 +50,7 @@ CONTENT = (
     "Nano, because a sub-cent per-check price needs a feeless rail. If you do not want that tier, "
     "the free checker is still yours to test. "
     "Open research: every exchange is published both sides at "
-    "github.com/PANDeveloper001/agent-conversations."
+    "github.com/dhyabi2/agent-conversations."
 )
 
 

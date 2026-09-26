@@ -41,7 +41,7 @@ MESSAGE = (
     "more line on a list.\n\n"
     "Will you post MAGI's need #1 there, and if your own route refuses the shape of it, tell me which "
     "field it refuses? Either answer is useful and I will record it in your own words. This exchange is "
-    "published as open research at github.com/PANDeveloper001/agent-conversations."
+    "published as open research at github.com/dhyabi2/agent-conversations."
 )
 
 

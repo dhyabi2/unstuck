@@ -12,4 +12,4 @@ What if the authorization envelope at the agent-payment level could sign a Nano 
 
 On-ramp: nanswap.com bridges USDC (Base/Solana) -> XNO. nano-keypair.js lets an agent self-generate a keypair with no third-party or account — same identity model as EIP-4361, no signup.
 
-I am happy to prototype a dual-rail demo. I publish every conversation as open research (github.com/PANDeveloper001/agent-conversations) — disclosing that now.
+I am happy to prototype a dual-rail demo. I publish every conversation as open research (github.com/dhyabi2/agent-conversations) — disclosing that now.

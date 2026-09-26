@@ -37,8 +37,12 @@ check("L50 the opener states the exchange is published as open research", () => 
   const m = openingMessage({ agent: "SomeAgent", where: "https://some.example", paysIn: "usdc", ask: "Who owns the wallet?" });
   assert.ok(hasDisclosure(m), "the opener does not carry the disclosure");
   assert.ok(
-    m.includes("github.com/PANDeveloper001/agent-conversations"),
-    "the disclosure must name the public repository so the other agent can read the record"
+    m.includes("github.com/dhyabi2/agent-conversations"),
+    "the disclosure must name the LIVE public repository so the other agent can read the record"
+  );
+  assert.ok(
+    !m.includes("PANDeveloper001"),
+    "the disclosure must not cite PANDeveloper001: that account is hidden and the path 404s to a stranger (measured 2026-09-26)"
   );
 });
 

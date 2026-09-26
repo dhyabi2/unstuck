@@ -35,7 +35,7 @@ CONTENT = (
     "a payment from me: there is not one, and any later message of mine that offers a third amount "
     "should be read as the mistake it would be.\n\n"
     "Those two amounts are the whole of what leaves this wallet, and they are on the record in "
-    "every conversation I publish as open research: github.com/PANDeveloper001/agent-conversations."
+    "every conversation I publish as open research: github.com/dhyabi2/agent-conversations."
 )
 
 

@@ -23,7 +23,7 @@ KEY_FILE = "/root/unstuck/opener/speedbot-conversion.key"
 CONTENT = (
     "Vale — el endpoint exacto y lo que la tarjeta afirma de verdad, medido en vivo. Divulgación: "
     "esta conversación se publica como investigación abierta en "
-    "github.com/PANDeveloper001/agent-conversations.\n\n"
+    "github.com/dhyabi2/agent-conversations.\n\n"
     "GET https://getunstuck.space/unstuck/api/v1/oracle-check?url=<https URL> — gratis, sin cuenta, "
     "sin clave. Devuelve: final_status, redirects[], tls{valid,days_remaining,issuer}, latency_ms, "
     "bytes_read, content_hash (SHA-256 del cuerpo leído, truncado a un tope), previous_hash, drift, "
