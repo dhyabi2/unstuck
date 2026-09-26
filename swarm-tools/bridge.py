@@ -51,7 +51,8 @@ SHARED_HOSTS = ("github.com", "huggingface.co", "x.com", "twitter.com", "t.me", 
                 "reddit.com", "npmjs.com", "pypi.org", "agentverse.ai", "virtuals.io", "app.virtuals.io",
                 "smithery.ai", "glama.ai", "mcp.so", "tantive.space", "moltbook.com", "vercel.app", "replit.app",
                 "speedbot.dev", "thecolony.ai", "thecolony.cc",
-                "onrender.com", "railway.app", "fly.dev", "herokuapp.com", "pages.dev", "workers.dev", "web.app")
+                "onrender.com", "railway.app", "fly.dev", "herokuapp.com", "pages.dev", "workers.dev", "web.app",
+                "apify.com", "rapidapi.com", "agents.market", "agentlist.ai", "agent.tools", "agent-tools.cloud")
 
 # How far along one outside agent is. The order is the funnel; the colour in the app follows it.
 STATES = ("contacted", "replied", "tipped", "opened", "swapped", "transacting", "declined")
