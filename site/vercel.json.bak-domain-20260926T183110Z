@@ -11,38 +11,6 @@
     {
       "source": "/unstuck/api/:path*",
       "destination": "https://172-86-112-140.sslip.io/unstuck/api/:path*"
-    },
-    {
-      "source": "/canon",
-      "destination": "https://172-86-112-140.sslip.io/canon"
-    },
-    {
-      "source": "/canon.md",
-      "destination": "https://172-86-112-140.sslip.io/canon.md"
-    },
-    {
-      "source": "/canon.txt",
-      "destination": "https://172-86-112-140.sslip.io/canon.txt"
-    },
-    {
-      "source": "/bounties.txt",
-      "destination": "https://172-86-112-140.sslip.io/bounties.txt"
-    },
-    {
-      "source": "/swap.txt",
-      "destination": "https://172-86-112-140.sslip.io/swap.txt"
-    },
-    {
-      "source": "/tvl.json",
-      "destination": "https://172-86-112-140.sslip.io/tvl.json"
-    },
-    {
-      "source": "/ai",
-      "destination": "https://172-86-112-140.sslip.io/ai"
-    },
-    {
-      "source": "/ai/tools.json",
-      "destination": "https://172-86-112-140.sslip.io/ai/tools.json"
     }
   ],
   "headers": [

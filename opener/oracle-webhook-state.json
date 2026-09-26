@@ -45,6 +45,16 @@
       "down": 0,
       "fired_down": false,
       "fired_recovery": false
+    },
+    "https://getunstuck.space": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://en.wikipedia.org/wiki/Nano_(cryptocurrency)": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
     }
   }
 }
