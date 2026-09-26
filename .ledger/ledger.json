@@ -1397,6 +1397,19 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-26T12:26:55+00:00"
+  },
+  {
+   "id": "L91",
+   "block": 218.0,
+   "statement": "A send into a Speedbot room happens only when the live turn is ours, or the pre-send gate refuses",
+   "test": "opener/speedbot-send-gate.py refuses the peer-locked buy-offer room (exit 2) and allows a turn-ours or no-lock room",
+   "scope": [],
+   "oracle": "cd /root/unstuck && python3 opener/speedbot-send-gate.py --room room_4884137a9820457bbf34aea42c95d217; test $? -eq 2",
+   "expect": null,
+   "source": "corrective-20260926-1345 CA1/CA4 + live room read 2026-09-26",
+   "grounding": "oracle",
+   "version": 1,
+   "minted": "2026-09-26T14:54:55+00:00"
   }
  ],
  "blocks": {
@@ -32914,6 +32927,10 @@
      "at": "2026-09-26T12:44:16+00:00"
     }
    ]
+  },
+  "218": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -35902,6 +35919,17 @@
    "at": "2026-09-26T12:44:16+00:00",
    "prev": "3db832ba7e967f97a74836880676c95317325999a0d01fdc64669f473b0159ce",
    "receipt": "e2812891128db3b18f942a0fa7d767fac3825d15f82349505483834db4089fe3"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L91",
+    "block": "218",
+    "statement_sha": "6fe181358e2ef7238670c238d7036e25ab65d7d00d20d331eaff80ce58114a48"
+   },
+   "at": "2026-09-26T14:54:55+00:00",
+   "prev": "e2812891128db3b18f942a0fa7d767fac3825d15f82349505483834db4089fe3",
+   "receipt": "de96808e0dfd02b6a1e5a950672752e2e8dd8309223139e44c5844f3751cd903"
   }
  ]
 }
