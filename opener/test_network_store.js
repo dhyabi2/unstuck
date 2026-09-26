@@ -324,6 +324,31 @@ process.env.NW_DB_PATH = tmpDb;
     check("F56c startup migration leaves an outside-genuine ask type='ask'",
       stillThere && stillThere.type === "ask", JSON.stringify(stillThere && stillThere.type));
 
+    // Forge #632 (ember): the public genuine-asks view led with probe/test debris
+    // (72 'newcomer flow confirmation', 71 'x', 70 'positive control', 69 'shape probe',
+    // 68 'checksum-shape probe', 67 'grove-valid-check', 66/65 grove-zzz/validity-probe,
+    // 63 'auth-probe', 62/61 'probe', 74 'SPA end-to-end verification'). All are internal
+    // tests that must sweep to type='test' while a genuine question stays 'ask'.
+    const f632Probes = [
+      "newcomer flow confirmation", "x", "positive control", "shape probe",
+      "checksum-shape probe", "grove-valid-check", "grove-zzz-probe",
+      "grove-validity-probe", "auth-probe", "probe", "SPA end-to-end verification",
+    ];
+    for (const t of f632Probes) {
+      const p = s5.createAsk({ asker: F56, title: t, body: "b", bountyRaw: "1" });
+      check(`#632 probe title '${t}' stored as type='test'`,
+        p.type === "test", String(p.type));
+      check(`#632 probe title '${t}' absent from the genuine asks view`,
+        !s5.listAsks({ type: "ask" }).some((a) => a.id === p.id));
+    }
+    // The boundary: a genuine question that merely CONTAINS one of these words mid-title
+    // is not a probe — the classifier is anchored whole-title, exactly as F56b proves.
+    const real632 = s5.createAsk({
+      asker: F56, title: "How do I shape a probe payload for the Nano RPC?", body: "b", bountyRaw: "1",
+    });
+    check("#632 a genuine title containing 'probe' mid-sentence stays type='ask'",
+      real632.type === "ask", String(real632.type));
+
     // L88 (2026-09-24): the same answerer may not post the same words twice on one ask. Measured on
     // ask 543: 21 answers, two byte-identical duplicates (159 and 173 repeating 156), which made eight
     // distinct answerers read as one voice. The control below proves the refusal is exact-match only:
