@@ -123,6 +123,72 @@ law("B4 payments tracked per block hash are idempotent in /verify-payment endpoi
 });
 
 // ============================================================
+// B5 — A verified block is bound to its claim (change B5)
+// ============================================================
+
+const BRIDGE_ADDR = process.env.BRIDGE_NANO_ADDRESS ||
+  "nano_1434j1n4sin4cefs5njibag4tsmo596fmg3s6bdogtod3ndmdfez5yuebrh9";
+
+// Mock the RPC read so the test is deterministic and offline.
+function withBlocks(blocks, fn) {
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async () => ({ ok: true, status: 200, json: async () => blocks });
+  return Promise.resolve(fn()).finally(() => { globalThis.fetch = origFetch; });
+}
+
+const paidBlock = (linkAsAccount) => ({
+  contents: {
+    type: "state",
+    link_as_account: linkAsAccount,
+    balance: "1000000000000000000000000000",
+    account: "nano_3payer00000000000000000000000000000000000000000000000000000",
+  },
+  previous_balance: "0",
+});
+
+law("B5 verifyNanoPayment refuses a block whose payee is not bound to the claim", async () => {
+  await withBlocks(paidBlock("nano_3someoneelse00000000000000000000000000000000000000000000000000000"), async () => {
+    const r = await bridge.verifyNanoPayment("a".repeat(64), "100000000000000000000000000");
+    assert.strictEqual(r.valid, false, "a block paid to a third party must not unlock a claim");
+    assert.ok(/not bound/.test(r.reason), `reason should name the binding: ${r.reason}`);
+  });
+});
+
+law("B5 verifyNanoPayment still accepts a block paid to the bridge address", async () => {
+  await withBlocks(paidBlock(BRIDGE_ADDR), async () => {
+    const r = await bridge.verifyNanoPayment("b".repeat(64), "100000000000000000000000000");
+    assert.strictEqual(r.valid, true, "the ordinary path must not regress");
+    assert.strictEqual(r.amount_raw, "1000000000000000000000000000");
+  });
+});
+
+law("B5 verifyNanoPayment honours an explicit per-claim payee", async () => {
+  await withBlocks(paidBlock("nano_3ownpayee0000000000000000000000000000000000000000000000000000000"), async () => {
+    const r = await bridge.verifyNanoPayment("c".repeat(64), {
+      amountRaw: "100000000000000000000000000",
+      payee: "nano_3ownpayee0000000000000000000000000000000000000000000000000000000",
+    });
+    assert.strictEqual(r.valid, true, "a claim may name its own payee");
+  });
+});
+
+law("B5 verifyNanoPayment ties the same block to exactly one claim", async () => {
+  const block = paidBlock("nano_3ownpayee0000000000000000000000000000000000000000000000000000000");
+  await withBlocks(block, async () => {
+    const bound = await bridge.verifyNanoPayment("d".repeat(64), {
+      amountRaw: "100000000000000000000000000",
+      payee: "nano_3ownpayee0000000000000000000000000000000000000000000000000000000",
+    });
+    const other = await bridge.verifyNanoPayment("d".repeat(64), {
+      amountRaw: "100000000000000000000000000",
+      payee: "nano_3adifferentclaim0000000000000000000000000000000000000000000000000",
+    });
+    assert.strictEqual(bound.valid, true);
+    assert.strictEqual(other.valid, false, "the same block must not unlock a different claim");
+  });
+});
+
+// ============================================================
 // Report
 // ============================================================
 console.log(failed ? `\n${failed} test(s) failed` : "\nall bridge laws pass");

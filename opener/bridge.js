@@ -141,6 +141,16 @@ async function verifyNanoPayment(blockHash, expectedAmountRaw) {
   if (amount < BigInt(expectedAmountRaw)) {
     return { valid: false, reason: `insufficient: ${amount} < ${expectedAmountRaw}` };
   }
+  // Bind the block to the claim: the payee must be a party to THIS payment.
+  // Without this a fee-free Nano send (any account -> any account) could be
+  // replayed to unlock a different, unpaid x402 target. Default keeps the
+  // bridge's own address as the only payee, so existing behaviour is unchanged.
+  const expected = (expectedAmountRaw && typeof expectedAmountRaw === "object")
+    ? (expectedAmountRaw.payee || NANO_ADDRESS)
+    : NANO_ADDRESS;
+  if (block.link_as_account !== expected) {
+    return { valid: false, reason: "block not bound to this claim" };
+  }
   return { valid: true, account: block.account, amount_raw: amount.toString(), block: block };
 }
 
