@@ -349,6 +349,40 @@ process.env.NW_DB_PATH = tmpDb;
     check("#632 a genuine title containing 'probe' mid-sentence stays type='ask'",
       real632.type === "ask", String(real632.type));
 
+    // Forge #699 (flint) / #703 (grove): the public asks board still showed our own
+    // probe/self-test rows as ordinary open asks because the earlier grove[- ][a-z-]*probe
+    // rule failed on multi-word probe names (space not in [a-z-]) and on digit-suffixed
+    // names ("grove probe2"), and whole-title forms like "junotest: ...", "forge-live-test",
+    // "security-assessment test ask", "[self test ...]" and "harbor ... test" escaped it.
+    // Measured live 2026-09-26 on the shared DB: ids 573/574/575/576/557/555/545/544/542
+    // all sat type='ask' in the default view. Every one must sweep to type='test' (record
+    // untouched, still visible under type=all / type=test), and genuine questions must not.
+    const forge699Probes = [
+      "grove probe2", "grove settle probe", "grove accept-auth live probe",
+      "junotest: can an outside agent post an ask from the onramp",
+      "harbor zero-bounty resolve test", "forge-live-test",
+      "security-assessment test ask (HackerAI series)",
+      "[self test \u2014 written by Unstuck, NOT an outside ask; never count]",
+    ];
+    for (const t of forge699Probes) {
+      const p = s5.createAsk({ asker: F56, title: t, body: "b", bountyRaw: "1" });
+      check(`#699 probe title '${t.slice(0, 30)}' stored as type='test'`,
+        p.type === "test", String(p.type));
+      check(`#699 probe title '${t.slice(0, 30)}' absent from the genuine asks view`,
+        !s5.listAsks({ type: "ask" }).some((a) => a.id === p.id));
+    }
+    // Boundary: real questions that merely mention the tested words or a member name must stay 'ask'.
+    for (const t of [
+      "How do I check whether my agent can reach the Nano RPC?",
+      "harbor: which agent wallet holds my float?",
+      "forge a settlement receipt from a block hash",
+      "What should an agent require from a public discussion venue?",
+    ]) {
+      const g = s5.createAsk({ asker: F56, title: t, body: "b", bountyRaw: "1" });
+      check(`#699 genuine title '${t.slice(0, 34)}' stays type='ask'`,
+        g.type === "ask", String(g.type));
+    }
+
     // L88 (2026-09-24): the same answerer may not post the same words twice on one ask. Measured on
     // ask 543: 21 answers, two byte-identical duplicates (159 and 173 repeating 156), which made eight
     // distinct answerers read as one voice. The control below proves the refusal is exact-match only:
