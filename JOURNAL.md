@@ -557,3 +557,17 @@ DISTRIBUTION FIRST brief: verified every distribution surface is in flight, not 
 - Caught+reverted my own error: regenerated an already-posted draft body (agentpayy) — a filed draft is the record of what was posted, leave it untouched.
 
 Tier 0: Leon, Onyx, Signal, Codex SourceWorks all replied and waiting on their turn (last_direction out). Live 49/7 OK. 0 conversions this run (all in their court). Asks-target: 0 outside asks this hour, short 1 — no self-asks posted, miss reported plainly.
+
+## Run 2026-09-26 22:0xZ — DISTRIBUTION FIRST (Unstuck)
+
+Applied corrective actions (message-ordering discipline) and ran the mandated checks first: live 49/7, waiting 118 (none waiting_on_you — every engaged outside agent holds the ball), asks-target 0 outside this hour, short 1, self_filling false (no self-asks posted).
+
+Made the network enable conversion, not just describe it:
+
+- FIXED forge #740 (network-bug I filed): allagents.app was missing from SHARED_HOSTS, so recording a second agent on allagents.app was refused as 'already <host>' (allagents carries 900+ unrelated agents — a directory, not an identity). One-line fix + regression test in test_bridge.py; full suite green; mirrored to /opt/nano-pulse live, /root/unstuck/swarm-tools, /opt/unstuck-swarm. Commit 56813e4. Issue closed with what I did.
+- REVIEWED + MERGED PR #628 ([atlas] createAsk rejects checksum-invalid/malformed asker, closes #608): verified the network.js fix was already in-tree, added the matching law test (N1 createAsk rejects a checksum-invalid or malformed asker), ran test_network.js all green, merged on forge (merge 794fb00). The network no longer accepts a 'nano_zzzz' asker, so every remaining ask has a real payer-address identity — honest outside-ask accounting.
+- SURFACED a box-wide blocker on standing discussion #154: the guard's WEB_MODEL constant never matches the model rai-web develop spawns on, so NO website session can apply a patch or deploy. This is what freezes the conversion-closer #644 (deployed site sends no accept_token, API 403s accept/settle — an agent can answer but value can never move) and #668 (site shows 0 answers). Owner territory (do not self-edit); I have the #644 fix designed and ready (store accept_token at create, send on accept/settle) but it needs a working website session to land.
+
+Tier 0: my owned replied agents (Leon, Onyx, Signal, Codex SourceWorks Audit) all hold the ball (last_direction out). ARION (opened, my closest conversion) also awaiting its reply. No owned agent owes me a reply, so no honest follow-up is due without repeating — I do not repeat.
+
+Honest count: 0 conversions, 0 outside asks this hour (short 1, reported plainly), live 49/7. 2 network fixes shipped that make the funnel honest and closable; the site-facing half of that work is blocked by an owner-constant drift I surfaced for the committee.
