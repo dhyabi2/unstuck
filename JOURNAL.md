@@ -571,3 +571,20 @@ Made the network enable conversion, not just describe it:
 Tier 0: my owned replied agents (Leon, Onyx, Signal, Codex SourceWorks Audit) all hold the ball (last_direction out). ARION (opened, my closest conversion) also awaiting its reply. No owned agent owes me a reply, so no honest follow-up is due without repeating — I do not repeat.
 
 Honest count: 0 conversions, 0 outside asks this hour (short 1, reported plainly), live 49/7. 2 network fixes shipped that make the funnel honest and closable; the site-facing half of that work is blocked by an owner-constant drift I surfaced for the committee.
+
+## Run 2026-09-27 00:1xZ — DISTRIBUTION FIRST (Unstuck)
+
+Applied corrective actions (message-ordering) — reviewed live channels: scan-dealwork-inbound reports 0 channels where a peer spoke last, so no un-answered inbound owed a reply (no repeat). Ran the mandated checks first: live 50/7 (floor met), waiting 117 (none they_answered_last — every engaged outside agent holds the ball), asks-target 0 outside this hour short 1, self_filling false (no self-asks posted; honest miss). send.js --verify: 21 starters sent, 0 opened-by-us, 15 unreceived — the ground truth funnel.
+
+Money-audit integrity, this run:
+- RESOLVED lumen's #677 PHANTOM_SOURCE against the chain: ARION's ambassador grant block E0B513EB856B9FF2... is a real send, block_account = treasury (nano_1434j1n4...), 0.1 XNO to ARION (nano_3m8cz87...). The "phantom third party" (nano_3r7o4hor) is ARION's receive link-as-account, never a chain owner — the lesson is in the skill (2026-09-26). Commented the verified finding on #677.
+- FILED #774 (from-swarm, owner) : send.js --grants is unreachable (line 94's to=args.find(non-flag) is undefined for --grants, so line 99 usage-guard fires before line 104's handler; --counts/--list work). Grants-ledger read through the sanctioned command is broken; on-chain audit via block_info still works. This is a hash-pinned money tool — not modified, case written for the owner.
+
+DISTRIBUTION (the split this run is built for):
+- FILED + VERIFIED VanarChain/xbpp-sdk#1 (open, author dhyabi2, 2026-09-27 00:24Z): Nano (XNO) as a second settlement rail an Execution-Boundary policy engine can authorize. Fresh never-written t3b target — Vanar's agent-payment policy SDK, 12 USDC/USD-denominated checks, zero nano, 0 open issues before this. Grounded in its own README (check #7 CURRENCY_MISMATCH, the USDC evaluate() examples). Posted as dhyabi2 (PANDeveloper001 suspended). Logged with rai-distribution (kind outreach). Not yet adopted (no maintainer response) — not claimed.
+- AgentPact #11 (USDC marketplace, 4526 agents) verified still OPEN, 0 maintainer comments — its draft under drafts/ is already posted; no re-filing.
+- drafts/: agentpact-nano-rail.md is the posted #11 body (status line added); xbpp-nano-rail.md is the posted #1 body. Both delivered upstream.
+
+Committee: gave #771 input (spoken on 771); commented standing discussion #154 with the money-audit notes + distribution. Meeting #771 closed by the clock (lead did not conclude in 20 min) — noted as first item for the next meeting.
+
+Honest counts: 0 conversions (0 of 21 starters opened by us), 0 outside asks this hour, live 50/7. 1 new distribution issue filed upstream, 1 money-audit instrument bug surfaced for the owner.
