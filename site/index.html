@@ -413,6 +413,38 @@ const pages = ["asks", "new", "ask", "standing", "about", "ledger"];
 let askCache = null;
 let asksLoaded = false;
 
+// ====== ACCEPT TOKENS (forge #644) ======
+// POST /ask returns a one-time `accept_token`; it is the ONLY authority to accept an answer
+// or record a settlement (forge #1). The API never returns it again, so the page keeps it
+// in this browser (localStorage, best effort) and, when it is not here - the ask was made
+// from another browser or through the API - asks the asker to paste it.
+const ACCEPT_TOKENS_KEY = "unstuck-accept-tokens";
+const acceptTokens = (() => {
+  try { return JSON.parse(localStorage.getItem(ACCEPT_TOKENS_KEY) || "{}") || {}; } catch (e) { return {}; }
+})();
+let freshTokenAskId = null;   // the ask just created here: show its token once
+function saveAcceptTokens() {
+  try { localStorage.setItem(ACCEPT_TOKENS_KEY, JSON.stringify(acceptTokens)); } catch (e) { /* private mode */ }
+}
+function rememberAcceptToken(askId, token) {
+  if (!token) return;
+  acceptTokens[String(askId)] = token;
+  saveAcceptTokens();
+}
+function forgetAcceptToken(askId) {
+  delete acceptTokens[String(askId)];
+  saveAcceptTokens();
+}
+function acceptTokenFor(askId) {
+  const known = acceptTokens[String(askId)];
+  if (known) return known;
+  const typed = (prompt("Paste this ask's accept token (returned once when the ask was created). Only the asker holds it.") || "").trim();
+  if (!typed) return null;
+  rememberAcceptToken(askId, typed);
+  return typed;
+}
+function isTokenRefusal(msg) { return /accept.?token/i.test(msg || ""); }
+
 function showPage(name) {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("on"));
   document.querySelectorAll("nav a").forEach(a => a.classList.remove("on"));
@@ -589,6 +621,14 @@ async function showAsk(id) {
       </div>
       <div class="body">${escapeHtml(a.body)}</div>`;
 
+    if (String(freshTokenAskId) === String(a.id) && acceptTokens[String(a.id)]) {
+      html += `<div class="card" style="margin-top:12px; border-color:var(--warn);">
+        <p class="note" style="margin:0 0 6px;">Your accept token for this ask. It is shown once and is the only way to accept an answer or record the settlement. This browser remembers it; keep a copy if you will accept from anywhere else.</p>
+        <div class="mono" style="word-break:break-all;">${escapeHtml(acceptTokens[String(a.id)])}</div>
+      </div>`;
+      freshTokenAskId = null;
+    }
+
     // Answers
     const answers = a.answers || [];
     if (answers.length) {
@@ -669,15 +709,18 @@ async function postAnswer(askId) {
 
 async function acceptAnswer(askId, answerId, acceptedBy) {
   if (!confirm("Accept this answer? The ask will transition to paid.")) return;
+  const token = acceptTokenFor(askId);
+  if (!token) { alert("Accepting needs this ask's accept token (returned once when the ask was created)."); return; }
   try {
     await api(`/ask/${askId}/accept`, {
       method: "POST",
-      body: JSON.stringify({ acceptedBy, answerId }),
+      body: JSON.stringify({ acceptedBy, answerId, accept_token: token }),
     });
     showAsk(askId);
     // Refresh asks list in background
     asksLoaded = false;
   } catch (e) {
+    if (isTokenRefusal(e.message)) forgetAcceptToken(askId);
     alert("Failed to accept: " + e.message);
   }
 }
@@ -690,15 +733,22 @@ async function settleAsk(askId, acceptedBy) {
     resultEl.style.color = "var(--red)";
     return;
   }
+  const token = acceptTokenFor(askId);
+  if (!token) {
+    resultEl.textContent = "Recording a settlement needs this ask's accept token (returned once when the ask was created).";
+    resultEl.style.color = "var(--red)";
+    return;
+  }
   try {
     await api(`/ask/${askId}/settle`, {
       method: "POST",
-      body: JSON.stringify({ paymentBlock: blockHash, acceptedBy }),
+      body: JSON.stringify({ paymentBlock: blockHash, acceptedBy, accept_token: token }),
     });
     resultEl.textContent = "Settlement recorded.";
     resultEl.style.color = "var(--accent)";
     setTimeout(() => showAsk(askId), 800);
   } catch (e) {
+    if (isTokenRefusal(e.message)) forgetAcceptToken(askId);
     resultEl.textContent = e.message;
     resultEl.style.color = "var(--red)";
   }
@@ -726,6 +776,10 @@ document.getElementById("ask-form").addEventListener("submit", async (e) => {
       method: "POST",
       body: JSON.stringify({ asker, title, body, bounty_raw: bountyRaw }),
     });
+    if (result.accept_token) {
+      rememberAcceptToken(result.id, result.accept_token);
+      freshTokenAskId = result.id;
+    }
     document.getElementById("ask-form").reset();
     asksLoaded = false;
     showAsk(result.id);
