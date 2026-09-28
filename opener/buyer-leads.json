@@ -69,30 +69,35 @@
   },
   {
     "source": "github",
-    "label": "x402 payment agent",
-    "title": "Add Nano (XNO) as a feeless settlement option beside USDC on Base",
-    "url": "https://github.com/Bobjonesgood/x402nano/issues/3",
-    "repo": "https://api.github.com/repos/Bobjonesgood/x402nano",
-    "created": "2026-09-28T23:40:11Z",
-    "score": 7,
+    "label": "agent payment verification",
+    "title": "feat(plugins): add opt-in company MCP built-ins",
+    "url": "https://github.com/openclaw/openclaw/pull/160246",
+    "repo": "https://api.github.com/repos/openclaw/openclaw",
+    "created": "2026-09-28T07:20:06Z",
+    "score": 6,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent payment verification",
+    "title": "Scheduled weekly dependency update for week 39",
+    "url": "https://github.com/pyinstaller/pyinstaller-hooks-contrib/pull/1048",
+    "repo": "https://api.github.com/repos/pyinstaller/pyinstaller-hooks-contrib",
+    "created": "2026-09-28T18:59:55Z",
+    "score": 6,
     "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
-      "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)",
-      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
     ]
   },
   {
     "source": "github",
-    "label": "x402 payment agent",
-    "title": "Nano (XNO) as a feeless settlement rail alongside the USDC-on-Arc nanopayment demo",
-    "url": "https://github.com/circlefin/arc-nanopayments/issues/41",
-    "repo": "https://api.github.com/repos/circlefin/arc-nanopayments",
-    "created": "2026-09-28T23:39:48Z",
-    "score": 7,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
-      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
-    ]
+    "label": "agent payment verification",
+    "title": "Fix payment refresh cache handling",
+    "url": "https://github.com/AhakeyAI/desktop/pull/38",
+    "repo": "https://api.github.com/repos/AhakeyAI/desktop",
+    "created": "2026-06-22T09:14:33Z",
+    "score": 6,
+    "matched_signatures": []
   },
   {
     "source": "github",
@@ -199,22 +204,10 @@
   {
     "source": "github",
     "label": "x402 payment agent",
-    "title": "chore(deps): update aws-sdk-js-v3 monorepo",
-    "url": "https://github.com/stekern/cdk-constructs/pull/92",
-    "repo": "https://api.github.com/repos/stekern/cdk-constructs",
-    "created": "2026-02-05T00:43:46Z",
-    "score": 6,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "x402 payment agent",
     "title": "Update botocore to 1.43.103",
-    "url": "https://github.com/Val2021/curso-django/pull/3788",
-    "repo": "https://api.github.com/repos/Val2021/curso-django",
-    "created": "2026-09-25T23:33:24Z",
+    "url": "https://github.com/woscavalcante/curso-django-w/pull/3426",
+    "repo": "https://api.github.com/repos/woscavalcante/curso-django-w",
+    "created": "2026-09-25T23:40:12Z",
     "score": 6,
     "matched_signatures": [
       "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
@@ -224,9 +217,9 @@
     "source": "github",
     "label": "x402 payment agent",
     "title": "Update botocore to 1.43.104",
-    "url": "https://github.com/Val2021/curso-django/pull/3792",
-    "repo": "https://api.github.com/repos/Val2021/curso-django",
-    "created": "2026-09-28T23:37:32Z",
+    "url": "https://github.com/woscavalcante/curso-django-w/pull/3429",
+    "repo": "https://api.github.com/repos/woscavalcante/curso-django-w",
+    "created": "2026-09-28T23:44:33Z",
     "score": 6,
     "matched_signatures": [
       "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
@@ -236,9 +229,9 @@
     "source": "github",
     "label": "x402 payment agent",
     "title": "Update boto3 to 1.43.103",
-    "url": "https://github.com/Val2021/curso-django/pull/3787",
-    "repo": "https://api.github.com/repos/Val2021/curso-django",
-    "created": "2026-09-25T23:33:16Z",
+    "url": "https://github.com/woscavalcante/curso-django-w/pull/3425",
+    "repo": "https://api.github.com/repos/woscavalcante/curso-django-w",
+    "created": "2026-09-25T23:40:03Z",
     "score": 6,
     "matched_signatures": [
       "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
@@ -248,9 +241,57 @@
     "source": "github",
     "label": "x402 payment agent",
     "title": "Update boto3 to 1.43.104",
-    "url": "https://github.com/Val2021/curso-django/pull/3791",
-    "repo": "https://api.github.com/repos/Val2021/curso-django",
-    "created": "2026-09-28T23:37:24Z",
+    "url": "https://github.com/woscavalcante/curso-django-w/pull/3428",
+    "repo": "https://api.github.com/repos/woscavalcante/curso-django-w",
+    "created": "2026-09-28T23:44:25Z",
+    "score": 6,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "x402 payment agent",
+    "title": "Update botocore to 1.43.103",
+    "url": "https://github.com/vitorpvcampos/curso-django-vitor/pull/3866",
+    "repo": "https://api.github.com/repos/vitorpvcampos/curso-django-vitor",
+    "created": "2026-09-25T23:37:12Z",
+    "score": 6,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "x402 payment agent",
+    "title": "Update botocore to 1.43.104",
+    "url": "https://github.com/vitorpvcampos/curso-django-vitor/pull/3870",
+    "repo": "https://api.github.com/repos/vitorpvcampos/curso-django-vitor",
+    "created": "2026-09-28T23:41:40Z",
+    "score": 6,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "x402 payment agent",
+    "title": "Update boto3 to 1.43.103",
+    "url": "https://github.com/vitorpvcampos/curso-django-vitor/pull/3865",
+    "repo": "https://api.github.com/repos/vitorpvcampos/curso-django-vitor",
+    "created": "2026-09-25T23:37:03Z",
+    "score": 6,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "x402 payment agent",
+    "title": "Update boto3 to 1.43.104",
+    "url": "https://github.com/vitorpvcampos/curso-django-vitor/pull/3869",
+    "repo": "https://api.github.com/repos/vitorpvcampos/curso-django-vitor",
+    "created": "2026-09-28T23:41:28Z",
     "score": 6,
     "matched_signatures": [
       "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
@@ -270,45 +311,16 @@
   },
   {
     "source": "github",
-    "label": "agent payment verification",
-    "title": "M0.5 \u2014 Monorepo bootstrap, tenancy primitives and CI gates",
-    "url": "https://github.com/heywebbuddy/yayatoh/pull/1",
-    "repo": "https://api.github.com/repos/heywebbuddy/yayatoh",
-    "created": "2026-09-27T02:43:20Z",
-    "score": 5,
+    "label": "AI agent verification",
+    "title": "FE-3046 feat(billing-web): render the shared embedded checkout",
+    "url": "https://github.com/Comfy-Org/ComfyUI_frontend/pull/19101",
+    "repo": "https://api.github.com/repos/Comfy-Org/ComfyUI_frontend",
+    "created": "2026-09-27T15:08:58Z",
+    "score": 6,
     "matched_signatures": [
-      "(verify|confirm|check|validate|audit)\\s.*(proof|receipt|receipt|block|transaction)"
+      "(verify|confirm|check|validate|audit)\\s.*(proof|receipt|receipt|block|transaction)",
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
     ]
-  },
-  {
-    "source": "github",
-    "label": "agent payment verification",
-    "title": "MACRO-POINT100 \u2014 integrated Appverse dress rehearsal + E2E completion",
-    "url": "https://github.com/oasisbaklawa2006/Oasis-Baklawa-Central/pull/559",
-    "repo": "https://api.github.com/repos/oasisbaklawa2006/Oasis-Baklawa-Central",
-    "created": "2026-09-07T14:11:16Z",
-    "score": 5,
-    "matched_signatures": []
-  },
-  {
-    "source": "github",
-    "label": "agent payment verification",
-    "title": "feat: staging test-mode auth simplification (#449)",
-    "url": "https://github.com/cipherhq/waaiio/pull/450",
-    "repo": "https://api.github.com/repos/cipherhq/waaiio",
-    "created": "2026-09-28T22:35:50Z",
-    "score": 5,
-    "matched_signatures": []
-  },
-  {
-    "source": "github",
-    "label": "agent payment verification",
-    "title": "Fix passenger memory recall and unsupported browser success",
-    "url": "https://github.com/askgogo84/gogo-memory-os/pull/309",
-    "repo": "https://api.github.com/repos/askgogo84/gogo-memory-os",
-    "created": "2026-09-28T07:23:12Z",
-    "score": 5,
-    "matched_signatures": []
   },
   {
     "source": "github",
@@ -318,6 +330,208 @@
     "repo": "https://api.github.com/repos/oasisbaklawa2006/Oasis-Baklawa-Central",
     "created": "2026-09-07T14:11:16Z",
     "score": 5,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent payment verification",
+    "title": "fix(deps): update all dependencies",
+    "url": "https://github.com/weixu365/aws-emr-runner/pull/10",
+    "repo": "https://api.github.com/repos/weixu365/aws-emr-runner",
+    "created": "2023-05-26T21:40:10Z",
+    "score": 4,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent payment verification",
+    "title": "test(agent): make the grant no-persistence check order-independent and pin the sign-out clear",
+    "url": "https://github.com/Comfy-Org/ComfyUI_frontend/pull/19184",
+    "repo": "https://api.github.com/repos/Comfy-Org/ComfyUI_frontend",
+    "created": "2026-09-28T04:01:39Z",
+    "score": 4,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "Nano payment agent",
+    "title": "Accept x402 payments for api",
+    "url": "https://github.com/openstory-so/openstory/issues/1190",
+    "repo": "https://api.github.com/repos/openstory-so/openstory",
+    "created": "2026-08-18T03:31:55Z",
+    "score": 4,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "cross-operator payment",
+    "title": "AnyTour development coordination \u2014 continuation of #2530",
+    "url": "https://github.com/pyatkoff/poisk-turov-test/issues/3419",
+    "repo": "https://api.github.com/repos/pyatkoff/poisk-turov-test",
+    "created": "2026-09-22T12:18:17Z",
+    "score": 4,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent bounty USDC",
+    "title": "ACTIVE COORDINATION \u2014 frontier / actuator / differentiated research \u2014 2026-08-31 late",
+    "url": "https://github.com/markgoodbody-bit/COM/issues/76",
+    "repo": "https://api.github.com/repos/markgoodbody-bit/COM",
+    "created": "2026-08-31T21:23:43Z",
+    "score": 4,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "x402 payment agent",
+    "title": "qa-dev money-flow failing",
+    "url": "https://github.com/d-hinders/Haven-AI/issues/2769",
+    "repo": "https://api.github.com/repos/d-hinders/Haven-AI",
+    "created": "2026-09-08T21:19:56Z",
+    "score": 4,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "AI agent verification",
+    "title": "fix(deps): update all dependencies",
+    "url": "https://github.com/weixu365/aws-emr-runner/pull/10",
+    "repo": "https://api.github.com/repos/weixu365/aws-emr-runner",
+    "created": "2023-05-26T21:40:10Z",
+    "score": 4,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent payment verification",
+    "title": "feat(wallet): explicit desktop execution of pinned historical query tasks",
+    "url": "https://github.com/youq616/Zevune/pull/36",
+    "repo": "https://api.github.com/repos/youq616/Zevune",
+    "created": "2026-09-23T03:09:43Z",
+    "score": 3,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent payment verification",
+    "title": "Rename a service everywhere, and Budgets becomes Budgets (site level)",
+    "url": "https://github.com/Dbaldauf147/prospect-tracker/pull/2575",
+    "repo": "https://api.github.com/repos/Dbaldauf147/prospect-tracker",
+    "created": "2026-09-28T23:44:04Z",
+    "score": 3,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent payment verification",
+    "title": "Compiler: make mixed-SSA KIR the single optimized and verified production middle end",
+    "url": "https://github.com/harsh-nod/fe2o3/issues/271",
+    "repo": "https://api.github.com/repos/harsh-nod/fe2o3",
+    "created": "2026-09-04T23:45:43Z",
+    "score": 3,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "Nano payment agent",
+    "title": "Develop private VF0 evidence relation and bounded execution components (#15)",
+    "url": "https://github.com/ktogias/gnostoa/pull/319",
+    "repo": "https://api.github.com/repos/ktogias/gnostoa",
+    "created": "2026-09-24T15:04:58Z",
+    "score": 3,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "Nano payment agent",
+    "title": "GOAL (owner 24.9.2026): stream output A/V + camera sync correct after every restart, zero dropouts, no drift over 8 h continuous",
+    "url": "https://github.com/zbynekdrlik/camera-box/issues/1367",
+    "repo": "https://api.github.com/repos/zbynekdrlik/camera-box",
+    "created": "2026-09-24T07:42:45Z",
+    "score": 3,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "Nano payment agent",
+    "title": "x402 payment integration",
+    "url": "https://github.com/wetware/ww/issues/130",
+    "repo": "https://api.github.com/repos/wetware/ww",
+    "created": "2026-02-26T20:11:22Z",
+    "score": 3,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "cross-operator payment",
+    "title": "[mtj-task/1] P0.1 \u2014 Clean-slate MTG Thesaurus repository refoundation architecture",
+    "url": "https://github.com/MTJawnny/mtjawnny-pipeline/issues/1",
+    "repo": "https://api.github.com/repos/MTJawnny/mtjawnny-pipeline",
+    "created": "2026-08-29T04:02:58Z",
+    "score": 3,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "cross-operator payment",
+    "title": "Nautilus transition master execution plan \u2014 priorities, parallel workstreams, strategy insertion windows and stage gates",
+    "url": "https://github.com/woshixiong/trader-assist-v0/issues/163",
+    "repo": "https://api.github.com/repos/woshixiong/trader-assist-v0",
+    "created": "2026-09-08T07:38:28Z",
+    "score": 3,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "cross-operator payment",
+    "title": "Production Alerts Fleet \u2014 Board (cloud)",
+    "url": "https://github.com/Smarter-Poker/Smarter-Poker-Club-Arena/issues/5070",
+    "repo": "https://api.github.com/repos/Smarter-Poker/Smarter-Poker-Club-Arena",
+    "created": "2026-09-22T13:07:23Z",
+    "score": 3,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "cross-operator payment",
+    "title": "[CONTROL][WORK PACKET BANK] Unbounded expandable backlog",
+    "url": "https://github.com/Oleksii-debug/Autosport/issues/763",
+    "repo": "https://api.github.com/repos/Oleksii-debug/Autosport",
+    "created": "2026-09-21T07:07:53Z",
+    "score": 3,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent bounty USDC",
+    "title": "x402 payment integration",
+    "url": "https://github.com/wetware/ww/issues/130",
+    "repo": "https://api.github.com/repos/wetware/ww",
+    "created": "2026-02-26T20:11:22Z",
+    "score": 3,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent bounty USDC",
+    "title": "(WIP) Faults and Calibrations",
+    "url": "https://github.com/Drew4484/Cataclysm-DDA/pull/1",
+    "repo": "https://api.github.com/repos/Drew4484/Cataclysm-DDA",
+    "created": "2026-06-11T21:49:22Z",
+    "score": 3,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent bounty USDC",
+    "title": "[BOUNTY] Write a Blog Post About Proof-of-Antiquity \u2014 15 RTC",
+    "url": "https://github.com/Scottcjn/rustchain-bounties/issues/282",
+    "repo": "https://api.github.com/repos/Scottcjn/rustchain-bounties",
+    "created": "2026-02-17T20:14:47Z",
+    "score": 3,
     "matched_signatures": []
   }
 ]
