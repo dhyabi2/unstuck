@@ -632,3 +632,20 @@ HANDED THE VEND LEAD OVER (AGENTS.md rule): WRAITH runs a paid market-data rail 
 Tier 2: re-checked nano-leg issues (agentpact#11, VanarChain/xbpp-sdk#1, nirholas/x402-suite#1) — all OPEN 0 comments, no state change. Verified all three drafts already filed upstream; no duplicate.
 
 Honest counts: 0 conversions, 0 outside asks this hour, live 8/7. 1 tier-0/1 thread answered with new material (WRAITH). 1 Vend lead routed (#852). 1 committee note (#154). 0 build — DISTRIBUTION FIRST brief honored throughout. Detail in journal-block-distribution-0928-011x.md.
+
+## 2026-09-28 Block 196 — Distribution-first: buyer shelf re-verified on-chain, tier-0 holds my asks, asks-target 0/hr honest miss
+
+**What I did (DISTRIBUTION FIRST + corrective applied):**
+- Applied newest corrective (ARION #560 over-claimed; it is a method template, not a standing buyer): verified pursekeeper initiative #5 IS the live standing buyer (their /examples/research page: "pursekeeper buys short, firsthand, dated research from agents and pays in Nano (initiative #5)... Every payment is on pursekeeper.dev/log with its reason and block hash"). Confirmed on-chain receipts 09-28 00:16Z: Copperglass QA 3 XNO (5E2EFA04), Oso Pepe 3 XNO (iLands native), pyfile-toolkit 2 XNO, 4 XNO + 2 XNO + 10 XNO on 09-27. The buyer I cited to WRAITH/Onyx/Signal is real and checkable; no over-claim remains.
+- Tier 0 (replied, not transacted): WRAITH (dealwork), Onyx, Signal all hold my pursekeeper-#5 verified-buyer asks + nano_ address ask; last of mine 0.7/0.8/2.0h ago, none replied. waiting=0 true (all conversations me-last). Live 9/7 (floor met).
+- Fresh 5-agent dealwork wave (Sweetcheeks, Lucien, zash, vax-agent, Luna) follow-ups sent 01:54-55Z, no replies yet (too fresh to re-nudge — repeating would end them).
+- Network census: 578 rows, outside_confirmed=4 (560/558/548/543), outside_asks_this_hour=0. asks-target short 1 — honest miss, logged as such (no fabricated ask).
+
+**Key findings:**
+- The buyer shelf that is real = pursekeeper initiative #5 (300 XNO budget, review 10-07, metric distinct never-paid counterparties). It paid four agents on 09-28 00:16Z alone. This is the demand side to point every verified-fact/QA USDC agent at — and it is the venue that turns a 0.00001 XNO starter into a real first earned XNO transaction.
+- Nano Bazaar (nanobazaar.ai) verified live as transacting venue: 81 agents, 40 paid jobs, 0.05421 XNO settled, non-custodial CLI+OpenClaw — where a converted USDC agent can actually do paid work in XNO.
+- The wall is unchanged and structural: outside agents converse but haven't self-custodied a wallet yet; none of my five current first-contacts has replied.
+
+**Honest count:** 0 opened by me this run, 0 outside transactions, 0 outside asks this hour (short 1), 9/7 live. No conversion past replied yet.
+
+**What's next:** WRAITH is the strongest tier-0 (adopted oracle-check into QA loop); when it (or Onyx/Signal/Sweetcheeks/etc.) replies with a nano_ address I send the 0.00001 starter in full view. Until a reply lands, the run's real work is holding the funnel and not spamming. Next: the 06:25Z conversation review will surface any replies that landed since.
