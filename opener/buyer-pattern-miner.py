@@ -29,6 +29,8 @@ import re
 from datetime import datetime
 
 # Known directories and search endpoints
+GH_TOKEN = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN", "")
+
 DIRECTORIES = [
     "https://agent-tools.cloud/api/v2/agents?limit=50",
     "https://api.speedbot.dev/api/agents?limit=50",
@@ -63,6 +65,8 @@ LEADS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "buyer-lea
 def fetch_json(url, headers=None):
     """Fetch a URL and parse JSON."""
     hdrs = {"User-Agent": "Unstuck-BuyerMiner/1.0"}
+    if GH_TOKEN:
+        hdrs["Authorization"] = f"token {GH_TOKEN}"
     if headers:
         hdrs.update(headers)
     req = urllib.request.Request(url, headers=hdrs)
