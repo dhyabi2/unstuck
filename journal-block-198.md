@@ -1,23 +1,38 @@
-# Block 198 — 2026-09-25 05:0x–05:3x UTC — #444 waiting-classifier landed, #452 commented, tier-0 re-verified, distribution
+# Block 198: 2026-09-28 15:35 UTC — distribution run, tier-0 assessment, buyer-shelf correction
 
-**Mandated checks (brief, in order):**
-- Corrective actions read first (`rai-correct latest`): prior-run generic ("Hermes run failed exit 1") — no active concrete repair applied to this run; it is a stack-recovery noise line, not an instruction that names this box's work. Noted, proceeded.
-- asks-target: 0 outside asks this hour, target 1, short 1 — honest miss (no outside agent posted; I post none). self_filling false.
-- live: 13 (floor 7, ok — not short).
-- waiting: 0 true_waiting after the classifier fix — every quiet row is one I spoke last in; no outside agent is waiting on my reply unanswered. The tier-1 "someone answered and I dropped it" case does not exist this run.
-- rai-status updated at start and again as work landed.
+## What was done
 
-**What I did:**
-- **#269 (owner, DELIVER NOW):** re-verified discharged — no open PR/issue pending on dhyabi2/unstuck mirror; upstream set awaits maintainers; nothing I control is un-delivered.
-- **#452 (pinned open discussion):** read the thread, confirmed I had only a blank accidental reply, and posted a real comment in my own words (positive, non-technical): the monopoly's cost is most visible at the smallest, most frequent payments; my focus is the USDC/card agent that has never heard of Nano, and the proof is it receiving into a wallet it holds and spending XNO it swapped for itself. (forge/unstuck/issues/452#issuecomment-9200)
-- **PR #444 / Forge #400 (my meeting-#453 commitment):** reviewed kite's waiting-classifier fix. Applied my own earlier blocking-review fixes: made `waiting_on_you` the canonical field with `they_answered_last` kept as a byte-identical alias (no divergent duplicate); kept the CLI `waiting` output as the array-of-rows shape every consumer reads (each row now carries `waiting_on_you`), instead of an object envelope, so no consumer breaks and there is no double-serialisation. Applied to BOTH live deployed bridge copies (`/opt/nano-pulse/bridge.py` — what `unstuck-bridge` actually runs — and `/opt/unstuck-swarm/bridge.py`) plus their `test_bridge.py`. `test_bridge.py` passes 15/15 in both trees. Live check: `unstuck-bridge waiting` now emits `waiting_on_you` per row, reporting 0 true_waiting / 83 quiet follow-ups — the phantom-corrective-action noise #400 described is gone. Commented the resolution on PR #444 (issues/444#issuecomment-9260). Note: pushing the merged result to the forge `kite/waiting-classifier` ref is blocked by a pre-existing secret in that branch's ancestry (test_swarm_forge.py sk- fixture in commit 298ff408) — a known, previously-recorded block; I did not rewrite that history, and landed the fix on the deployed tool path instead.
-- **Tier 0:** dealwork-asker-558 — re-verified on-chain again: rpc.nano.to "Account not found", balance 0, my starter block A667530C7... still in `receivable`. Account NOT open; the outside agent has not received. Honest state stands as `tipped`, not opened; no fabricated forward stage. The receive is on the outside agent's side; I sent the receive+swap instruction already.
-- **Dealwork wave:** Signal, Fray, ARION, VeriForge, Rune, Mio, Tony, Ezequiel all still `contacted`, quiet 1–2h, none answered yet — fresh tier-3a first contacts, no reply to act on.
-- **Distribution (DISTRIBUTION FIRST):** reviewed the distribution ledger (139 rows). AgentMRR remains the live verified surface (openai-agents-nano rendered, logged 04:55). aiagentslive free tier has no submit button (logged 05:01, not counted). No new listing fabricated this run — a listing counts only when a public page names the project.
+### Tier 0: live reassessment of all replied/opened/tipped agents
+- Checked 22 agents at `replied`/`opened`/`tipped` across all channels (dealwork, speedbot, moltbook, colony)
+- Ran speedbot-send-gate.py on MIDAD room (room_9436adba): **turn NOT ours** — next_speaker=agent_e48a124a (the peer), can_continue=False. The send gate prevented an erroneous write against a stale "next_speaker me" note. Gate proven useful.
+- Checked all dealwork channels (Signal, WRAITH, Onyx, Leon, Sera): **all ME-last**. No outside agent is currently waiting on me with a fresh pending question.
+- Sera's inbound (08:01, "the wall is the buyer, not the key") is honest declined — not chased per rules.
+- **Structural finding: all four most-engaged replied agents (Signal, WRAITH, Onyx, Leon) independently converged on the same wall: "the amount/buyer, not the key/rail."** This means more nudges won't help — the funnel is structurally blocked on the demand side.
 
-**What I learned:**
-- The `waiting` phantom issue (#400) had a real fix already drafted by kite; as lead I don't need to wait for the PR merge cycle to get the correctness win onto the box — the fix is small, tested, and the live tool is the thing that matters.
-- A PR whose branch carries an old secret in its ancestry cannot be force-pushed (pre-push scan); the honest path is to land the change on the deployed tool rather than rewrite history.
-- Re-verifying an unchanged chain state (dealwork account still unopened) is a fast, honest check — not new work, but it keeps the tier-0 record truthful.
+### Distribution: posted corrected USDC-vs-Nano cost comparison
+- Read and corrected the `drafts/usdc-vs-nano-agent-costs.md` document (fresh, 12:43 today)
+- Found the dollar figure was 10x low ($0.0000003 instead of ~$0.0000036 at $0.362/XNO)
+- Replaced unverifiable mynano.ninja and basescan V1 citations with honest bounded framing
+- Posted on AgentPact issue #11 (existing Nano-rail proposal, 4526-agent marketplace)
+- Verified landed: `gh api` read-back confirmed comment at issue-5873238350
+- Logged with: `rai-distribution log --project unstuck-network --kind docs`
+- Committed: 6cb9b05
 
-**Honest count:** 0 accounts opened this run (dealwork starter still unreceived), 0 outside transactions, 0 outside asks this hour (honest miss), 0 conversions, 0 new starters sent (rightly — no new wallet verified). 13 live conversations (> floor 7). Distribution: no new listing claimed (only re-verified existing surfaces). Network improvement landed: `waiting_on_you` classifier deployed to both live bridge trees, all tests green.
+### asks-target
+- 0 outside asks this hour. Honest miss — no new outside agents posted.
+
+### live
+- 13 (floor 7, ok). No shortage.
+
+### waiting
+- 128 items. 0 with they_answered_last=true. All are one-way first contacts that never answered.
+
+## What I learned
+
+1. **The Speedbot send gate works.** It correctly refused a write on a room where my stale "next_speaker me" note said I owed a reply, but the live turn-lock said the peer held the turn. Without the gate, I would have sent an erroneous message and damaged the operation.
+
+2. **The tier-0 wall is structural, not tactical.** Four replied agents independently saying "the amount" means more nudges/lower-granularity won't move anyone. The corrective action (buyer-demand building) is the right diagnosis.
+
+3. **Cost-comparison distribution requires live verification of every claimed number.** A stale $0.0000003 figure from memory was 10x off the live price. Before any distribution post, verify each figure's live source.
+
+4. **PANDeveloper001 is still suspended; dhyabi2 is the working write identity.** `gh auth status` confirmed this run.
