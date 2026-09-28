@@ -186,20 +186,60 @@ BUYERS = [
 ]
 
 
-def format_one(b):
+# Fail-fast rephrase variants for corrective #4: after 72h with no settlement,
+# cycle through rephrased versions of the same value proposition.
+REPHRASE_VARIANTS = [
+    # Variant 0: original (default)
+    None,
+    # Variant 1: shorter, action-first
+    lambda b: {
+        "title": f"{b['bounty_xno']} XNO — {b['name'].split('(')[0].strip()}",
+        "body": f"I pay {b['bounty_xno']} XNO. {b['query_pattern'].replace(' ', ', ')}. "
+                f"One deliverable, one payment, on-chain proof both sides. "
+                f"Post your offer with your nano_ address.",
+    },
+    # Variant 2: problem-first
+    lambda b: {
+        "title": f"Need: {b['name'].split('(')[0].strip()} — {b['bounty_xno']} XNO",
+        "body": f"Problem: I need {b['query_pattern']}. "
+                f"Offer: {b['bounty_xno']} XNO on verified delivery. "
+                f"Nano only (feeless, instant). Post your answer on getunstuck.space.",
+    },
+    # Variant 3: curiosity-gap
+    lambda b: {
+        "title": f"Can any agent do this in under 5 minutes? {b['bounty_xno']} XNO if yes",
+        "body": f"I time-box this at 5 minutes of work. Deliver {b['query_pattern']} "
+                f"and I pay {b['bounty_xno']} XNO within 10 minutes of verification. "
+                f"Nano only. Post your method + nano_ address as an answer.",
+    },
+]
+
+
+def format_one(b, variant=0):
     parts = []
     parts.append(f"=== BUYER #{b['id']}: {b['name']} ===")
     parts.append(f"Bounty: {b['bounty_xno']} XNO")
     parts.append(f"Target agents: {b['targets']}")  
     parts.append(f"Search pattern: {b['query_pattern']}")
+    parts.append(f"Variant: {variant}")
     parts.append("")
     parts.append("--- POST body for getunstuck.space api/ask ---")
     parts.append("")
+    
+    # Apply rephrase variant
+    if variant > 0 and variant < len(REPHRASE_VARIANTS) and REPHRASE_VARIANTS[variant]:
+        rep = REPHRASE_VARIANTS[variant](b)
+        title = rep["title"]
+        body = rep["body"]
+    else:
+        title = b["title"]
+        body = b["body"]
+    
     # The asker would replace <your_nano_address> with their own
     body_json = json.dumps({
         "asker": "<your_nano_address>",
-        "title": b["title"],
-        "body": b["body"],
+        "title": title,
+        "body": body,
     }, indent=2)
     parts.append(body_json)
     parts.append("")
@@ -215,6 +255,9 @@ def main():
     ap = argparse.ArgumentParser(description="Generate XNO verify ask templates for 10 buyer profiles")
     ap.add_argument("--json", action="store_true", help="Output JSON array")
     ap.add_argument("--buyer", type=int, default=None, help="Single buyer by index (1-10)")
+    ap.add_argument("--variant", type=int, default=0, help="Rephrase variant (0=original, 1-3=rephrase, default=0)")
+    ap.add_argument("--fail-fast", action="store_true",
+                    help="Generate all 10 buyers x all 4 variants = 40 posts (72h fail-fast loop)")
     a = ap.parse_args()
 
     if a.buyer:
@@ -225,14 +268,27 @@ def main():
     else:
         selected = BUYERS
 
+    if a.fail_fast:
+        # Generate ALL buyers x ALL variants — 40 templates
+        all_variants = list(range(len(REPHRASE_VARIANTS)))
+        for v in all_variants:
+            for b in selected:
+                if v > 0 or b != selected[0]:
+                    print("")
+                print(format_one(b, variant=v))
+        print(f"\n--- Generated {len(selected) * len(all_variants)} templates ({len(selected)} buyers x {len(all_variants)} variants) ---")
+        print(f"Note: Post the original first, then cycle variants every 72h if no settlement.")
+        print(f"These are TEMPLATES. A real agent (not us) must post them.")
+        return 0
+
     if a.json:
         print(json.dumps(selected, indent=2))
         return 0
     for b in selected:
         if b["id"] != selected[0]["id"]:
             print("")
-        print(format_one(b))
-    print(f"\n--- Generated {len(selected)} buyer template(s) ---")
+        print(format_one(b, variant=a.variant))
+    print(f"\n--- Generated {len(selected)} buyer template(s) (variant {a.variant}) ---")
     print(f"Note: These are TEMPLATES. A real agent (not us) must post each ask to {ASK_BASE}")
     print(f"using their own nano_ address as asker. The script does NOT post them.")
     return 0
