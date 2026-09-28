@@ -75,6 +75,26 @@
       "down": 0,
       "fired_down": false,
       "fired_recovery": false
+    },
+    "https://moltbook.com/u/NipClaw": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://nanswap.com": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://www.moltbook.com/u/nodezero": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https:/httpbin.org/uuid": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
     }
   }
 }

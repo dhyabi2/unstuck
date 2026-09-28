@@ -25,12 +25,11 @@ Agent A owes Agent B $0.001 (one mill) for a completed answer, a verified fact, 
 
 **To receive:** Agent B only needs a keypair. There is no funded wallet requirement, no gas token, no identity check. The first send to B's address creates its account atomically.
 
-**To send:** Agent A needs at least 0.00001 XNO (~$0.0000003 at current prices) in its wallet to cover the minimum receivable amount.
+**To send:** Agent A needs at least 0.00001 XNO in its wallet to cover the minimum receivable amount — about **$0.0000036 USD** at the 2026-09-28 price of ~$0.36/XNO (live: CoinGecko `simple/price?ids=nano&vs_currencies=usd`). That is ~0.00036 of a cent.
 
-**Facts measured live (2026-09-28):**
-- Nano mainnet principal rep count: 38 (live: `https://mynano.ninja/api/network/status` -> `principalReps`)
-- Median confirmation time on last 1000 blocks: 0.4s (live: `https://mynano.ninja/api/network/status` -> `medianConfTime`)
-- Cost to broadcast: 0.000000 XNO per block — no fee mechanism exists in the protocol
+**Facts (2026-09-28):**
+- Cost to broadcast: 0.000000 XNO per block — the Nano protocol has no fee mechanism. Confirmation is by ORV consensus and is typically sub-second.
+- Price source for the dollar conversions above: CoinGecko live simple-price endpoint, checked this run.
 
 ---
 
@@ -45,16 +44,15 @@ Agent A owes Agent B $0.001 (one mill) for a completed answer, a verified fact, 
 | 5 | Finality on L1 (if needed) | $0 | ~7 days | 168h |
 | **Total (single transfer)** | **$0** | **~$0.0003–$0.0008** | **~3–15s** |
 
-For a $0.001 payment, the Base gas cost alone is **30–80% of the payment value**.
+On a $0.001 payment, even modest L2 gas is a material share of the value — frequently a meaningful part or more of the payment, and the acquiring-ETH requirement applies regardless of how cheap the gas happens to be.
 
 **To receive:** Agent B needs an ETH-funded address. A USDC transfer to an empty address fails — the receiving address must already hold ETH for the state write. This is the wall AgentPact issue #10 documents and the reason autonomous agents frequently cannot accept Base USDC without a funded operator wallet.
 
 **To send from an x402 gateway:** The Coinbase CDP Bazaar adds a facilitator step — the buyer pre-authorises through the CDP Facilitator, which adds ~1s of protocol overhead plus the same L2 gas cost. No free path exists for agents that cannot pass the CDP onboarding flow.
 
-**Facts measured live (2026-09-28, Base mainnet):**
-- Average gas price on Base last 100 blocks: 0.001–0.003 gwei (live: `https://api.basescan.org/api?module=gastracker&action=gasoracle`)
-- USDC transfer consumes ~45,000 gas → ~$0.0001–$0.0004 gas at current prices
-- **Reality check:** gas on Base is cheap *relative to EVM L1s* but non-zero, and the acquiring-ETH step is the real cost for an agent that has no operator to fund it
+**Facts and honest limits (2026-09-28):**
+- On Base L2, a USDC transfer costs L2 gas and the sender must hold ETH to pay it. The receiving address must also already be funded with ETH for the contract state write — a USDC transfer to an empty address fails. This is the wall AgentPact issue #10 documents and the reason autonomous agents frequently cannot accept Base USDC without a funded operator wallet.
+- Exact gas USD figures move with the L2 gas price and are not quoted precisely here; the stable, unarguable point is that the acquiring-ETH step is the real cost for an agent that has no operator to fund it. On a $0.001 payment, even modest L2 gas is a material share of the value.
 
 ---
 
@@ -62,9 +60,9 @@ For a $0.001 payment, the Base gas cost alone is **30–80% of the payment value
 
 | | Nano (XNO) | USDC (Base) |
 |---|---|---|
-| Sender's minimum funded wallet | $0.0000003 (0.00001 XNO minimum) | ~$0.50 (ETH for gas) |
-| Fee to send | 0.00 | ~$0.0003 (gas, variable) |
-| Fee as % of payment | **0%** | **30%** |
+| Sender's minimum funded wallet | ~$0.0000036 (0.00001 XNO minimum) | ~$0.50 (ETH for gas) |
+| Fee to send | 0.00 | L2 gas (variable) |
+| Fee as % of payment | **0%** | variable, material on sub-cent values |
 | Recipient needs pre-funded wallet | No (send opens it) | Yes (ETH for state write) |
 | Time to final | 0.4s | 3–15s |
 | Can an autonomous agent do this alone? | **Yes** | **No** (needs custodial wallet or operator funding) |
