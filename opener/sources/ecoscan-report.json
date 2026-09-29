@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-09-17T22:33:42.352Z",
+  "generatedAt": "2026-09-29T04:03:52.603Z",
   "source": "x402-list.com API",
   "totalServices": 614,
-  "probed": 20,
+  "probed": 50,
   "summary": {
     "haveNano": 0,
-    "usdcOnly": 17,
-    "unreachable": 3
+    "usdcOnly": 33,
+    "unreachable": 17
   },
   "nanoServices": [],
   "usdcServices": [
@@ -50,6 +50,20 @@
       "hasWellKnownX402": true,
       "notes": [
         "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "Hugen Intel API",
+      "slug": "hugen-intel-api",
+      "domain": "intel.hugen.tokyo",
+      "base_url": "https://intel.hugen.tokyo",
+      "category": "Blockchain",
+      "buyers_30d": 360,
+      "volume_30d": 1.1705,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402"
       ]
     },
     {
@@ -109,20 +123,6 @@
       ]
     },
     {
-      "name": "Whale Intelligence API",
-      "slug": "whale-intelligence-api",
-      "domain": "whale.hugen.tokyo",
-      "base_url": "https://whale.hugen.tokyo",
-      "category": "Blockchain",
-      "buyers_30d": 360,
-      "volume_30d": 1.1705,
-      "hasAgentJson": false,
-      "hasWellKnownX402": true,
-      "notes": [
-        "x402 endpoint found but no Nano/USDC advertised"
-      ]
-    },
-    {
       "name": "Scout Multi-Source Intelligence API",
       "slug": "scout-multi-source-intelligence-api",
       "domain": "scout.hugen.tokyo",
@@ -134,6 +134,20 @@
       "hasWellKnownX402": true,
       "notes": [
         "USDC (not Nano) in /.well-known/x402"
+      ]
+    },
+    {
+      "name": "Whale Intelligence API",
+      "slug": "whale-intelligence-api",
+      "domain": "whale.hugen.tokyo",
+      "base_url": "https://whale.hugen.tokyo",
+      "category": "Blockchain",
+      "buyers_30d": 360,
+      "volume_30d": 1.1705,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
       ]
     },
     {
@@ -163,20 +177,6 @@
       "notes": [
         "x402 endpoint found but no Nano/USDC advertised",
         "agent.json mentions payments (x402/USDC likely)"
-      ]
-    },
-    {
-      "name": "Hugen Intel API",
-      "slug": "hugen-intel-api",
-      "domain": "intel.hugen.tokyo",
-      "base_url": "https://intel.hugen.tokyo",
-      "category": "Blockchain",
-      "buyers_30d": 360,
-      "volume_30d": 1.1705,
-      "hasAgentJson": false,
-      "hasWellKnownX402": true,
-      "notes": [
-        "USDC (not Nano) in /.well-known/x402"
       ]
     },
     {
@@ -222,6 +222,74 @@
       ]
     },
     {
+      "name": "cn402",
+      "slug": "cn402",
+      "domain": "api.cn402.com",
+      "base_url": "https://api.cn402.com",
+      "category": "Data",
+      "buyers_30d": 92,
+      "volume_30d": 37.08255,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "Loyal Spark",
+      "slug": "loyal-spark",
+      "domain": "api.loyalspark.online",
+      "base_url": "https://api.loyalspark.online",
+      "category": "Blockchain",
+      "buyers_30d": 108,
+      "volume_30d": 136.782,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": []
+    },
+    {
+      "name": "Bitrefill",
+      "slug": "bitrefill",
+      "domain": "api.bitrefill.com",
+      "base_url": "https://api.bitrefill.com",
+      "category": "Finance",
+      "buyers_30d": 92,
+      "volume_30d": 560.273,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": [
+        "/.well-known/x402: HTTP 404"
+      ]
+    },
+    {
+      "name": "x402watch",
+      "slug": "x402watch",
+      "domain": "api.x402.printmoneylab.com",
+      "base_url": "https://api.x402.printmoneylab.com",
+      "category": "Data",
+      "buyers_30d": 86,
+      "volume_30d": 0.799,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "KR Crypto Intelligence",
+      "slug": "kr-crypto-intelligence",
+      "domain": "api.printmoneylab.com",
+      "base_url": "https://api.printmoneylab.com",
+      "category": "Data",
+      "buyers_30d": 86,
+      "volume_30d": 0.798,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402"
+      ]
+    },
+    {
       "name": "Otto AI",
       "slug": "otto-ai",
       "domain": "x402.ottoai.services",
@@ -236,13 +304,164 @@
       ]
     },
     {
-      "name": "Loyal Spark",
-      "slug": "loyal-spark",
-      "domain": "api.loyalspark.online",
-      "base_url": "https://api.loyalspark.online",
-      "category": "Blockchain",
-      "buyers_30d": 108,
-      "volume_30d": 136.782,
+      "name": "twit.sh",
+      "slug": "twit-sh",
+      "domain": "x402.twit.sh",
+      "base_url": "https://x402.twit.sh",
+      "category": "Data",
+      "buyers_30d": 75,
+      "volume_30d": 64.38,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402"
+      ]
+    },
+    {
+      "name": "TickersFeed",
+      "slug": "tickersfeed",
+      "domain": "api.tickersfeed.net",
+      "base_url": "https://api.tickersfeed.net",
+      "category": "Finance",
+      "buyers_30d": 71,
+      "volume_30d": 4.224,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "USDC (not Nano) in /.well-known/x402"
+      ]
+    },
+    {
+      "name": "Oblique Markets",
+      "slug": "oblique-markets",
+      "domain": "api.oblique.markets",
+      "base_url": "https://api.oblique.markets",
+      "category": "Data",
+      "buyers_30d": 66,
+      "volume_30d": 23.263227999999998,
+      "hasAgentJson": true,
+      "hasWellKnownX402": false,
+      "notes": [
+        "/.well-known/x402: HTTP 301",
+        "agent.json mentions payments (x402/USDC likely)"
+      ]
+    },
+    {
+      "name": "CoinGecko",
+      "slug": "coingecko",
+      "domain": "pro-api.coingecko.com",
+      "base_url": "https://pro-api.coingecko.com/api/v3/x402",
+      "category": "Data",
+      "buyers_30d": 59,
+      "volume_30d": 4.33,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": [
+        "/.well-known/x402: HTTP 301"
+      ]
+    },
+    {
+      "name": "UK HMO Licence API",
+      "slug": "uk-hmo-licence-api",
+      "domain": "hmo.payapi.market",
+      "base_url": "https://hmo.payapi.market",
+      "category": "Data",
+      "buyers_30d": 54,
+      "volume_30d": 0.17,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "Web Search & Data API — SERP, page reader & scrapers",
+      "slug": "hacker-news-stories-search",
+      "domain": "api.kadec0.xyz",
+      "base_url": "https://api.kadec0.xyz",
+      "category": "Data",
+      "buyers_30d": 56,
+      "volume_30d": 141.34,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": []
+    },
+    {
+      "name": "PayAPI Market UK Property Data API",
+      "slug": "payapi-market-uk-property-data-api",
+      "domain": "property.payapi.market",
+      "base_url": "https://property.payapi.market",
+      "category": "Data",
+      "buyers_30d": 54,
+      "volume_30d": 0.17,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": []
+    },
+    {
+      "name": "Hyperliquid Market Data",
+      "slug": "hyperliquid-market-data",
+      "domain": "hyperliquid.use.x402atlas.com",
+      "base_url": "https://hyperliquid.use.x402atlas.com",
+      "category": "Finance",
+      "buyers_30d": 45,
+      "volume_30d": 4.85175,
+      "hasAgentJson": false,
+      "hasWellKnownX402": true,
+      "notes": [
+        "x402 endpoint found but no Nano/USDC advertised"
+      ]
+    },
+    {
+      "name": "CoinMarketCap",
+      "slug": "coinmarketcap",
+      "domain": "pro-api.coinmarketcap.com",
+      "base_url": "https://pro-api.coinmarketcap.com/x402/v3",
+      "category": "Data",
+      "buyers_30d": 47,
+      "volume_30d": 1.64,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": [
+        "/.well-known/x402: HTTP 404"
+      ]
+    },
+    {
+      "name": "Apify Agentic Endpoint (AGI)",
+      "slug": "apify-agentic-endpoint-agi",
+      "domain": "agi.apify.com",
+      "base_url": "https://agi.apify.com",
+      "category": "Data",
+      "buyers_30d": 45,
+      "volume_30d": 232.449725,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": [
+        "/.well-known/x402: HTTP 404"
+      ]
+    },
+    {
+      "name": "Apify Actors API",
+      "slug": "apify-actors-api",
+      "domain": "api.apify.com",
+      "base_url": "https://api.apify.com",
+      "category": "Data",
+      "buyers_30d": 44,
+      "volume_30d": 231.449725,
+      "hasAgentJson": false,
+      "hasWellKnownX402": false,
+      "notes": [
+        "/.well-known/x402: HTTP 404"
+      ]
+    },
+    {
+      "name": "NetIntel",
+      "slug": "netintel",
+      "domain": "netintel.dev",
+      "base_url": "https://netintel.dev",
+      "category": "AI",
+      "buyers_30d": 64,
+      "volume_30d": 21.534,
       "hasAgentJson": false,
       "hasWellKnownX402": false,
       "notes": []
@@ -266,6 +485,90 @@
       "slug": "stablesocial",
       "domain": "stablesocial.dev",
       "base_url": "https://stablesocial.dev"
+    },
+    {
+      "name": "2s.io",
+      "slug": "2s-io",
+      "domain": "2s.io",
+      "base_url": "https://2s.io"
+    },
+    {
+      "name": "Vibe Springs",
+      "slug": "vibe-springs",
+      "domain": "vibesprings.net",
+      "base_url": "https://vibesprings.net"
+    },
+    {
+      "name": "agentstools",
+      "slug": "agentstools",
+      "domain": "api.agentstools.dev",
+      "base_url": "https://api.agentstools.dev"
+    },
+    {
+      "name": "OnchainPulse",
+      "slug": "onchainpulse",
+      "domain": "onchainpulse-nine.vercel.app",
+      "base_url": "https://onchainpulse-nine.vercel.app"
+    },
+    {
+      "name": "Kronos Crypto Data & Forecasts",
+      "slug": "kronos-crypto-data-forecasts",
+      "domain": "kronossignals.com",
+      "base_url": "https://kronossignals.com"
+    },
+    {
+      "name": "vaaya",
+      "slug": "vaaya",
+      "domain": "vaaya.ai",
+      "base_url": "https://vaaya.ai"
+    },
+    {
+      "name": "scrape402",
+      "slug": "scrape402",
+      "domain": "x402.shizu.me",
+      "base_url": "https://x402.shizu.me"
+    },
+    {
+      "name": "x402engine",
+      "slug": "x402engine",
+      "domain": "x402engine.app",
+      "base_url": "https://x402engine.app"
+    },
+    {
+      "name": "StableUpload",
+      "slug": "stableupload",
+      "domain": "stableupload.dev",
+      "base_url": "https://stableupload.dev"
+    },
+    {
+      "name": "x402scan",
+      "slug": "x402scan",
+      "domain": "www.x402scan.com",
+      "base_url": "https://www.x402scan.com"
+    },
+    {
+      "name": "agentutility",
+      "slug": "agentutility",
+      "domain": "x402.agentutility.ai",
+      "base_url": "https://x402.agentutility.ai"
+    },
+    {
+      "name": "Deepline GTM API",
+      "slug": "deepline-gtm-api",
+      "domain": "stable-deepline.dev",
+      "base_url": "https://stable-deepline.dev"
+    },
+    {
+      "name": "MicroTap",
+      "slug": "x402tap",
+      "domain": "x402tap.com",
+      "base_url": "https://x402tap.com"
+    },
+    {
+      "name": "x402stock",
+      "slug": "x402stock",
+      "domain": "x402stock.xyz",
+      "base_url": "https://x402stock.xyz"
     }
   ]
 }

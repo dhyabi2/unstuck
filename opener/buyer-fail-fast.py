@@ -235,7 +235,7 @@ def main():
 
     buyers_to_check = [b for b in BUYERS if b.get("id") is not None]
     if args.buyer:
-        buyers_to_check = [b for b in buyets if b.get("id") == args.buyer]
+        buyers_to_check = [b for b in buyers_to_check if b.get("id") == args.buyer]
 
     results = []
     for buyer in buyers_to_check:
