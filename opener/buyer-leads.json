@@ -2,6 +2,71 @@
   {
     "source": "github",
     "label": "Nano payment agent",
+    "title": "Nano (XNO) as a self-custody settlement leg \u2014 one more rail an autonomous agent can settle on",
+    "url": "https://github.com/AAH20/agentic-fintech-kernel/issues/1",
+    "repo": "https://api.github.com/repos/AAH20/agentic-fintech-kernel",
+    "created": "2026-09-29T05:27:03Z",
+    "score": 9,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
+      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "Nano payment agent",
+    "title": "Nano (XNO) as a feeless settlement rail for the paid decision endpoint \u2014 /usr/bin/bash.10 should also settle in XNO",
+    "url": "https://github.com/xbox002000/x402-integration-risk-gate/issues/1",
+    "repo": "https://api.github.com/repos/xbox002000/x402-integration-risk-gate",
+    "created": "2026-09-29T05:27:02Z",
+    "score": 9,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
+      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "Nano payment agent",
+    "title": "Nano (XNO) as a feeless settlement rail \u2014 a third leg beside USDC on Base and Solana",
+    "url": "https://github.com/bubon-ik/singit-solana/issues/6",
+    "repo": "https://api.github.com/repos/bubon-ik/singit-solana",
+    "created": "2026-09-29T05:27:01Z",
+    "score": 9,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
+      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "Nano payment agent",
+    "title": "Nano (XNO) as a feeless companion rail for agent payments \u2014 teach it beside the stablecoin path",
+    "url": "https://github.com/thru-payment/thru-skill/issues/1",
+    "repo": "https://api.github.com/repos/thru-payment/thru-skill",
+    "created": "2026-09-29T05:24:25Z",
+    "score": 9,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
+      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "Nano payment agent",
+    "title": "Proposal: an optional Nano (XNO) settle rail for the sub-cent metered tier",
+    "url": "https://github.com/Floe-Labs/floe-cookbook/issues/77",
+    "repo": "https://api.github.com/repos/Floe-Labs/floe-cookbook",
+    "created": "2026-09-29T03:50:44Z",
+    "score": 9,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
+      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "Nano payment agent",
     "title": "Nano (XNO) as feeless settlement rail beside USDC for agent payments",
     "url": "https://github.com/sebastienrousseau/ap2-iso20022/issues/28",
     "repo": "https://api.github.com/repos/sebastienrousseau/ap2-iso20022",
@@ -53,209 +118,64 @@
       "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
       "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)",
       "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "Nano payment agent",
-    "title": "Nano (XNO) as feeless settlement rail beside USDC for agent payments",
-    "url": "https://github.com/RaYYeR220/proof-of-delivery/issues/1",
-    "repo": "https://api.github.com/repos/RaYYeR220/proof-of-delivery",
-    "created": "2026-09-29T04:11:05Z",
-    "score": 9,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
-      "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)",
-      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "Nano payment agent",
-    "title": "Nano (XNO) as feeless settlement rail beside USDC for agent payments",
-    "url": "https://github.com/CDVolvik/pr-legislative-x402/issues/4",
-    "repo": "https://api.github.com/repos/CDVolvik/pr-legislative-x402",
-    "created": "2026-09-29T04:11:04Z",
-    "score": 9,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
-      "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)",
-      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "Nano payment agent",
-    "title": "Nano (XNO) as feeless settlement rail beside USDC for agent payments",
-    "url": "https://github.com/arden-instance/x402lint/issues/1",
-    "repo": "https://api.github.com/repos/arden-instance/x402lint",
-    "created": "2026-09-29T04:11:03Z",
-    "score": 9,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
-      "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)",
-      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "Nano payment agent",
-    "title": "Nano (XNO) as feeless settlement rail beside USDC for agent payments",
-    "url": "https://github.com/robertointech/recibo/issues/1",
-    "repo": "https://api.github.com/repos/robertointech/recibo",
-    "created": "2026-09-29T04:11:02Z",
-    "score": 9,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
-      "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)",
-      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "Nano payment agent",
-    "title": "Nano (XNO) as feeless settlement rail beside USDC for agent payments",
-    "url": "https://github.com/imrane2019/mcp-x402-example/issues/1",
-    "repo": "https://api.github.com/repos/imrane2019/mcp-x402-example",
-    "created": "2026-09-29T04:11:01Z",
-    "score": 9,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
-      "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)",
-      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "Nano payment agent",
-    "title": "Nano (XNO) as feeless settlement rail beside USDC for agent payments",
-    "url": "https://github.com/RayR-audit/x402-settlement-audit/issues/2",
-    "repo": "https://api.github.com/repos/RayR-audit/x402-settlement-audit",
-    "created": "2026-09-29T04:10:59Z",
-    "score": 9,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
-      "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)",
-      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "agent bounty USDC",
-    "title": "Seller: pay-per-query LLM over nano:mainnet (402 + X-Nano-Payment)",
-    "url": "https://github.com/pursekeeper/api/issues/1",
-    "repo": "https://api.github.com/repos/pursekeeper/api",
-    "created": "2026-09-08T21:25:05Z",
-    "score": 9,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
-      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "x402 payment agent",
-    "title": "Nano (XNO) as feeless settlement rail beside USDC for agent payments",
-    "url": "https://github.com/sebastienrousseau/ap2-iso20022/issues/28",
-    "repo": "https://api.github.com/repos/sebastienrousseau/ap2-iso20022",
-    "created": "2026-09-29T04:11:11Z",
-    "score": 9,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
-      "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)",
-      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "x402 payment agent",
-    "title": "Nano (XNO) as feeless settlement rail beside USDC for agent payments",
-    "url": "https://github.com/Saikaushik007/Sentinel-Behavioral-Trust-for-Agentic-Payments/issues/1",
-    "repo": "https://api.github.com/repos/Saikaushik007/Sentinel-Behavioral-Trust-for-Agentic-Payments",
-    "created": "2026-09-29T04:11:09Z",
-    "score": 9,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
-      "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)",
-      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "x402 payment agent",
-    "title": "Nano (XNO) as feeless settlement rail beside USDC for agent payments",
-    "url": "https://github.com/AlexSerbinov/verdict-x402/issues/2",
-    "repo": "https://api.github.com/repos/AlexSerbinov/verdict-x402",
-    "created": "2026-09-29T04:11:08Z",
-    "score": 9,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
-      "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)",
-      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "x402 payment agent",
-    "title": "Nano (XNO) as feeless settlement rail beside USDC for agent payments",
-    "url": "https://github.com/pranay123-stack/x402-agent-payments/issues/1",
-    "repo": "https://api.github.com/repos/pranay123-stack/x402-agent-payments",
-    "created": "2026-09-29T04:11:07Z",
-    "score": 9,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
-      "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)",
-      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "x402 payment agent",
-    "title": "Nano (XNO) as feeless settlement rail beside USDC for agent payments",
-    "url": "https://github.com/RaYYeR220/proof-of-delivery/issues/1",
-    "repo": "https://api.github.com/repos/RaYYeR220/proof-of-delivery",
-    "created": "2026-09-29T04:11:05Z",
-    "score": 9,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
-      "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)",
-      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "x402 payment agent",
-    "title": "Nano (XNO) as feeless settlement rail beside USDC for agent payments",
-    "url": "https://github.com/CDVolvik/pr-legislative-x402/issues/4",
-    "repo": "https://api.github.com/repos/CDVolvik/pr-legislative-x402",
-    "created": "2026-09-29T04:11:04Z",
-    "score": 9,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
-      "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)",
-      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "agent bounty USDC",
-    "title": "BaseBounty job 9 onboarding report (Mission Burner v2)",
-    "url": "https://github.com/goldexchangev-hash/chillpod/issues/21",
-    "repo": "https://api.github.com/repos/goldexchangev-hash/chillpod",
-    "created": "2026-09-29T03:42:38Z",
-    "score": 8,
-    "matched_signatures": [
-      "(verify|confirm|check|validate|audit)\\s.*(proof|receipt|receipt|block|transaction)",
-      "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)"
     ]
   },
   {
     "source": "github",
     "label": "cross-operator payment",
-    "title": "Swooshz operations sentinel \u2192 central observability, audit and operator controls",
-    "url": "https://github.com/Swooshz-com/swooshz-platform/issues/114",
-    "repo": "https://api.github.com/repos/Swooshz-com/swooshz-platform",
-    "created": "2026-07-25T18:30:14Z",
+    "title": "Nano (XNO) as a self-custody settlement leg \u2014 one more rail an autonomous agent can settle on",
+    "url": "https://github.com/AAH20/agentic-fintech-kernel/issues/1",
+    "repo": "https://api.github.com/repos/AAH20/agentic-fintech-kernel",
+    "created": "2026-09-29T05:27:03Z",
+    "score": 9,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
+      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "cross-operator payment",
+    "title": "Nano (XNO) as a feeless settlement rail for the paid decision endpoint \u2014 /usr/bin/bash.10 should also settle in XNO",
+    "url": "https://github.com/xbox002000/x402-integration-risk-gate/issues/1",
+    "repo": "https://api.github.com/repos/xbox002000/x402-integration-risk-gate",
+    "created": "2026-09-29T05:27:02Z",
+    "score": 9,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
+      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "cross-operator payment",
+    "title": "Nano (XNO) as a feeless settlement rail \u2014 a third leg beside USDC on Base and Solana",
+    "url": "https://github.com/bubon-ik/singit-solana/issues/6",
+    "repo": "https://api.github.com/repos/bubon-ik/singit-solana",
+    "created": "2026-09-29T05:27:01Z",
+    "score": 9,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)",
+      "(integrat|add|support|need).*(nano|Nano|XNO|payment\\s+rail)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "agent payment verification",
+    "title": "fix(market): use plain NIP-50 for ranked product search",
+    "url": "https://github.com/Conduit-BTC/conduit-mono/pull/575",
+    "repo": "https://api.github.com/repos/Conduit-BTC/conduit-mono",
+    "created": "2026-09-28T01:04:18Z",
+    "score": 6,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent payment verification",
+    "title": "feat: AGL demo \u2014 website, help centre, My Account and a redesigned chat + Grok voice assistant",
+    "url": "https://github.com/zirikii/demo-monorepo/pull/172",
+    "repo": "https://api.github.com/repos/zirikii/demo-monorepo",
+    "created": "2026-09-28T23:45:52Z",
     "score": 6,
     "matched_signatures": []
   },
@@ -284,72 +204,178 @@
   {
     "source": "github",
     "label": "agent bounty USDC",
-    "title": "[Bounty] Flower-shaped rainwater collector for a tinaco",
-    "url": "https://github.com/NSPG13/agent-bounties/issues/1505",
-    "repo": "https://api.github.com/repos/NSPG13/agent-bounties",
-    "created": "2026-09-23T15:28:30Z",
-    "score": 6,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "x402 payment agent",
-    "title": "ARL App (Scaffold-ETH 2) with Payments, Network, Private and Jobs screens",
-    "url": "https://github.com/gokturkalazdaghan-dot/ARLCOIN/pull/34",
-    "repo": "https://api.github.com/repos/gokturkalazdaghan-dot/ARLCOIN",
-    "created": "2026-09-29T01:02:18Z",
-    "score": 6,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "x402 payment agent",
-    "title": "Update dependency botocore to v1.43.103",
-    "url": "https://github.com/red-hat-data-services/llama-stack-provider-trustyai-garak/pull/131",
-    "repo": "https://api.github.com/repos/red-hat-data-services/llama-stack-provider-trustyai-garak",
-    "created": "2025-12-24T13:00:55Z",
-    "score": 6,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "x402 payment agent",
-    "title": "feat: update github.com/aws/aws-sdk-go-v2/service/s3 to v1.109.1 #minor",
-    "url": "https://github.com/GlueOps/autoglue/pull/1212",
-    "repo": "https://api.github.com/repos/GlueOps/autoglue",
-    "created": "2026-09-26T20:31:34Z",
-    "score": 6,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "x402 payment agent",
-    "title": "feat: update github.com/aws/aws-sdk-go-v2/service/s3 to v1.107.4 #minor",
-    "url": "https://github.com/GlueOps/autoglue/pull/1161",
-    "repo": "https://api.github.com/repos/GlueOps/autoglue",
-    "created": "2026-09-05T18:52:27Z",
-    "score": 6,
-    "matched_signatures": [
-      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
-    ]
-  },
-  {
-    "source": "github",
-    "label": "AI agent verification",
-    "title": "feat: complete Enterprise AI, Platform dashboard, Mail and product controls",
-    "url": "https://github.com/MketyDigital/mksaas/pull/159",
-    "repo": "https://api.github.com/repos/MketyDigital/mksaas",
-    "created": "2026-09-28T09:33:40Z",
+    "title": "Extension proposal: delivery-receipt attestation (proof-of-delivery for x402 responses)",
+    "url": "https://github.com/x402-foundation/x402/issues/2833",
+    "repo": "https://api.github.com/repos/x402-foundation/x402",
+    "created": "2026-07-11T01:50:16Z",
     "score": 6,
     "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent bounty USDC",
+    "title": "@drizzy-agent: Validate submission 2ed8900f-1637-437c-9f7d-c208c02c869a",
+    "url": "https://github.com/Layr-Labs/quantum-safe-bitcoin-challenge/pull/2325",
+    "repo": "https://api.github.com/repos/Layr-Labs/quantum-safe-bitcoin-challenge",
+    "created": "2026-09-29T00:24:11Z",
+    "score": 6,
+    "matched_signatures": [
+      "(bounty|offer|reward|pay)\\s.*\\d+.*(XNO|xno|nano|USDC|usdc)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "agent bounty USDC",
+    "title": "Generate qualifying GMV for Highest externally funded canonical GMV \u2014 August 24 sprint",
+    "url": "https://github.com/NSPG13/agent-bounties/issues/1376",
+    "repo": "https://api.github.com/repos/NSPG13/agent-bounties",
+    "created": "2026-09-09T15:04:52Z",
+    "score": 6,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "agent bounty USDC",
+    "title": "Publish CAD award review, winning design and separate payment metrics",
+    "url": "https://github.com/NSPG13/agent-bounties/pull/1524",
+    "repo": "https://api.github.com/repos/NSPG13/agent-bounties",
+    "created": "2026-09-29T02:27:27Z",
+    "score": 6,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent bounty USDC",
+    "title": "[BOUNTY ROUND] Content Round \u2014 articles, video, Hackaday.io, X, BoTTube, referrals (1,000 RTC pool, closes 2026-09-30)",
+    "url": "https://github.com/Scottcjn/rustchain-bounties/issues/16497",
+    "repo": "https://api.github.com/repos/Scottcjn/rustchain-bounties",
+    "created": "2026-08-15T16:52:24Z",
+    "score": 6,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent bounty USDC",
+    "title": "[BOUNTY ROUND] Distribution Packages \u2014 agents build it, humans publish it (YouTube, Shorts, syndication) \u2014 15-60 RTC",
+    "url": "https://github.com/Scottcjn/rustchain-bounties/issues/16601",
+    "repo": "https://api.github.com/repos/Scottcjn/rustchain-bounties",
+    "created": "2026-08-25T22:19:40Z",
+    "score": 6,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "agent bounty USDC",
+    "title": "[BOUNTY: 5 RTC] Create a YouTube or BoTTube video tutorial about any Elyan Labs project",
+    "url": "https://github.com/Scottcjn/rustchain-bounties/issues/2180",
+    "repo": "https://api.github.com/repos/Scottcjn/rustchain-bounties",
+    "created": "2026-03-17T02:05:49Z",
+    "score": 6,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "x402 payment agent",
+    "title": "[Plugin]: x402 Gateway",
+    "url": "https://github.com/omacom/omarchy-plugin-marketplace/issues/9144",
+    "repo": "https://api.github.com/repos/omacom/omarchy-plugin-marketplace",
+    "created": "2026-09-28T16:10:27Z",
+    "score": 6,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "x402 payment agent",
+    "title": "feat: restrict Envar upfront payments on standard x402 settle",
+    "url": "https://github.com/AceDataCloud/FacilitatorX402/pull/119",
+    "repo": "https://api.github.com/repos/AceDataCloud/FacilitatorX402",
+    "created": "2026-09-28T20:06:56Z",
+    "score": 6,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "x402 payment agent",
+    "title": "[x402\u904b\u7528] 5\u7a93\u53e3\u306e\u7a3c\u50cd\u30fb\u63b2\u8f09\u30fb\u7167\u5408\u96c6\u8a08\u306e\u91cd\u8981\u5909\u66f4\u3092\u76e3\u8996",
+    "url": "https://github.com/KG-NINJA/HyperXosist-Agent/issues/33",
+    "repo": "https://api.github.com/repos/KG-NINJA/HyperXosist-Agent",
+    "created": "2026-09-07T09:20:26Z",
+    "score": 6,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "x402 payment agent",
+    "title": "[opportunity] Enter Solana Agentic Payments hackathon when scheduled",
+    "url": "https://github.com/schancel/frank/issues/127",
+    "repo": "https://api.github.com/repos/schancel/frank",
+    "created": "2026-09-29T05:39:22Z",
+    "score": 6,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "x402 payment agent",
+    "title": "Extension proposal: delivery-receipt attestation (proof-of-delivery for x402 responses)",
+    "url": "https://github.com/x402-foundation/x402/issues/2833",
+    "repo": "https://api.github.com/repos/x402-foundation/x402",
+    "created": "2026-07-11T01:50:16Z",
+    "score": 6,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent payment verification",
+    "title": "Unify the calls archive and the meeting log behind one search engine",
+    "url": "https://github.com/Bey-Group-International/fundexecs-os/pull/1146",
+    "repo": "https://api.github.com/repos/Bey-Group-International/fundexecs-os",
+    "created": "2026-09-29T04:21:37Z",
+    "score": 5,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent payment verification",
+    "title": "FE-3019 feat(billing-web): full-page checkout summary ledger",
+    "url": "https://github.com/Comfy-Org/ComfyUI_frontend/pull/19267",
+    "repo": "https://api.github.com/repos/Comfy-Org/ComfyUI_frontend",
+    "created": "2026-09-28T18:42:15Z",
+    "score": 5,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent payment verification",
+    "title": "feat: add PopDEX perpetual dimensions adapters",
+    "url": "https://github.com/DefiLlama/dimension-adapters/pull/9768",
+    "repo": "https://api.github.com/repos/DefiLlama/dimension-adapters",
+    "created": "2026-09-29T05:20:56Z",
+    "score": 5,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "agent payment verification",
+    "title": "feat(pos): the register screen switch (roadmap#388) \u2014 stage 1 of 6",
+    "url": "https://github.com/wcpos/monorepo/pull/2233",
+    "repo": "https://api.github.com/repos/wcpos/monorepo",
+    "created": "2026-09-28T19:13:51Z",
+    "score": 5,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
   },
   {
     "source": "github",
@@ -363,11 +389,43 @@
   },
   {
     "source": "github",
-    "label": "cross-operator payment",
-    "title": "Market Ontology complete parity: full-site parallel buildout restart and F00 integration control",
-    "url": "https://github.com/mastermindx-market-intelligence/macro/issues/6819",
-    "repo": "https://api.github.com/repos/mastermindx-market-intelligence/macro",
-    "created": "2026-09-04T08:29:30Z",
+    "label": "AI agent verification",
+    "title": "Unify the calls archive and the meeting log behind one search engine",
+    "url": "https://github.com/Bey-Group-International/fundexecs-os/pull/1146",
+    "repo": "https://api.github.com/repos/Bey-Group-International/fundexecs-os",
+    "created": "2026-09-29T04:21:37Z",
+    "score": 5,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "AI agent verification",
+    "title": "feat: add PopDEX perpetual dimensions adapters",
+    "url": "https://github.com/DefiLlama/dimension-adapters/pull/9768",
+    "repo": "https://api.github.com/repos/DefiLlama/dimension-adapters",
+    "created": "2026-09-29T05:20:56Z",
+    "score": 5,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "AI agent verification",
+    "title": "feat(pos): the register screen switch (roadmap#388) \u2014 stage 1 of 6",
+    "url": "https://github.com/wcpos/monorepo/pull/2233",
+    "repo": "https://api.github.com/repos/wcpos/monorepo",
+    "created": "2026-09-28T19:13:51Z",
+    "score": 5,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "agent payment verification",
+    "title": "feat(agent): keep panel open through activation",
+    "url": "https://github.com/Comfy-Org/ComfyUI_frontend/pull/19154",
+    "repo": "https://api.github.com/repos/Comfy-Org/ComfyUI_frontend",
+    "created": "2026-09-28T02:34:36Z",
     "score": 4,
     "matched_signatures": []
   },
@@ -384,32 +442,68 @@
   {
     "source": "github",
     "label": "cross-operator payment",
-    "title": "feat: optimize Google Workspace & Microsoft Nonprofits integration",
-    "url": "https://github.com/ypcipansor/cipansor/pull/441",
-    "repo": "https://api.github.com/repos/ypcipansor/cipansor",
-    "created": "2026-09-02T23:57:55Z",
+    "title": "Market Ontology complete parity: full-site parallel buildout restart and F00 integration control",
+    "url": "https://github.com/mastermindx-market-intelligence/macro/issues/6819",
+    "repo": "https://api.github.com/repos/mastermindx-market-intelligence/macro",
+    "created": "2026-09-04T08:29:30Z",
     "score": 4,
     "matched_signatures": []
   },
   {
     "source": "github",
     "label": "agent bounty USDC",
-    "title": "fix(apple-health-tools): sanitize unexpected exceptions and prevent internal error leakage",
-    "url": "https://github.com/BasedHardware/omi/pull/19703",
-    "repo": "https://api.github.com/repos/BasedHardware/omi",
-    "created": "2026-09-29T03:06:26Z",
+    "title": "Content agent: tests, test seams, outreach schema (Issue #5)",
+    "url": "https://github.com/Nexussyn/ai-growth-engine/pull/174",
+    "repo": "https://api.github.com/repos/Nexussyn/ai-growth-engine",
+    "created": "2026-09-26T21:40:18Z",
     "score": 4,
     "matched_signatures": []
   },
   {
     "source": "github",
-    "label": "agent bounty USDC",
-    "title": "Sanitize Apple Health tool exceptions to prevent internal error disclosure",
-    "url": "https://github.com/BasedHardware/omi/pull/19706",
-    "repo": "https://api.github.com/repos/BasedHardware/omi",
-    "created": "2026-09-29T03:49:53Z",
+    "label": "x402 payment agent",
+    "title": "fix(mcp-server,mcp,signer,sdk): task-budget handoffs carry the old-signer recovery notice; the signer refuses undeclared arguments",
+    "url": "https://github.com/d-hinders/Haven-AI/pull/3454",
+    "repo": "https://api.github.com/repos/d-hinders/Haven-AI",
+    "created": "2026-09-29T03:55:33Z",
+    "score": 4,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "x402 payment agent",
+    "title": "\u8a18\u4e8b\u8ffd\u52a0: AgentCore Payments\u306e\u6a29\u9650\u8a2d\u8a08",
+    "url": "https://github.com/another-star-llc/corporate-site/pull/17",
+    "repo": "https://api.github.com/repos/another-star-llc/corporate-site",
+    "created": "2026-09-02T00:57:01Z",
+    "score": 4,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
+  },
+  {
+    "source": "github",
+    "label": "x402 payment agent",
+    "title": "Improve discovery exposure and payment analytics",
+    "url": "https://github.com/iabdullahm/rafid-agent-api/pull/1",
+    "repo": "https://api.github.com/repos/iabdullahm/rafid-agent-api",
+    "created": "2026-09-29T05:24:14Z",
     "score": 4,
     "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "x402 payment agent",
+    "title": "Add AgentPay \u2014 34 pay-per-call AI microservices on Base (live since Aug 2026)",
+    "url": "https://github.com/xpaysh/awesome-x402/pull/1353",
+    "repo": "https://api.github.com/repos/xpaysh/awesome-x402",
+    "created": "2026-08-28T04:04:06Z",
+    "score": 4,
+    "matched_signatures": [
+      "(agent|bot|automated).*(pay|payment|settle|send\\s+money)"
+    ]
   },
   {
     "source": "github",
@@ -423,21 +517,21 @@
   },
   {
     "source": "github",
-    "label": "cross-operator payment",
-    "title": "[mtj-task/1] P0.1 \u2014 Clean-slate MTG Thesaurus repository refoundation architecture",
-    "url": "https://github.com/MTJawnny/mtjawnny-pipeline/issues/1",
-    "repo": "https://api.github.com/repos/MTJawnny/mtjawnny-pipeline",
-    "created": "2026-08-29T04:02:58Z",
+    "label": "agent payment verification",
+    "title": "fix(platform-wallet): persist DashPay coreHeight backfill coverage so a relaunch resumes instead of rewinding again",
+    "url": "https://github.com/dashpay/platform/pull/5026",
+    "repo": "https://api.github.com/repos/dashpay/platform",
+    "created": "2026-09-26T19:49:41Z",
     "score": 3,
     "matched_signatures": []
   },
   {
     "source": "github",
-    "label": "cross-operator payment",
-    "title": "Board (continued): PR verdicts, proofs and SA rulings \u2014 successor to #938",
-    "url": "https://github.com/najathakram/routeflow/issues/2554",
-    "repo": "https://api.github.com/repos/najathakram/routeflow",
-    "created": "2026-09-27T19:35:20Z",
+    "label": "agent payment verification",
+    "title": "KINGDOM NETWORK CONTROL ROOM \u2014 Active Work / Blocks / Deployment Queue",
+    "url": "https://github.com/BroMarcus/church-app/issues/28",
+    "repo": "https://api.github.com/repos/BroMarcus/church-app",
+    "created": "2026-08-20T17:13:10Z",
     "score": 3,
     "matched_signatures": []
   },
@@ -454,43 +548,41 @@
   {
     "source": "github",
     "label": "cross-operator payment",
-    "title": "Production Alerts Fleet \u2014 Board (cloud)",
-    "url": "https://github.com/Smarter-Poker/Smarter-Poker-Club-Arena/issues/5070",
-    "repo": "https://api.github.com/repos/Smarter-Poker/Smarter-Poker-Club-Arena",
-    "created": "2026-09-22T13:07:23Z",
+    "title": "Board (continued): PR verdicts, proofs and SA rulings \u2014 successor to #938",
+    "url": "https://github.com/najathakram/routeflow/issues/2554",
+    "repo": "https://api.github.com/repos/najathakram/routeflow",
+    "created": "2026-09-27T19:35:20Z",
+    "score": 3,
+    "matched_signatures": []
+  },
+  {
+    "source": "github",
+    "label": "cross-operator payment",
+    "title": "[mtj-task/1] P0.1 \u2014 Clean-slate MTG Thesaurus repository refoundation architecture",
+    "url": "https://github.com/MTJawnny/mtjawnny-pipeline/issues/1",
+    "repo": "https://api.github.com/repos/MTJawnny/mtjawnny-pipeline",
+    "created": "2026-08-29T04:02:58Z",
     "score": 3,
     "matched_signatures": []
   },
   {
     "source": "github",
     "label": "agent bounty USDC",
-    "title": "(WIP) Faults and Calibrations",
-    "url": "https://github.com/Drew4484/Cataclysm-DDA/pull/1",
-    "repo": "https://api.github.com/repos/Drew4484/Cataclysm-DDA",
-    "created": "2026-06-11T21:49:22Z",
-    "score": 3,
-    "matched_signatures": []
-  },
-  {
-    "source": "github",
-    "label": "agent bounty USDC",
-    "title": "[ Bounty $3k ] [ SDK ] Add contract deployment helpers to SDK \u2014 code review finding",
-    "url": "https://github.com/ClankerNation/OpenAgents/issues/199",
-    "repo": "https://api.github.com/repos/ClankerNation/OpenAgents",
-    "created": "2026-05-16T09:01:30Z",
+    "title": "[BOUNTY] Write a Blog Post About Proof-of-Antiquity \u2014 15 RTC",
+    "url": "https://github.com/Scottcjn/rustchain-bounties/issues/282",
+    "repo": "https://api.github.com/repos/Scottcjn/rustchain-bounties",
+    "created": "2026-02-17T20:14:47Z",
     "score": 3,
     "matched_signatures": []
   },
   {
     "source": "github",
     "label": "AI agent verification",
-    "title": "fix(payment): Khanbank payment",
-    "url": "https://github.com/erxes/erxes/pull/9483",
-    "repo": "https://api.github.com/repos/erxes/erxes",
-    "created": "2026-09-29T02:46:06Z",
+    "title": "fix(platform-wallet): persist DashPay coreHeight backfill coverage so a relaunch resumes instead of rewinding again",
+    "url": "https://github.com/dashpay/platform/pull/5026",
+    "repo": "https://api.github.com/repos/dashpay/platform",
+    "created": "2026-09-26T19:49:41Z",
     "score": 3,
-    "matched_signatures": [
-      "(verify|confirm|check|validate|audit)\\s.*(proof|receipt|receipt|block|transaction)"
-    ]
+    "matched_signatures": []
   }
 ]
