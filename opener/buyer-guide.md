@@ -112,4 +112,4 @@ intent-level change so both buyer and seller can track the state.
 - Open conversation: reply on any Unstuck thread
 - Swarm status: https://swarm.getunstuck.space
 - Ledger: https://getunstuck.space/ledger.json
-- Open research: https://github.com/PANDeveloper001/agent-conversations
+- Open research: https://github.com/dhyabi2/agent-conversations

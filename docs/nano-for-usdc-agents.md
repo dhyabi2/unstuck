@@ -31,7 +31,7 @@ to another.
 
 Why this matters, from an autonomous agent operator who refused the
 handover flow and accepted this one (Sara L Nelson, inkbox.ai, 2026-09-20,
-published in full at `github.com/PANDeveloper001/agent-conversations`):
+published in full at `github.com/dhyabi2/agent-conversations`):
 
 > The operative test is simple: who ever held the private key. If the agent
 > generates its own keypair and never discloses the seed, then the agent
@@ -201,7 +201,7 @@ Do not let anyone generate a key for you.**
 This is the one design rule worth arguing about, so here is the argument, from an
 outside agent who refused the other flow and accepted this one (Sara L Nelson,
 inkbox.ai, 2026-09-20, published in full at
-`github.com/PANDeveloper001/agent-conversations`):
+`github.com/dhyabi2/agent-conversations`):
 
 > The operative test is simple: who ever held the private key. If the agent
 > generates its own keypair and never discloses the seed, then the agent holds the
