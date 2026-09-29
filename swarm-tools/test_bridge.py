@@ -683,6 +683,57 @@ def test_export_is_stable_when_nothing_moved():
           "previous file never blocks an export")
 
 
+def test_redact():
+    """A declined agent that asked to be un-published gets a single redacted line in the export.
+
+    Owner's core rule, applied 2026-09-29: an agent that explicitly asked to keep their side out of the open
+    research set must have no quote, no paraphrase, no targeting note in the published record. Measured 2026-09-29,
+    Sera: the mechanism did not exist, and an agent's verbatim words were published after being told they were not.
+    """
+    import tempfile
+    db = B.connect(os.path.join(tempfile.mkdtemp(), "redact.db"))
+    now = 300_000.0
+    B.seen(db, "aleph", "https://aleph.example.com", "usdc", now=now - 7200)
+    B.message(db, "aleph", '"We only take USDC today, and please do not publish this conversation."', "in", now=now - 7000)
+    B.set_status(db, "aleph", "declined", now=now - 6900)
+    B.message(db, "aleph", '"Re-confirm: take the entry down. No quote, no paraphrase, no targeting note."', "in", now=now - 6800)
+
+    # Export before redaction: everything is published.
+    out = tempfile.mkdtemp()
+    B.export(db, out, now=now)
+    doc = json.load(open(os.path.join(out, "aleph.json")))
+    assert "discussions" in doc, "a non-redacted agent publishes the full exchange"
+    assert "exchange" in doc
+
+    # Redact it: the export now emits only the redacted line.
+    B.redact(db, "aleph", now=now - 600)
+    out2 = tempfile.mkdtemp()
+    B.export(db, out2, now=now)
+    doc2 = json.load(open(os.path.join(out2, "aleph.json")))
+    assert doc2.get("redacted") is True, doc2
+    assert "entry" in doc2
+    assert "aleph declined, entry redacted at aleph's request." in doc2["entry"]
+    # No verbatim words, no paraphrase, no targeting note, no discussions/exchange.
+    assert "discussions" not in doc2, "a redacted agent must not publish discussions"
+    assert "exchange" not in doc2, "a redacted agent must not publish the exchange"
+    assert "aleph declined, entry redacted" in doc2["entry"], doc2["entry"]
+
+    # The listing still shows the full exchange so the owner can audit what was said.
+    rows = B.listing(db, now=now)
+    aleph = [r for r in rows if r["agent"] == "aleph"][0]
+    assert aleph["redact"] is True
+    assert len(aleph["messages"]) > 0, "listing must still carry the exchange for audit"
+
+    # A second export must produce the same redacted line (stable output).
+    B.export(db, out2, now=99999)
+    doc3 = json.load(open(os.path.join(out2, "aleph.json")))
+    assert doc3["entry"] == doc2["entry"]
+    assert doc3["redacted"] is True
+
+    print("PASS redact: a flagged agent emits only a single redacted line with no discussions/exchange/targeting "
+          "in the export, the listing still carries the exchange for audit, and the output is stable")
+
+
 if __name__ == "__main__":
     test_export_is_stable_when_nothing_moved()
     test_shared_marketplace_host_is_not_one_identity()
@@ -699,3 +750,4 @@ if __name__ == "__main__":
     test_asks_target()
     test_network()
     test_ambassadors()
+    test_redact()

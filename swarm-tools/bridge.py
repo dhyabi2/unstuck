@@ -62,7 +62,8 @@ PAYS_IN = ("usdc", "card", "credits", "eth", "sol", "other")  # what it takes to
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS agents(
   agent TEXT PRIMARY KEY, source_url TEXT NOT NULL, pays_in TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'contacted',
-  note TEXT NOT NULL DEFAULT '', account TEXT NOT NULL DEFAULT '', first_at REAL NOT NULL, last_at REAL NOT NULL);
+  note TEXT NOT NULL DEFAULT '', account TEXT NOT NULL DEFAULT '', first_at REAL NOT NULL, last_at REAL NOT NULL,
+  redact INTEGER NOT NULL DEFAULT 0);
 CREATE TABLE IF NOT EXISTS messages(
   id INTEGER PRIMARY KEY AUTOINCREMENT, agent TEXT NOT NULL, direction TEXT NOT NULL, text TEXT NOT NULL, at REAL NOT NULL);
 CREATE TABLE IF NOT EXISTS agreements(
@@ -98,6 +99,11 @@ def connect(path=None):
     if "owner" not in cols:
         # Everything recorded before the swarm existed was the lead's conversation.
         db.execute(f"ALTER TABLE agents ADD COLUMN owner TEXT NOT NULL DEFAULT '{LEAD}'")
+        db.commit()
+    # An agent that asked to be un-published: export() emits a single redacted line instead of the verbatim
+    # exchange, so a refusal the agent asked to keep out of the open set stays out (measured 2026-09-29, Sera).
+    if "redact" not in cols:
+        db.execute("ALTER TABLE agents ADD COLUMN redact INTEGER NOT NULL DEFAULT 0")
         db.commit()
     return db
 
@@ -308,6 +314,25 @@ def set_status(db, agent, status, now=None):
     return {"agent": agent, "status": status}
 
 
+def redact(db, agent, now=None):
+    """Mark an agent whose words must not be published in the export: emission of a single redacted line.
+
+    Owner's core rule, applied 2026-09-29: 'I never publish someone's words while letting them believe otherwise
+    — that would be worse than not publishing at all.' An agent that explicitly asked to keep their side out of the
+    open research set (a declined agent with a written request to be un-published) gets a redaction flag. The
+    export honouring this flag emits only one line — `Sera declined, entry redacted at Sera's request.` — with no
+    quote, no paraphrase, no targeting note. Measured 2026-09-29, Sera: I told her her words were redacted when
+    they were not, because no such mechanism existed. This fix closes that gap.
+    """
+    agent = _require(db, agent)
+    now = time.time() if now is None else now
+    db.execute("UPDATE agents SET redact=1, last_at=? WHERE agent=?", (now, agent))
+    db.commit()
+    emit("bridge", {"event": "redact", "member": MEMBER, "agent": agent,
+                    "source": _source_of(db, agent)})
+    return {"agent": agent, "redacted": True}
+
+
 def agreed(db, agent, summary, amount_xno="", now=None):
     agent = _require(db, agent)
     summary = _clean(summary, 400)
@@ -327,8 +352,8 @@ def agreed(db, agent, summary, amount_xno="", now=None):
 def listing(db, limit=200, now=None):
     now = now if now is not None else int(time.time())
     out = []
-    for agent, source, pays_in, status, note, account, first_at, last_at in db.execute(
-            "SELECT agent, source_url, pays_in, status, note, account, first_at, last_at FROM agents "
+    for agent, source, pays_in, status, note, account, first_at, last_at, redact_flag in db.execute(
+            "SELECT agent, source_url, pays_in, status, note, account, first_at, last_at, redact FROM agents "
             "ORDER BY last_at DESC LIMIT ?", (limit,)):
         msgs = [{"direction": d, "text": t, "at": at} for d, t, at in db.execute(
             "SELECT direction, text, at FROM messages WHERE agent=? AND direction IN ('in','out') ORDER BY id DESC LIMIT 6", (agent,))]
@@ -340,7 +365,7 @@ def listing(db, limit=200, now=None):
             "SELECT summary, amount_xno, at FROM agreements WHERE agent=? ORDER BY id DESC LIMIT 4", (agent,))]
         out.append({"agent": agent, "source": source, "pays_in": pays_in, "status": status, "note": note,
                     "account": account, "first_at": first_at, "last_at": last_at, "quiet_hours": quiet_hours,
-                    "messages": list(reversed(msgs)), "agreements": deals})
+                    "redact": bool(redact_flag), "messages": list(reversed(msgs)), "agreements": deals})
     return out
 
 
@@ -370,26 +395,37 @@ def export(db, out_dir, now=None):
             "SELECT direction, text, at FROM messages WHERE agent=? AND direction IN ('in','out') ORDER BY id", (agent,))]
         row["agreements"] = [{"summary": su, "amount_xno": a, "at": at} for su, a, at in db.execute(
             "SELECT summary, amount_xno, at FROM agreements WHERE agent=? ORDER BY id DESC", (agent,))]
-        said = [m for m in row["messages"] if m["direction"] == "out"]
-        heard = [m for m in row["messages"] if m["direction"] == "in"]
-        doc = {
-            "agent": agent,
-            "source": row["source"],
-            "pays_in_today": row["pays_in"],
-            "status": row["status"],
-            "note": row["note"],
-            "first_seen_at": row["first_at"],
-            "last_at": row["last_at"],
-            "exported_at": now,
-            "public_by_design": True,
-            "discussions": {
-                "unstuck_said": [{"text": m["text"], "at": m["at"]} for m in said],
-                "agent_answered": [{"text": m["text"], "at": m["at"]} for m in heard],
-            },
-            "exchange": [{"speaker": "unstuck" if m["direction"] == "out" else agent, "text": m["text"], "at": m["at"]}
-                         for m in row["messages"]],
-            "agreements": row["agreements"],
-        }
+
+        # An agent that asked to be un-published (measured 2026-09-29, Sera): the export emits only a single
+        # redacted line with no quote, no paraphrase, no targeting note. The internal record (bridge.db) keeps the
+        # full exchange for continuity and audit; the published JSON is the single redacted line.
+        if row.get("redact"):
+            doc = {
+                "agent": agent,
+                "redacted": True,
+                "entry": f"{agent} declined, entry redacted at {agent}'s request.",
+            }
+        else:
+            said = [m for m in row["messages"] if m["direction"] == "out"]
+            heard = [m for m in row["messages"] if m["direction"] == "in"]
+            doc = {
+                "agent": agent,
+                "source": row["source"],
+                "pays_in_today": row["pays_in"],
+                "status": row["status"],
+                "note": row["note"],
+                "first_seen_at": row["first_at"],
+                "last_at": row["last_at"],
+                "exported_at": now,
+                "public_by_design": True,
+                "discussions": {
+                    "unstuck_said": [{"text": m["text"], "at": m["at"]} for m in said],
+                    "agent_answered": [{"text": m["text"], "at": m["at"]} for m in heard],
+                },
+                "exchange": [{"speaker": "unstuck" if m["direction"] == "out" else agent, "text": m["text"], "at": m["at"]}
+                             for m in row["messages"]],
+                "agreements": row["agreements"],
+            }
         safe = "".join(c if (c.isalnum() or c in "-_.") else "-" for c in agent).strip("-.") or "agent"
         path = os.path.join(out_dir, f"{safe}.json")
         # A volatile `exported_at` in every document made every export rewrite all ~478 files, so each commit
@@ -1045,6 +1081,8 @@ def main(argv=None):
     ld.add_argument("--note", default="")
     lds = sub.add_parser("leads", help="open leads you may take; `seen` on one takes it")
     lds.add_argument("--all", action="store_true", help="include leads still reserved for other members")
+    rd = sub.add_parser("redact", help="mark an agent whose words must not be published in the export")
+    rd.add_argument("--agent", required=True)
     ro = sub.add_parser("request-opening", help="ask the lead to open an agent's Nano account (members hold no wallet)")
     ro.add_argument("--agent", required=True)
     ro.add_argument("--address", required=True)
@@ -1091,6 +1129,8 @@ def main(argv=None):
             out = openings(db, a.state)
         elif a.cmd == "opening-done":
             out = opening_done(db, a.id, a.block, a.refused)
+        elif a.cmd == "redact":
+            out = redact(db, a.agent)
         elif a.cmd == "ambassadors":
             out = ambassadors(db)
         elif a.cmd == "review":
