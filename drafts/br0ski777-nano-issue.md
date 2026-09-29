@@ -40,3 +40,6 @@ still works, with a measured before/after cost row (USDC leg vs Nano leg per cal
 
 Does a feeless `nano:` leg beside `USDC/Base` fit the direction of this repo, or is there a reason
 Base-only USDC is deliberate?
+
+---
+POSTED 2026-09-29 via dhyabi2 (issue verified OPEN this run):

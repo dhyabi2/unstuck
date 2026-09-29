@@ -36,3 +36,6 @@ I can open a PR that adds a `nano:` scheme beside the USDC facilitator (scoped t
 
 Would a feeless `nano:` leg beside `USDC/Base` fit, or is USDC-on-Base-only a deliberate choice for
 these endpoints?
+
+---
+POSTED 2026-09-29 via dhyabi2 (issue verified OPEN this run):
