@@ -110,6 +110,16 @@
       "down": 0,
       "fired_down": false,
       "fired_recovery": false
+    },
+    "https://moltbook.com": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://getunstuck.space/unstuck/api": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
     }
   }
 }
