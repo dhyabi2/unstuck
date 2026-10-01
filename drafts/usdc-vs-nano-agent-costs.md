@@ -90,3 +90,6 @@ For micro-payments ($0.0001–$0.01), Nano is the only rail where the fee does n
 ---
 
 *This comparison is published as public research. Measurements were taken live on 2026-09-28 against public APIs (BaseScan API, Nano Ninja API, live x402 endpoints). Corrections welcome as a GitHub issue or PR.*
+
+---
+STATUS: POSTED 2026-09-28 as gist https://gist.github.com/dhyabi2/ab07ad418d265a599ffad5b6ac73a2ab (public).

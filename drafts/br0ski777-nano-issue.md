@@ -42,4 +42,4 @@ Does a feeless `nano:` leg beside `USDC/Base` fit the direction of this repo, or
 Base-only USDC is deliberate?
 
 ---
-POSTED 2026-09-29 via dhyabi2 (issue verified OPEN this run):
+STATUS: POSTED 2026-09-29 as https://github.com/Br0ski777/x402-trading-agent-starter/issues/3 (author dhyabi2, verified OPEN 2026-10-01).

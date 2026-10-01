@@ -39,4 +39,4 @@ beside the FET one.
 Would a feeless Nano leg beside the 0.01 FET/request protocol fit, or is FET-only the deliberate
 design for Ziro's call layer?
 ---
-POSTED 2026-09-29 via dhyabi2 (issue verified OPEN this run):
+STATUS: POSTED 2026-09-29 as https://github.com/ziro1978/ziro-agent/issues/1 (author dhyabi2, verified OPEN 2026-10-01).

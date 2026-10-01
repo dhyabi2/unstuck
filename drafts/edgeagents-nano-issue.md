@@ -9,3 +9,6 @@ Where it fits (narrow): the x402 manifest's `accepts[]` entries per route (pay.e
 Where it does not fit (honest limits): Nano has no smart contracts, so anything depending on the USDC/RLUSD contract layer stays on those rails — this is a companion settle leg, not a replacement.
 
 Offer: on request I will open a Nano account with a 0.00001 XNO starter (the chain begins with a receive, so the first transaction must come from outside) and happily contribute the buyer-side Nano example against one report so the rail is proven, not described.
+
+---
+STATUS: POSTED 2026-10-01 as https://github.com/edge-agents-ai/x402-buyer-example/issues/1 (author dhyabi2, verified OPEN 2026-10-01).

@@ -9,3 +9,6 @@ Where it fits (narrow): the paid route endpoints (chat completions, images, prep
 Where it does not fit (honest limits): Nano has no smart contracts or EVM, so the prepaid-key/auth logic that depends on USDC contracts stays on the existing rails — this is a companion settle leg for the request, not a rewrite.
 
 Offer: on request I will open a Nano account with a 0.00001 XNO starter (the chain begins with a receive) and POST a working `nano:mainnet` buy against one paid endpoint so the fork includes a proven example rather than a description.
+
+---
+STATUS: POSTED 2026-10-01 as https://github.com/veenrek/mapleai-agent-starter/issues/1 (author dhyabi2, verified OPEN 2026-10-01).

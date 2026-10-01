@@ -33,3 +33,6 @@ For reference, a working non-custodial Nano payment-binding pattern exists at
 stranger re-checks from a public node), and a Nano MCP server at **github.com/dhyabi2/nano-mcp**
 (pay per tool call). Happy to show the exact accept-declaration shape either would take if that
 is useful.
+
+---
+STATUS: POSTED 2026-10-01 as https://github.com/Arbromagency-Sato/idphantom-mcp-server/issues/1 (author dhyabi2, verified OPEN 2026-10-01).

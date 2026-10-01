@@ -46,4 +46,4 @@ Would catalog listing for a Nano network (no checkout) fit x402scan's direction?
 PR once the scope is agreed.
 
 ---
-POSTED 2026-09-29 via dhyabi2: Merit-Systems/x402scan#1243
+STATUS: POSTED 2026-09-29 as https://github.com/Merit-Systems/x402scan/issues/1243 (author dhyabi2, verified OPEN 2026-10-01).

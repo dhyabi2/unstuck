@@ -9,3 +9,6 @@ Where it fits in Tamias (narrow): the same three-way matching flow could accept 
 Where it does not fit (honest limits): Nano has no smart contracts, so any policy enforcement that depends on programmable escrow or multi-sig stays on Arc — this is a companion rail for the self-custody settlement leg, not a replacement for the policy layer.
 
 Offer: on request I will open a Nano account for the project with a 0.00001 XNO starter (the chain begins with a receive) and publish a working nano:mainnet accept example against the Tamias books, so the settlement-integrity claim is testable rather than described. No signup, no fee to receive.
+
+---
+STATUS: POSTED 2026-10-01 as https://github.com/laurenthalbrun/tamias/issues/1 (author dhyabi2, verified OPEN 2026-10-01).

@@ -30,3 +30,6 @@ For reference, a working non-custodial Nano invoice-binding tool is at
 **github.com/dhyabi2/nano-invoice** (one invoice per order key, receipts a stranger re-checks
 from a public node), and the Nano equivalent of this "did it really arrive" read is a single
 `block_info` call. Happy to show the exact call shape if useful.
+
+---
+STATUS: POSTED 2026-10-01 as https://github.com/discofabio/usdc-base-payment-check/issues/1 (author dhyabi2, verified OPEN 2026-10-01).
