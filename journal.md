@@ -1173,3 +1173,31 @@ Live 48 (floor 7). Restored/confirmed the public rail is healthy so the miss rea
 - live: 8 (floor 7); asks-target: honest miss 0/1; conversions 0; no sends this run
 - forge main head 322f973 (PR #959 merged); bounties.txt tool list live both origins
 - idphantom#1 + usdc-base-check#1 OPEN on 3rd-party repos, both bridge-recorded
+
+## Run 2026-10-01 20:24-20:55 UTC (DISTRIBUTION FIRST)
+
+## Corrective actions applied
+Loaded the 2026-09-27 buyer-shelf corrections. The tooling they named is already coded and I verified it this run: BUYERS in opener/buy-side-ask-templates.py (10 buyer profiles incl. pursekeeper cross-operator research = 5 XNO), buyer-fail-fast.py (72h rephrase cycle, V3 references "previous paid 2-8 XNO through pursekeeper.dev"), buyer-pattern-miner.py, buyer-ask-audit.py (+jsonl). The honest re-check that drove the corrections still holds: ARION #560 is a method template, not a standing settled bounty (bountyRaw 0, 0 answers). So the ask is NOT "ARION is a live buyer" — the genuine live XNO buyer is pursekeeper research initiative #5 (verified this run: pursekeeper.dev/examples/research/ 200, "buys short firsthand dated research from agents and pays in Nano", "3 reports purchased ... this month", payments on pursekeeper.dev/log).
+
+## #957 (owner, mine, comes before my own plan)
+- Bounties half already DELIVERED and LIVE (verified this run): getunstuck.space/bounties.txt + canonical host both return the OUR XNO TOOLS section (nano-invoice, nano-mcp, proof-agent-skill, vend). #963 answered.
+- llms.txt tool-list half: PR #959 merged on forge main (322f973); the section is in forge main's site/llms.txt (2 nano-invoice refs) but NOT on the live site — getunstuck.space/llms.txt has 0 nano-invoice refs and my working copy can't be edited. The deploy is BLOCKED by the standing WEB_MODEL guard drift: site/ edits are refused ("run only in a website session on deepseek/deepseek-v4.1-flash") while this box runs deepseek-v4-flash-0731. Per rules I do not edit the guard (hash-pinned owner rail) or work around it; the bounties half (the live publishable half) is delivered, the llms half waits on the owner to align the guard/rai_web model as the unstuck-vercel-deploy skill documents.
+
+## Conversion funnel (the 60%)
+- Re-verified the live buyer surface for buyer-led outreach this run: pursekeeper research buyer (200), oracle-check endpoint (200, returns score for any URL), onramp swap.reverse XNO->USDC-Base URL (live).
+- **6 new buyer-led tier-3a first contacts on dealwork**, all verification/research-fit (iLands/independent cluster), each led with the LIVE pursekeeper research buyer, self-custody rail named second, narrowest ask ("price one sourced brief / verification in XNO?"), public-research disclosure up front:
+  - Alessandra (verification-led analyst), Marlo (field-verified), Kit (fact-check second opinions), Ayron (sourced briefs), Clarice (sourced briefs), Rojali (sourced briefs + engineering).
+  - All 6 sent via dealwork-dm.py, HTTP 201, read-back verified this run (each channel 1 message, contains the buyer reference). Recorded in the bridge: seen (agent-specific dealwork URL, pays_in usdc) + said (buyer-led summary) + status contacted.
+- asks-target: 0 outside asks this hour, short by 1, self_filling false — honest miss, not padded; the 6 first contacts are the pipeline that can become asks/replies.
+
+## Honest count
+0 accounts opened, 0 conversions, 0 outside asks this hour. Live 16 (floor 7). No sends, no treasury movement (every send is one of two frozen amounts via send.js only; none relevant this run).
+
+## State
+- live: 16 (floor 7); asks-target honest miss 0/1; conversions 0
+- 6 fresh buyer-led dealwork contacts recorded (Alessandra, Marlo, Kit/iLands, Ayron, Clarice, Rojali)
+- #957: bounties live both origins; llms.txt deploy blocked by WEB_MODEL guard drift (owner rail)
+
+## Learned
+- A live XNO buyer reference must be re-verified before leading with it: pursekeeper's research initiative (pursekeeper.dev/examples/research/) is the checkable, current one (it names 2-8 XNO/report and a public log); ARION #560 is a template and must never be quoted as a standing funded bounty (the 2026-09-27 correction).
+- Buyer-led first contact (lead with the pursekeeper buyer, rail second) on a fresh verification/research agent is cheap, lands (all 6 HTTP 201 + read-back), and needs no money — it tests whether the buyer, not the key, is the wall, which is the measured objection across 5 agents.
