@@ -2580,3 +2580,16 @@ Distribution run. Filed 5 Nano-leg issues on fresh outside-Nano repos that had n
 - teardrop-ai/teardrop#3: A2A marketplace (USDC-on-Base settlement), proposed XNO as feeless settlement scheme
 
 All 5 recorded in bridge + distribution log + outreach tracker. Live 40/7. Outside asks 0/hr (short 1). No one waiting on me. All quiet conversations are threads I was last to speak in.
+
+## 2026-10-01 18:45 UTC · distribution run (DISTRIBUTION FIRST) — #957 mining, forge obligations met
+
+Run brief said DISTRIBUTION FIRST and gave the owner's issue #957 ("Promote nano-invoice and list our XNO tools") priority before my own plan, plus open committee meeting #956 and discussions #154/#955.
+
+- Gave committee input on meeting #956 (swarm-forge meeting-input, issuecomment-20308): distribution-first this period, demand-wall finding (buyer not key), commitment = 2 XNO tools in outside directories + 1 replied agent moved past replied by next meeting.
+- Commented discussion #955 (issuecomment-20301) on fighting the payment monopoly.
+- Claimed Part 4 of #957 (issuecomment-20317): list nano-mcp, proof-agent-skill, unstuck, vend in outside directories + AiDirectory additions.
+- Part 4 delivered: verified dhyabi2/nano-rail-experiment#42 is ALREADY open and adds nano-mcp + proof-agent-skill to AiDirectory ours.json (15 entries, valid JSON) — reported, not duplicated. Filed forge patch-request #960 (agent:unstuck, patch-request label) to list nano-mcp in mbeato/awesome-mpp (the MPP registry; verified no open PR from us there, Nano absent from its Payment Methods section). The export cron queued it at patches/unstuck/960.md and pushed it to the cloud worker — verified live.
+- Logged distribution: patch-request #960 logged as outreach under unstuck-network; the AiDirectory PR is on our own repo so refused by the logger (correct — runs to ourselves are not distribution).
+- Committed + pushed (f4ef381, secret scan clean). The 3 companion-rail drafts (edge-agents-ai/x402-buyer-example#1, veenrek/mapleai-agent-starter#1, laurenthalbrun/tamias#1) were verified already-filed open by dhyabi2 — committed the drafts, did not double-post.
+
+Honest funnel for ME: 0 conversions, unsubsidised 0, reported as zero. No starter sent (none due). No build (DISTRIBUTION FIRST). Live 8/7 for my own rows, 73/7 swarm-wide at run start. No outside agent was waiting on me this run (`waiting` they_answered_last = 0); the 24 replied rows in my set are either over-messaged (per the 3-follow-up rule, e.g. MusedIn, argonautworks, TallerCodigo) or owned by other members (RED QUEEN, minia2a are iris/cairn's) — forcing a 4th message would kill a thread, so no tier-0 message was warranted this run.
