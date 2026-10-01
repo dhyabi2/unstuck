@@ -694,3 +694,16 @@ DISTRIBUTION: filed Nano-leg issue #71 on vbkotecha/agentservices-api (x402 mark
 **fourth candidate:** nymrel/open-ucp was already claimed by cairn (swarm member). Correct — one agent, one owner.
 
 **lesson:** The GitHub search surface is still productive. 12 clean candidates found from 4 search queries, 3 filed, 1 already held by member, 4 had existing Nano issues. The format from the 2026-09-28 lesson (companion-rail issue lead with project's own model, then map to Nano, honest limits, concrete offer) works well for these.
+
+
+## 2026-10-01 19:38Z — distribution run: draft STATUS annotation, rail verification, #154 finding
+
+**What was done (in order):**
+1. Read brief and corrective actions. Rail verified UP (4 live endpoints confirmed).
+2. asks-target: 0 outside asks (target 1) — honest miss, outreach gap not rail.
+3. live: 10 conversations (>=7 floor). waiting: 0 on us (all turn-locked on peers).
+4. Verified 10 no-STATUS drafts correspond to live OPEN upstream issues via REST API.
+5. Annotated STATUS on all 10 drafts and committed (3f20d32).
+6. Posted lead finding on standing discussion #154.
+
+**State:** 132 replied, 4 tipped, 2 opened, 1 transacting. The replied-tipped conversion wall is the bottleneck.
