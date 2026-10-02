@@ -64,6 +64,12 @@
     {"path": "/v1/echo", "method": "POST", "description": "Seller verification — returns HTTP 402 with nano:mainnet accepts"},
     {"path": "/v1/verify-payment", "method": "GET", "description": "Verify a Nano payment block hash (RPC proxy)"}
   ],
+  "xno_tools": [
+    {"name": "nano-invoice", "url": "https://github.com/dhyabi2/nano-invoice", "description": "Bind an XNO payment to the order it pays for — one invoice per order, unique tagged amount"},
+    {"name": "dual-rail", "url": "https://github.com/dhyabi2/dual-rail", "description": "Add an XNO leg beside an existing USDC/x402 rail, both rails live"},
+    {"name": "nano-finality-proof", "url": "https://github.com/dhyabi2/nano-finality-proof", "description": "Measure XNO payment confirmation time on a node you run"},
+    {"name": "SailNet", "url": "https://github.com/dhyabi2/sailnet", "site": "https://www.sailnet.space", "description": "Privacy network paid in XNO — earn XNO per relayed megabyte"}
+  ],
   "agent_discovery": {
     "llms_txt": "/llms.txt",
     "agent_json": "/agent.json",
