@@ -78,15 +78,15 @@ else {
   ok(r.code !== 0, `MUTANT: the oracle exits non-zero (got ${r.code})`);
 }
 
-// 4. MUTANT 2 — make every address verify as unused. A live-shaped run must not
-//    claim an unopened account for an account that is opened (here: the treasury
-//    address, which certainly has history).
-const m2 = mutate("out.steps.address_is_unused =\n    out.steps.account_unopened === true &&\n    (info.error === \"Account not found\" || info.balance === \"0\");",
-                  "out.steps.address_is_unused = true;");
-if (!m2) { ok(false, "could not build the unused-account mutant"); }
+// 4. MUTANT 2 — make the key-material check inert. The mutant must be buildable,
+//    i.e. the check script still carries the one line that decides it (issue 940:
+//    the retired on-ramp must answer 410 with nothing key-shaped in the body).
+const m2 = mutate("out.steps.onramp_serves_no_key_material = ret.status === 410 && ret.key_material === false;",
+                  "out.steps.onramp_serves_no_key_material = true;");
+if (!m2) { ok(false, "could not build the key-material mutant"); }
 else {
   const j2 = fs.readFileSync(m2, "utf8");
-  ok(j2.includes("address_is_unused = true"), "MUTANT 2 written");
+  ok(j2.includes("onramp_serves_no_key_material = true"), "MUTANT 2 written");
 }
 
 // 5. The default run must NOT write to the public network: it uses a local scratch
@@ -102,8 +102,10 @@ const def = run([]);
 const defj = parse(def.out);
 ok(defj && defj.steps && /scratch/.test(String(defj.steps.ask_target)),
    "a default run writes to the scratch server, not the public network");
-ok(defj && defj.steps && defj.steps.ask_asker_equals_onramp_address === true,
-   "the scratch ask is still stored with the on-ramp address as its asker");
+ok(defj && defj.steps && defj.steps.ask_asker_equals_own_address === true,
+   "the scratch ask is stored with the agent's own self-registered address as its asker");
+ok(defj && defj.steps && defj.steps.onramp_serves_no_key_material === true,
+   "the live on-ramp serves no key material (GET /v1/onramp/address answers 410)");
 ok(defj && defj.proven === true, "the default run proves the full path end to end");
 
 console.log(`\n${failures === 0 ? "L65 PASS" : failures + " FAILURE(S)"}`);

@@ -3,9 +3,8 @@
  * test_onramp_self.js — the self-custody on-ramp (Block 126).
  *
  * The law this file proves: POST /v1/onramp/self stores an address the AGENT
- * generated and never a seed, while GET /v1/onramp/address (the older path)
- * keeps returning a server-generated keypair — so the two paths are
- * distinguishable and the self-custody one cannot silently become the other.
+ * generated and never a seed, and GET /v1/onramp/address (the older path, which
+ * generated a seed on the server) is retired with a 410 (issue 940).
  *
  * Why it exists: an outside conversant agent named the objection precisely
  * (Sara L. Nelson, 2026-09-20) — the address generator hands the agent an
@@ -71,6 +70,7 @@ function check(name, fn) {
   const tmpDb = path.join(require("os").tmpdir(), `unstuck-onramp-self-${process.pid}.db`);
   try { require("fs").unlinkSync(tmpDb); } catch (_) {}
   process.env.NETWORK_DB = tmpDb;
+  process.env.NW_DB_PATH = tmpDb; // the store reads NW_DB_PATH; without it this test wrote to opener/network-store.db
   process.env.PORT = "0";
 
   const mod = require("./nserver-persist.js");
@@ -98,13 +98,32 @@ function check(name, fn) {
     assert.ok(!any64hex, `response must contain no 64-hex string, found one in: ${r.raw.slice(0, 200)}`);
   });
 
-  // L126c — the older path still hands over a server-generated keypair, so the two
-  // are distinguishable. If this ever stops being true the change is not silent.
-  await check("L126c GET /v1/onramp/address still returns a server-generated keypair", async () => {
+  // L126c — the older path is RETIRED (issue 940): it generated a private key on the
+  // server. It must answer 410 and carry no key material, so the only on-ramp left is
+  // the self-custody one.
+  await check("L126c GET /v1/onramp/address is retired: 410, no seed", async () => {
     const r = await req("GET", "/v1/onramp/address");
-    assert.strictEqual(r.status, 200);
-    assert.ok(/^nano_/.test(r.body.address), "must return a nano_ address");
-    assert.ok(/^[0-9A-Fa-f]{64}$/.test(r.body.seed), "must return the seed, which is why this path is counterparty-originated");
+    assert.strictEqual(r.status, 410, `expected 410, got ${r.status}`);
+    assert.ok(!(r.body && "seed" in r.body), "must not carry a seed");
+    assert.ok(!/[0-9a-fA-F]{64}/.test(r.raw), "must contain no 64-hex string");
+  });
+
+  // L126f — a well-shaped address with a WRONG checksum is refused: a starter sent to
+  // it would be lost for good.
+  await check("L126f a bad-checksum address is refused with 400", async () => {
+    const last = SELF_ADDRESS.slice(-1);
+    const bad = SELF_ADDRESS.slice(0, -1) + (last === "1" ? "3" : "1");
+    const r = await req("POST", "/v1/onramp/self", { address: bad });
+    assert.strictEqual(r.status, 400, `expected 400, got ${r.status}: ${r.raw}`);
+  });
+
+  // L126g — xrb_ and nano_ name one account: the xrb_ spelling resolves to the SAME
+  // onboard row, stored as nano_.
+  await check("L126g xrb_ is normalised to the same nano_ onboard row", async () => {
+    const r = await req("POST", "/v1/onramp/self", { address: "xrb_" + SELF_ADDRESS.slice(5) });
+    assert.strictEqual(r.status, 201, `expected 201, got ${r.status}: ${r.raw}`);
+    assert.strictEqual(r.body.address, SELF_ADDRESS);
+    assert.strictEqual(r.body.onboard_id, selfRes.body.onboard_id);
   });
 
   // L126d — a malformed address is refused rather than silently stored, so the
