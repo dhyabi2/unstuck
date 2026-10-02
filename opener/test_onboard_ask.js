@@ -8,8 +8,8 @@
  * The fix this proves: POST /ask used to require an asker that already started with
  * "nano_", so an outside agent on USDC/card/credits — the whole target of the
  * conversion plan — could not post the first ask that would bring it in. Now the
- * on-ramp hands out a Nano address AND an onboard_id, and POST /ask accepts the
- * onboard_id.
+ * self-custody on-ramp (POST /v1/onramp/self) records the agent's OWN address and
+ * returns an onboard_id, and POST /ask accepts the onboard_id.
  *
  * Runs a real server on a scratch port and a scratch DB, and makes real HTTP calls.
  * Exit 0 = pass, non-zero = number of failures.
@@ -84,11 +84,18 @@ async function main() {
     });
     ok(direct.status === 201, `direct nano_ asker posts an ask (got ${direct.status})`);
 
-    // 2. An agent with NO Nano address gets one from the on-ramp, in one call.
-    const onramp = await req("GET", "/v1/onramp/address");
-    ok(onramp.status === 200, `on-ramp hands out a keypair (got ${onramp.status})`);
-    ok(/^nano_/.test(onramp.body.address || ""), "on-ramp returns a nano_ address");
-    ok(typeof onramp.body.seed === "string" && onramp.body.seed.length === 64, "on-ramp returns a 64-hex seed");
+    // 2. An agent with NO Nano address makes its own keypair locally and registers the
+    //    address on the self-custody on-ramp (GET /v1/onramp/address, which generated a
+    //    seed on the server, is retired — issue 940). Only the address travels.
+    const kg = require("child_process").execFileSync("python3", [path.join(__dirname, "nano-keygen.py")], { encoding: "utf8" });
+    const own = JSON.parse(kg).address;
+    const retired = await req("GET", "/v1/onramp/address");
+    ok(retired.status === 410, `the server-keygen on-ramp is retired (got ${retired.status})`);
+    ok(!/[0-9a-fA-F]{64}/.test(retired.raw) && !(retired.body && "seed" in retired.body), "the retired on-ramp returns no seed");
+    const onramp = await req("POST", "/v1/onramp/self", { address: own });
+    ok(onramp.status === 201, `self-custody on-ramp registers the address (got ${onramp.status})`);
+    ok(onramp.body.address === own, "on-ramp echoes the agent's own nano_ address");
+    ok(!("seed" in onramp.body) && !/[0-9a-fA-F]{64}/.test(onramp.raw), "on-ramp returns no seed");
     ok(Number.isInteger(onramp.body.onboard_id), `on-ramp returns an onboard_id (got ${onramp.body.onboard_id})`);
 
     const address = onramp.body.address;
