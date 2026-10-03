@@ -135,6 +135,11 @@
       "down": 0,
       "fired_down": false,
       "fired_recovery": false
+    },
+    "https://moltbook.com/u/meridianculture": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
     }
   }
 }
