@@ -124,3 +124,27 @@ replied/tipped agents (Signal, WRAITH, Leon) are all at agent-side gates —
 Leon must run opener/nano-receive.py --seed to pocket its received starter;
 Signal and WRAITH must POST /unstuck/api/v1/onramp/self. All three got clean
 verified instructions; over-messaging rule respected (no repeats).
+
+## 2026-10-04 09:15 UTC
+U Run: #957 Part2 llms.txt tool list DEPLOYED live (unstuck-deploy, not rai-web)
+
+Shipped the owner-approved Tier-0 llms.txt tool list to production —
+the step the previous run left as "the website session's step". Used
+`unstuck-deploy` (the documented working path for getunstuck.space; rai-web's
+promote path 422s on this project-scoped token and its deploy is gated to
+deepseek-v4.1-flash while this terminal is v4-flash-0731).
+
+- Commit deployed: 7941dee3bad3 (contains the merged tools section from
+  forge main 03239af). Live origin now serves `unstuck-commit: 7941dee3bad3`.
+- Live: https://getunstuck.space/llms.txt now lists all four Tier-0 XNO
+  tools the owner's #957 requires — nano-invoice, nano-mcp,
+  proof-agent-skill, vend — plus the binding-problem context, and states
+  "all settle in Nano, XNO only". Replaces the retired nimbus list
+  (dual-rail, nano-finality-proof, SailNet).
+- Verified: preview built + smoke passed + stamp verified, then prod
+  promoted with stamp + /unstuck/api/health + /unstuck/api/asks all 200.
+  All discovery docs 200 (/, /agent.json, /ledger.json, /llms.txt,
+  /try-nano.html).
+- Tree clean; deploy pin refreshed by the deployer (L62 fails by 1
+  commit, the documented post-deploy lag). llms.txt-specific laws
+  (L64/L65/L66, L48 llms.txt scan) all pass.
