@@ -3,12 +3,12 @@
  * from the published discovery documents alone.
  *
  * The gap this file makes executable. Block 108 shipped the no-wallet path on the network
- * server (`GET /v1/onramp/address` hands out {address, seed, index, onboard_id}; `POST /ask`
+ * server (`POST /v1/onramp/self` registers {address, onboard_id, custody:self}; `POST /ask`
  * accepts {onboard_id, title, body} and stores the handed-out nano_ address as the asker).
  * But nothing a visitor could READ named it:
  *
  *   measured 2026-09-19 against the shipped llms.txt and agent.json:
- *     - neither document mentioned /v1/onramp/address at all;
+ *     - neither document mentioned POST /v1/onramp/self;
  *     - agent.json's /ask entry said only "Create an ask" and never named onboard_id;
  *     - llms.txt's "Get in" section sent the reader to /try-nano, whose prose asks for a
  *       wallet before the network will take an ask.
@@ -20,7 +20,7 @@
  * The laws, each named so a failure says which property broke:
  *
  *   L67 — every published discovery document that names POST /ask also names the no-wallet
- *         path to it: GET /v1/onramp/address and the onboard_id handoff. A document that
+ *         path to it: POST /v1/onramp/self and the onboard_id handoff. A document that
  *         tells an agent to post without its wallet does not exist.
  *   L68 — the documented two calls really produce a 201: fetch the on-ramp as the document
  *         describes it, post an ask with the onboard_id it returned, read the ask back and
@@ -55,6 +55,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { execSync } from "node:child_process";
 import { startScratchNetwork, scratchDbExists } from "./scratch-network.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -64,7 +65,8 @@ const LIVE_ORIGIN = "https://getunstuck.space";
 const API_PATH = "/unstuck/api";
 
 /** The on-ramp path the server actually serves, relative to the API base. */
-const ONRAMP_PATH = "/v1/onramp/address";
+const ONRAMP_PATH = "/v1/onramp/self";
+const ONRAMP_METHOD = "POST";
 /** The ask path, relative to the API base. */
 const ASK_PATH = "/ask";
 
@@ -86,7 +88,7 @@ const read = (rel) => fs.readFileSync(path.join(SITE, rel), "utf8");
 // L67 — a document that names POST /ask also names the way in without a wallet
 // ---------------------------------------------------------------------------
 
-test("L67 every document that names POST /ask names GET /v1/onramp/address", () => {
+test("L67 every document that names POST /ask names POST /v1/onramp/self", () => {
   // The falsifiable core: this must be checked against the documents, not asserted about
   // them. A document that posts asks but never says how an agent with no address gets one
   // leaves the whole conversion target stuck at read-only.
@@ -123,8 +125,10 @@ test("L67 every JSON document that names POST /ask declares the onboard_id body"
     );
     const fc = obj.first_call;
     assert.ok(fc, `${d.file} carries no first_call recipe for an agent with no wallet`);
-    assert.equal(fc.call_1.method, "GET", `${d.file} first_call.call_1 must be a GET`);
+    assert.equal(fc.call_1.method, ONRAMP_METHOD, `${d.file} first_call.call_1 must be ${ONRAMP_METHOD}`);
     assert.equal(fc.call_1.path, ONRAMP_PATH, `${d.file} first_call.call_1 must be ${ONRAMP_PATH}`);
+    assert.ok(fc.call_1.body && fc.call_1.body.address, `${d.file} first_call.call_1 body must carry an address field: ${JSON.stringify(fc.call_1.body)}`);
+    assert.equal(fc.call_1.method, ONRAMP_METHOD, `${d.file} first_call.call_1 must be ${ONRAMP_METHOD}`);
     assert.equal(fc.call_2.method, "POST", `${d.file} first_call.call_2 must be a POST`);
     assert.equal(fc.call_2.path, ASK_PATH, `${d.file} first_call.call_2 must be ${ASK_PATH}`);
     assert.ok(
@@ -144,8 +148,8 @@ test("L67 llms.txt gives the no-wallet path both as its own section and next to 
   const txt = read("llms.txt");
   // Next to the endpoint, so an agent that jumps straight to the ask line sees it.
   assert.ok(
-    txt.includes(`GET ${API_PATH}${ONRAMP_PATH}`) || txt.includes(`GET /unstuck/api${ONRAMP_PATH}`),
-    `llms.txt must name GET ${API_PATH}${ONRAMP_PATH}`
+    txt.includes(`POST ${API_PATH}${ONRAMP_PATH}`) || txt.includes(`POST /unstuck/api${ONRAMP_PATH}`),
+    `llms.txt must name POST ${API_PATH}${ONRAMP_PATH}`
   );
   // The section heading, so a text-reading agent scanning headings finds it.
   assert.match(
@@ -161,11 +165,11 @@ test("L67 llms.txt gives the no-wallet path both as its own section and next to 
     `llms.txt names onboard_id ${mentions} time(s); the path needs it in the section, the response and next to POST /ask`
   );
   // And the endpoint path documented here must still be a full API-base-relative path (L65).
-  const bare = [...txt.matchAll(/^(GET|POST)\s+(\/v1\/onramp\/address)/gm)];
+  const bare = [...txt.matchAll(/^(GET|POST)\s+(\/v1\/onramp\/self)/gm)];
   assert.deepEqual(
     bare.map((m) => m[0]),
     [],
-    "llms.txt names /v1/onramp/address without the API base, so an agent resolves it against the origin root and 404s"
+    "llms.txt names /v1/onramp/self without the API base, so an agent resolves it against the origin root and 404s"
   );
 });
 
@@ -200,19 +204,25 @@ async function jsonReq(method, url, body, timeoutMs = 15000) {
 /**
  * The exact round trip the documents describe, against a scratch instance of the shipped server.
  *
- * The order matters and is the law's whole content: ask the on-ramp for an address (call 1),
- * post an ask carrying only the onboard_id it handed back (call 2), then read the ask back and
- * require the stored asker to be that address. A server that invented an asker, or accepted an
+ * The order matters and is the law's whole content: generate your own keypair locally,
+ * POST the address to /v1/onramp/self to register it (call 1), post an ask carrying
+ * only the onboard_id it handed back (call 2), then read the ask back and require the
+ * stored asker to be that address. A server that invented an asker, or accepted an
  * onboard_id it never issued, fails here.
  */
 async function roundTrip(base, title) {
-  // Call 1, exactly as the documents describe it.
-  const onramp = await jsonReq("GET", `${base}${API_PATH}${ONRAMP_PATH}`);
-  assert.ok(!onramp.error, `GET ${API_PATH}${ONRAMP_PATH} did not answer: ${onramp.error}`);
-  assert.equal(onramp.status, 200, `GET ${API_PATH}${ONRAMP_PATH} answered ${onramp.status}`);
-  const { address, seed, onboard_id: onboardId } = onramp.body || {};
+  // Call 1 — generate a real Nano keypair locally (self-custody); register only the address.
+  const KEYGEN = new URL("../../opener/nano-keypair.js", import.meta.url).pathname;
+  const kp = JSON.parse(execSync(`node "${KEYGEN}" --json`, { encoding: "utf8" }));
+  const ownAddress = kp.address;
+  const onramp = await jsonReq(ONRAMP_METHOD, `${base}${API_PATH}${ONRAMP_PATH}`, { address: ownAddress });
+  assert.ok(!onramp.error, `${ONRAMP_METHOD} ${API_PATH}${ONRAMP_PATH} did not answer: ${onramp.error}`);
+  assert.equal(onramp.status, 201, `${ONRAMP_METHOD} ${API_PATH}${ONRAMP_PATH} answered ${onramp.status}`);
+  const { address, onboard_id: onboardId, custody } = onramp.body || {};
   assert.match(String(address), /^nano_[13][0-9a-z]{59}$/, `on-ramp returned no nano_ address: ${JSON.stringify(address)}`);
-  assert.match(String(seed), /^[0-9A-Fa-f]{64}$/, `on-ramp returned no 64-hex seed: ${JSON.stringify(seed)}`);
+  assert.equal(address, ownAddress, "the on-ramp must return the address we registered");
+  assert.equal(custody, "self", "the on-ramp must set custody: self");
+  assert.ok(typeof onramp.body === "object" && !("seed" in onramp.body), "the on-ramp must never return a seed on the self-custody path");
   assert.ok(Number.isInteger(onboardId), `on-ramp returned no onboard_id: ${JSON.stringify(onboardId)}`);
 
   // Call 2, with no asker address anywhere in the body — the whole point.

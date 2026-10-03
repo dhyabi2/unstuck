@@ -131,11 +131,21 @@ async function startFallback(tmpDb, reason = "server module not loadable") {
     const url = new URL(req.url || "/", "http://127.0.0.1");
     const p = url.pathname.replace(/^\/unstuck\/api/, "") || "/";
     if (req.method === "GET" && p === "/health") return json(res, 200, { status: "ok" });
-    if (req.method === "GET" && p === "/v1/onramp/address") {
-      const kp = fallbackKeypair();
-      const id = nextOnboard++;
-      handed.set(String(id), kp.address);
-      return json(res, 200, { address: kp.address, seed: kp.seed, index: 0, onboard_id: id, engine: "fallback" });
+    if (req.method === "POST" && p === "/v1/onramp/self") {
+      let raw = "";
+      req.on("data", (ch) => (raw += ch));
+      req.on("end", () => {
+        let body = {};
+        try { body = JSON.parse(raw || "{}"); } catch { return json(res, 400, { error: "invalid JSON body" }); }
+        const address = body && body.address;
+        if (typeof address !== "string" || !/^nano_[13][0-9a-z]{59}$/.test(address)) {
+          return json(res, 400, { error: "a self-custody address nano_... is required" });
+        }
+        const id = nextOnboard++;
+        handed.set(String(id), address);
+        return json(res, 201, { address, onboard_id: id, custody: "self", engine: "fallback" });
+      });
+      return undefined;
     }
     if (req.method === "POST" && p === "/ask") {
       let raw = "";

@@ -151,8 +151,17 @@ test("L74 the scratch instance serves the shipped nserver-persist.js, not a stub
 test("L74 the scratch round trip answers 201 and refuses an unknown onboard_id", async () => {
   const scratch = await startScratchNetwork();
   try {
-    const on = await fetch(`${scratch.base}${API_PATH}/v1/onramp/address`).then((r) => r.json());
+    const KEYGEN = new URL("../../opener/nano-keypair.js", import.meta.url).pathname;
+    const kp = JSON.parse(execSync(`node "${KEYGEN}" --json`, { encoding: "utf8" }));
+    const ownAddr = kp.address;
+    const on = await fetch(`${scratch.base}${API_PATH}/v1/onramp/self`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address: ownAddr }),
+    }).then((r) => r.json());
     assert.match(String(on.address), /^nano_[13][0-9a-z]{59}$/, `scratch on-ramp returned no address: ${JSON.stringify(on.address)}`);
+    assert.equal(on.address, ownAddr, "scratch on-ramp must return the address we registered");
+    assert.equal(on.custody, "self", "scratch on-ramp must return custody:self");
 
     const posted = await fetch(`${scratch.base}${API_PATH}/ask`, {
       method: "POST",
@@ -188,7 +197,11 @@ test("L74 the scratch database is a temp file removed when the run ends", async 
   );
   // The store file appears when the first write lands, so make one: a scratch db that was never
   // touched proves nothing about where the writes went.
-  await fetch(`${scratch.base}${API_PATH}/v1/onramp/address`);
+  await fetch(`${scratch.base}${API_PATH}/v1/onramp/self`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ address: "nano_1" + "3".repeat(59) }),
+  });
   assert.ok(fs.existsSync(tmpDb), "the scratch db was never created, so nothing was really exercised");
   scratch.stop();
   assert.equal(fs.existsSync(tmpDb), false, `the scratch db ${tmpDb} survived stop(); a temp store must be removed`);
