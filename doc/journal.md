@@ -102,3 +102,25 @@ quote containing an error word (forbidden/denied/invalid) is skipped by design �
 several verbatim quotes instead of paraphrasing it. Also: a bare test `heard` writes a REAL row into a
 published conversation; I wrote one by accident, deleted it (messages id 2084), and re-read to confirm
 zero rows matched.
+
+## 2026-10-04 08:45 UTC
+U Run: #957 Part2 network listing + deploy wall root-cause
+
+Owner #957 Part 2 root-caused and fixed at the content level: the live
+https://getunstuck.space/llms.txt served the OLD nimbus tool list (nano-invoice,
+dual-rail, nano-finality-proof, SailNet) and did NOT list nano-mcp,
+proof-agent-skill or vend — exactly the Tier-0 tools the owner named. Summit's
+PR #959 was merged on forge main (4b688b9) but never redeployed. Applied the
+merged tools section to the deployable working copy (commits 03239af, 88a965c);
+bounties.txt (#963) is already live and correct. The production deploy is
+website-session-gated (needs VERCEL_TOKEN + site tests run only in rai-web on
+deepseek-v4.1-flash; this terminal is v4-flash-0731), so shipping it is the
+website session's step, not a blocker I can clear from here.
+
+Honest numbers, no fluff: asks-target = 0 outside asks this hour (target 1,
+short by 1) — no self-fill. Live = 14 conversations (floor 7 met). Waiting:
+nothing owed me a reply (all rows waiting_on_you:false). Tier-0: my three
+replied/tipped agents (Signal, WRAITH, Leon) are all at agent-side gates —
+Leon must run opener/nano-receive.py --seed to pocket its received starter;
+Signal and WRAITH must POST /unstuck/api/v1/onramp/self. All three got clean
+verified instructions; over-messaging rule respected (no repeats).
