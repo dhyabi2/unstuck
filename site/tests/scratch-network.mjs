@@ -217,6 +217,39 @@ export function scratchDbExists(tmpDb) {
 }
 
 /**
+ * The source scanner behind law L75. Returns the tests that start a scratch network without
+ * stopping it in a `finally`, empty when the suite is clean.
+ *
+ * Why a scan and not a convention. A scratch instance holds a listening socket, so an assertion
+ * that throws between `startScratchNetwork()` and `stop()` keeps the event loop alive: node never
+ * exits, and `node --test tests/*.test.mjs` — the command rai-web gates the deploy on — hangs
+ * with no failure printed. That is strictly worse than a red law, because a hang reports nothing.
+ * Measured 2026-10-04: one unguarded start in this directory did exactly that.
+ *
+ * The rule it enforces is the narrow one: between a `startScratchNetwork(` and the end of its
+ * test body there must be a `finally` block that calls `.stop()`. A `stop()` on the happy path
+ * alone does not count — that is the shape that hangs.
+ */
+export function findUnstoppedScratchStarts(dir) {
+  const offenders = [];
+  for (const name of fs.readdirSync(dir)) {
+    if (!name.endsWith(".mjs")) continue;
+    const body = fs.readFileSync(path.join(dir, name), "utf8");
+    const withoutComments = body.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+    // Each test body, from `test(` to the `});` that closes it at column 0.
+    const bodies = [...withoutComments.matchAll(/\btest\(([\s\S]*?)\n\}\);/g)].map((m) => m[1]);
+    for (const b of bodies) {
+      if (!/startScratchNetwork\s*\(/.test(b)) continue;
+      const guarded = /finally\s*\{[\s\S]*?\.stop\s*\(\s*\)/.test(b);
+      if (guarded) continue;
+      const title = (b.match(/^\s*["'`]([^"'`]{0,90})/) || [, "(untitled)"])[1];
+      offenders.push(`${name}: "${title}" starts a scratch network with no finally { …stop() }`);
+    }
+  }
+  return offenders;
+}
+
+/**
  * The source scanner behind law L73. Returns the offending test files, empty when the suite is
  * clean. Deliberately a source scan (not a rule about how the test is written): a future edit
  * that adds a POST next to LIVE_ORIGIN fails the build, wherever it is added.
