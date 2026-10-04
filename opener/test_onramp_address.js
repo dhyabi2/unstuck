@@ -87,6 +87,53 @@ function ownAddress() {
       !!(gj && JSON.stringify(gj.replacement || {}).includes("/v1/onramp/self")), g.body.slice(0, 200));
     check("L57 the 410 carries no address and no onboard_id", !!(gj && !("address" in gj) && !("onboard_id" in gj)));
 
+    // --- Every path the 410 points at must be one an OUTSIDE agent can send -----------
+    // L57b. The 410 is the one thing an agent holding no wallet reads, and its whole job is to
+    // hand over a working route. Measured 2026-10-04 on the live network, with every check in
+    // this file green: step_1 said "GET /try-nano", which answers 404 at the public origin
+    // (https://getunstuck.space/try-nano), while the served path is /unstuck/api/try-nano (200).
+    // step_2 in the same object was already absolute, so the object contradicted itself, and an
+    // agent that followed step_1 before step_2 concluded the on-ramp was dead.
+    //
+    // THE TRAP, and why this law checks the spelling and not just reachability: this server
+    // strips the /unstuck/api prefix (nserver-persist.js: `if (path.startsWith("/unstuck/api"))`),
+    // so BOTH spellings answer 200 here. Probing the named paths against this process would have
+    // passed before the fix and proved nothing. Only the public origin routes /unstuck/api/* to
+    // the network and serves everything else as a static file, so the prefix is not decoration —
+    // it is the difference between a 200 and a 404 for every caller outside this box.
+    const PUBLIC_PREFIX = "/unstuck/api";
+    // Method and path together: probing a POST-only route with GET answers 404 and would
+    // report the route as missing when it is only being asked the wrong way.
+    const namedRoutes = (body) =>
+      [...JSON.stringify(body || {}).matchAll(/\b(GET|POST|PUT|PATCH|DELETE) (\/[A-Za-z0-9._\/{}:-]+)/g)].map((m) => ({
+        method: m[1],
+        path: m[2],
+      }));
+
+    const named = namedRoutes(gj && gj.replacement);
+    check("L57b the 410's replacement names at least two routes", named.length >= 2, JSON.stringify(named));
+    const bare = named.filter((r) => !r.path.startsWith(PUBLIC_PREFIX));
+    check(
+      "L57b every path the 410 names carries the public API prefix",
+      bare.length === 0,
+      `these resolve against the origin root and 404 for every caller off this box: ${JSON.stringify(bare.map((r) => r.path))}`
+    );
+    // Reachability, on top of the spelling: a prefixed path that names no handler is still a 404.
+    for (const r of named) {
+      const probe = await req(r.method, r.path, r.method === "GET" ? null : {});
+      check(`L57b the 410 names ${r.method} ${r.path}, which this network answers`, probe.status !== 404, `got ${probe.status}`);
+    }
+    // Non-vacuity, both halves. The pre-fix body must fail the spelling check...
+    const preFix = { step_1: "generate a keypair (GET /try-nano shows a no-install python3 way)", step_2: "POST /unstuck/api/v1/onramp/self" };
+    check(
+      "L57b the pre-fix 410 body is caught by the spelling check, so this law is not vacuous",
+      namedRoutes(preFix).filter((r) => !r.path.startsWith(PUBLIC_PREFIX)).length === 1,
+      JSON.stringify(namedRoutes(preFix))
+    );
+    // ...and the reachability check must be able to fail at all.
+    const nowhere = await req("GET", `${PUBLIC_PREFIX}/try-nano-not-a-route`);
+    check("L57b a prefixed path naming no handler answers 404, so the probe above can fail", nowhere.status === 404, String(nowhere.status));
+
     // --- Retiring it hands out no onboard row either ---------------------------------
     let rows = -1;
     try {

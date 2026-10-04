@@ -164,7 +164,7 @@ const RETIRED_ADDRESS_RESPONSE = {
   error: "endpoint_retired",
   reason: "This endpoint generated a Nano private key on the server and sent it over the wire. It no longer exists. Your key is yours to make.",
   replacement: {
-    step_1: "generate a Nano keypair locally with any Nano wallet or library (GET /try-nano shows a no-install python3 way); keep the seed, never send it anywhere",
+    step_1: "generate a Nano keypair locally with any Nano wallet or library (GET /unstuck/api/try-nano shows a no-install python3 way); keep the seed, never send it anywhere",
     step_2: "POST /unstuck/api/v1/onramp/self {\"address\": \"<your nano_ address>\"} -> 201 {address, onboard_id, custody: \"self\"}",
   },
 };
