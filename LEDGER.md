@@ -163,24 +163,42 @@ None.
 
 ## Block 15 (PASSED — manual verify, MANUAL mode)
 
-### L12 (minted)
-**Statement:** The network store records a 64-hex settlement block for a paid ask and refuses non-paid or malformed settles.
+### L12 (minted; amended 2026-10-04)
+**Statement:** The network store records a settlement block for a paid ask only when it is given the result of an
+on-chain verification of that block, and at most one ask per block; it refuses non-paid, malformed, unauthorised,
+reused and unverified settles.
 **Test:** `node test_network_settle.js` L12 assertions
 **Scope:** opener/network-store.js, waived: opener/network-settle.js, waived: opener/test_network_settle.js
-**Grounded:** oracle — 23 tests pass (all laws)
+**Grounded:** oracle — 47 tests pass (all laws)
+**Amendment (dhyabi2/unstuck#14):** the statement said "records a 64-hex settlement block", and that was exactly
+the defect — a well-formed hash of anything, or of nothing, became a settlement and was stamped
+`settlement_verified_at`. A law whose statement can be satisfied without the thing it is for is a law asserting
+the wrong thing; the verification is now part of the statement.
 
-### L13 (minted)
-**Statement:** Network standing counts only settled paid asks per distinct asker, exposed via POST /ask/:id/settle and GET /standing.
+### L13 (minted; amended 2026-10-04)
+**Statement:** Network standing counts only settled paid asks per distinct asker, exposed via POST /ask/:id/settle
+and GET /standing; that endpoint verifies the block against a Nano node before writing anything and refuses, with
+the reason, when the block does not prove the payment.
 **Test:** `node test_network_settle.js` L13 assertions
 **Scope:** opener/nserver-persist.js (amended)
+**Amendment (dhyabi2/unstuck#14):** standing is computed from settled rows, so an unverified settle bought
+standing. Every refusal that needs no node runs before the RPC, so an unauthorised caller cannot make the server
+talk to a node.
 
 ## Block 16 (PASSED — manual verify, MANUAL mode)
 
-### L14 (minted)
-**Statement:** network-settle.js verifies an on-chain payment block exists, reaches the answerer, and covers the bounty.
+### L14 (minted; amended 2026-10-04)
+**Statement:** network-settle.js verifies an on-chain payment block exists, is CONFIRMED, is a send by the node's
+own `subtype`, comes from the asker, reaches the answerer, and covers the bounty. A node that does not say counts
+as no.
 **Test:** `node test_network_settle.js` L14 assertions
 **Scope:** opener/network-settle.js
-**Grounded:** oracle — mocked RPC confirms valid block passes, wrong recipient/fmt/missing rejected
+**Grounded:** oracle — stubbed RPC holding a small fake chain: a valid block passes; unconfirmed, no-`confirmed`,
+receive, no-`subtype`, wrong sender, wrong recipient, under-bounty, bad format and missing are each refused
+**Amendment (dhyabi2/unstuck#14):** an unconfirmed block can still be forked away, and a receive carries a
+`link_as_account` too — it is the source block's hash read as an account — so the recipient check alone did not
+establish that anything was sent. The sender check existed but had never run: it reads the node's
+`block_account` and the old stub set `account`.
 
 ## Verification (manual)
 

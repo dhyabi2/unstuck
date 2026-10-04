@@ -7,9 +7,11 @@
  *
  * It verifies that:
  *   - The block exists on-chain
- *   - It is a send subtype (link points to a nano_ address)
+ *   - The network has CONFIRMED it
+ *   - It is a send subtype (the node says so, and the link points to a nano_ address)
  *   - The recipient is the answerer's Nano address
  *   - The amount sent is >= the bounty amount
+ *   - The sender is the asker, when the asker's address is known
  *
  * The RPC module's _rpcCall override enables testability without network.
  */
@@ -54,7 +56,27 @@ async function verifyBlockPayment(blockHash, expected) {
     return { valid: false, reason: `block not found: ${info?.error || "unknown"}` };
   }
 
-  // Must be a send block (has a destination in link_as_account)
+  // Must be CONFIRMED. An unconfirmed block can still be forked away, so a
+  // settlement written against one records a payment that may never have
+  // happened. `block_info` answers `confirmed` as the string "true"; anything
+  // else - "false", or a node too old to say - is not a yes, and this fails
+  // closed rather than guessing, because the only cost of refusing is that the
+  // asker settles again a second later.
+  const confirmed = info.confirmed;
+  if (confirmed !== true && confirmed !== "true") {
+    return { valid: false, reason: `block is not confirmed (confirmed=${JSON.stringify(confirmed ?? null)})` };
+  }
+
+  // Must be a SEND. `link_as_account` is only a destination on a send: on a
+  // receive, `link` is the source block's hash and `link_as_account` is that
+  // hash re-read as an account, which is a well-formed nano_ address that
+  // belongs to nobody. The node names the block's direction in `subtype`, so
+  // ask it rather than inferring the direction from a field that is populated
+  // either way. Fails closed when the node does not say.
+  if (info.subtype !== "send") {
+    return { valid: false, reason: `block subtype is ${JSON.stringify(info.subtype ?? null)}, not a send` };
+  }
+
   if (!info.link_as_account && !info.link) {
     return { valid: false, reason: "block has no link (not a send)" };
   }

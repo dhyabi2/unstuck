@@ -383,14 +383,16 @@ function acceptAnswer(askId, answerId, acceptedBy, acceptToken) {
 // --- Settlement (Block 15) ---
 
 /**
- * Record an on-chain settlement block hash for an ask that has been accepted
- * (status 'paid'). Returns { ok, settlementBlock, verified }.
+ * Every refusal a settlement can be given WITHOUT asking a Nano node, in one
+ * place, so that `recordSettlement` and the HTTP handler cannot drift apart.
+ * Throws on the first failure; on success returns what the on-chain check needs:
+ * `{ ask, amountRaw, fromAddress, toAddress, bountyAsset }`.
  *
- * The block hash is the proof the asker actually sent the bounty on-chain.
- * Callers should verify it against the Nano ledger (verifyBlockPayment)
- * before recording; the store records the block and the verification time.
+ * It runs before any RPC so that an unauthorised caller cannot make this server
+ * talk to a node, and it is re-run inside `recordSettlement`, so the store is
+ * safe whichever way it is reached.
  */
-function recordSettlement(askId, blockHash, acceptToken, { now = new Date().toISOString() } = {}) {
+function settlementPrecheck(askId, blockHash, acceptToken) {
   const db = getDb();
   const ask = getAsk(askId);
   if (!ask) throw new Error(`no ask ${askId}`);
@@ -411,6 +413,53 @@ function recordSettlement(askId, blockHash, acceptToken, { now = new Date().toIS
   const stored = db.prepare("SELECT accept_token FROM asks WHERE id = ?").get(askId);
   if (!stored || !stored.accept_token || acceptToken !== stored.accept_token) {
     throw new Error("settling requires the ask's accept token (returned at create time)");
+  }
+  // One block settles one ask. A send covers exactly the bounty it was sent
+  // for, so the same hash on a second ask is one payment counted twice — and
+  // standing is distinct askers over settled asks, so it would be bought
+  // twice. Compared case-insensitively: a block hash is hex, and a node
+  // answers in upper case while a caller may send either.
+  const reused = db.prepare(
+    "SELECT id FROM asks WHERE settlement_block IS NOT NULL AND UPPER(settlement_block) = UPPER(?) AND id != ?"
+  ).get(String(blockHash), askId);
+  if (reused) {
+    throw new Error(`block ${blockHash} already settles ask ${reused.id}; one block settles one ask`);
+  }
+  // The destination the chain must show: the accepted answer's answerer. Both
+  // `asker` and `answerer` are Nano addresses in this store.
+  const accepted = ask.answers.find((a) => a.id === ask.acceptedAnswerId);
+  if (!accepted) {
+    throw new Error(`ask ${askId} is paid but its accepted answer ${ask.acceptedAnswerId} is missing`);
+  }
+  return {
+    ask,
+    amountRaw: ask.bountyRaw,
+    fromAddress: ask.asker,
+    toAddress: accepted.answerer,
+    bountyAsset: ask.bountyAsset,
+  };
+}
+
+/**
+ * Record an on-chain settlement block hash for an ask that has been accepted
+ * (status 'paid'). Returns { ok, settlementBlock, settledAt }.
+ *
+ * `verification` is REQUIRED and must be the `{valid: true}` result of
+ * `network-settle.verifyBlockPayment` for this block. The store used to take
+ * the caller's word that the hash had been checked, and nothing ever checked
+ * it (dhyabi2/unstuck#14): any 64-hex string became a settlement, and
+ * `settlement_verified_at` was stamped on it. That column names a
+ * verification, so there is no writing it without one — this refuses rather
+ * than trusting, and no other behaviour changes.
+ */
+function recordSettlement(askId, blockHash, acceptToken, { now = new Date().toISOString(), verification } = {}) {
+  const db = getDb();
+  settlementPrecheck(askId, blockHash, acceptToken);
+  if (!verification || verification.valid !== true) {
+    throw new Error(
+      "a settlement is recorded only after the block is verified on-chain: " +
+      (verification && verification.reason ? verification.reason : "no verification was supplied")
+    );
   }
   db.prepare("UPDATE asks SET settlement_block = ?, settlement_verified_at = ? WHERE id = ? AND status = 'paid'")
     .run(blockHash, now, askId);
@@ -450,6 +499,7 @@ module.exports = {
   addAnswer,
   acceptAnswer,
   recordSettlement,
+  settlementPrecheck,
   getStanding,
   recordOnboard,
   getOnboard,
