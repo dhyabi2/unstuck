@@ -20,6 +20,8 @@
  *         server.
  *   L74 — the L68 round trip runs against a scratch instance of the shipped network server, which
  *         answers 201 and stores the on-ramp address as asker.
+ *   L75 — those laws exercise the shipped server on a probe it accepts, and a failing one stops
+ *         its scratch server instead of leaving it listening and hanging the suite.
  *
  * L73 is enforced by a SOURCE SCAN, not by a rule about how one test is written: a future edit
  * that adds a POST next to LIVE_ORIGIN fails the build wherever it is added. The scan is proven
@@ -35,7 +37,15 @@ import fs from "node:fs";
 import os, { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { findLiveWriteCalls, startScratchNetwork, SERVER_SOURCE } from "./scratch-network.mjs";
+// execSync runs the repository's own keygen. It was used below and never imported, so every
+// law in this file that generates a keypair threw ReferenceError before reaching an assertion.
+import { execSync } from "node:child_process";
+import {
+  findLiveWriteCalls,
+  findUnstoppedScratchStarts,
+  startScratchNetwork,
+  SERVER_SOURCE,
+} from "./scratch-network.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SITE = path.resolve(HERE, "..");
@@ -190,19 +200,117 @@ test("L74 the scratch round trip answers 201 and refuses an unknown onboard_id",
 
 test("L74 the scratch database is a temp file removed when the run ends", async () => {
   const scratch = await startScratchNetwork();
-  const tmpDb = scratch.tmpDb;
-  assert.ok(
-    tmpDb.startsWith(tmpdir()),
-    `the scratch db ${tmpDb} is not under the temp directory; a scratch store must not live beside the network's own db`
+  try {
+    const tmpDb = scratch.tmpDb;
+    assert.ok(
+      tmpDb.startsWith(tmpdir()),
+      `the scratch db ${tmpDb} is not under the temp directory; a scratch store must not live beside the network's own db`
+    );
+    // The store file appears when the first write LANDS, so the write has to be one the shipped
+    // server accepts. A shape-valid address is not enough: nserver-persist.js checks the
+    // checksum, so a hand-made `nano_1333…` is refused 400, nothing is written, and this law
+    // then fails on its own probe rather than on the property it names. Generate a real one.
+    const KEYGEN = new URL("../../opener/nano-keypair.js", import.meta.url).pathname;
+    const kp = JSON.parse(execSync(`node "${KEYGEN}" --json`, { encoding: "utf8" }));
+    const registered = await fetch(`${scratch.base}${API_PATH}/v1/onramp/self`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address: kp.address }),
+    });
+    assert.equal(
+      registered.status,
+      201,
+      `the scratch on-ramp refused the write this law needs (${registered.status}); nothing was stored, so the db check below would measure the probe, not the store`
+    );
+    assert.ok(fs.existsSync(tmpDb), "the scratch db was never created, so nothing was really exercised");
+    scratch.stop();
+    assert.equal(fs.existsSync(tmpDb), false, `the scratch db ${tmpDb} survived stop(); a temp store must be removed`);
+  } finally {
+    // stop() twice is safe and this is the point of the finally: without it, an assertion above
+    // leaves the scratch server listening, the process never exits, and `node --test tests/*.mjs`
+    // — the command that gates the deploy — hangs instead of reporting a failure.
+    scratch.stop();
+  }
+});
+
+// ---------------------------------------------------------------------------
+// L75 — the laws above cannot pass on a probe the shipped server would refuse, and cannot
+// leave a listening server behind when they fail
+// ---------------------------------------------------------------------------
+
+test("L75 the shipped on-ramp accepts a generated address and refuses a shape-valid fake", async (t) => {
+  // Both directions, because each one failed in a different way. A law that hands the server an
+  // address it refuses measures nothing (that is the defect fixed above); a server that accepted
+  // an address with no valid checksum would be storing an asker nobody can be paid at.
+  const scratch = await startScratchNetwork();
+  try {
+    const KEYGEN = new URL("../../opener/nano-keypair.js", import.meta.url).pathname;
+    const kp = JSON.parse(execSync(`node "${KEYGEN}" --json`, { encoding: "utf8" }));
+    const good = await fetch(`${scratch.base}${API_PATH}/v1/onramp/self`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address: kp.address }),
+    });
+    assert.equal(good.status, 201, `the shipped on-ramp refused a generated address (${good.status})`);
+
+    // Shape-valid against /^nano_[13][0-9a-z]{59}$/ and checksum-invalid: the exact literal this
+    // file used to probe with.
+    const fake = "nano_1" + "3".repeat(59);
+    assert.match(fake, /^nano_[13][0-9a-z]{59}$/, "the fake must be shape-valid, or it proves nothing about the checksum");
+    const refused = await fetch(`${scratch.base}${API_PATH}/v1/onramp/self`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address: fake }),
+    });
+    assert.equal(refused.status, 400, `the shipped on-ramp accepted a checksum-invalid address (${refused.status})`);
+    t.diagnostic(`on-ramp: generated 201, shape-valid fake ${refused.status}`);
+  } finally {
+    scratch.stop();
+  }
+});
+
+test("L75 every scratch law stops its server in a finally, so a failure cannot hang the suite", () => {
+  const offenders = findUnstoppedScratchStarts(HERE);
+  assert.deepEqual(
+    offenders,
+    [],
+    `a test starts a scratch network without stopping it in a finally. When an assertion in that ` +
+      `test throws, the server stays listening, node never exits, and the deploy gate ` +
+      `(node --test tests/*.test.mjs) hangs with no failure reported:\n  ${offenders.join("\n  ")}`
   );
-  // The store file appears when the first write lands, so make one: a scratch db that was never
-  // touched proves nothing about where the writes went.
-  await fetch(`${scratch.base}${API_PATH}/v1/onramp/self`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ address: "nano_1" + "3".repeat(59) }),
-  });
-  assert.ok(fs.existsSync(tmpDb), "the scratch db was never created, so nothing was really exercised");
-  scratch.stop();
-  assert.equal(fs.existsSync(tmpDb), false, `the scratch db ${tmpDb} survived stop(); a temp store must be removed`);
+});
+
+test("L75 the finally scanner catches an unguarded start and passes a guarded one", () => {
+  // Non-vacuity, in this file's own idiom: the scanner is run against a mutant that breaks the
+  // law and a file that obeys it. Both are assembled from inert pieces and written to a temp
+  // directory, so this test cannot flag itself.
+  const dir = fs.mkdtempSync(path.join(tmpdir(), "l75-scan-"));
+  try {
+    const S = "startScratch" + "Network";
+    const mutant = [
+      `test("mutant", async () => {`,
+      `  const scratch = await ${S}();`,
+      `  assert.ok(scratch.base);`,
+      `  scratch.stop();`,
+      `});`,
+    ].join("\n");
+    const clean = [
+      `test("clean", async () => {`,
+      `  const scratch = await ${S}();`,
+      `  try {`,
+      `    assert.ok(scratch.base);`,
+      `  } finally {`,
+      `    scratch.stop();`,
+      `  }`,
+      `});`,
+    ].join("\n");
+    fs.writeFileSync(path.join(dir, "mutant.test.mjs"), mutant);
+    fs.writeFileSync(path.join(dir, "clean.test.mjs"), clean);
+
+    const found = findUnstoppedScratchStarts(dir);
+    assert.equal(found.length, 1, `the scanner found ${found.length} offenders in the mutant set, expected exactly 1`);
+    assert.match(found[0], /mutant\.test\.mjs/, `the scanner blamed the wrong file: ${found[0]}`);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
 });
