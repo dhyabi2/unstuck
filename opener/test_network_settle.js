@@ -19,6 +19,18 @@
  *         anything is written, and refuses when it does not prove the payment.
  *   L14 also — a block proves a payment only if the network has CONFIRMED it
  *         and the node calls it a send; unprovable counts as no.
+ *   L18 — a settlement is VERIFIED only where the on-chain facts it was checked
+ *         against are recorded on the row. #14 closed the write path but left
+ *         the rows written before it: two are on the live network, both citing
+ *         a block the ledger does not have, both still publishing a
+ *         `settlement_verified_at` and both still buying their answerer
+ *         standing. A timestamp is not evidence, and the hash's SHAPE cannot
+ *         stand in for one - `settled_on_chain` tried that twice (any non-null
+ *         block, then any 64-hex block that is not all one character) and the
+ *         second rule passes one of the two live rows. So nothing here asks
+ *         about shape: no recorded proof, not verified, no standing. The block
+ *         is still published, because every row must stay enumerable - what
+ *         stops is calling it verified.
  *
  * Method: use a temp DB and a stubbed Nano RPC (`rpc._rpcCall`) holding a small
  * fake chain, so the HTTP settle path is exercised end to end without a node.
@@ -42,6 +54,9 @@ function check(name, cond, detail = "") {
 const nanoA = "nano_3ppzytmqf6gfhd84wipe61owb5nmw919dz4m8oop4msz7cr9ofs3cza4zibj";
 const nanoB = "nano_3on5iz7bfg44zhqgapdme6zp7yun4yk37kofukctyiiefhfhfjh45eihgdk1";
 const nanoC = "nano_3sxqbj4d5bet7uczwo8b8y9pghhn5kgi51axhuor1j8bxjf17sh3tt4kr9ua";
+// A fourth identity, so L18's answerer starts with no standing from the laws
+// above and the count it asserts is about L18's own rows.
+const nanoC2 = "nano_1iubpnotkwngurzqq9eog1u1acermr161r5176xogbxpb1cy1uidu6z4bh6c";
 const bounty = "1000000000000000000000000";
 const HASH = "A".repeat(64);
 const HASH2 = "B".repeat(64);
@@ -51,7 +66,23 @@ const HASH2 = "B".repeat(64);
 // refusal boundaries, not about the chain, so they pass a verified result; the
 // L17 block below is what proves the store refuses an unverified one, and that
 // the HTTP path really asks a node.
-const VERIFIED = { valid: true };
+// A verification now carries the EVIDENCE it was verified against, and the
+// store refuses one that does not name the block being settled - so this is a
+// function of the hash rather than a single constant. The store does not re-read
+// amounts or addresses (the verifier did); what it checks is that the proof is
+// about this block, so the rest of the shape is the same everywhere.
+const verifiedFor = (hash) => ({
+  valid: true,
+  evidence: {
+    block: String(hash).toUpperCase(),
+    amount_raw: bounty,
+    source: nanoA,
+    destination: nanoB,
+    subtype: "send",
+    confirmed: true,
+    asset: "XNO",
+  },
+});
 
 // A small fake chain the stubbed `block_info` answers from: hash -> the fields
 // `verifyBlockPayment` reads. Shaped like a real node's answer (strings, upper
@@ -135,19 +166,19 @@ async function run() {
     check("L12 nothing was written by either refusal", s.getAsk(a1.id).settlementBlock === null && s.getAsk(a1.id).settlementVerifiedAt === null);
 
     // Record a valid settlement (with the correct token and a verified block)
-    const rec = s.recordSettlement(a1.id, HASH, a1.accept_token, { verification: VERIFIED });
+    const rec = s.recordSettlement(a1.id, HASH, a1.accept_token, { verification: verifiedFor(HASH) });
     check("L12 settlement recorded ok", rec.ok === true);
     check("L12 settlement block stored", rec.settlementBlock === HASH);
 
     // Double settle refused
-    try { s.recordSettlement(a1.id, HASH2, a1.accept_token, { verification: VERIFIED }); failed++; console.log("FAIL L12 double settle"); }
+    try { s.recordSettlement(a1.id, HASH2, a1.accept_token, { verification: verifiedFor(HASH2) }); failed++; console.log("FAIL L12 double settle"); }
     catch (e) { check("L12 double settle refused", /already settled/.test(e.message), e.message); }
 
     // Bad-format block refused (with the valid token)
     const a2 = s.createAsk({ asker: nanoA, title: "t2", body: "b2", bountyRaw: bounty });
     const ans2 = s.addAnswer(a2.id, { answerer: nanoB, body: "answer 2: switch to a fresh RPC endpoint" });
     s.acceptAnswer(a2.id, ans2.answerId, nanoA, a2.accept_token);
-    try { s.recordSettlement(a2.id, "short-hash", a2.accept_token, { verification: VERIFIED }); failed++; console.log("FAIL L12 bad hash accepted"); }
+    try { s.recordSettlement(a2.id, "short-hash", a2.accept_token, { verification: verifiedFor("short-hash") }); failed++; console.log("FAIL L12 bad hash accepted"); }
     catch (e) { check("L12 bad block hash refused", /64-hex/.test(e.message), e.message); }
 
     // --- Persistence: settlement survives close/reopen ---
@@ -168,7 +199,7 @@ async function run() {
     const a3 = s2.createAsk({ asker: nanoC, title: "t3", body: "b3", bountyRaw: bounty });
     const ans3 = s2.addAnswer(a3.id, { answerer: nanoB, body: "answer 3: verify against a second node first" });
     s2.acceptAnswer(a3.id, ans3.answerId, nanoC, a3.accept_token);
-    s2.recordSettlement(a3.id, HASH2, a3.accept_token, { verification: VERIFIED });
+    s2.recordSettlement(a3.id, HASH2, a3.accept_token, { verification: verifiedFor(HASH2) });
     const st2 = s2.getStanding();
     check("L13 distinct askers counted, not volume", st2[nanoB] === 2, JSON.stringify(st2));
 
@@ -178,7 +209,7 @@ async function run() {
     const a4 = s2.createAsk({ asker: nanoA, title: "t4", body: "b4", bountyRaw: bounty });
     const ans4 = s2.addAnswer(a4.id, { answerer: nanoB, body: "answer 4: the block hash matches the confirmed send" });
     s2.acceptAnswer(a4.id, ans4.answerId, nanoA, a4.accept_token);
-    s2.recordSettlement(a4.id, "C".repeat(64), a4.accept_token, { verification: VERIFIED });
+    s2.recordSettlement(a4.id, "C".repeat(64), a4.accept_token, { verification: verifiedFor("C".repeat(64)) });
     const st3 = s2.getStanding();
     check("L13 same asker twice counts once (distinct, not volume)", st3[nanoB] === 2, JSON.stringify(st3));
 
@@ -189,12 +220,124 @@ async function run() {
     const a5 = s2.createAsk({ asker: nanoC, title: "t5", body: "b5", bountyRaw: bounty });
     const ans5 = s2.addAnswer(a5.id, { answerer: nanoB, body: "answer 5: the same block cannot pay two bounties" });
     s2.acceptAnswer(a5.id, ans5.answerId, nanoC, a5.accept_token);
-    try { s2.recordSettlement(a5.id, HASH2, a5.accept_token, { verification: VERIFIED }); failed++; console.log("FAIL L12 reused block settled"); }
+    try { s2.recordSettlement(a5.id, HASH2, a5.accept_token, { verification: verifiedFor(HASH2) }); failed++; console.log("FAIL L12 reused block settled"); }
     catch (e) { check("L12 a block that already settles another ask is refused", /already settles ask/.test(e.message), e.message); }
     check("L12 the reuse left no row", s2.getAsk(a5.id).settlementBlock === null);
     // Lower case must not slip past it: a block hash is hex either way.
-    try { s2.recordSettlement(a5.id, HASH2.toLowerCase(), a5.accept_token, { verification: VERIFIED }); failed++; console.log("FAIL L12 lower-case reuse settled"); }
+    try { s2.recordSettlement(a5.id, HASH2.toLowerCase(), a5.accept_token, { verification: verifiedFor(HASH2) }); failed++; console.log("FAIL L12 lower-case reuse settled"); }
     catch (e) { check("L12 reuse is caught whatever the hex case", /already settles ask/.test(e.message), e.message); }
+
+    // --- L18: a settlement is verified only if its on-chain proof is recorded ---
+    //
+    // #14's write path is closed, and these are the rows written BEFORE it was.
+    // Two of them are on the live network right now, and both were still being
+    // published with a `settlement_verified_at` and still buying standing:
+    //
+    //   ask 585  abcdef0123456789 x4   verified_at 2026-10-03T10:00:12.917Z
+    //   ask 544  A x64                 verified_at 2026-09-20T17:49:17.088Z
+    //
+    // Queried against a public node on 2026-10-04 both answer
+    // `{"error":"Block not found"}`. They are replicated here by writing the
+    // columns directly, which is the only honest fixture for them: no code path
+    // can produce such a row any more, and the point of the law is that the
+    // READ side stops trusting the ones that already exist.
+    // The exact live hashes are already pinned by the L13 HTTP laws below
+    // ("a hash of nothing does not settle an ask" posts 585's verbatim), so
+    // these fixtures carry the same two SHAPES on hashes nothing else claims:
+    // 64 hex with sixteen distinct characters, and 64 of one character.
+    const LIVE_585 = "fedcba9876543210".repeat(4).toUpperCase();
+    const LIVE_544 = "0".repeat(64);
+    const db = s2.getDb();
+
+    const a6 = s2.createAsk({ asker: nanoC, title: "t6", body: "b6", bountyRaw: bounty });
+    const ans6 = s2.addAnswer(a6.id, { answerer: nanoC2, body: "answer 6: a timestamp is not a verification" });
+    s2.acceptAnswer(a6.id, ans6.answerId, nanoC, a6.accept_token);
+    db.prepare("UPDATE asks SET settlement_block = ?, settlement_verified_at = ?, settlement_verification = NULL WHERE id = ?")
+      .run(LIVE_585, "2026-10-03T10:00:12.917Z", a6.id);
+
+    const legacy = s2.getAsk(a6.id);
+    check("L18 an unproven settlement is not published as verified",
+      legacy.settlementVerified === false, JSON.stringify(legacy.settlementVerified));
+    check("L18 its verified-at is withheld, because nothing verified it",
+      legacy.settlementVerifiedAt === null, String(legacy.settlementVerifiedAt));
+    check("L18 it says why, rather than going quiet",
+      /no on-chain proof/.test(legacy.settlementUnverifiedReason || ""), String(legacy.settlementUnverifiedReason));
+    check("L18 the block itself is still published, so the row stays enumerable",
+      legacy.settlementBlock === LIVE_585, String(legacy.settlementBlock));
+    check("L18 it buys its answerer no standing",
+      (s2.getStanding()[nanoC2] || 0) === 0, JSON.stringify(s2.getStanding()));
+
+    // The list view is the one a stranger actually reads at /unstuck/api/asks.
+    const listed = s2.listAsks().find((x) => x.id === a6.id);
+    check("L18 the list view agrees with the ask view",
+      listed.settlementVerified === false && listed.settlementVerifiedAt === null,
+      JSON.stringify({ v: listed.settlementVerified, at: listed.settlementVerifiedAt }));
+
+    // Shape is NOT what decides it. `settled_on_chain` counted any non-null
+    // block (Block 146), then any 64-hex block that was not all one character
+    // (Block 150) - and LIVE_585 is well-formed hex with sixteen distinct
+    // characters, so that second rule passes it while LIVE_544 fails. Both are
+    // equally unproven here, which is the point: the hash cannot answer this.
+    check("L18 the 64-hex 16-distinct-char block is unproven too, where a shape rule passes it",
+      new Set(LIVE_585).size === 16 && /^[0-9A-F]{64}$/.test(LIVE_585) && legacy.settlementVerified === false);
+
+    const a7 = s2.createAsk({ asker: nanoA, title: "t7", body: "b7", bountyRaw: bounty });
+    const ans7 = s2.addAnswer(a7.id, { answerer: nanoC2, body: "answer 7: the all-one-char placeholder is the same case" });
+    s2.acceptAnswer(a7.id, ans7.answerId, nanoA, a7.accept_token);
+    db.prepare("UPDATE asks SET settlement_block = ?, settlement_verified_at = ?, settlement_verification = NULL WHERE id = ?")
+      .run(LIVE_544, "2026-09-20T17:49:17.088Z", a7.id);
+    check("L18 the placeholder row is unverified by the same rule",
+      s2.getAsk(a7.id).settlementVerified === false);
+    check("L18 neither live row buys standing",
+      (s2.getStanding()[nanoC2] || 0) === 0, JSON.stringify(s2.getStanding()));
+
+    // ...and a settlement recorded the proper way IS verified and DOES count,
+    // so this is a refusal of the unproven, not a refusal of everything.
+    const a8 = s2.createAsk({ asker: nanoC, title: "t8", body: "b8", bountyRaw: bounty });
+    const ans8 = s2.addAnswer(a8.id, { answerer: nanoC2, body: "answer 8: a recorded proof is what makes it verified" });
+    s2.acceptAnswer(a8.id, ans8.answerId, nanoC, a8.accept_token);
+    const PROVEN = "0F".repeat(32);
+    s2.recordSettlement(a8.id, PROVEN, a8.accept_token, { verification: verifiedFor(PROVEN) });
+    const proven = s2.getAsk(a8.id);
+    check("L18 a proven settlement is published as verified",
+      proven.settlementVerified === true && proven.settlementVerifiedAt !== null);
+    check("L18 its evidence is published, so a stranger can re-read the block",
+      proven.settlementEvidence && proven.settlementEvidence.block === PROVEN,
+      JSON.stringify(proven.settlementEvidence));
+    check("L18 a proven settlement does buy standing",
+      (s2.getStanding()[nanoC2] || 0) === 1, JSON.stringify(s2.getStanding()));
+
+    // The proof has to be about THIS block, or it proves something else.
+    const a9 = s2.createAsk({ asker: nanoA, title: "t9", body: "b9", bountyRaw: bounty });
+    const ans9 = s2.addAnswer(a9.id, { answerer: nanoC2, body: "answer 9: evidence for another block is not evidence" });
+    s2.acceptAnswer(a9.id, ans9.answerId, nanoA, a9.accept_token);
+    const OTHER_THIS = "1A".repeat(32);   // the block the row claims
+    const OTHER_THAT = "2B".repeat(32);   // the block the proof is about
+    try {
+      s2.recordSettlement(a9.id, OTHER_THIS, a9.accept_token, { verification: verifiedFor(OTHER_THAT) });
+      failed++; console.log("FAIL L18 evidence for another block accepted");
+    } catch (e) {
+      check("L18 evidence naming another block is refused", /evidence is for block/.test(e.message), e.message);
+    }
+    try {
+      s2.recordSettlement(a9.id, OTHER_THIS, a9.accept_token, { verification: { valid: true } });
+      failed++; console.log("FAIL L18 verification with no evidence accepted");
+    } catch (e) {
+      check("L18 a verification carrying no evidence is refused", /must carry the on-chain evidence/.test(e.message), e.message);
+    }
+    check("L18 neither refusal wrote a row", s2.getAsk(a9.id).settlementBlock === null);
+
+    // A row whose stored proof names another block reads unverified rather than
+    // being trusted, so the write-side check is not the only thing holding.
+    db.prepare("UPDATE asks SET settlement_block = ?, settlement_verified_at = ?, settlement_verification = ? WHERE id = ?")
+      .run(OTHER_THIS, "2026-10-04T00:00:00.000Z", JSON.stringify({ block: OTHER_THAT }), a9.id);
+    check("L18 a stored proof for another block does not verify the row",
+      s2.getAsk(a9.id).settlementVerified === false &&
+      /the recorded proof is for block/.test(String(s2.getAsk(a9.id).settlementUnverifiedReason)),
+      String(s2.getAsk(a9.id).settlementUnverifiedReason));
+    db.prepare("UPDATE asks SET settlement_verification = ? WHERE id = ?").run("{not json", a9.id);
+    check("L18 an unreadable stored proof does not verify the row",
+      s2.getAsk(a9.id).settlementVerified === false);
 
     // --- network-settle.js: on-chain verification via RPC mock ---
     const VALID_HASH = "AB".repeat(32); // exactly 64 hex chars
