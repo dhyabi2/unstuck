@@ -38,7 +38,10 @@ import { fileURLToPath } from "node:url";
 import {
   GUARDED,
   GUARDED_ALIASES,
+  NEGATION_CUES,
+  UNGUARDED_LIVE_ONLY,
   formatViolations,
+  sentencesIn,
   violationsIn,
 } from "./nano_only_scan.mjs";
 
@@ -197,17 +200,133 @@ test("L48 the agent's OWN swap at nanswap is not what this law forbids", () => {
   // The corrective action keeps the USDC -> XNO leg at nanswap for the agent converting its own
   // money. This law governs the NETWORK's published surfaces, so it must not forbid an agent from
   // doing that itself — and it must not be softened to allow the network to broker it either.
-  // The distinction is real and testable: the shipped pages name no swap, and the scanner would
-  // reject one the moment the network offered it.
+  //
+  // Until 2026-10-04 this test asserted the shipped pages name no swap AT ALL, which is stricter
+  // than the rule it cites and is not what the corrective action says. `index.html` has carried
+  // "Already hold USDC? Convert it to XNO with Nanswap ->" since 36b908e (2026-09-26), and L48 was
+  // red for eight days because of it. The distinction the law actually draws is about WHO converts,
+  // so that is what is pinned here: the pointer passes, and every way of saying the network does it
+  // fails.
   const html = fs.readFileSync(path.join(SITE, "index.html"), "utf8");
-  const llms = fs.readFileSync(path.join(SITE, "llms.txt"), "utf8");
-  assert.ok(!/nanswap/i.test(html), "the network's own page must not send an agent to a swap it brokers");
-  assert.ok(!/nanswap/i.test(llms), "the network's own entry point must not advertise a swap path");
 
-  // Falsifier: the same scanner rejects the sentence a brokering network would publish.
-  const brokered = "Unstuck converts your USDC to Nano for you at nanswap before settling.";
+  // The pointer, read off the shipped page rather than retyped, so this control cannot drift from
+  // what ships.
+  const pointer = html.split("\n").filter((l) => /nanswap/i.test(l));
+  assert.ok(pointer.length > 0, "the on-ramp no longer points a USDC holder anywhere — did the line move?");
+  for (const line of pointer) {
+    const found = violationsIn(line);
+    assert.deepEqual(
+      found,
+      [],
+      `the law flagged the agent's own swap, which the corrective action keeps:\n${formatViolations(found)}`
+    );
+  }
+
+  // Falsifiers: the same scanner rejects every shape a brokering network would publish. Each names
+  // nanswap or USDC and puts the network in charge, which is the one thing the rule forbids.
+  const brokered = [
+    "Unstuck converts your USDC to Nano for you at nanswap before settling.",
+    "We swap your USDC at nanswap and credit the XNO.",
+    "Already hold USDC? Send it to us and we return XNO.",
+    "The network accepts USDC.",
+  ];
+  for (const line of brokered) {
+    assert.ok(
+      violationsIn(line).length > 0,
+      `the scanner would have to reject a network that brokered the swap itself: ${line}`
+    );
+  }
+});
+
+test("L48 a cue inside a word does not excuse a line, and 'XNO' is the word that did", () => {
+  // The defect this test exists for, measured on 2026-10-04: NEGATION_CUES was unanchored and
+  // case-insensitive, so the "NO" inside "XNO" satisfied it. On a site whose every page is about
+  // XNO that excused every line, and the USDC half of L48 and L34 had therefore never fired on a
+  // real regression since the law was written. Only a sentence with no XNO in it was ever caught.
+  //
+  // This is the same family as L65 (matched line-initial where the prose said "anywhere") and L85
+  // (an unanchored article that the final "a" of "Solana" supplied). A law is only as strong as its
+  // boundaries, so the boundary is what is pinned.
+  assert.ok(!NEGATION_CUES.test("XNO"), "'XNO' must not read as the negation cue 'no'");
+  assert.ok(!NEGATION_CUES.test("Nano"), "'Nano' must not read as the negation cue 'no'");
+  assert.ok(!NEGATION_CUES.test("nonce"), "'nonce' must not read as the negation cue 'none'");
+  assert.ok(!NEGATION_CUES.test("notation"), "'notation' must not read as the negation cue 'not'");
+  // The honest cues must still read as cues, or the law becomes unfixable.
+  for (const cue of ["never", "no", "not", "nothing", "none", "only", "without", "cannot"]) {
+    assert.ok(NEGATION_CUES.test(`settles in Nano, ${cue} USDC`), `the cue "${cue}" stopped working`);
+  }
+
+  // The regression the hole was hiding, stated as the sentence a broker would ship. Every one of
+  // these scanned CLEAN before the fix, each because of the letters "NO" in "XNO".
+  const wasInvisible = [
+    "Top up with USDC and we settle your XNO balance for you.",
+    "Pay us in USDC; we convert to XNO at our desk.",
+    "We accept USDC deposits and credit XNO.",
+    "Send USDC here to buy XNO from the network.",
+    "We hold your USDC until the XNO clears.",
+  ];
+  for (const line of wasInvisible) {
+    assert.ok(violationsIn(line).length > 0, `still invisible to the law: ${line}`);
+  }
+
+  // A cue must stand in the SAME sentence as the mention it excuses: a leading denial must not
+  // license a brokering clause after it.
   assert.ok(
-    violationsIn(brokered).length > 0,
-    "the scanner would have to reject a network that brokered the swap itself"
+    violationsIn("No fees. Top up with USDC and we credit your XNO.").length > 0,
+    "a denial in an earlier sentence must not excuse a later brokering clause"
   );
+
+  // The backstop earns its keep on a regression that names no actor and no direction — a structured
+  // claim. These are caught by the bare-USDC rule ALONE, so a scanner whose permitted-mention check
+  // were widened to always allow would fail here and nowhere else.
+  for (const line of ['"settlement_asset": "USDC"', '"payment": {"asset": "USDC"}', "Prices are quoted in USDC."]) {
+    const found = violationsIn(line);
+    assert.ok(found.length > 0, `the backstop let a structured USDC claim through: ${line}`);
+    assert.ok(
+      found.some((v) => /names USDC without denying it/.test(v.why)),
+      `this control must be caught by the backstop specifically, not incidentally: ${line}`
+    );
+  }
+});
+
+test("L48 an HTML entity's semicolon does not end a sentence", () => {
+  // The splitter's own boundary, found by getting it wrong: `&rarr;` ends in ';', so splitting on it
+  // cut "USDC &rarr; XNO" into "USDC &rarr;" and "XNO instructions". The first piece names USDC with
+  // no XNO in it, so the permitted into-XNO direction became invisible and the shipped on-ramp line
+  // was flagged. Same mistake as the law above, one layer down.
+  assert.deepEqual(sentencesIn("USDC &rarr; XNO instructions"), ["USDC &rarr; XNO instructions"]);
+  assert.deepEqual(sentencesIn("a &middot; b"), ["a &middot; b"]);
+  assert.deepEqual(sentencesIn("x &#8594; y"), ["x &#8594; y"]);
+  // A real semicolon still ends a piece, or "Pay us in USDC; we convert it" would be read as one
+  // clause and the receiving half would lose its own judgement.
+  assert.deepEqual(sentencesIn("Pay us in USDC; we convert it"), ["Pay us in USDC;", "we convert it"]);
+});
+
+test("L48 /swap.txt ships outside this law's reach, and that is recorded, not assumed", () => {
+  // The network's whole USDC->XNO document is the single page most on-topic for this law, and no
+  // file in this repository produces it: site/vercel.json rewrites /swap.txt to the box, so it ships
+  // without passing any guard here. A law whose subject matter lives on a surface it cannot read is
+  // worth saying out loud, so the gap is pinned as a fact rather than left to be rediscovered.
+  const vercel = JSON.parse(fs.readFileSync(path.join(SITE, "vercel.json"), "utf8"));
+  const rewritten = (vercel.rewrites || []).map((r) => r.source);
+  for (const p of UNGUARDED_LIVE_ONLY) {
+    assert.ok(
+      rewritten.includes(p),
+      `${p} is recorded as live-only but vercel.json no longer rewrites it — either it is served from this repo now (add it to GUARDED) or the link is dead`
+    );
+    assert.ok(
+      !fs.existsSync(path.join(SITE, p.replace(/^\//, ""))),
+      `${p} now exists in this repository, so it must be scanned offline: move it into GUARDED`
+    );
+  }
+  // And every path index.html links on our own origin must be one this repo ships or vercel rewrites,
+  // so a pointer cannot quietly become a 404 — the harm L67 exists for, pointed at the page's links.
+  const html = fs.readFileSync(path.join(SITE, "index.html"), "utf8");
+  const ours = [...html.matchAll(/href="(?:https:\/\/getunstuck\.space)?(\/[^"#?]*)"/g)].map((m) => m[1]);
+  for (const p of new Set(ours)) {
+    if (p === "/") continue;
+    const onDisk = fs.existsSync(path.join(SITE, p.replace(/^\//, "")));
+    const viaRewrite = rewritten.some((s) => s === p || (s.endsWith(":path*") && p.startsWith(s.slice(0, -6))));
+    assert.ok(onDisk || viaRewrite, `index.html links ${p}, which this repo neither ships nor rewrites`);
+  }
 });
