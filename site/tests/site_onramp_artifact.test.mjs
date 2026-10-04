@@ -50,6 +50,14 @@ const SITE_COPY = path.join(SITE, "nano-onramp-check.js");
 const SOURCE = path.join(REPO, "opener", "nano-onramp-check.js");
 const LLMS = path.join(SITE, "llms.txt");
 
+/**
+ * The report step that carries the last and strongest claim of the on-ramp run: the ask the check
+ * posted is stored with the address the check generated as its asker. Named once, here, because
+ * these laws read it by name out of a JSON report and a name read out of JSON cannot be checked by
+ * a linter. L88 below pins it against the keys the shipped artifact actually assigns.
+ */
+const ASKER_EQUALITY_STEP = "ask_asker_equals_own_address";
+
 const read = (p) => fs.readFileSync(p, "utf8");
 const digest = (buf) => crypto.createHash("sha256").update(buf).digest("hex");
 
@@ -232,8 +240,19 @@ test("L71 the artifact defaults away from the public origin, proven by running i
     !String(report.steps.ask_target).includes("getunstuck.space"),
     "a default run must never post an ask to the public network — that would be our own activity counted as a reader's"
   );
+  // Absence and falsity are different findings and must not read the same. A missing key means
+  // nobody measured the property; `false` means the artifact measured it and it did not hold.
+  // Asserting the value alone reports the first as the second — which is what happened here from
+  // 2026-10-02 (`b8bd155` renamed this key) until it was found: these two laws accused the on-ramp
+  // of not proving the asker, while the artifact proved it under a name they did not read.
+  assert.ok(
+    ASKER_EQUALITY_STEP in report.steps,
+    `the artifact's report carries no ${ASKER_EQUALITY_STEP} step (it reported ` +
+      `${JSON.stringify(Object.keys(report.steps))}). That is not the property failing — it is this ` +
+      `law reading a key the artifact does not emit, so check for a rename before blaming the on-ramp.`
+  );
   assert.equal(
-    report.steps.ask_asker_equals_onramp_address,
+    report.steps[ASKER_EQUALITY_STEP],
     true,
     "the scratch run must still prove the on-ramp address is stored as the asker, or it proves nothing"
   );
@@ -276,8 +295,13 @@ test("L72 the artifact runs to completion as a lone downloadable file", () => {
     const report = JSON.parse(stdout);
     assert.equal(report.mode, "live", `a lone run reported mode ${JSON.stringify(report.mode)}`);
     // It must reach the end of the sequence, not stop where the missing module stopped it.
+    assert.ok(
+      ASKER_EQUALITY_STEP in report.steps,
+      `a lone run's report carries no ${ASKER_EQUALITY_STEP} step (it reported ` +
+        `${JSON.stringify(Object.keys(report.steps))}); see the note in L71 — check for a rename first`
+    );
     assert.equal(
-      report.steps.ask_asker_equals_onramp_address,
+      report.steps[ASKER_EQUALITY_STEP],
       true,
       "a lone run must complete the last step (the asker equality) or the download promises more than it delivers"
     );
@@ -317,6 +341,116 @@ test("L72 a checkout run still exercises the repository server, not the fallback
     `inside a checkout the check reported engine ${JSON.stringify(report.steps.scratch_engine)}; ` +
       `it must exercise nserver-persist.js, which is the code this repository tests`
   );
+});
+
+// ---------------------------------------------------------------------------
+// L88 — these laws may only assert on steps the shipped artifact actually emits
+// ---------------------------------------------------------------------------
+
+/**
+ * Collect the step keys a program ASSIGNS, from its source text. Assignment only: the artifact
+ * also reads its own steps back when it computes `proven`, and a read is not a promise to emit.
+ */
+function stepsAssignedBy(src) {
+  const found = new Set();
+  for (const m of src.matchAll(/\bout\.steps\.([A-Za-z0-9_]+)\s*=(?!=)/g)) found.add(m[1]);
+  return found;
+}
+
+/** Collect the step keys a law file names literally, i.e. reads out of a parsed report. */
+function stepsNamedBy(src) {
+  const found = new Set();
+  for (const m of src.matchAll(/\breport\.steps\.([A-Za-z0-9_]+)/g)) found.add(m[1]);
+  return found;
+}
+
+test("L88 every step these laws name is a step the shipped artifact emits", () => {
+  // The defect this law exists for, measured: on 2026-10-02 commit b8bd155 ("retire the
+  // server-generated seed; self-custody only") renamed the asker-equality step in both copies of
+  // the artifact and updated the artifact's own oracle — and did not update this file. L71 and L72
+  // went on reading the old name, so `undefined` was compared against `true` and both laws failed
+  // with a message accusing the on-ramp of not proving the asker. It proved it the whole time. Ten
+  // runs read those two reds off a list and attributed them to the environment.
+  //
+  // A key read out of a JSON report is invisible to every other check in this repository: no
+  // linter, no type, no test sees a typo in a string that indexes a parsed object. So the two
+  // sides are compared here, both derived from disk, so nothing is carved out by name.
+  const emitted = stepsAssignedBy(read(SITE_COPY));
+  const named = stepsNamedBy(read(path.join(HERE, "site_onramp_artifact.test.mjs")));
+
+  // Non-vacuity, both sides: a scan that found nothing would pass this law silently.
+  assert.ok(emitted.size >= 10, `only ${emitted.size} steps found in the artifact; the scan is broken`);
+  assert.ok(named.size >= 2, `only ${named.size} step names found in this file; the scan is broken`);
+
+  // The named-by-constant one, which is the exact key the rename broke and the only one these
+  // laws reach through a variable rather than a literal.
+  assert.ok(
+    emitted.has(ASKER_EQUALITY_STEP),
+    `these laws assert on ${ASKER_EQUALITY_STEP}, which the shipped artifact never assigns. ` +
+      `It emits ${JSON.stringify([...emitted].sort())}. Rename the constant to match the artifact ` +
+      `(or the artifact to match the laws) — do not leave a law reading a key that does not exist, ` +
+      `because its failure is indistinguishable from the property being false.`
+  );
+
+  // And every literal mention, so the next rename is caught wherever it lands.
+  const orphans = [...named].filter((k) => !emitted.has(k)).sort();
+  assert.deepEqual(
+    orphans,
+    [],
+    `these laws name step(s) the shipped artifact does not emit: ${JSON.stringify(orphans)}. ` +
+      `The artifact emits ${JSON.stringify([...emitted].sort())}.`
+  );
+});
+
+test("L88 the comparison itself rejects an orphan step, proven on fixtures", () => {
+  // The control. The law above passes when the two sides agree, which is also what it would do if
+  // either scan silently matched nothing. So exercise both scanners on synthetic text whose answer
+  // is known, and require the orphan to be found. No file and no network is touched.
+  //
+  // The fixtures are spelled with a seam (`"out.steps" + "."`) on purpose, and the seam is
+  // load-bearing: written out in full they are literal `report.steps.<key>` text sitting in this
+  // very file, so L88's scan of its own source would read the fixture keys as real assertions and
+  // report them as orphans. Measured — that is exactly what the first version of this law did. The
+  // last assertion below pins the seam, so a later edit that spells them out fails here, where the
+  // reason is written down, instead of in L88 with a confusing message.
+  const OUT = "out.steps" + ".";
+  const REPORT = "report.steps" + ".";
+  const fakeArtifact = [
+    `${OUT}kept = 1;`,
+    `${OUT}also_kept = compute();`,
+    // A READ of a step the program never assigns. It must NOT count as emitted: the artifact
+    // reads its own steps back when it computes `proven`, and a read is not a promise to emit —
+    // counting one would let a law name a step nothing ever writes and still pass.
+    `if (${OUT}read_but_never_assigned === true) {}`,
+  ].join("\n");
+  const fakeLaws = [
+    `assert.ok(${REPORT}kept);`,
+    `assert.equal(${REPORT}renamed_away, true);`,
+  ].join("\n");
+
+  const emitted = stepsAssignedBy(fakeArtifact);
+  const named = stepsNamedBy(fakeLaws);
+  assert.deepEqual(
+    [...emitted].sort(),
+    ["also_kept", "kept"],
+    "the assignment scan must ignore reads: read_but_never_assigned is only ever read here"
+  );
+  assert.deepEqual([...named].sort(), ["kept", "renamed_away"], "the name scan must find both mentions");
+  assert.deepEqual(
+    [...named].filter((k) => !emitted.has(k)),
+    ["renamed_away"],
+    "the comparison must report a named step the program does not emit"
+  );
+
+  // The seam holds: these fixture keys must not leak into the scan of this file itself.
+  const selfNamed = stepsNamedBy(read(path.join(HERE, "site_onramp_artifact.test.mjs")));
+  for (const leaked of ["kept", "also_kept", "renamed_away"]) {
+    assert.ok(
+      !selfNamed.has(leaked),
+      `the fixture key ${leaked} is spelled literally in this file, so L88 now scans its own ` +
+        `fixtures and will report them as orphan steps; keep the seam described above`
+    );
+  }
 });
 
 // ---------------------------------------------------------------------------
