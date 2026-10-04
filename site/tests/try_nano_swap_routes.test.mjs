@@ -92,9 +92,34 @@ const PAGE = fs.readFileSync(PAGE_PATH, "utf8");
  * Written as `[^.<\n]` runs so it stops at a sentence boundary — the denial must be in
  * the same clause as the claim, or a paragraph that denies one pair and names another
  * would be flagged wholesale and the law would be unfixable.
+ *
+ * CHAIN-QUALIFIED, because a denial is false only about a chain nanswap actually serves.
+ * The header above measures both sides: USDC-BASE and USDC-ETH answer 200, USDC-SOLANA
+ * answers 404. So "nanswap has no Base USDC pair" is the lie this law exists to catch,
+ * while "nanswap has no Solana USDC pair" is a measurement the page is REQUIRED to carry
+ * (it is why the one-hop fallback exists at all). Denying every "<chain> USDC pair"
+ * alike would forbid the true sentence and make the law unfixable — the same trap the
+ * sibling scanner's docstring names, and the reason the article below is `\b`-anchored:
+ * unanchored, the final "a" of "Solana" stood in for the article "a", so
+ * "nanswap has no Solana USDC pair" matched `a\s+USDC\s+pair` on the letters
+ * "Solan[a USDC pair]" and the law accused its own on-ramp page of a lie it had
+ * carefully avoided telling.
  */
-const FALSE_COVERAGE_CLAIM =
-  /nanswap[^.<\n]{0,60}(?:carries|has|does not carry|doesn't carry|supports|lists)[^.<\n]{0,20}(?:no\s+USDC|a\s+USDC\s+pair)|no\s+USDC\s+pair|USDC\s+is\s+not\s+one\s+of\s+them/i;
+/** Chains nanswap serves a USDC -> XNO pair for (measured 200). Denying one is false. */
+const SERVED_USDC_CHAIN = String.raw`(?:base|eth|ethereum)`;
+/**
+ * A denied "USDC pair", unqualified or qualified by a chain that IS served. The article
+ * is `\bno|\ba` so a chain name ending in "a" cannot supply it. A denial qualified by an
+ * unserved chain (Solana) matches nothing here, which is the point.
+ */
+const DENIED_USDC_PAIR =
+  String.raw`(?:\bno|\ba)\s+(?:USDC\s+pair|${SERVED_USDC_CHAIN}\s+USDC\s+pair|USDC-${SERVED_USDC_CHAIN}\s+pair)`;
+const FALSE_COVERAGE_CLAIM = new RegExp(
+  String.raw`nanswap[^.<\n]{0,60}(?:carries|has|does not carry|doesn't carry|supports|lists)[^.<\n]{0,20}(?:no\s+USDC\b(?!-${SERVED_USDC_CHAIN})(?!\s|-)|${DENIED_USDC_PAIR})` +
+    String.raw`|${DENIED_USDC_PAIR}` +
+    String.raw`|USDC\s+is\s+not\s+one\s+of\s+them`,
+  "i"
+);
 
 /**
  * The pair URL that does not exist. A bare ticker is not a pair: nanswap's are
@@ -165,6 +190,40 @@ test("L85 the scanner rejects the denial the old page published, and accepts the
     assert.ok(
       FALSE_COVERAGE_CLAIM.test(line),
       `the denial the old page published was not caught by FALSE_COVERAGE_CLAIM: ${line}`
+    );
+  }
+
+  // A denial is false only about a chain the service actually serves, so the law is
+  // chain-qualified and BOTH directions are controlled here. A denial naming a SERVED
+  // chain (measured 200) is the lie, in every spelling the page could use:
+  const chainQualifiedLies = [
+    "nanswap has no Base USDC pair",
+    "nanswap has no Ethereum USDC pair",
+    "nanswap carries no USDC-BASE pair",
+    "nanswap carries no USDC-ETH pair",
+  ];
+  for (const line of chainQualifiedLies) {
+    assert.ok(
+      FALSE_COVERAGE_CLAIM.test(line),
+      `a denial of a pair nanswap DOES serve escaped FALSE_COVERAGE_CLAIM: ${line}`
+    );
+  }
+
+  // ...and a denial naming the one chain it genuinely serves none for is a MEASUREMENT
+  // the page is required to carry, so it must survive. The first line is the exact
+  // sentence shipped at site/try-nano.html, which this law accused for as long as the
+  // article in `a\s+USDC\s+pair` went unanchored: the final "a" of "Solana" stood in
+  // for it, matching the letters "Solan[a USDC pair]". The law has to be able to read a
+  // chain name without mistaking it for an article.
+  const chainQualifiedTruths = [
+    "USDC on Solana -> ETH with any DEX you already use (nanswap has no Solana USDC pair), then -> nanswap ETH -> XNO",
+    "nanswap has no USDC-SOLANA pair",
+    "only USDC on Solana has no pair at all and takes the one-hop route below",
+  ];
+  for (const line of chainQualifiedTruths) {
+    assert.ok(
+      !FALSE_COVERAGE_CLAIM.test(line),
+      `the scanner forbids a denial that is TRUE of an unserved chain: ${line}`
     );
   }
 
