@@ -43,6 +43,31 @@ const REWRITE_DEST = `https://${GATEWAY_HOST}/unstuck/api/:path*`;
 
 const readVercel = () => JSON.parse(fs.readFileSync(path.join(SITE, "vercel.json"), "utf8"));
 
+/**
+ * The literal leading part of a Vercel rewrite `source`, i.e. everything before the first pattern
+ * character. `/unstuck/api/:path*` -> `/unstuck/api/`; a literal path is returned unchanged.
+ */
+function literalPrefix(source) {
+  return source.split(/[:*(]/)[0];
+}
+
+/**
+ * Does the site ship a file that Vercel would serve at this rewrite's source path?
+ *
+ * Exact match plus the two clean-URL forms Vercel resolves (`.html`, `.json`), because those are
+ * served as files too and a rewrite naming one is the same dead entry. A pattern source ships no
+ * single file, so only its literal prefix is considered, and a directory is not a served file.
+ */
+function shipsFileAt(source) {
+  const rel = literalPrefix(source).replace(/^\/+/, "");
+  if (!rel) return false;
+  for (const candidate of [rel, `${rel}.html`, `${rel}.json`]) {
+    const abs = path.join(SITE, candidate);
+    if (fs.existsSync(abs) && fs.statSync(abs).isFile()) return true;
+  }
+  return false;
+}
+
 /** Raw bytes of a committed path, exactly as git stores them (execFileSync would strip a trailing newline). */
 function committedBytes(relPath) {
   return execFileSync("git", ["show", `HEAD:${relPath}`], { cwd: SITE, maxBuffer: 8 * 1024 * 1024 });
@@ -224,57 +249,104 @@ test("L42 the rewrite is enabled, JSON-valid and its destination is a certificat
   );
 });
 
-test("L42 a rewrite does not shadow the SPA shell or the machine-readable entry points", () => {
-  // The rewrite must forward one prefix and nothing else: /ask, /agent.json, /llms.txt must still be served
-  // as files by Vercel, not swallowed by the rewrite.
+test("L42 a rewrite does not shadow a path the site ships as a file", () => {
+  // Measured 2026-10-04, against the deployed config rather than from the config's text:
+  //
+  //   13e2e17 (which added the /.well-known/x402 and /.well-known/agent.json rewrites) IS an
+  //   ancestor of the pin the origin serves, so those rewrites were live — and yet
+  //   https://getunstuck.space/.well-known/agent.json answered with site/.well-known/agent.json
+  //   byte for byte (sha256 cc842cf1…, 4999 bytes), NOT the 3102-byte document the rewrite's
+  //   destination serves. site_discovery_paths asserts that same file-equality and is green.
+  //
+  // So on Vercel a static file wins over a `rewrites` entry: a rewrite CANNOT shadow a path the
+  // site ships as a file. The earlier form of this law asserted the opposite ("every rewrite must
+  // stay inside /unstuck/api, or it could shadow the SPA or its manifests") and was red for as long
+  // as the site had been right — and obeying it would have deleted the nine rewrites below that
+  // serve /canon, /tvl.json and /ai/tools.json, none of which the site ships as a file. A law whose
+  // remedy is a regression is the thing being tested, not the config.
+  //
+  // What stays worth forbidding is a rewrite that NAMES a shipped file. It cannot shadow it on
+  // Vercel today, but it is dead config that reads as if it were live — the trap being that editing
+  // the destination's copy of a manifest changes nothing a visitor sees — and the precedence is a
+  // platform behaviour we measured, not a contract we control (site/caddy-reference.conf is a
+  // non-Vercel front end in this same tree, where the same entry would shadow).
   const cfg = readVercel();
   const sources = (cfg.rewrites || []).map((r) => r.source);
+  assert.ok(sources.length > 0, "vercel.json must still carry the /unstuck/api rewrite");
+
   for (const s of sources) {
+    if (s.startsWith(API_PATH)) continue; // forwarded to the gateway by design
     assert.ok(
-      s.startsWith(API_PATH),
-      `rewrite ${s} is outside ${API_PATH} and could shadow the SPA or its manifests`
+      !shipsFileAt(s),
+      `rewrite ${s} names a path the site ships as a file (site${literalPrefix(s)}); it is dead ` +
+        `config on Vercel and shadows that file on any front end that resolves rewrites first`
     );
   }
 });
 
-test("L60 no rewrite leaves the API prefix, so .well-known and the SPA are never shadowed", () => {
-  // Measured: vercel.json carried a /.well-known/x402 rewrite pointing at the Caddy x402 endpoint. A
-  // rewrite whose source is that path shadows the `/.well-known/` directory Vercel serves as files —
-  // including .well-known/agent.json, the agent-discovery manifest the x402 capability is already
-  // advertised in. The x402 endpoint is reachable at /unstuck/api/v1/x402, which the surviving
-  // rewrite already forwards, so the shadowing entry bought nothing and hid a manifest.
+test("L60 no rewrite captures the SPA's client-side routes, and the manifests stay files", () => {
+  // The SPA is a single shell plus client-side routes, so a catch-all rewrite is the one entry that
+  // really can swallow it: it matches every path for which no file exists, which is exactly the set
+  // of the SPA's own routes. That is a different failure from the file case in L42 and is not
+  // reachable by it, so it gets its own assertion.
   const cfg = readVercel();
   const sources = (cfg.rewrites || []).map((r) => r.source);
-
-  assert.ok(sources.length > 0, "vercel.json must still carry the /unstuck/api rewrite");
-  const trespassing = sources.filter((s) => !s.startsWith(API_PATH));
+  const catchAll = sources.filter((s) => /^\/(?::path\*|\(\.\*\)|\*)?$/.test(s));
   assert.deepEqual(
-    trespassing,
+    catchAll,
     [],
-    `every rewrite must stay inside ${API_PATH}; ${JSON.stringify(trespassing)} can shadow the SPA ` +
-      `or the manifests Vercel serves as files (.well-known/agent.json, agent.json, llms.txt)`
+    `${JSON.stringify(catchAll)} matches every path the site does not ship as a file, which is the ` +
+      `SPA's client-side route space`
   );
+
+  // The manifests an agent discovers this network through must be shipped as files — that is what
+  // makes them immune to a rewrite under the precedence measured in L42 — and none may be named by
+  // a rewrite. .well-known/agent.json is the one that advertises the x402 capability.
+  const MANIFESTS = ["/.well-known/agent.json", "/agent.json", "/llms.txt"];
+  for (const m of MANIFESTS) {
+    assert.ok(shipsFileAt(m), `site${m} must be shipped as a file, not resolved by a rewrite`);
+    assert.ok(!sources.includes(m), `no rewrite may name ${m}: it is a shipped manifest`);
+  }
   assert.ok(
     !sources.some((s) => s.startsWith("/.well-known")),
     "no rewrite may match /.well-known: agent.json there is the manifest that advertises the x402 capability"
   );
-  // The x402 capability is carried by the manifest, not by a rewrite — that is the whole point of
-  // removing the shadowing entry, so assert the carrier is still there and still names x402.
+
   const manifest = JSON.parse(fs.readFileSync(path.join(SITE, ".well-known", "agent.json"), "utf8"));
   assert.ok(
     JSON.stringify(manifest).includes("x402"),
-    ".well-known/agent.json must keep advertising the x402 capability the removed rewrite used to shadow"
+    ".well-known/agent.json must keep advertising the x402 capability"
   );
+  // The served manifest is the one that carries the on-ramp fields a wallet-less agent needs; the
+  // rewrite removed here pointed at a copy with neither, which is what made it worth removing
+  // rather than merely tolerating.
+  for (const k of ["api_path", "first_call"]) {
+    assert.ok(k in manifest, `.well-known/agent.json must carry ${k}: #16's on-ramp guidance resolves through it`);
+  }
 
-  // The falsifier: the same assertion must reject the mutant this block removed. Re-running the
-  // predicate over a config that carries the shadowing rewrite proves the law is not vacuous.
-  const mutant = { rewrites: [...sources.map((s, i) => ({ source: s, destination: "x" })), { source: "/.well-known/x402", destination: "https://example.invalid/x" }] };
-  const mutantTrespassing = (mutant.rewrites || []).map((r) => r.source).filter((s) => !s.startsWith(API_PATH));
-  assert.deepEqual(
-    mutantTrespassing,
-    ["/.well-known/x402"],
-    "the shadowing rewrite this block removed must be caught by this same assertion; if it is not, the law is vacuous"
-  );
+  // The falsifiers, in both directions. A rewrite naming a shipped manifest must still be caught,
+  // and a catch-all must still be caught — otherwise narrowing this law to let /canon through would
+  // have quietly opened both holes it exists to close.
+  const shadowing = ["/.well-known/x402", "/.well-known/agent.json", "/llms.txt"];
+  for (const s of shadowing) {
+    assert.ok(
+      shipsFileAt(s) && !s.startsWith(API_PATH),
+      `the falsifier needs ${s} to be a shipped file outside the API prefix; if it is not, L42 is vacuous`
+    );
+  }
+  for (const s of ["/", "/:path*", "/(.*)"]) {
+    assert.ok(
+      /^\/(?::path\*|\(\.\*\)|\*)?$/.test(s),
+      `the catch-all predicate must reject ${s}; if it does not, this law is vacuous`
+    );
+  }
+  // And it must NOT reject the nine entries the site actually needs.
+  for (const s of ["/canon", "/tvl.json", "/ai/tools.json", "/unstuck/api/:path*"]) {
+    assert.ok(
+      !/^\/(?::path\*|\(\.\*\)|\*)?$/.test(s),
+      `${s} is a load-bearing rewrite and must not read as a catch-all`
+    );
+  }
 });
 
 // ---------------------------------------------------------------------------
