@@ -27,9 +27,18 @@ const {
  * Returns { valid, reason } — valid=true when the on-chain block proves
  * the asker paid the bounty to the answerer.
  *
+ * On success it also returns `evidence`: the facts the node answered with, so
+ * the store can record WHAT was checked rather than merely that something was.
+ * Every field in it is re-derivable by a stranger from the public ledger
+ * (`block_info` on `evidence.block`), which is what makes it proof rather than
+ * our own say-so. A timestamp is not evidence: two rows on the live network
+ * carry `settlement_verified_at` for blocks that do not exist, and nothing
+ * could tell them from a checked row because only the timestamp was kept
+ * (dhyabi2/unstuck#14).
+ *
  * @param {string} blockHash — 64-char hex Nano block hash
  * @param {object} expected — { amountRaw, fromAddress, toAddress, bountyAsset }
- * @returns {Promise<{valid: boolean, reason?: string}>}
+ * @returns {Promise<{valid: boolean, reason?: string, evidence?: object}>}
  */
 async function verifyBlockPayment(blockHash, expected) {
   if (!blockHash || !/^[0-9A-Fa-f]{64}$/.test(blockHash)) {
@@ -116,7 +125,21 @@ async function verifyBlockPayment(blockHash, expected) {
     }
   }
 
-  return { valid: true };
+  // What the chain actually said. Recorded by the store so that "verified"
+  // means "these facts were read off the ledger", and so that anyone can
+  // re-read them from `block_info` and disagree with us.
+  return {
+    valid: true,
+    evidence: {
+      block: String(blockHash).toUpperCase(),
+      amount_raw: String(sentRaw),
+      source: info.block_account || null,
+      destination: recipient,
+      subtype: "send",
+      confirmed: true,
+      asset: expected.bountyAsset,
+    },
+  };
 }
 
 module.exports = {

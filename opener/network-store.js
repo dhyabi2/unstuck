@@ -34,6 +34,14 @@ const DB_PATH = process.env.NW_DB_PATH || path.join(__dirname, "network-store.db
 const SETTLEMENT_COLUMNS = [
   ["settlement_block", "TEXT"],
   ["settlement_verified_at", "TEXT"],
+  // The proof itself, added after dhyabi2/unstuck#14. `settlement_verified_at`
+  // is a timestamp, and a timestamp is not evidence: rows written before any
+  // verification existed carry one, and nothing could tell them from a checked
+  // row. This column holds what the node answered, so a settlement is verified
+  // only when the facts it was verified against are still on the row. It is
+  // migrated in additively below, because the live store is an existing file
+  // and `CREATE TABLE IF NOT EXISTS` never revisits its shape.
+  ["settlement_verification", "TEXT"],
 ];
 const TYPE_COLUMN = ["type", "TEXT DEFAULT 'ask'"];
 const ACCEPT_TOKEN_COLUMN = ["accept_token", "TEXT"];
@@ -247,7 +255,7 @@ function getAsk(id) {
     acceptedAnswerId: row.accepted_answer_id,
     created_at: row.created_at,
     settlementBlock: row.settlement_block || null,
-    settlementVerifiedAt: row.settlement_verified_at || null,
+    ...settlementView(row),
     answers: answers.map((a) => ({
       id: a.id,
       answerer: a.answerer,
@@ -313,7 +321,7 @@ function listAsks(filter) {
     acceptedAnswerId: r.accepted_answer_id,
     created_at: r.created_at,
     settlementBlock: r.settlement_block || null,
-    settlementVerifiedAt: r.settlement_verified_at || null,
+    ...settlementView(r),
     answerCount: db.prepare("SELECT COUNT(*) n FROM answers WHERE ask_id = ?").get(r.id).n,
     answers: [],  // not loaded in list view for efficiency
   }));
@@ -381,6 +389,90 @@ function acceptAnswer(askId, answerId, acceptedBy, acceptToken) {
 }
 
 // --- Settlement (Block 15) ---
+
+/**
+ * Read a row's settlement and say whether it is PROVEN, in one place, so that
+ * the ask view, the list view and standing cannot drift apart.
+ *
+ * The question "did this block really pay this bounty?" cannot be answered from
+ * the hash's shape. It was answered that way twice - `settled_on_chain` counted
+ * any non-null block (Block 146), then any 64-hex block that was not all one
+ * character (Block 150) - and the second rule is defeated by the next row to
+ * arrive: live ask 585 carries `abcdef0123456789` four times over, which is
+ * well-formed hex with sixteen distinct characters and no block on the ledger.
+ * So shape is not asked here at all. A settlement is verified when the facts it
+ * was checked against are recorded on the row, and otherwise it is not.
+ *
+ * The block is still returned either way. A stranger must be able to enumerate
+ * every row ever written, including the ones we cannot stand behind - what
+ * changes is that we stop calling them verified.
+ */
+function settlementProof(row) {
+  const block = (row && (row.settlement_block || row.settlementBlock)) || null;
+  if (!block) return { settled: false, verified: false, evidence: null, reason: null };
+  const raw = row.settlement_verification || null;
+  if (!raw) {
+    return {
+      settled: true, verified: false, evidence: null,
+      reason: "no on-chain proof is recorded for this block: it was written before a " +
+        "settlement had to be verified against a node (dhyabi2/unstuck#14), so this " +
+        "network does not stand behind it as a payment",
+    };
+  }
+  let evidence;
+  try {
+    evidence = JSON.parse(raw);
+  } catch {
+    return {
+      settled: true, verified: false, evidence: null,
+      reason: "the recorded on-chain proof for this block is not readable",
+    };
+  }
+  if (!evidence || typeof evidence !== "object" || Array.isArray(evidence)) {
+    return {
+      settled: true, verified: false, evidence: null,
+      reason: "the recorded on-chain proof for this block is not an object",
+    };
+  }
+  // The proof must be about THIS block. Evidence naming another block proves
+  // something about that one, which is not what this row claims.
+  if (String(evidence.block || "").toUpperCase() !== String(block).toUpperCase()) {
+    return {
+      settled: true, verified: false, evidence: null,
+      reason: `the recorded proof is for block ${evidence.block || "(none)"}, not ${block}`,
+    };
+  }
+  return { settled: true, verified: true, evidence, reason: null };
+}
+
+/**
+ * The settlement fields as a client reads them, from `settlementProof`, so the
+ * ask view and the list view say the same thing about the same row.
+ *
+ * `settlementVerifiedAt` is published ONLY for a proven settlement. The column
+ * is named for a verification, and on two live rows it holds a time at which no
+ * verification happened; returning it there is the over-report itself, not a
+ * harmless extra field. The evidence is published alongside so a stranger can
+ * re-read the block and contradict us.
+ */
+function settlementView(row) {
+  const proof = settlementProof(row);
+  if (!proof.settled) {
+    return { settlementVerified: false, settlementVerifiedAt: null };
+  }
+  if (!proof.verified) {
+    return {
+      settlementVerified: false,
+      settlementVerifiedAt: null,
+      settlementUnverifiedReason: proof.reason,
+    };
+  }
+  return {
+    settlementVerified: true,
+    settlementVerifiedAt: row.settlement_verified_at || null,
+    settlementEvidence: proof.evidence,
+  };
+}
 
 /**
  * Every refusal a settlement can be given WITHOUT asking a Nano node, in one
@@ -461,8 +553,22 @@ function recordSettlement(askId, blockHash, acceptToken, { now = new Date().toIS
       (verification && verification.reason ? verification.reason : "no verification was supplied")
     );
   }
-  db.prepare("UPDATE asks SET settlement_block = ?, settlement_verified_at = ? WHERE id = ? AND status = 'paid'")
-    .run(blockHash, now, askId);
+  // `valid: true` is a claim; the evidence is what makes it checkable later. A
+  // verification that carries none would write a row indistinguishable from the
+  // two unverifiable ones already on the live network, which is the whole of
+  // #14 - so it is refused here rather than stored and trusted.
+  const evidence = verification.evidence;
+  if (!evidence || typeof evidence !== "object" || Array.isArray(evidence)) {
+    throw new Error("a verified settlement must carry the on-chain evidence it was verified against");
+  }
+  if (String(evidence.block || "").toUpperCase() !== String(blockHash).toUpperCase()) {
+    throw new Error(
+      `the evidence is for block ${evidence.block || "(none)"}, not ${blockHash}`
+    );
+  }
+  db.prepare(
+    "UPDATE asks SET settlement_block = ?, settlement_verified_at = ?, settlement_verification = ? WHERE id = ? AND status = 'paid'"
+  ).run(blockHash, now, JSON.stringify(evidence), askId);
   return { ok: true, settlementBlock: blockHash, settledAt: now };
 }
 
@@ -476,12 +582,16 @@ function recordSettlement(askId, blockHash, acceptToken, { now = new Date().toIS
 function getStanding() {
   const db = getDb();
   const rows = db.prepare(
-    `SELECT a.id, a.asker, ans.answerer FROM asks a
+    `SELECT a.id, a.asker, ans.answerer, a.settlement_block, a.settlement_verification FROM asks a
      JOIN answers ans ON ans.id = a.accepted_answer_id
      WHERE a.status = 'paid' AND a.settlement_block IS NOT NULL`
   ).all();
   const byAnswerer = {};
   for (const r of rows) {
+    // Standing is bought with a payment, so an unprovable settlement buys none.
+    // Both rows with a block on the live network cite a hash that is not on the
+    // ledger, and each of them was giving its answerer standing (#14).
+    if (!settlementProof(r).verified) continue;
     if (!byAnswerer[r.answerer]) byAnswerer[r.answerer] = new Set();
     byAnswerer[r.answerer].add(r.asker);
   }
@@ -500,6 +610,8 @@ module.exports = {
   acceptAnswer,
   recordSettlement,
   settlementPrecheck,
+  settlementProof,
+  settlementView,
   getStanding,
   recordOnboard,
   getOnboard,
