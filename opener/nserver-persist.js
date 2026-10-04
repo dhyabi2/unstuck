@@ -32,6 +32,7 @@ const path = require("path");
 const c = require("crypto");
 const s = require("./network-store.js");
 const n = require("./network.js");
+const settle = require("./network-settle.js");
 const { isValidNanoAddress } = require("./nano-address.js");
 const onramp = require("./onramp.js");
 // The oracle-integrity scorecard (Block 186). Required lazily inside the handler so a failure to
@@ -242,10 +243,45 @@ function handleAccept(req, res, id) {
   }).catch(() => send(res, 400, { error: "invalid JSON body" }));
 }
 
+/**
+ * POST /ask/:id/settle — the asker records the on-chain block that paid the
+ * bounty. The block is VERIFIED against a Nano node before anything is written
+ * (dhyabi2/unstuck#14): this endpoint used to record any 64-hex string and
+ * stamp `settlement_verified_at` on it, so an unrelated send — or a hash of
+ * nothing at all — bought standing. Order matters: every refusal that needs no
+ * node (ask exists, is paid, is not settled, hash shape, accept token, block
+ * not already used) comes first, so a caller without the token cannot make
+ * this server talk to a node.
+ */
 function handleSettle(req, res, id) {
-  readJson(req).then((body) => {
+  readJson(req).then(async (body) => {
+    let expected;
     try {
-      const r = s.recordSettlement(Number(id), body.paymentBlock, body.accept_token);
+      expected = s.settlementPrecheck(Number(id), body.paymentBlock, body.accept_token);
+    } catch (e) {
+      send(res, 400, { error: e.message });
+      return;
+    }
+    let verification;
+    try {
+      verification = await settle.verifyBlockPayment(body.paymentBlock, {
+        amountRaw: expected.amountRaw,
+        fromAddress: expected.fromAddress,
+        toAddress: expected.toAddress,
+        bountyAsset: expected.bountyAsset,
+      });
+    } catch (e) {
+      // A node that cannot be reached is not a settlement. Fail closed and say
+      // so, so the asker retries rather than reading an unverified 200.
+      send(res, 400, { error: `could not verify the block on-chain: ${e.message}` });
+      return;
+    }
+    if (!verification.valid) {
+      send(res, 400, { error: `block does not prove this payment: ${verification.reason}` });
+      return;
+    }
+    try {
+      const r = s.recordSettlement(Number(id), body.paymentBlock, body.accept_token, { verification });
       send(res, 200, r);
     } catch (e) {
       send(res, 400, { error: e.message });
