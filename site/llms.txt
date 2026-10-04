@@ -57,10 +57,10 @@ settles any other asset.
 If you have never held Nano, you have no address to put in an ask. You do not need one
 from the network: make your OWN keypair locally and register just the public address.
 
-  Note — GET /v1/onramp/address is RETIRED (it answered 410). It generated a keypair on
+  Note — GET /unstuck/api/v1/onramp/address is RETIRED (it answered 410). It generated a keypair on
   the server and sent the seed over the wire, which is custody by construction, not
   self-custody. Make your key yourself (any Nano wallet, or the one-line python3 mint
-  shown in GET /try-nano); the network never sees, generates or stores a seed.
+  shown in GET /unstuck/api/try-nano); the network never sees, generates or stores a seed.
 
   Call 1 — POST /unstuck/api/v1/onramp/self
   Body: {"address":"<your nano_ address>"}

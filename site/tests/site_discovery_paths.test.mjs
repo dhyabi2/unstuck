@@ -229,6 +229,73 @@ test("L65 llms.txt prefixes every endpoint path with the API base, never a bare 
   );
 });
 
+/**
+ * Every GET/POST path llms.txt names, including the ones written inline in a sentence.
+ *
+ * L65 above states the law as "never a bare path" but only ever read line-INITIAL endpoint
+ * declarations (`/^(GET|POST)\s+/gm`), so a path mentioned mid-sentence escaped it. Measured
+ * 2026-10-04 against the live origin, with all eight laws in this file green:
+ *
+ *   llms.txt said "the one-line python3 mint shown in GET /try-nano"
+ *   https://getunstuck.space/try-nano                 -> 404
+ *   https://getunstuck.space/unstuck/api/try-nano     -> 200
+ *
+ * and the same file's own line 47 spelled it `GET /unstuck/api/try-nano`. An agent with no
+ * wallet reads that sentence to find out how to make a keypair, follows the path, and gets a
+ * 404 — the exact failure L64/L65 exist to prevent, one regex anchor away from being caught.
+ *
+ * The honest discriminator between an API endpoint and a site asset is not the spelling but
+ * whether the site ships a file at that path: `/nano-onramp-check.js` IS served at the origin
+ * root (200, and site/nano-onramp-check.js exists on disk), while `/try-nano` is a route on the
+ * API and exists as no file at all. So the rule carves nothing out by name.
+ *
+ *   L67 — every GET/POST path named ANYWHERE in llms.txt, inline prose included, either carries
+ *         the API base or is a static file this site actually ships.
+ */
+
+/** Every `GET /x` / `POST /x` in a document, wherever it appears — not only at a line start. */
+function endpointMentions(txt) {
+  return [...txt.matchAll(/\b(GET|POST|PUT|PATCH|DELETE)\s+(\/[A-Za-z0-9._/{}:-]+)/g)].map((m) => ({
+    mention: `${m[1]} ${m[2]}`,
+    path: m[2].replace(/[.,;]+$/, ""),
+  }));
+}
+
+/** Does the site ship a file served at this origin-root path? */
+const shippedAsset = (p) => fs.existsSync(path.join(SITE, p.replace(/^\//, "")));
+
+test("L67 every endpoint path llms.txt names, inline prose included, carries the API base", () => {
+  const mentions = endpointMentions(read("llms.txt"));
+  assert.ok(mentions.length > 10, `llms.txt should document many endpoints, found ${mentions.length}`);
+
+  const unreachable = mentions.filter((m) => !m.path.startsWith(API_PATH) && !shippedAsset(m.path));
+  assert.deepEqual(
+    unreachable.map((m) => m.mention),
+    [],
+    `llms.txt names paths that resolve against the origin root and 404 there, and that this file's ` +
+      `line-anchored L65 check cannot see because they are written inline: ` +
+      `${JSON.stringify(unreachable.map((m) => m.mention))}`
+  );
+});
+
+test("L67 the inline mention this law was written for is caught by that same predicate", () => {
+  // Non-vacuity, and the specific escape: the pre-fix sentence must fail the predicate above.
+  const prefix = "  shown in GET /try-nano); the network never sees, generates or stores a seed.\n";
+  const caught = endpointMentions(prefix).filter((m) => !m.path.startsWith(API_PATH) && !shippedAsset(m.path));
+  assert.deepEqual(
+    caught.map((m) => m.mention),
+    ["GET /try-nano"],
+    "the inline bare path this law was written for must be caught; if it is not, L67 is vacuous"
+  );
+  // And the old anchored regex must NOT catch it — that is why this law had to be added at all.
+  const byOldCheck = [...prefix.matchAll(/^(GET|POST)\s+(\/\S+)/gm)].filter((m) => !m[2].startsWith(API_PATH));
+  assert.deepEqual(byOldCheck, [], "if the line-anchored check already caught an inline mention, L67 is redundant");
+  // A static asset at the origin root must still be allowed: the rule reads the disk, not a name list.
+  const asset = endpointMentions("GET /nano-onramp-check.js    (self-check)\n");
+  assert.equal(asset.length, 1);
+  assert.ok(shippedAsset(asset[0].path), "site/nano-onramp-check.js must exist for L67 to allow the mention");
+});
+
 test("L65 the mutation this block fixed is caught by the same assertions", () => {
   // Non-vacuity: replay the assertions over the pre-fix shapes and prove they would have failed.
   const retiredNames = ["/unstuck/llms.txt", "/unstuck/agent.json", "/unstuck/ledger.json"];
