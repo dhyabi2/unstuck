@@ -180,7 +180,23 @@ async function verifyNanoPayment(blockHash) {
   const block = info.contents || info.block;
   if (!block || block.type !== "state") return { valid: false, reason: "not a state block" };
   if (block.link_as_account !== NANO_ADDRESS) return { valid: false, reason: "not sent to bridge address" };
-  const amount = BigInt(block.balance) - BigInt(info.previous_balance || "0");
+  // `contents.balance` is the payer's balance AFTER the send and a `block_info`
+  // answer carries no `previous_balance`, so this read the payer's leftover
+  // balance and recorded it as the amount paid - into the payments table, which
+  // is the record this bridge settles from. The node reports what the block
+  // moved in its own top-level `amount`. (Same defect as opener/bridge.js.)
+  if (info.subtype && info.subtype !== "send") {
+    return { valid: false, reason: `not a send (subtype ${info.subtype})` };
+  }
+  if (info.amount === undefined || info.amount === null || info.amount === "") {
+    return { valid: false, reason: "node did not report the amount moved" };
+  }
+  let amount;
+  try {
+    amount = BigInt(info.amount);
+  } catch {
+    return { valid: false, reason: "amount is not an integer number of raw" };
+  }
   if (amount <= BigInt(0)) return { valid: false, reason: "zero or negative amount" };
   return { valid: true, account: block.account, amount_raw: amount.toString(), block };
 }

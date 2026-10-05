@@ -133,8 +133,33 @@ async function verifyNanoPayment(blockHash, expectedAmountRaw) {
   if (block.link_as_account !== NANO_ADDRESS) {
     return { valid: false, reason: "not sent to bridge address" };
   }
-  // Check the amount is sufficient
-  const amount = BigInt(block.balance) - BigInt(info.previous_balance || "0");
+  // How much did this block actually move to us?
+  //
+  // `contents.balance` is the PAYER'S BALANCE AFTER the send, not the amount
+  // sent, and a `block_info` answer has no `previous_balance` field at all - so
+  // `info.previous_balance || "0"` was always "0" and this read the payer's
+  // leftover balance and called it the payment. Both directions are wrong:
+  //
+  //   pay 0.000001 XNO out of a 100 XNO account -> amount read as 99.999999 XNO,
+  //   so any price up to that is "paid" by the floor payment; and
+  //
+  //   pay 1 XNO emptying the account            -> balance after is 0, so a real
+  //   payment is refused as "zero or negative amount".
+  //
+  // The node reports what the block moved in its own top-level `amount` field.
+  // That is the number to read, and `subtype` says which way it moved.
+  if (info.subtype && info.subtype !== "send") {
+    return { valid: false, reason: `not a send (subtype ${info.subtype})` };
+  }
+  if (info.amount === undefined || info.amount === null || info.amount === "") {
+    return { valid: false, reason: "node did not report the amount moved" };
+  }
+  let amount;
+  try {
+    amount = BigInt(info.amount);
+  } catch {
+    return { valid: false, reason: "amount is not an integer number of raw" };
+  }
   if (amount <= BigInt(0)) {
     return { valid: false, reason: "zero or negative amount" };
   }
