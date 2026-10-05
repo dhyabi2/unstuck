@@ -388,11 +388,26 @@ function acceptAnswer(askId, answerId, acceptedBy, acceptToken) {
  * The block hash is the proof the asker actually sent the bounty on-chain.
  * Callers should verify it against the Nano ledger (verifyBlockPayment)
  * before recording; the store records the block and the verification time.
+ *
+ * Authority is the ask's accept token, exactly as it is for acceptAnswer
+ * (Forge #1) — never a caller-claimed `acceptedBy` address, since anyone can
+ * name an asker. Found by iris 2026-10-03 (unstuck#1107): the running server
+ * carried an extra, uncommitted accept_token gate on this path; the committed
+ * code let anyone who knew a paid ask's id settle it with any 64-hex hash.
  */
-function recordSettlement(askId, blockHash, { now = new Date().toISOString() } = {}) {
+function recordSettlement(askId, blockHash, { now = new Date().toISOString(), acceptedBy, acceptToken } = {}) {
   const db = getDb();
   const ask = getAsk(askId);
   if (!ask) throw new Error(`no ask ${askId}`);
+  if (typeof acceptedBy !== "string" || !acceptedBy.startsWith("nano_")) {
+    throw new Error("settling requires the asker's Nano address");
+  }
+  if (acceptedBy !== ask.asker) {
+    throw new Error("only the asker can record a settlement");
+  }
+  if (typeof acceptToken !== "string" || acceptToken.length === 0 || acceptToken !== ask.acceptToken) {
+    throw new Error("settling requires the ask's accept token (returned at create time)");
+  }
   if (ask.status !== "paid") {
     throw new Error(`cannot settle an ask that is ${ask.status}, only paid asks settle`);
   }

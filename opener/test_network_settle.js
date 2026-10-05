@@ -9,6 +9,10 @@
  *   L13 — The network store's on-chain standing counts only paid asks with a
  *         recorded settlement block, per distinct asker (never volume), and the
  *         server exposes it via GET /standing and POST /ask/:id/settle.
+ *   L15 — Settling requires the ask's own accept token, exactly like accepting
+ *         an answer does: a stranger who only knows the ask id, a wrong token,
+ *         or a different (even valid) asker's token can never record a
+ *         settlement (unstuck#1107, found by iris 2026-10-03).
  *
  * Method: use a temp DB, mock no RPC (settlement recording is local, the block
  * hash is the proof the caller verified). Verify refusal boundaries and that
@@ -65,7 +69,8 @@ async function run() {
     // Create an ask, add an answer, do NOT accept — settlement must be refused (ask still open)
     const a1 = s.createAsk({ asker: nanoA, title: "t1", body: "b1", bountyRaw: bounty });
     const ans1 = s.addAnswer(a1.id, { answerer: nanoB, body: "answer 1: reboot the node clears the cache" });
-    try { s.recordSettlement(a1.id, HASH); failed++; console.log("FAIL L12 open ask settled"); }
+    const auth1 = { acceptedBy: nanoA, acceptToken: a1.accept_token };
+    try { s.recordSettlement(a1.id, HASH, auth1); failed++; console.log("FAIL L12 open ask settled"); }
     catch (e) { check("L12 cannot settle an open ask", /paid/.test(e.message), e.message); }
 
     // Accept it -> paid
@@ -73,20 +78,33 @@ async function run() {
     const paid1 = s.getAsk(a1.id);
     check("L12 ask is paid after acceptance", paid1.status === "paid");
 
-    // Record a valid settlement
-    const rec = s.recordSettlement(a1.id, HASH);
+    // --- L15: settling with no / wrong / someone-else's token is refused ---
+    // a1 is now paid — this is exactly the live window unstuck#1107 found exploitable.
+    try { s.recordSettlement(a1.id, HASH); failed++; console.log("FAIL L15 settle with no auth at all"); }
+    catch (e) { check("L15 settle with no acceptedBy/token refused", /Nano address/.test(e.message), e.message); }
+    try { s.recordSettlement(a1.id, HASH, { acceptedBy: nanoB, acceptToken: a1.accept_token }); failed++; console.log("FAIL L15 settle as non-asker"); }
+    catch (e) { check("L15 settle claiming a different asker refused", /only the asker/.test(e.message), e.message); }
+    try { s.recordSettlement(a1.id, HASH, { acceptedBy: nanoA, acceptToken: "not-the-real-token" }); failed++; console.log("FAIL L15 settle wrong token"); }
+    catch (e) { check("L15 settle with wrong accept token refused", /accept token/.test(e.message), e.message); }
+    const a1b = s.createAsk({ asker: nanoC, title: "t1b", body: "a second ask with its own token", bountyRaw: bounty });
+    try { s.recordSettlement(a1.id, HASH, { acceptedBy: nanoA, acceptToken: a1b.accept_token }); failed++; console.log("FAIL L15 settle with another ask's valid token"); }
+    catch (e) { check("L15 settle with a DIFFERENT ask's own valid token refused", /accept token/.test(e.message), e.message); }
+    check("L15 nothing settled by any of the attempts above", s.getAsk(a1.id).settlementBlock == null, String(s.getAsk(a1.id).settlementBlock));
+
+    // Record a valid settlement, with the ask's own token
+    const rec = s.recordSettlement(a1.id, HASH, auth1);
     check("L12 settlement recorded ok", rec.ok === true);
     check("L12 settlement block stored", rec.settlementBlock === HASH);
 
-    // Double settle refused
-    try { s.recordSettlement(a1.id, HASH2); failed++; console.log("FAIL L12 double settle"); }
+    // Double settle refused (even with valid auth)
+    try { s.recordSettlement(a1.id, HASH2, auth1); failed++; console.log("FAIL L12 double settle"); }
     catch (e) { check("L12 double settle refused", /already settled/.test(e.message), e.message); }
 
     // Bad-format block refused
     const a2 = s.createAsk({ asker: nanoA, title: "t2", body: "b2", bountyRaw: bounty });
     const ans2 = s.addAnswer(a2.id, { answerer: nanoB, body: "answer 2: switch to a fresh RPC endpoint" });
     s.acceptAnswer(a2.id, ans2.answerId, nanoA, a2.accept_token);
-    try { s.recordSettlement(a2.id, "short-hash"); failed++; console.log("FAIL L12 bad hash accepted"); }
+    try { s.recordSettlement(a2.id, "short-hash", { acceptedBy: nanoA, acceptToken: a2.accept_token }); failed++; console.log("FAIL L12 bad hash accepted"); }
     catch (e) { check("L12 bad block hash refused", /64-hex/.test(e.message), e.message); }
 
     // --- Persistence: settlement survives close/reopen ---
@@ -107,7 +125,7 @@ async function run() {
     const a3 = s2.createAsk({ asker: nanoC, title: "t3", body: "b3", bountyRaw: bounty });
     const ans3 = s2.addAnswer(a3.id, { answerer: nanoB, body: "answer 3: verify against a second node first" });
     s2.acceptAnswer(a3.id, ans3.answerId, nanoC, a3.accept_token);
-    s2.recordSettlement(a3.id, HASH2);
+    s2.recordSettlement(a3.id, HASH2, { acceptedBy: nanoC, acceptToken: a3.accept_token });
     const st2 = s2.getStanding();
     check("L13 distinct askers counted, not volume", st2[nanoB] === 2, JSON.stringify(st2));
 
@@ -117,7 +135,7 @@ async function run() {
     const a4 = s2.createAsk({ asker: nanoA, title: "t4", body: "b4", bountyRaw: bounty });
     const ans4 = s2.addAnswer(a4.id, { answerer: nanoB, body: "answer 4: the block hash matches the confirmed send" });
     s2.acceptAnswer(a4.id, ans4.answerId, nanoA, a4.accept_token);
-    s2.recordSettlement(a4.id, "C".repeat(64));
+    s2.recordSettlement(a4.id, "C".repeat(64), { acceptedBy: nanoA, acceptToken: a4.accept_token });
     const st3 = s2.getStanding();
     check("L13 same asker twice counts once (distinct, not volume)", st3[nanoB] === 2, JSON.stringify(st3));
 
@@ -168,7 +186,17 @@ async function run() {
     const aid = JSON.parse(ans.body).answerId;
     const acc = await req(PORT, "POST", `/ask/${cid}/accept`, { acceptedBy: nanoA, answerId: aid, accept_token: cTok });
     check("L13 accept via HTTP 200", acc.status === 200, String(acc.status));
-    const st = await req(PORT, "POST", `/ask/${cid}/settle`, { paymentBlock: "D".repeat(64), acceptedBy: nanoA });
+
+    // --- L15 over HTTP: this is the exact exploit iris found live (unstuck#1107) ---
+    // Anyone who only knows the (public) ask id used to be able to settle it.
+    const stNoAuth = await req(PORT, "POST", `/ask/${cid}/settle`, { paymentBlock: "D".repeat(64) });
+    check("L15 settle via HTTP with no accept_token -> 403", stNoAuth.status === 403, String(stNoAuth.status) + " " + stNoAuth.body);
+    const stWrongTok = await req(PORT, "POST", `/ask/${cid}/settle`, { paymentBlock: "D".repeat(64), acceptedBy: nanoA, accept_token: "guessed-wrong" });
+    check("L15 settle via HTTP with wrong accept_token -> 403", stWrongTok.status === 403, String(stWrongTok.status) + " " + stWrongTok.body);
+    const stillUnsettled = await req(PORT, "GET", `/ask/${cid}`);
+    check("L15 ask still unsettled after both bad attempts", JSON.parse(stillUnsettled.body).ask.settlementBlock == null, stillUnsettled.body);
+
+    const st = await req(PORT, "POST", `/ask/${cid}/settle`, { paymentBlock: "D".repeat(64), acceptedBy: nanoA, accept_token: cTok });
     check("L13 settle via HTTP 200", st.status === 200, String(st.status) + " " + st.body);
     const stResp = await req(PORT, "GET", "/standing");
     check("L13 GET /standing 200", stResp.status === 200, String(stResp.status));
@@ -176,14 +204,17 @@ async function run() {
     check("L13 standing has nanoB >= 2", stData.standing[nanoB] >= 2, JSON.stringify(stData.standing));
     check("L13 standing asset is XNO", stData.asset === "XNO", String(stData.asset));
 
-    // settle non-paid (open) ask via HTTP -> 400
+    // settle non-paid (open) ask via HTTP -> 400 (correct auth supplied, so the
+    // refusal reached is the status check, not the identity check)
     const c2 = await req(PORT, "POST", "/ask", { asker: nanoA, title: "open", body: "not paid", bounty_raw: bounty });
-    const c2id = JSON.parse(c2.body).id;
-    const bad = await req(PORT, "POST", `/ask/${c2id}/settle`, { paymentBlock: "E".repeat(64) });
+    const c2Body = JSON.parse(c2.body);
+    const c2id = c2Body.id;
+    const bad = await req(PORT, "POST", `/ask/${c2id}/settle`, { paymentBlock: "E".repeat(64), acceptedBy: nanoA, accept_token: c2Body.accept_token });
     check("L13 settle open ask via HTTP 400", bad.status === 400, String(bad.status) + " " + bad.body);
 
-    // bad block hash via HTTP -> 400
-    const badhash = await req(PORT, "POST", `/ask/${cid}/settle`, { paymentBlock: "nope" });
+    // bad block hash via HTTP -> 400 (correct auth supplied; cid is already settled
+    // above, so this also re-confirms double-settle still reads 400 over HTTP)
+    const badhash = await req(PORT, "POST", `/ask/${cid}/settle`, { paymentBlock: "nope", acceptedBy: nanoA, accept_token: cTok });
     check("L13 settle bad hash via HTTP 400", badhash.status === 400, String(badhash.status) + " " + badhash.body);
 
     nw.s.closeDb();

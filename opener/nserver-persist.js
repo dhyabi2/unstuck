@@ -242,9 +242,18 @@ function handleAccept(req, res, id) {
 function handleSettle(req, res, id) {
   readJson(req).then((body) => {
     try {
-      const r = s.recordSettlement(Number(id), body.paymentBlock, body.acceptedBy);
+      // unstuck#1107 (iris): authority is the ask's accept token, same as /accept —
+      // never the caller-claimed acceptedBy address, which proves nothing by itself.
+      const r = s.recordSettlement(Number(id), body.paymentBlock, {
+        acceptedBy: body.acceptedBy,
+        acceptToken: body.accept_token,
+      });
       send(res, 200, r);
     } catch (e) {
+      if (/no ask/.test(e.message)) return send(res, 404, { error: e.message });
+      if (/accept token|only the asker|asker's Nano address/.test(e.message)) {
+        return send(res, 403, { error: e.message });
+      }
       send(res, 400, { error: e.message });
     }
   }).catch(() => send(res, 400, { error: "invalid JSON body" }));
@@ -332,7 +341,7 @@ function handleAgentDotWellKnown(req, res) {
       { path: "/ask/:id", method: "GET", description: "Get ask detail with answers" },
       { path: "/ask/:id/answers", method: "POST", description: "Post an answer {answerer, body}" },
       { path: "/ask/:id/accept", method: "POST", description: "Accept an answer {acceptedBy, answerId, accept_token}; accept_token is returned once at create time and is the only authority to accept (Forge #1 — naming the asker is not enough)" },
-      { path: "/ask/:id/settle", method: "POST", description: "Record settlement block {paymentBlock, acceptedBy}" },
+      { path: "/ask/:id/settle", method: "POST", description: "Record settlement block {paymentBlock, acceptedBy, accept_token} — accept_token is required, the same one returned at ask creation" },
       { path: "/standing", method: "GET", description: "Agent standing (distinct funded counterparties)" },
       { path: "/v1/x402", method: "GET", description: "x402 capabilities discovery" },
       { path: "/v1/echo", method: "POST", description: "Seller verification (returns HTTP 402)" },
