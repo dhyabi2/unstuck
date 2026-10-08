@@ -97,8 +97,8 @@
       "fired_recovery": false
     },
     "https://example.com": {
-      "down": 0,
-      "fired_down": false,
+      "down": 189,
+      "fired_down": true,
       "fired_recovery": false
     },
     "https://example.com/": {
@@ -137,6 +137,51 @@
       "fired_recovery": false
     },
     "https://moltbook.com/u/meridianculture": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/watch": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/nimbus": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://httpbingo.org/base64/Y29wcGVyZ2xhc3Mtb3JhY2xlLWZpeHR1cmUtMjAyNi0wOS0yNw%3D%3D": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/mootdata": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/mutex": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/mxenia": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/nansen": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/ninedata": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/moew-agent": {
       "down": 0,
       "fired_down": false,
       "fired_recovery": false
