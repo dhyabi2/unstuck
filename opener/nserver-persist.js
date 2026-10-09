@@ -31,6 +31,7 @@ const path = require("path");
 const c = require("crypto");
 const s = require("./network-store.js");
 const n = require("./network.js");
+const settle = require("./network-settle.js");
 const onramp = require("./onramp.js");
 // The oracle-integrity scorecard (Block 186). Required lazily inside the handler so a failure to
 // load it cannot stop the ask/answer network from serving — the network is the thing that matters.
@@ -239,15 +240,54 @@ function handleAccept(req, res, id) {
   }).catch(() => send(res, 400, { error: "invalid JSON body" }));
 }
 
+/**
+ * POST /ask/:id/settle — the asker records the on-chain block that paid the bounty.
+ *
+ * The block is read off a Nano node before anything is written. It used to be
+ * taken on the asker's word: any 64-hex string was stored with a
+ * `settlement_verified_at` beside it and counted towards the answerer's
+ * standing, which is the whole of dhyabi2/unstuck#14 — the network's published
+ * claim is on-chain settlement, and two live rows cite blocks no node has.
+ *
+ * Order matters. Authority is checked first, against the store, so that a
+ * caller who holds no accept token cannot make this server talk to a node at
+ * all; only then is the block fetched. The store re-checks everything it was
+ * told, so it is safe whichever way it is reached.
+ */
 function handleSettle(req, res, id) {
-  readJson(req).then((body) => {
+  readJson(req).then(async (body) => {
+    const askId = Number(id);
+    // unstuck#1107 (iris): authority is the ask's accept token, same as /accept —
+    // never the caller-claimed acceptedBy address, which proves nothing by itself.
+    const auth = { acceptedBy: body.acceptedBy, acceptToken: body.accept_token };
+    let expected;
     try {
-      // unstuck#1107 (iris): authority is the ask's accept token, same as /accept —
-      // never the caller-claimed acceptedBy address, which proves nothing by itself.
-      const r = s.recordSettlement(Number(id), body.paymentBlock, {
-        acceptedBy: body.acceptedBy,
-        acceptToken: body.accept_token,
+      expected = s.settlementPrecheck(askId, body.paymentBlock, auth);
+    } catch (e) {
+      if (/no ask/.test(e.message)) return send(res, 404, { error: e.message });
+      if (/accept token|only the asker|asker's Nano address/.test(e.message)) {
+        return send(res, 403, { error: e.message });
+      }
+      return send(res, 400, { error: e.message });
+    }
+    let verification;
+    try {
+      verification = await settle.verifyBlockPayment(body.paymentBlock, {
+        amountRaw: expected.amountRaw,
+        fromAddress: expected.fromAddress,
+        toAddress: expected.toAddress,
+        bountyAsset: expected.bountyAsset,
       });
+    } catch (e) {
+      // A node that cannot be reached is not a settlement. Fail closed and say
+      // so, so the asker retries rather than reading an unverified 200.
+      return send(res, 400, { error: `could not verify the block on-chain: ${e.message}` });
+    }
+    if (!verification.valid) {
+      return send(res, 400, { error: `block does not prove this payment: ${verification.reason}` });
+    }
+    try {
+      const r = s.recordSettlement(askId, body.paymentBlock, { ...auth, verification });
       send(res, 200, r);
     } catch (e) {
       if (/no ask/.test(e.message)) return send(res, 404, { error: e.message });
