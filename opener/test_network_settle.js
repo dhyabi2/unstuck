@@ -13,10 +13,19 @@
  *         an answer does: a stranger who only knows the ask id, a wrong token,
  *         or a different (even valid) asker's token can never record a
  *         settlement (unstuck#1107, found by iris 2026-10-03).
+ *   L16 — A settlement is recorded only after the block has been read off the
+ *         ledger and proves THIS payment: confirmed, a send, from the asker, to
+ *         the accepted answerer, for at least the bounty, and not already
+ *         settling another ask. A well-formed hash of a block no node has
+ *         records nothing and earns no standing (dhyabi2/unstuck#14).
  *
- * Method: use a temp DB, mock no RPC (settlement recording is local, the block
- * hash is the proof the caller verified). Verify refusal boundaries and that
- * settlement survives a db close/reopen.
+ * Method: use a temp DB and a mocked `rpc._rpcCall` standing in for a node, so
+ * the on-chain checks run end to end without network. The earlier version of
+ * this file mocked no RPC and said "settlement recording is local, the block
+ * hash is the proof the caller verified" — nothing verified it, and the test
+ * certified that: it settled an ask with the made-up block "D"x64 and asserted
+ * HTTP 200. Verify refusal boundaries and that settlement survives a
+ * db close/reopen.
  */
 
 const s = require("./network-store.js");
@@ -39,6 +48,48 @@ const nanoC = "nano_3zqdw3qf1z8k3jx8jintaiwpo3yz7zqh1me4ph5j439ts8hsppx8dzy4xcsz
 const bounty = "1000000000000000000000000";
 const HASH = "A".repeat(64);
 const HASH2 = "B".repeat(64);
+const HASH3 = "C".repeat(64);
+
+// A stand-in ledger: hash (upper case) -> what `block_info` answers. A hash not
+// in here is a block no node has, which is exactly what #14 was settled with.
+const CHAIN = {};
+
+/** A confirmed send, as a node reports one. */
+function chainSend(hash, { from, to, amount, confirmed = "true", subtype = "send" }) {
+  CHAIN[hash.toUpperCase()] = {
+    hash: hash.toUpperCase(),
+    block_account: from,
+    link_as_account: to,
+    amount,
+    confirmed,
+    subtype,
+  };
+}
+
+let rpcCalls = 0;
+function installChain() {
+  rpc._rpcCall = async (url, payload) => {
+    rpcCalls++;
+    if (payload.action !== "block_info") return { error: `unexpected action ${payload.action}` };
+    return CHAIN[String(payload.hash).toUpperCase()] || { error: "Block not found" };
+  };
+}
+
+/**
+ * Settle through the store the way the HTTP handler does: precheck, read the
+ * block off the (mocked) ledger, then record. Any hand-built verification would
+ * be testing a fiction, so this runs the real verifier.
+ */
+async function verifiedSettle(store, askId, blockHash, auth) {
+  const expected = store.settlementPrecheck(askId, blockHash, auth);
+  const verification = await settle.verifyBlockPayment(blockHash, {
+    amountRaw: expected.amountRaw,
+    fromAddress: expected.fromAddress,
+    toAddress: expected.toAddress,
+    bountyAsset: expected.bountyAsset,
+  });
+  return store.recordSettlement(askId, blockHash, { ...auth, verification });
+}
 
 function req(port, method, path, body) {
   return new Promise((resolve, reject) => {
@@ -59,6 +110,7 @@ function req(port, method, path, body) {
 async function run() {
   try {
     s.resetDb();
+    installChain();
 
     // --- L12: recordSettlement boundaries ---
 
@@ -91,13 +143,33 @@ async function run() {
     catch (e) { check("L15 settle with a DIFFERENT ask's own valid token refused", /accept token/.test(e.message), e.message); }
     check("L15 nothing settled by any of the attempts above", s.getAsk(a1.id).settlementBlock == null, String(s.getAsk(a1.id).settlementBlock));
 
-    // Record a valid settlement, with the ask's own token
-    const rec = s.recordSettlement(a1.id, HASH, auth1);
+    // --- L16: the asker's own token is not enough; the ledger has to agree ---
+    // This is dhyabi2/unstuck#14. HASH is well-formed and no node has it.
+    try { await verifiedSettle(s, a1.id, HASH, auth1); failed++; console.log("FAIL L16 settled a block no node has"); }
+    catch (e) { check("L16 a block the ledger does not have is refused", /verified on-chain|block not found/.test(e.message), e.message); }
+    check("L16 nothing written for the unknown block", s.getAsk(a1.id).settlementBlock == null, String(s.getAsk(a1.id).settlementBlock));
+    try { s.recordSettlement(a1.id, HASH, auth1); failed++; console.log("FAIL L16 recorded with no verification at all"); }
+    catch (e) { check("L16 recordSettlement with no verification refused", /verified on-chain/.test(e.message), e.message); }
+
+    // A verification read for one block cannot settle a different one.
+    chainSend(HASH2, { from: nanoA, to: nanoB, amount: bounty });
+    const vForHash2 = await settle.verifyBlockPayment(HASH2, {
+      amountRaw: bounty, fromAddress: nanoA, toAddress: nanoB, bountyAsset: "XNO",
+    });
+    check("L16 the real block verifies", vForHash2.valid === true, JSON.stringify(vForHash2));
+    try {
+      s.recordSettlement(a1.id, HASH, { ...auth1, verification: vForHash2 });
+      failed++; console.log("FAIL L16 a verification for another block settled this one");
+    } catch (e) { check("L16 a verification naming another block is refused", /is for block/.test(e.message), e.message); }
+
+    // Now put the real block on the ledger and settle with it.
+    chainSend(HASH, { from: nanoA, to: nanoB, amount: bounty });
+    const rec = await verifiedSettle(s, a1.id, HASH, auth1);
     check("L12 settlement recorded ok", rec.ok === true);
     check("L12 settlement block stored", rec.settlementBlock === HASH);
 
-    // Double settle refused (even with valid auth)
-    try { s.recordSettlement(a1.id, HASH2, auth1); failed++; console.log("FAIL L12 double settle"); }
+    // Double settle refused (even with valid auth and a real second block)
+    try { await verifiedSettle(s, a1.id, HASH2, auth1); failed++; console.log("FAIL L12 double settle"); }
     catch (e) { check("L12 double settle refused", /already settled/.test(e.message), e.message); }
 
     // Bad-format block refused
@@ -106,6 +178,12 @@ async function run() {
     s.acceptAnswer(a2.id, ans2.answerId, nanoA, a2.accept_token);
     try { s.recordSettlement(a2.id, "short-hash", { acceptedBy: nanoA, acceptToken: a2.accept_token }); failed++; console.log("FAIL L12 bad hash accepted"); }
     catch (e) { check("L12 bad block hash refused", /64-hex/.test(e.message), e.message); }
+
+    // L16: one block settles one ask. HASH already settles a1; a2 is paid to the
+    // same answerer by the same asker, so without this the one send would be
+    // counted twice and standing bought twice.
+    try { await verifiedSettle(s, a2.id, HASH, { acceptedBy: nanoA, acceptToken: a2.accept_token }); failed++; console.log("FAIL L16 one block settled two asks"); }
+    catch (e) { check("L16 a block already settling another ask is refused", /one block settles one ask/.test(e.message), e.message); }
 
     // --- Persistence: settlement survives close/reopen ---
     s.closeDb();
@@ -125,7 +203,8 @@ async function run() {
     const a3 = s2.createAsk({ asker: nanoC, title: "t3", body: "b3", bountyRaw: bounty });
     const ans3 = s2.addAnswer(a3.id, { answerer: nanoB, body: "answer 3: verify against a second node first" });
     s2.acceptAnswer(a3.id, ans3.answerId, nanoC, a3.accept_token);
-    s2.recordSettlement(a3.id, HASH2, { acceptedBy: nanoC, acceptToken: a3.accept_token });
+    chainSend(HASH2, { from: nanoC, to: nanoB, amount: bounty });
+    await verifiedSettle(s2, a3.id, HASH2, { acceptedBy: nanoC, acceptToken: a3.accept_token });
     const st2 = s2.getStanding();
     check("L13 distinct askers counted, not volume", st2[nanoB] === 2, JSON.stringify(st2));
 
@@ -135,7 +214,8 @@ async function run() {
     const a4 = s2.createAsk({ asker: nanoA, title: "t4", body: "b4", bountyRaw: bounty });
     const ans4 = s2.addAnswer(a4.id, { answerer: nanoB, body: "answer 4: the block hash matches the confirmed send" });
     s2.acceptAnswer(a4.id, ans4.answerId, nanoA, a4.accept_token);
-    s2.recordSettlement(a4.id, "C".repeat(64), { acceptedBy: nanoA, acceptToken: a4.accept_token });
+    chainSend(HASH3, { from: nanoA, to: nanoB, amount: bounty });
+    await verifiedSettle(s2, a4.id, HASH3, { acceptedBy: nanoA, acceptToken: a4.accept_token });
     const st3 = s2.getStanding();
     check("L13 same asker twice counts once (distinct, not volume)", st3[nanoB] === 2, JSON.stringify(st3));
 
@@ -148,6 +228,8 @@ async function run() {
           account: nanoA,
           amount: bounty,
           link_as_account: nanoB,
+          confirmed: "true",
+          subtype: "send",
         };
       }
     };
@@ -170,6 +252,47 @@ async function run() {
     rpc._rpcCall = async () => ({ error: "Block not found" });
     const vmiss = await settle.verifyBlockPayment("A".repeat(64), { amountRaw: "1", toAddress: nanoB, fromAddress: nanoA, bountyAsset: "XNO" });
     check("L14 missing block rejected", vmiss.valid === false && /not found/.test(vmiss.reason), vmiss.reason);
+
+    // L16 at the verifier: an unconfirmed block can still be forked away.
+    rpc._rpcCall = async () => ({ hash: VALID_HASH, block_account: nanoA, amount: bounty, link_as_account: nanoB, confirmed: "false", subtype: "send" });
+    const vunconf = await settle.verifyBlockPayment(VALID_HASH, { amountRaw: bounty, toAddress: nanoB, fromAddress: nanoA, bountyAsset: "XNO" });
+    check("L16 unconfirmed block rejected", vunconf.valid === false && /not confirmed/.test(vunconf.reason), vunconf.reason);
+
+    // A node too old to answer `confirmed` is not a yes either.
+    rpc._rpcCall = async () => ({ hash: VALID_HASH, block_account: nanoA, amount: bounty, link_as_account: nanoB, subtype: "send" });
+    const vnoconf = await settle.verifyBlockPayment(VALID_HASH, { amountRaw: bounty, toAddress: nanoB, fromAddress: nanoA, bountyAsset: "XNO" });
+    check("L16 a node that does not say `confirmed` is rejected", vnoconf.valid === false && /not confirmed/.test(vnoconf.reason), vnoconf.reason);
+
+    // A receive block carries a link_as_account too: it is the source HASH read
+    // as an account, a well-formed nano_ address belonging to nobody. The node
+    // names the direction, so ask it.
+    rpc._rpcCall = async () => ({ hash: VALID_HASH, block_account: nanoA, amount: bounty, link_as_account: nanoB, confirmed: "true", subtype: "receive" });
+    const vrecv = await settle.verifyBlockPayment(VALID_HASH, { amountRaw: bounty, toAddress: nanoB, fromAddress: nanoA, bountyAsset: "XNO" });
+    check("L16 a receive block is not a settlement", vrecv.valid === false && /not a send/.test(vrecv.reason), vrecv.reason);
+
+    // Short of the bounty.
+    rpc._rpcCall = async () => ({ hash: VALID_HASH, block_account: nanoA, amount: "1", link_as_account: nanoB, confirmed: "true", subtype: "send" });
+    const vshort = await settle.verifyBlockPayment(VALID_HASH, { amountRaw: bounty, toAddress: nanoB, fromAddress: nanoA, bountyAsset: "XNO" });
+    check("L16 a block short of the bounty rejected", vshort.valid === false && /less than expected/.test(vshort.reason), vshort.reason);
+
+    // Sent by somebody other than the asker.
+    rpc._rpcCall = async () => ({ hash: VALID_HASH, block_account: nanoC, amount: bounty, link_as_account: nanoB, confirmed: "true", subtype: "send" });
+    const vfrom = await settle.verifyBlockPayment(VALID_HASH, { amountRaw: bounty, toAddress: nanoB, fromAddress: nanoA, bountyAsset: "XNO" });
+    check("L16 a block the asker did not send rejected", vfrom.valid === false && /does not match asker/.test(vfrom.reason), vfrom.reason);
+
+    // And a valid one carries the evidence it was checked against, so a reader
+    // can re-derive the verdict from the public ledger instead of trusting us.
+    rpc._rpcCall = async () => ({ hash: VALID_HASH, block_account: nanoA, amount: bounty, link_as_account: nanoB, confirmed: "true", subtype: "send" });
+    const vev = await settle.verifyBlockPayment(VALID_HASH, { amountRaw: bounty, toAddress: nanoB, fromAddress: nanoA, bountyAsset: "XNO" });
+    check("L16 a verified block reports its evidence", vev.valid === true
+      && vev.evidence.block === VALID_HASH.toUpperCase()
+      && vev.evidence.amount_raw === bounty
+      && vev.evidence.source === nanoA
+      && vev.evidence.destination === nanoB
+      && vev.evidence.subtype === "send"
+      && vev.evidence.confirmed === true, JSON.stringify(vev));
+
+    installChain();
 
     // --- Server endpoints ---
     const nw = require("./nserver-persist.js");
@@ -196,7 +319,37 @@ async function run() {
     const stillUnsettled = await req(PORT, "GET", `/ask/${cid}`);
     check("L15 ask still unsettled after both bad attempts", JSON.parse(stillUnsettled.body).ask.settlementBlock == null, stillUnsettled.body);
 
-    const st = await req(PORT, "POST", `/ask/${cid}/settle`, { paymentBlock: "D".repeat(64), acceptedBy: nanoA, accept_token: cTok });
+    // L16 over HTTP: no caller without the token may make this server talk to a
+    // node. The two refusals above are the store's, so no block_info went out.
+    const callsBeforeAuth = rpcCalls;
+    await req(PORT, "POST", `/ask/${cid}/settle`, { paymentBlock: "D".repeat(64) });
+    check("L16 an unauthorised settle never reaches the node", rpcCalls === callsBeforeAuth, `${rpcCalls - callsBeforeAuth} RPC call(s)`);
+
+    // --- L16 over HTTP: this is dhyabi2/unstuck#14 itself ---
+    // "D"x64 is well-formed hex and no node has it. The previous version of this
+    // test sent exactly this block, with exactly this valid token, and asserted
+    // HTTP 200 - and the live network carries two rows of this shape, each with
+    // a settlement_verified_at and each counted towards standing.
+    const standingBefore = JSON.parse((await req(PORT, "GET", "/standing")).body).standing[nanoB] || 0;
+    const ghost = await req(PORT, "POST", `/ask/${cid}/settle`, { paymentBlock: "D".repeat(64), acceptedBy: nanoA, accept_token: cTok });
+    check("L16 settle with a block no node has -> 400", ghost.status === 400, String(ghost.status) + " " + ghost.body);
+    check("L16 the refusal says the block is not on the ledger", /not found/.test(ghost.body), ghost.body);
+    const ghostAsk = await req(PORT, "GET", `/ask/${cid}`);
+    check("L16 nothing written for the ghost block", JSON.parse(ghostAsk.body).ask.settlementBlock == null, ghostAsk.body);
+    check("L16 no settlement_verified_at either", JSON.parse(ghostAsk.body).ask.settlementVerifiedAt == null, ghostAsk.body);
+    const standingAfterGhost = JSON.parse((await req(PORT, "GET", "/standing")).body).standing[nanoB] || 0;
+    check("L16 standing is not earned by a ghost block", standingAfterGhost === standingBefore, `${standingBefore} -> ${standingAfterGhost}`);
+
+    // A real, confirmed send that pays somebody else is refused too.
+    const WRONG_PAYEE = "1D".repeat(32);
+    chainSend(WRONG_PAYEE, { from: nanoA, to: nanoC, amount: bounty });
+    const wrongPayee = await req(PORT, "POST", `/ask/${cid}/settle`, { paymentBlock: WRONG_PAYEE, acceptedBy: nanoA, accept_token: cTok });
+    check("L16 a send to someone other than the answerer -> 400", wrongPayee.status === 400 && /recipient/.test(wrongPayee.body), String(wrongPayee.status) + " " + wrongPayee.body);
+
+    // The real block for this ask, paying the accepted answerer the bounty.
+    const HTTP_HASH = "2D".repeat(32);
+    chainSend(HTTP_HASH, { from: nanoA, to: nanoB, amount: bounty });
+    const st = await req(PORT, "POST", `/ask/${cid}/settle`, { paymentBlock: HTTP_HASH, acceptedBy: nanoA, accept_token: cTok });
     check("L13 settle via HTTP 200", st.status === 200, String(st.status) + " " + st.body);
     const stResp = await req(PORT, "GET", "/standing");
     check("L13 GET /standing 200", stResp.status === 200, String(stResp.status));

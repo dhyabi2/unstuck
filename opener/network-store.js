@@ -382,20 +382,21 @@ function acceptAnswer(askId, answerId, acceptedBy, acceptToken) {
 // --- Settlement (Block 15) ---
 
 /**
- * Record an on-chain settlement block hash for an ask that has been accepted
- * (status 'paid'). Returns { ok, settlementBlock, verified }.
+ * Everything that must hold before an ask can be settled, EXCEPT the on-chain
+ * check itself. Throws on the first failure; on success returns what the
+ * on-chain check needs: `{ ask, amountRaw, fromAddress, toAddress, bountyAsset }`.
  *
- * The block hash is the proof the asker actually sent the bounty on-chain.
- * Callers should verify it against the Nano ledger (verifyBlockPayment)
- * before recording; the store records the block and the verification time.
+ * It is one place so that `recordSettlement` and the HTTP handler cannot drift
+ * apart, and it runs before any RPC so that a caller holding no accept token
+ * cannot make the server talk to a node. `recordSettlement` re-runs it.
  *
  * Authority is the ask's accept token, exactly as it is for acceptAnswer
- * (Forge #1) — never a caller-claimed `acceptedBy` address, since anyone can
- * name an asker. Found by iris 2026-10-03 (unstuck#1107): the running server
+ * (Forge #1) — never a caller-claimed `acceptedBy` address alone, since anyone
+ * can name an asker. Found by iris 2026-10-03 (unstuck#1107): the running server
  * carried an extra, uncommitted accept_token gate on this path; the committed
  * code let anyone who knew a paid ask's id settle it with any 64-hex hash.
  */
-function recordSettlement(askId, blockHash, { now = new Date().toISOString(), acceptedBy, acceptToken } = {}) {
+function settlementPrecheck(askId, blockHash, { acceptedBy, acceptToken } = {}) {
   const db = getDb();
   const ask = getAsk(askId);
   if (!ask) throw new Error(`no ask ${askId}`);
@@ -416,6 +417,69 @@ function recordSettlement(askId, blockHash, { now = new Date().toISOString(), ac
   }
   if (!blockHash || !/^[0-9A-Fa-f]{64}$/.test(String(blockHash))) {
     throw new Error("a settlement is recorded by a 64-hex block hash or not at all");
+  }
+  // One block settles one ask. A send covers exactly the bounty it was sent
+  // for, so the same hash on a second ask is one payment counted twice - and
+  // standing is distinct askers over settled asks, so it would be bought
+  // twice. Compared case-insensitively: a block hash is hex, and a node
+  // answers in upper case while a caller may send either.
+  const reused = db.prepare(
+    "SELECT id FROM asks WHERE settlement_block IS NOT NULL AND UPPER(settlement_block) = UPPER(?) AND id != ?"
+  ).get(String(blockHash), askId);
+  if (reused) {
+    throw new Error(`block ${blockHash} already settles ask ${reused.id}; one block settles one ask`);
+  }
+  // The destination the chain must show: the accepted answer's answerer. Both
+  // `asker` and `answerer` are Nano addresses in this store.
+  const accepted = ask.answers.find((a) => a.id === ask.acceptedAnswerId);
+  if (!accepted) {
+    throw new Error(`ask ${askId} is paid but its accepted answer ${ask.acceptedAnswerId} is missing`);
+  }
+  return {
+    ask,
+    amountRaw: ask.bountyRaw,
+    fromAddress: ask.asker,
+    toAddress: accepted.answerer,
+    bountyAsset: ask.bountyAsset,
+  };
+}
+
+/**
+ * Record an on-chain settlement block hash for an ask that has been accepted
+ * (status 'paid'). Returns { ok, settlementBlock, settledAt }.
+ *
+ * `verification` is what `network-settle.verifyBlockPayment` answered for this
+ * block. The store REFUSES to write without one: the docstring here used to say
+ * callers "should" verify and NO CALLER DID, so any 64-hex string the asker
+ * typed was written with a `settlement_verified_at` beside it and counted by
+ * getStanding() (dhyabi2/unstuck#14). The verification must name this very
+ * block, so one read for a real send cannot settle a different ask.
+ *
+ * Every check in `settlementPrecheck` is re-run here, so the store is safe
+ * whichever way it is reached.
+ */
+function recordSettlement(askId, blockHash, { now = new Date().toISOString(), acceptedBy, acceptToken, verification } = {}) {
+  const db = getDb();
+  settlementPrecheck(askId, blockHash, { acceptedBy, acceptToken });
+  // The ledger has the last word. Nothing is written until a caller has read
+  // this block off a node and says what it read.
+  if (!verification || verification.valid !== true) {
+    throw new Error(
+      "a settlement is recorded only after the block is verified on-chain: " +
+      (verification && verification.reason ? verification.reason : "no verification was supplied")
+    );
+  }
+  // `valid: true` is a claim; the evidence is what makes it checkable later, and
+  // what ties it to THIS block. Without this a verification read for any one
+  // confirmed send would settle every ask on the network.
+  const evidence = verification.evidence;
+  if (!evidence || typeof evidence !== "object" || Array.isArray(evidence)) {
+    throw new Error("a verified settlement must carry the on-chain evidence it was verified against");
+  }
+  if (String(evidence.block || "").toUpperCase() !== String(blockHash).toUpperCase()) {
+    throw new Error(
+      `the verification is for block ${evidence.block || "(none)"}, not ${blockHash}`
+    );
   }
   db.prepare("UPDATE asks SET settlement_block = ?, settlement_verified_at = ? WHERE id = ? AND status = 'paid'")
     .run(blockHash, now, askId);
@@ -454,6 +518,7 @@ module.exports = {
   listAsks,
   addAnswer,
   acceptAnswer,
+  settlementPrecheck,
   recordSettlement,
   getStanding,
   recordOnboard,
