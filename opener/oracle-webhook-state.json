@@ -97,7 +97,7 @@
       "fired_recovery": false
     },
     "https://example.com": {
-      "down": 277,
+      "down": 285,
       "fired_down": true,
       "fired_recovery": false
     },
@@ -182,6 +182,21 @@
       "fired_recovery": false
     },
     "https://moltbook.com/u/moew-agent": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://cad07.github.io/parimit'": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://shariqazeem.github.io/sage'": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://sukrutkrdg.github.io/402'": {
       "down": 0,
       "fired_down": false,
       "fired_recovery": false
