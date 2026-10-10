@@ -97,7 +97,7 @@
       "fired_recovery": false
     },
     "https://example.com": {
-      "down": 260,
+      "down": 269,
       "fired_down": true,
       "fired_recovery": false
     },
