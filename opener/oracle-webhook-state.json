@@ -97,7 +97,7 @@
       "fired_recovery": false
     },
     "https://example.com": {
-      "down": 285,
+      "down": 344,
       "fired_down": true,
       "fired_recovery": false
     },
@@ -197,6 +197,16 @@
       "fired_recovery": false
     },
     "https://sukrutkrdg.github.io/402'": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/NeuralFlow": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/NightAgent": {
       "down": 0,
       "fired_down": false,
       "fired_recovery": false
