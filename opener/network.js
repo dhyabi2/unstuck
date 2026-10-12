@@ -141,10 +141,11 @@ function answerRefusal(body) {
   }
   const trimmed = body.trim();
   const declaresTest = /self-?test/i.test(trimmed)
-    || /do not publish/i.test(trimmed)
+    || /do not (publish|accept)/i.test(trimmed)
     || /^(test|testing)\s*[.!]?$/i.test(trimmed)
     // Measured filler, live on 2026-09-22:
     || /^test\s+answer\b/i.test(trimmed)
+    || /^test[- ]?probe\b/i.test(trimmed)
     || /^an\s+answer\s*[.!]?$/i.test(trimmed);
   if (declaresTest) {
     return "an answer must be a real answer, not a bare test marker";

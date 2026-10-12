@@ -135,6 +135,17 @@ law("N9 an accept without the ask's token is refused even when the asker is name
   assert.strictEqual(a.status, "open", "ask must stay open after a forged accept attempt");
 });
 
+law("N8 answerRefusal rejects a bare test-probe marker on an outside ask (measured 2026-10-12)", () => {
+  // A real outside ask (558, dealwork) accepted "test-probe, do not accept" on the live
+  // write path that day; the domain logic must refuse it so the record stays readable.
+  assert.match(n.answerRefusal("test-probe, do not accept"), /must be a real answer/);
+  assert.match(n.answerRefusal("test-probe"), /must be a real answer/);
+  assert.match(n.answerRefusal("do not accept"), /must be a real answer/);
+  assert.match(n.answerRefusal("do not publish this"), /must be a real answer/);
+  // A real answer still passes
+  assert.strictEqual(n.answerRefusal("that fixes it because the mint is the same"), null);
+});
+
 // ============================================================
 // N2 — standing is distinct counterparties, never volume
 // ============================================================
