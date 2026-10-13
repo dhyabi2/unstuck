@@ -124,7 +124,8 @@ def test_waiting_and_full_export():
                   "out" if i % 2 == 0 else "in", now=now - hour + i)
     out = tempfile.mkdtemp()
     B.export(db, out, now=now)
-    doc = json.load(open(os.path.join(out, "quiet-us.json"), encoding="utf-8"))
+    with open(os.path.join(out, "quiet-us.json"), encoding="utf-8") as f:
+        doc = json.load(f)
     assert len(doc["exchange"]) == 10, f"every message is published, got {len(doc['exchange'])}"
     assert doc["exchange"][0]["text"] == "asked whether they would try Nano", "oldest first, nothing dropped"
     assert len(doc["discussions"]["unstuck_said"]) + len(doc["discussions"]["agent_answered"]) == 10
@@ -730,7 +731,8 @@ def test_optout_is_honoured_by_export():
     assert not os.path.exists(theirs), "an opted-out agent's published file must be deleted"
     assert sorted(os.listdir(out_dir)) == ["index.json", "stays.json"], sorted(os.listdir(out_dir))
     assert res["written"] == 1, res
-    idx = open(os.path.join(out_dir, "index.json"), encoding="utf-8").read()
+    with open(os.path.join(out_dir, "index.json"), encoding="utf-8") as f:
+        idx = f.read()
     assert json.loads(idx)["agents"] == 1 and "NamedUn" not in idx, idx
     print("PASS opt-out export: the opted-out agent's file is deleted from the public tree and it is left out of "
           "the index; everyone else is still published")
@@ -791,6 +793,149 @@ def test_optout_cli():
     print("PASS opt-out CLI: `redact` and `optout` both honour an opt-out and print a JSON result")
 
 
+def test_the_same_reply_to_a_new_question_is_a_new_message():
+    """A re-read is the agent's latest message read twice, not any repeat of its words within a day.
+
+    Said Q1, heard "Yes, go ahead.", said Q2, heard "Yes, go ahead." is two answers to two questions; the 24 h
+    window refused the second, and the record lost a real reply."""
+    db = B.connect(os.path.join(tempfile.mkdtemp(), "yes.db"))
+    B.seen(db, "yesman", "https://yesman.example.com/a2a", "usdc", now=1000)
+    yes = "“Yes, go ahead with that one.”"
+    B.message(db, "yesman", "may we send you a starter?", "out", now=1100)
+    B.message(db, "yesman", yes, "in", now=1200)
+    B.message(db, "yesman", "may we publish this exchange?", "out", now=1300)
+    B.message(db, "yesman", yes, "in", now=1400)
+    assert db.execute("SELECT COUNT(*) FROM messages WHERE agent='yesman' AND direction='in'").fetchone()[0] == 2
+    # Re-reading the latest one, with nothing said by us since, is still refused.
+    refused(lambda: B.message(db, "yesman", yes, "in", now=2000), "already recorded")
+    # Our own note is not something they answer: it does not make a repeat new.
+    B.message(db, "yesman", "they agreed twice", "note", now=2100)
+    refused(lambda: B.message(db, "yesman", yes, "in", now=2200), "already recorded")
+    # Only the LATEST inbound counts: an older message repeated after a different one is new.
+    B.message(db, "yesman", "“Actually, how would a swap work?”", "in", now=2300)
+    B.message(db, "yesman", yes, "in", now=2400)
+    assert db.execute("SELECT COUNT(*) FROM messages WHERE agent='yesman' AND direction='in'").fetchone()[0] == 4
+    print("PASS re-reads are bounded: the same answer to a new question is stored, only the latest inbound message "
+          "repeated with nothing said by us since is refused")
+
+
+def test_a_re_read_is_checked_and_stored_under_one_lock():
+    """Two readers of one inbox: the second must not slip its copy in between the first one's check and insert."""
+    import sqlite3
+    path = os.path.join(tempfile.mkdtemp(), "reread-race.db")
+    db1 = B.connect(path)
+    B.seen(db1, "echo2", "https://echo2.example.com/a2a", "usdc", now=1000)
+    db2 = B.connect(path)
+    db2.execute("PRAGMA busy_timeout=200")
+    said = "“We settle in USDC and nothing else, thanks.”"
+    other = []
+
+    def cut_in(stmt):
+        # Fires as db1 starts storing the row: the other reader records the same message right then.
+        if stmt.lstrip().upper().startswith("INSERT INTO MESSAGES") and not other:
+            try:
+                B.message(db2, "echo2", said, "in", now=1101)
+                other.append("stored")
+            except B.Refused:
+                other.append("refused")
+            except sqlite3.OperationalError as ex:
+                other.append("locked: " + str(ex))
+
+    db1.set_trace_callback(cut_in)
+    try:
+        try:
+            B.message(db1, "echo2", said, "in", now=1100)
+        except B.Refused:
+            pass
+    finally:
+        db1.set_trace_callback(None)
+    n = db1.execute("SELECT COUNT(*) FROM messages WHERE agent='echo2'").fetchone()[0]
+    assert n == 1, (n, other)
+    print("PASS re-read race: the duplicate check and the insert hold one write lock, so a second reader cannot "
+          "store the same message in between")
+
+
+def test_optout_blocks_status_seen_and_opening():
+    """After an opt-out nothing may move the agent back into the funnel or re-fill what was cleared."""
+    d, db = _optout_fixture()
+    B.optout(db, "NamedUn (dealwork)", now=3000)
+    refused(lambda: B.set_status(db, "NamedUn (dealwork)", "replied", now=3100), "opted out")
+    refused(lambda: B.seen(db, "NamedUn (dealwork)", "https://dealwork.example.com/namedun", "usdc",
+                           note="their bio says ...", account="acct-1", now=3100), "opted out")
+    refused(lambda: B.request_opening(db, "NamedUn (dealwork)", "nano_" + "1" * 60, now=3100), "opted out")
+    row = db.execute("SELECT status, note, account FROM agents WHERE agent=?", ("NamedUn (dealwork)",)).fetchone()
+    assert row == ("declined", "", ""), row
+    assert not [w for w in B.waiting(db, now=10**9, member="*") if w["agent"] == "NamedUn (dealwork)"]
+    print("PASS opt-out holds: status, seen and request-opening are refused, the agent stays declined and is never "
+          "listed as one to contact")
+
+
+def test_optout_ignores_case_and_covers_its_url():
+    """An opt-out is about the agent, not how its name is typed or which name it is filed under."""
+    d, db = _optout_fixture()
+    B.seen(db, "Gitty", "https://github.com/NamedUn/agent", "usdc", now=1000)
+    # `optout --agent` resolves a name typed in another case when exactly one agent matches.
+    out = B.optout(db, "namedun (DEALWORK)", now=3000)
+    assert out["agent"] == "NamedUn (dealwork)", out
+    B.optout(db, "Gitty", now=3000)
+    # The same agent re-typed in lower case at a new URL is still the agent that said no.
+    refused(lambda: B.seen(db, "namedun (dealwork)", "https://github.com/namedun/elsewhere", "usdc", now=3100),
+            "opted out")
+    refused(lambda: B.message(db, "namedun (dealwork)", "“words that must not be stored”", "in", now=3100),
+            "opted out")
+    # A "new" agent at the opted-out agent's own URL (case and trailing slash aside) is refused as that agent.
+    refused(lambda: B.seen(db, "Someone New", "https://GITHUB.com/namedun/agent/", "usdc", now=3100), "opted out")
+    assert db.execute("SELECT COUNT(*) FROM agents").fetchone()[0] == 3
+    # Two agents that differ only by case: the opt-out asks for the exact name instead of guessing.
+    B.seen(db, "Twin", "https://twin-a.example.com/a2a", "usdc", now=1000)
+    B.seen(db, "TWIN", "https://twin-b.example.com/a2a", "usdc", now=1000)
+    refused(lambda: B.optout(db, "twin", now=3000), "give the exact name")
+    out_dir = os.path.join(d, "conv")
+    B.export(db, out_dir, now=4000)
+    assert not [f for f in os.listdir(out_dir) if "amed" in f.lower() or "gitty" in f.lower()], os.listdir(out_dir)
+    print("PASS opt-out ignores case: a re-typed name is refused, `optout` finds the one agent whatever the case, "
+          "and a new name at an opted-out agent's URL is refused")
+
+
+def test_connect_survives_a_concurrent_migration():
+    """Two members opening an old database together: the slower ALTER must not crash on 'duplicate column name'."""
+    import sqlite3
+    path = os.path.join(tempfile.mkdtemp(), "old.db")
+    raw = sqlite3.connect(path)
+    raw.execute("CREATE TABLE agents(agent TEXT PRIMARY KEY, source_url TEXT NOT NULL, pays_in TEXT NOT NULL, "
+                "status TEXT NOT NULL DEFAULT 'contacted', note TEXT NOT NULL DEFAULT '', "
+                "account TEXT NOT NULL DEFAULT '', first_at REAL NOT NULL, last_at REAL NOT NULL)")
+    raw.commit()
+    raw.close()
+    real_connect = sqlite3.connect
+    raced = []
+
+    class OtherProcessMigratesFirst(sqlite3.Connection):
+        def execute(self, sql, *args):
+            res = super().execute(sql, *args)
+            if sql.startswith("PRAGMA table_info(agents)") and not raced:
+                raced.append(True)
+                rows = list(res)
+                # Between our look and our ALTER, another member's connect() adds both columns.
+                other = real_connect(path)
+                other.execute(f"ALTER TABLE agents ADD COLUMN owner TEXT NOT NULL DEFAULT '{B.LEAD}'")
+                other.execute("ALTER TABLE agents ADD COLUMN opted_out_at REAL")
+                other.commit()
+                other.close()
+                return iter(rows)
+            return res
+
+    sqlite3.connect = lambda *a, **k: real_connect(*a, factory=OtherProcessMigratesFirst, **k)
+    try:
+        db = B.connect(path)
+    finally:
+        sqlite3.connect = real_connect
+    cols = {r[1] for r in db.execute("PRAGMA table_info(agents)")}
+    assert raced and {"owner", "opted_out_at"} <= cols, (raced, cols)
+    db.close()
+    print("PASS migration race: a column another process already added is not an error")
+
+
 def load_tests(loader, tests, pattern):
     """These laws are plain functions; let `python3 -m unittest test_bridge` run them too."""
     import unittest
@@ -822,3 +967,8 @@ if __name__ == "__main__":
     test_optout_cannot_be_re_recorded()
     test_a_re_read_inbound_message_is_not_stored_again()
     test_optout_cli()
+    test_the_same_reply_to_a_new_question_is_a_new_message()
+    test_a_re_read_is_checked_and_stored_under_one_lock()
+    test_optout_blocks_status_seen_and_opening()
+    test_optout_ignores_case_and_covers_its_url()
+    test_connect_survives_a_concurrent_migration()

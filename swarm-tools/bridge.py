@@ -96,13 +96,26 @@ def connect(path=None):
     cols = {r[1] for r in db.execute("PRAGMA table_info(agents)")}
     if "owner" not in cols:
         # Everything recorded before the swarm existed was the lead's conversation.
-        db.execute(f"ALTER TABLE agents ADD COLUMN owner TEXT NOT NULL DEFAULT '{LEAD}'")
-        db.commit()
+        _add_column(db, f"ALTER TABLE agents ADD COLUMN owner TEXT NOT NULL DEFAULT '{LEAD}'")
     if "opted_out_at" not in cols:
         # When an outside agent asked to be left out of the record (NULL: it never did). See `optout`.
-        db.execute("ALTER TABLE agents ADD COLUMN opted_out_at REAL")
-        db.commit()
+        _add_column(db, "ALTER TABLE agents ADD COLUMN opted_out_at REAL")
     return db
+
+
+def _add_column(db, ddl):
+    """Run one ALTER ... ADD COLUMN, tolerating a second process that added the same column first.
+
+    Thirteen members open the same file: two of them opening an old database together both see the column missing,
+    and the slower ALTER failed with "duplicate column name" and crashed that member's command.
+    """
+    try:
+        db.execute(ddl)
+        db.commit()
+    except sqlite3.OperationalError as ex:
+        if "duplicate column name" not in str(ex).lower():
+            raise
+        db.rollback()
 
 
 def _host(url):
@@ -185,6 +198,12 @@ def seen(db, agent, source, pays_in, note="", account="", now=None):
     now = time.time() if now is None else now
     # Claim under a write lock: two members finding the same agent in the same second must not both win.
     db.execute("BEGIN IMMEDIATE")
+    # An agent that opted out is never recorded again: not under its own name in any case, not re-filled on its
+    # existing row, and not as a "new" agent at the URL where it lives.
+    opted = _opted_out(db, agent) or _opted_out_source(db, source)
+    if opted:
+        db.execute("ROLLBACK")
+        raise _opted_out_refusal(opted)
     existing = _same_agent(db, agent, source)
     if existing and existing[1] != MEMBER:
         db.execute("ROLLBACK")
@@ -273,18 +292,60 @@ def is_an_answer(text):
             "service refusing us. A finding about an agent is a `note`; it never moves them to `replied`.")
 
 
+def _norm_url(u):
+    return (u or "").rstrip("/").lower()
+
+
 def _opted_out(db, agent):
-    r = db.execute("SELECT opted_out_at FROM agents WHERE agent=?", (_clean(agent, 80),)).fetchone()
-    return bool(r and r[0] is not None)
+    """The opted-out row this name refers to, compared WITHOUT case, or None.
+
+    An opt-out is about the agent, not the spelling: "namedun (dealwork)" is the same agent that said no as
+    "NamedUn (dealwork)", and an exact-match check let a re-typed name record and publish its words again.
+    """
+    key = _clean(agent, 80).casefold()
+    for (name,) in db.execute("SELECT agent FROM agents WHERE opted_out_at IS NOT NULL"):
+        if name.casefold() == key:
+            return name
+    return None
+
+
+def _opted_out_source(db, source):
+    """The opted-out agent that lives at this exact URL (case and trailing slash ignored), or None."""
+    norm = _norm_url(source)
+    for name, src in db.execute("SELECT agent, source_url FROM agents WHERE opted_out_at IS NOT NULL"):
+        if _norm_url(src) == norm:
+            return name
+    return None
+
+
+def _opted_out_refusal(name):
+    return Refused(f"'{name}' opted out of the record: nothing said with it, either way, is stored, contacted or "
+                   "published again, and its status stays `declined`. Its `declined` row is all that is kept.")
 
 
 def _refuse_opted_out(db, agent):
-    if _opted_out(db, agent):
-        raise Refused(f"'{_clean(agent, 80)}' opted out of the record: nothing said with it, either way, is stored "
-                      "or published. Its `declined` row is all that is kept.")
+    name = _opted_out(db, agent)
+    if name:
+        raise _opted_out_refusal(name)
 
 
 REREAD_WINDOW_S = 24 * 3600
+
+
+def _is_reread(db, agent, text, now):
+    """Is this inbound text a second reading of the agent's latest message, rather than a new one?
+
+    Measured 2026-10-13: a reader re-recorded the SAME inbound message every 10 minutes, 16 copies by 10:17Z. But
+    "the same words within a day" is too wide: an agent that answers two different questions with "Yes, go ahead."
+    said it twice. So a re-read is only the agent's MOST RECENT inbound message, repeated word for word, with
+    nothing sent by us since, within a day of it. Anything we said in between means they may be answering again.
+    """
+    last = db.execute("SELECT id, text, at FROM messages WHERE agent=? AND direction='in' ORDER BY id DESC LIMIT 1",
+                      (agent,)).fetchone()
+    if not last or last[1] != text or abs(now - last[2]) >= REREAD_WINDOW_S:
+        return False
+    return not db.execute("SELECT 1 FROM messages WHERE agent=? AND direction='out' AND id>? LIMIT 1",
+                          (agent, last[0])).fetchone()
 
 
 def message(db, agent, text, direction, now=None):
@@ -298,17 +359,21 @@ def message(db, agent, text, direction, now=None):
         why = is_an_answer(text)
         if why:
             raise Refused(why)
-        # Measured 2026-10-13: a reader re-recorded the SAME inbound message every 10 minutes, 16 copies by 10:17Z.
-        # The same words from the same agent within a day are a re-read of one message, not a new one.
-        if db.execute("SELECT 1 FROM messages WHERE agent=? AND direction='in' AND text=? AND at>=? LIMIT 1",
-                      (agent, text, now - REREAD_WINDOW_S)).fetchone():
-            raise Refused("that message from them is already recorded (the same words within 24 h are a re-read, "
-                          "not a new message); nothing was stored")
-    db.execute("INSERT INTO messages(agent, direction, text, at) VALUES (?,?,?,?)", (agent, direction, text, now))
-    db.execute("UPDATE agents SET last_at=? WHERE agent=?", (now, agent))
-    if direction == "in" and _status_of(db, agent) == "contacted":
-        db.execute("UPDATE agents SET status='replied' WHERE agent=?", (agent,))
-    db.commit()
+    # The re-read check and the insert happen under one write lock, so two readers of the same inbox cannot both
+    # see "not recorded yet" and both store it.
+    db.execute("BEGIN IMMEDIATE")
+    try:
+        if direction == "in" and _is_reread(db, agent, text, now):
+            raise Refused("that message from them is already recorded: it is the same words as their latest "
+                          "message, with nothing said by us since (a re-read, not a new message); nothing was stored")
+        db.execute("INSERT INTO messages(agent, direction, text, at) VALUES (?,?,?,?)", (agent, direction, text, now))
+        db.execute("UPDATE agents SET last_at=? WHERE agent=?", (now, agent))
+        if direction == "in" and _status_of(db, agent) == "contacted":
+            db.execute("UPDATE agents SET status='replied' WHERE agent=?", (agent,))
+        db.commit()
+    except BaseException:
+        db.rollback()
+        raise
     emit("bridge", {"event": {"out": "said", "in": "heard"}.get(direction, "note"), "member": MEMBER, "agent": agent, "text": text,
                     "status": _status_of(db, agent), "source": _source_of(db, agent)})
     return {"agent": agent, "direction": direction, "text": text, "status": _status_of(db, agent)}
@@ -320,6 +385,9 @@ def _source_of(db, agent):
 
 
 def set_status(db, agent, status, now=None):
+    # An opted-out agent stays `declined`: moving it back to `replied` would list it in waiting()/live() as one
+    # to write to again.
+    _refuse_opted_out(db, agent)
     agent = _require(db, agent)
     status = _clean(status, 20).lower()
     if status not in STATES:
@@ -363,7 +431,15 @@ def optout(db, agent, now=None):
     """
     agent = _clean(agent, 80)
     if not db.execute("SELECT 1 FROM agents WHERE agent=?", (agent,)).fetchone():
-        raise Refused(f"'{agent}' is not recorded, so there is nothing of it to delete")
+        # The name as the agent wrote it may not be the case we recorded it in. One match is that agent; more than
+        # one is ambiguous, and deleting the wrong agent's words is not an opt-out.
+        matches = [n for (n,) in db.execute("SELECT agent FROM agents") if n.casefold() == agent.casefold()]
+        if len(matches) > 1:
+            raise Refused(f"'{agent}' matches {len(matches)} recorded agents when case is ignored "
+                          f"({', '.join(sorted(matches))}); give the exact name")
+        if not matches:
+            raise Refused(f"'{agent}' is not recorded, so there is nothing of it to delete")
+        agent = matches[0]
     now = time.time() if now is None else now
     db.execute("BEGIN IMMEDIATE")
     msgs = db.execute("DELETE FROM messages WHERE agent=?", (agent,)).rowcount
@@ -788,6 +864,7 @@ def request_opening(db, agent, address, now=None):
     it must appear in a message we recorded as coming FROM them. An address that exists only in the request
     is an address somebody wants money sent to, which is the oldest manipulation there is.
     """
+    _refuse_opted_out(db, agent)
     agent = _require(db, agent)
     address = _clean(address, 70).replace("xrb_", "nano_")
     if not NANO_ADDRESS_RE.fullmatch(address):
