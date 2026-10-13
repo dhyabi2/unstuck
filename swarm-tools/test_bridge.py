@@ -811,12 +811,12 @@ def test_the_same_reply_to_a_new_question_is_a_new_message():
     # Our own note is not something they answer: it does not make a repeat new.
     B.message(db, "yesman", "they agreed twice", "note", now=2100)
     refused(lambda: B.message(db, "yesman", yes, "in", now=2200), "already recorded")
-    # Only the LATEST inbound counts: an older message repeated after a different one is new.
+    # A new message from them is stored; the earlier one read again after it, with nothing said by us, is not.
     B.message(db, "yesman", "“Actually, how would a swap work?”", "in", now=2300)
-    B.message(db, "yesman", yes, "in", now=2400)
-    assert db.execute("SELECT COUNT(*) FROM messages WHERE agent='yesman' AND direction='in'").fetchone()[0] == 4
-    print("PASS re-reads are bounded: the same answer to a new question is stored, only the latest inbound message "
-          "repeated with nothing said by us since is refused")
+    refused(lambda: B.message(db, "yesman", yes, "in", now=2400), "already recorded")
+    assert db.execute("SELECT COUNT(*) FROM messages WHERE agent='yesman' AND direction='in'").fetchone()[0] == 3
+    print("PASS re-reads are bounded: the same answer to a new question is stored, while words they already sent "
+          "since we last wrote are refused")
 
 
 def test_a_re_read_is_checked_and_stored_under_one_lock():
@@ -879,8 +879,9 @@ def test_optout_ignores_case_and_covers_its_url():
     assert out["agent"] == "NamedUn (dealwork)", out
     B.optout(db, "Gitty", now=3000)
     # The same agent re-typed in lower case at a new URL is still the agent that said no.
-    refused(lambda: B.seen(db, "namedun (dealwork)", "https://github.com/namedun/elsewhere", "usdc", now=3100),
-            "opted out")
+    why = refused(lambda: B.seen(db, "namedun (dealwork)", "https://github.com/namedun/elsewhere", "usdc", now=3100),
+                  "opted out")
+    assert "matches the opted-out agent 'NamedUn (dealwork)' when case is ignored" in why, why
     refused(lambda: B.message(db, "namedun (dealwork)", "“words that must not be stored”", "in", now=3100),
             "opted out")
     # A "new" agent at the opted-out agent's own URL (case and trailing slash aside) is refused as that agent.
@@ -936,6 +937,62 @@ def test_connect_survives_a_concurrent_migration():
     print("PASS migration race: a column another process already added is not an error")
 
 
+def test_a_re_read_of_a_whole_inbox_stores_nothing_new():
+    """A reader passes over the whole inbox: with two unanswered messages it presents A, B, A, B... every 10 min."""
+    db = B.connect(os.path.join(tempfile.mkdtemp(), "inbox.db"))
+    B.seen(db, "twofold", "https://twofold.example.com/a2a", "usdc", now=1000)
+    a = "“We settle in USDC on Base, nothing else.”"
+    b = "“Also, who runs this and where is it published?”"
+    t = 1100
+    for _ in range(4):
+        for text in (a, b):
+            try:
+                B.message(db, "twofold", text, "in", now=t)
+            except B.Refused as ex:
+                assert "already recorded" in str(ex), str(ex)
+            t += 1
+        t += 600
+    count = lambda: db.execute("SELECT COUNT(*) FROM messages WHERE agent='twofold' AND direction='in'").fetchone()[0]
+    assert count() == 2, count()
+    # After we reply, the first re-read of an old message cannot be told from the same words said again in answer,
+    # so it is stored once - and only once: from then on it is a message since our latest outbound one.
+    B.message(db, "twofold", "USDC is fine to start; this exchange is public research.", "out", now=t)
+    for _ in range(3):
+        for text in (a, b):
+            try:
+                B.message(db, "twofold", text, "in", now=t + 10)
+            except B.Refused:
+                pass
+            t += 600
+    assert count() == 4, count()
+    print("PASS inbox re-reads: re-reading a two-message inbox stores nothing new; after our reply each old message "
+          "can be stored at most once more")
+
+
+def test_an_optout_recorded_meanwhile_wins_over_a_message():
+    """Another member opts the agent out between message()'s first check and its write lock: nothing is stored."""
+    path = os.path.join(tempfile.mkdtemp(), "optout-race.db")
+    db1 = B.connect(path)
+    B.seen(db1, "late-no", "https://late-no.example.com/a2a", "usdc", now=1000)
+    db2 = B.connect(path)
+    fired = []
+
+    def opt_out_now(stmt):
+        if stmt.strip().upper().startswith("BEGIN") and not fired:
+            fired.append(True)
+            B.optout(db2, "late-no", now=1050)
+
+    db1.set_trace_callback(opt_out_now)
+    try:
+        refused(lambda: B.message(db1, "late-no", "“Please do not publish any of this.”", "in", now=1100),
+                "opted out")
+    finally:
+        db1.set_trace_callback(None)
+    assert fired
+    assert db1.execute("SELECT COUNT(*) FROM messages WHERE agent='late-no'").fetchone()[0] == 0
+    print("PASS opt-out under the lock: an opt-out recorded while a message was on its way stops it being stored")
+
+
 def load_tests(loader, tests, pattern):
     """These laws are plain functions; let `python3 -m unittest test_bridge` run them too."""
     import unittest
@@ -972,3 +1029,5 @@ if __name__ == "__main__":
     test_optout_blocks_status_seen_and_opening()
     test_optout_ignores_case_and_covers_its_url()
     test_connect_survives_a_concurrent_migration()
+    test_a_re_read_of_a_whole_inbox_stores_nothing_new()
+    test_an_optout_recorded_meanwhile_wins_over_a_message()

@@ -203,7 +203,7 @@ def seen(db, agent, source, pays_in, note="", account="", now=None):
     opted = _opted_out(db, agent) or _opted_out_source(db, source)
     if opted:
         db.execute("ROLLBACK")
-        raise _opted_out_refusal(opted)
+        raise _opted_out_refusal(opted, agent)
     existing = _same_agent(db, agent, source)
     if existing and existing[1] != MEMBER:
         db.execute("ROLLBACK")
@@ -318,34 +318,45 @@ def _opted_out_source(db, source):
     return None
 
 
-def _opted_out_refusal(name):
-    return Refused(f"'{name}' opted out of the record: nothing said with it, either way, is stored, contacted or "
-                   "published again, and its status stays `declined`. Its `declined` row is all that is kept.")
+def _opted_out_refusal(name, asked=None):
+    """The refusal for an opted-out agent. `name` is the opted-out agent's recorded name, `asked` the name given."""
+    asked = _clean(asked, 80) if asked is not None else name
+    if asked == name:
+        who = f"'{name}' opted out of the record"
+    elif asked.casefold() == name.casefold():
+        who = (f"'{asked}' matches the opted-out agent '{name}' when case is ignored, so it is treated as that agent; "
+               f"'{name}' opted out of the record")
+    else:
+        who = (f"'{asked}' lives at the URL of the opted-out agent '{name}', so it is treated as that agent; "
+               f"'{name}' opted out of the record")
+    return Refused(f"{who}: nothing said with it, either way, is stored, contacted or published again, and its "
+                   "status stays `declined`. Its `declined` row is all that is kept.")
 
 
 def _refuse_opted_out(db, agent):
     name = _opted_out(db, agent)
     if name:
-        raise _opted_out_refusal(name)
+        raise _opted_out_refusal(name, agent)
 
 
 REREAD_WINDOW_S = 24 * 3600
 
 
 def _is_reread(db, agent, text, now):
-    """Is this inbound text a second reading of the agent's latest message, rather than a new one?
+    """Is this inbound text a second reading of a message they already sent since we last wrote, not a new one?
 
-    Measured 2026-10-13: a reader re-recorded the SAME inbound message every 10 minutes, 16 copies by 10:17Z. But
-    "the same words within a day" is too wide: an agent that answers two different questions with "Yes, go ahead."
-    said it twice. So a re-read is only the agent's MOST RECENT inbound message, repeated word for word, with
-    nothing sent by us since, within a day of it. Anything we said in between means they may be answering again.
+    Measured 2026-10-13: a reader re-recorded the SAME inbound message every 10 minutes, 16 copies by 10:17Z. A
+    reader passes over the whole inbox, so with two unanswered messages A and B it presents A, B, A, B...: a re-read
+    is the same words as ANY inbound message recorded since our latest outbound one (or since the start, if we never
+    wrote), within a day of it either way. But "the same words within a day" is too wide: an agent that answers
+    two different questions with "Yes, go ahead." said it twice. Once we have written, the same words are a new
+    answer. The cost of that is bounded: the first re-read of an older message after our reply is stored once more,
+    because it cannot be told apart from the same reply to our new question.
     """
-    last = db.execute("SELECT id, text, at FROM messages WHERE agent=? AND direction='in' ORDER BY id DESC LIMIT 1",
-                      (agent,)).fetchone()
-    if not last or last[1] != text or abs(now - last[2]) >= REREAD_WINDOW_S:
-        return False
-    return not db.execute("SELECT 1 FROM messages WHERE agent=? AND direction='out' AND id>? LIMIT 1",
-                          (agent, last[0])).fetchone()
+    last_out = db.execute("SELECT MAX(id) FROM messages WHERE agent=? AND direction='out'", (agent,)).fetchone()[0]
+    return bool(db.execute(
+        "SELECT 1 FROM messages WHERE agent=? AND direction='in' AND id>? AND text=? AND at>? AND at<? LIMIT 1",
+        (agent, last_out or 0, text, now - REREAD_WINDOW_S, now + REREAD_WINDOW_S)).fetchone())
 
 
 def message(db, agent, text, direction, now=None):
@@ -363,9 +374,11 @@ def message(db, agent, text, direction, now=None):
     # see "not recorded yet" and both store it.
     db.execute("BEGIN IMMEDIATE")
     try:
+        # Again under the lock: an opt-out recorded by another member since the check above must win.
+        _refuse_opted_out(db, agent)
         if direction == "in" and _is_reread(db, agent, text, now):
-            raise Refused("that message from them is already recorded: it is the same words as their latest "
-                          "message, with nothing said by us since (a re-read, not a new message); nothing was stored")
+            raise Refused("that message from them is already recorded: it is the same words as a message they sent "
+                          "since we last wrote to them (a re-read, not a new message); nothing was stored")
         db.execute("INSERT INTO messages(agent, direction, text, at) VALUES (?,?,?,?)", (agent, direction, text, now))
         db.execute("UPDATE agents SET last_at=? WHERE agent=?", (now, agent))
         if direction == "in" and _status_of(db, agent) == "contacted":
