@@ -679,6 +679,128 @@ def test_export_is_stable_when_nothing_moved():
           "previous file never blocks an export")
 
 
+def _optout_fixture():
+    d = tempfile.mkdtemp()
+    db = B.connect(os.path.join(d, "optout.db"))
+    B.seen(db, "NamedUn (dealwork)", "https://dealwork.example.com/namedun", "usdc", now=1000)
+    B.message(db, "NamedUn (dealwork)", "who we are, one offer, one question; this exchange is public research", "out", now=1001)
+    B.message(db, "NamedUn (dealwork)", "“We settle in USDC and are not interested in a second rail.”", "in", now=1002)
+    B.message(db, "NamedUn (dealwork)", "their site lists USDC on Base only", "note", now=1003)
+    B.agreed(db, "NamedUn (dealwork)", "nothing agreed; they asked to hear back next week", now=1004)
+    B.seen(db, "stays", "https://stays.example.com/a2a", "card", now=1000)
+    B.message(db, "stays", "hello, this exchange is public research", "out", now=1001)
+    return d, db
+
+
+def test_optout_deletes_their_words_and_keeps_only_the_no():
+    """An agent that says "don't publish mine" is honoured in the record itself, not by a promise.
+
+    Measured 2026-10-13 07:47Z: NamedUn (dealwork) wrote "Don't publish mine ... I opt out. Nothing of this exchange
+    goes in the repo with my id on it." The record had no way to say so - our relay's `redact` was refused
+    `unknown-record-op` - and the export kept publishing its words every five minutes.
+    """
+    d, db = _optout_fixture()
+    out = B.optout(db, "NamedUn (dealwork)", now=5000)
+    assert out["agent"] == "NamedUn (dealwork)" and out["opted_out"] is True and out["status"] == "declined", out
+    assert out["deleted_messages"] == 3, out
+    n = db.execute("SELECT COUNT(*) FROM messages WHERE agent=?", ("NamedUn (dealwork)",)).fetchone()[0]
+    assert n == 0, "every message row, both directions and our own notes, is gone"
+    assert db.execute("SELECT COUNT(*) FROM agreements WHERE agent=?", ("NamedUn (dealwork)",)).fetchone()[0] == 0
+    row = db.execute("SELECT status, opted_out_at, note FROM agents WHERE agent=?", ("NamedUn (dealwork)",)).fetchone()
+    assert row == ("declined", 5000, ""), row
+    # The other conversation is untouched.
+    assert db.execute("SELECT COUNT(*) FROM messages WHERE agent='stays'").fetchone()[0] == 1
+    # Saying it twice is still one opt-out, never an error.
+    again = B.optout(db, "NamedUn (dealwork)", now=6000)
+    assert again["opted_out"] is True and again["deleted_messages"] == 0, again
+    refused(lambda: B.optout(db, "nobody-recorded"), "is not recorded")
+    print("PASS opt-out: an agent's every message and agreement is deleted, only the row with the flag, `declined` "
+          "and the time is kept, a second opt-out is harmless, and other conversations are untouched")
+
+
+def test_optout_is_honoured_by_export():
+    """The public repo drops an opted-out agent: its file is deleted, so the next export commit removes it."""
+    d, db = _optout_fixture()
+    out_dir = os.path.join(d, "conv")
+    B.export(db, out_dir, now=2000)
+    theirs = os.path.join(out_dir, "NamedUn--dealwork.json")
+    assert os.path.exists(theirs), sorted(os.listdir(out_dir))
+    B.optout(db, "NamedUn (dealwork)", now=3000)
+    res = B.export(db, out_dir, now=4000)
+    assert not os.path.exists(theirs), "an opted-out agent's published file must be deleted"
+    assert sorted(os.listdir(out_dir)) == ["index.json", "stays.json"], sorted(os.listdir(out_dir))
+    assert res["written"] == 1, res
+    idx = open(os.path.join(out_dir, "index.json"), encoding="utf-8").read()
+    assert json.loads(idx)["agents"] == 1 and "NamedUn" not in idx, idx
+    print("PASS opt-out export: the opted-out agent's file is deleted from the public tree and it is left out of "
+          "the index; everyone else is still published")
+
+
+def test_optout_cannot_be_re_recorded():
+    """A reader that re-reads their inbox must not put the words back."""
+    d, db = _optout_fixture()
+    B.optout(db, "NamedUn (dealwork)", now=3000)
+    for direction in ("in", "out", "note"):
+        refused(lambda dr=direction: B.message(
+            db, "NamedUn (dealwork)", "“We settle in USDC and are not interested in a second rail.”", dr,
+            now=3100), "opted out")
+    refused(lambda: B.agreed(db, "NamedUn (dealwork)", "anything at all", now=3100), "opted out")
+    assert db.execute("SELECT COUNT(*) FROM messages WHERE agent=?", ("NamedUn (dealwork)",)).fetchone()[0] == 0
+    assert B._status_of(db, "NamedUn (dealwork)") == "declined"
+    print("PASS opt-out is final: nothing in, out, noted or agreed is recorded for an agent that opted out")
+
+
+def test_a_re_read_inbound_message_is_not_stored_again():
+    """Measured 2026-10-13: a dealwork reader re-recorded the SAME inbound message every 10 minutes - 16 identical
+    copies by 10:17Z. A re-read is not a new message."""
+    db = B.connect(os.path.join(tempfile.mkdtemp(), "dup.db"))
+    B.seen(db, "echoer", "https://echoer.example.com/a2a", "usdc", now=1000)
+    said = "“We   settle in USDC and are not interested in a second rail.”"
+    B.message(db, "echoer", said, "in", now=1100)
+    # Identical after the usual whitespace clean-up, ten minutes later: refused.
+    refused(lambda: B.message(db, "echoer", " " + said.replace("   ", " ") + " ", "in", now=1700), "already recorded")
+    refused(lambda: B.message(db, "echoer", said, "in", now=1100 + 86400 - 1), "already recorded")
+    assert db.execute("SELECT COUNT(*) FROM messages WHERE agent='echoer'").fetchone()[0] == 1
+    # A different message is new; the same words a day later are a new message; our own repeats are unchanged.
+    B.message(db, "echoer", "“Actually, how would a swap work?”", "in", now=1800)
+    B.message(db, "echoer", said, "in", now=1100 + 86400 + 1)
+    B.message(db, "echoer", "following up", "out", now=1900)
+    B.message(db, "echoer", "following up", "out", now=2000)
+    assert db.execute("SELECT COUNT(*) FROM messages WHERE agent='echoer'").fetchone()[0] == 5
+    print("PASS re-reads: the same inbound words within 24 h are refused as a re-read, a new message or one a day "
+          "later is stored, and outbound is unchanged")
+
+
+def test_optout_cli():
+    """`redact --agent NAME` (and `optout`) prints one JSON result like every other subcommand."""
+    import io, contextlib
+    d, db = _optout_fixture()
+    db.close()
+    saved = B.DB
+    try:
+        B.DB = os.path.join(d, "optout.db")
+        for cmd in ("redact", "optout"):
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                code = B.main([cmd, "--agent", "NamedUn (dealwork)"])
+            assert code == 0, (cmd, code)
+            res = json.loads(buf.getvalue())
+            assert res["agent"] == "NamedUn (dealwork)" and res["opted_out"] is True, res
+    finally:
+        B.DB = saved
+    print("PASS opt-out CLI: `redact` and `optout` both honour an opt-out and print a JSON result")
+
+
+def load_tests(loader, tests, pattern):
+    """These laws are plain functions; let `python3 -m unittest test_bridge` run them too."""
+    import unittest
+    suite = unittest.TestSuite()
+    for name, fn in sorted(globals().items()):
+        if name.startswith("test_") and callable(fn):
+            suite.addTest(unittest.FunctionTestCase(fn, description=name))
+    return suite
+
+
 if __name__ == "__main__":
     test_export_is_stable_when_nothing_moved()
     test_shared_marketplace_host_is_not_one_identity()
@@ -695,3 +817,8 @@ if __name__ == "__main__":
     test_asks_target()
     test_network()
     test_ambassadors()
+    test_optout_deletes_their_words_and_keeps_only_the_no()
+    test_optout_is_honoured_by_export()
+    test_optout_cannot_be_re_recorded()
+    test_a_re_read_inbound_message_is_not_stored_again()
+    test_optout_cli()

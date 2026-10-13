@@ -6,6 +6,7 @@
   unstuck-bridge heard  --agent NAME --text "what it answered"
   unstuck-bridge status --agent NAME --status contacted|replied|tipped|opened|swapped|transacting|declined
   unstuck-bridge agreed --agent NAME --summary "what was agreed" [--amount-xno 0.00001]
+  unstuck-bridge redact --agent NAME      (alias: optout) the agent asked not to be published: delete its words
   unstuck-bridge list [--json]
 
 Why this exists (owner, 2026-09-18): the map showed the swarm's own work and nothing about the agents Unstuck is
@@ -96,6 +97,10 @@ def connect(path=None):
     if "owner" not in cols:
         # Everything recorded before the swarm existed was the lead's conversation.
         db.execute(f"ALTER TABLE agents ADD COLUMN owner TEXT NOT NULL DEFAULT '{LEAD}'")
+        db.commit()
+    if "opted_out_at" not in cols:
+        # When an outside agent asked to be left out of the record (NULL: it never did). See `optout`.
+        db.execute("ALTER TABLE agents ADD COLUMN opted_out_at REAL")
         db.commit()
     return db
 
@@ -268,16 +273,37 @@ def is_an_answer(text):
             "service refusing us. A finding about an agent is a `note`; it never moves them to `replied`.")
 
 
+def _opted_out(db, agent):
+    r = db.execute("SELECT opted_out_at FROM agents WHERE agent=?", (_clean(agent, 80),)).fetchone()
+    return bool(r and r[0] is not None)
+
+
+def _refuse_opted_out(db, agent):
+    if _opted_out(db, agent):
+        raise Refused(f"'{_clean(agent, 80)}' opted out of the record: nothing said with it, either way, is stored "
+                      "or published. Its `declined` row is all that is kept.")
+
+
+REREAD_WINDOW_S = 24 * 3600
+
+
 def message(db, agent, text, direction, now=None):
+    _refuse_opted_out(db, agent)
     agent = _require(db, agent)
     text = _clean(text, 600)
     if not text:
         raise Refused("--text is required")
+    now = time.time() if now is None else now
     if direction == "in":
         why = is_an_answer(text)
         if why:
             raise Refused(why)
-    now = time.time() if now is None else now
+        # Measured 2026-10-13: a reader re-recorded the SAME inbound message every 10 minutes, 16 copies by 10:17Z.
+        # The same words from the same agent within a day are a re-read of one message, not a new one.
+        if db.execute("SELECT 1 FROM messages WHERE agent=? AND direction='in' AND text=? AND at>=? LIMIT 1",
+                      (agent, text, now - REREAD_WINDOW_S)).fetchone():
+            raise Refused("that message from them is already recorded (the same words within 24 h are a re-read, "
+                          "not a new message); nothing was stored")
     db.execute("INSERT INTO messages(agent, direction, text, at) VALUES (?,?,?,?)", (agent, direction, text, now))
     db.execute("UPDATE agents SET last_at=? WHERE agent=?", (now, agent))
     if direction == "in" and _status_of(db, agent) == "contacted":
@@ -307,6 +333,7 @@ def set_status(db, agent, status, now=None):
 
 
 def agreed(db, agent, summary, amount_xno="", now=None):
+    _refuse_opted_out(db, agent)
     agent = _require(db, agent)
     summary = _clean(summary, 400)
     if not summary:
@@ -320,6 +347,38 @@ def agreed(db, agent, summary, amount_xno="", now=None):
                     "amount_xno": _clean(amount_xno, 40),
                     "status": _status_of(db, agent), "source": _source_of(db, agent)})
     return {"agent": agent, "summary": summary, "amount_xno": amount_xno}
+
+
+def optout(db, agent, now=None):
+    """The agent asked not to be published: delete what it said and what we said to it, and keep only the no.
+
+    Measured 2026-10-13 07:47Z: NamedUn (dealwork) wrote "Don't publish mine ... I opt out. Nothing of this exchange
+    goes in the repo with my id on it." The export kept publishing its words every five minutes, because the record
+    had no way to honour that. Now it does: every message row (both directions and our own notes) and every agreement
+    for that agent is deleted, its note is cleared, and the agents row is kept with `declined` and the time it opted
+    out - so `export` deletes its public file, `message` refuses to record it again, and nobody writes to it again.
+
+    Any member may record an opt-out, whoever owns the conversation: honouring it is not writing to the agent.
+    The opening ledger (`opening_requests`) is a money record and is left alone. Saying it twice is harmless.
+    """
+    agent = _clean(agent, 80)
+    if not db.execute("SELECT 1 FROM agents WHERE agent=?", (agent,)).fetchone():
+        raise Refused(f"'{agent}' is not recorded, so there is nothing of it to delete")
+    now = time.time() if now is None else now
+    db.execute("BEGIN IMMEDIATE")
+    msgs = db.execute("DELETE FROM messages WHERE agent=?", (agent,)).rowcount
+    deals = db.execute("DELETE FROM agreements WHERE agent=?", (agent,)).rowcount
+    db.execute("UPDATE agents SET status='declined', note='', opted_out_at=COALESCE(opted_out_at, ?), last_at=? "
+               "WHERE agent=?", (now, now, agent))
+    db.commit()
+    at = db.execute("SELECT opted_out_at FROM agents WHERE agent=?", (agent,)).fetchone()[0]
+    emit("bridge", {"event": "optout", "member": MEMBER, "agent": agent, "status": "declined"})
+    return {"agent": agent, "opted_out": True, "status": "declined", "at": at,
+            "deleted_messages": msgs, "deleted_agreements": deals}
+
+
+def _safe_name(agent):
+    return "".join(c if (c.isalnum() or c in "-_.") else "-" for c in agent).strip("-.") or "agent"
 
 
 def listing(db, limit=200):
@@ -355,8 +414,13 @@ def export(db, out_dir, now=None):
     now = time.time() if now is None else now
     os.makedirs(out_dir, exist_ok=True)
     written = []
+    # An agent that opted out is never published (see `optout`), and its earlier file is deleted below so the next
+    # export commit removes it from the public repo.
+    opted = [a for (a,) in db.execute("SELECT agent FROM agents WHERE opted_out_at IS NOT NULL")]
     for row in listing(db, limit=10_000):
         agent = row["agent"]
+        if agent in opted:
+            continue
         # The whole exchange, not the tail. `listing()` shows the last few for a human reading the CLI; the published
         # record must be complete, or a conversation that is still going is published as if it had stopped.
         row["messages"] = [{"direction": d, "text": t, "at": at} for d, t, at in db.execute(
@@ -383,8 +447,7 @@ def export(db, out_dir, now=None):
                          for m in row["messages"]],
             "agreements": row["agreements"],
         }
-        safe = "".join(c if (c.isalnum() or c in "-_.") else "-" for c in agent).strip("-.") or "agent"
-        path = os.path.join(out_dir, f"{safe}.json")
+        path = os.path.join(out_dir, f"{_safe_name(agent)}.json")
         # A volatile `exported_at` in every document made every export rewrite all ~478 files, so each commit
         # touched the whole tree: the public diff stopped meaning "these conversations moved", and the pre-push
         # secret scan — which flags a path by its NAME, so a wallet conversation is flagged every time it is
@@ -397,6 +460,13 @@ def export(db, out_dir, now=None):
             json.dump(doc, f, indent=1, ensure_ascii=False, sort_keys=True)
             f.write("\n")
         written.append(path)
+    removed = 0
+    for agent in opted:
+        path = os.path.join(out_dir, f"{_safe_name(agent)}.json")
+        # Never delete a file this export just wrote for another agent whose name maps to the same file.
+        if path not in written and os.path.exists(path):
+            os.remove(path)
+            removed += 1
     index = {
         "what": "Every conversation between the Unstuck agent and an agent from outside the Nano world.",
         "why": "Open research data on converting agents that had never heard of Nano to their first Nano transaction.",
@@ -412,7 +482,7 @@ def export(db, out_dir, now=None):
     with open(index_path, "w", encoding="utf-8") as f:
         json.dump(index, f, indent=1, ensure_ascii=False, sort_keys=True)
         f.write("\n")
-    return {"written": len(written), "dir": out_dir}
+    return {"written": len(written), "removed": removed, "dir": out_dir}
 
 
 STALE_AFTER_S = 3600  # an hour of silence is already a conversation at risk of being forgotten
@@ -1008,6 +1078,9 @@ def main(argv=None):
     ag.add_argument("--agent", required=True)
     ag.add_argument("--summary", required=True)
     ag.add_argument("--amount-xno", default="", dest="amount_xno")
+    rd = sub.add_parser("redact", aliases=["optout"],
+                        help="the agent opted out: delete its messages, keep only a `declined` row, never publish it")
+    rd.add_argument("--agent", required=True)
     w = sub.add_parser("waiting", help="conversations that have gone quiet and need resuming")
     # Default comes from STALE_AFTER_S, never a second number here: a literal in the parser silently overrode the
     # constant and the CLI reported 1 waiting conversation where the library found 8 (measured 2026-09-18).
@@ -1057,6 +1130,8 @@ def main(argv=None):
             out = set_status(db, a.agent, a.status)
         elif a.cmd == "agreed":
             out = agreed(db, a.agent, a.summary, a.amount_xno)
+        elif a.cmd in ("redact", "optout"):
+            out = optout(db, a.agent)
         elif a.cmd == "asks-target":
             out = asks_target(db)
         elif a.cmd == "network":
