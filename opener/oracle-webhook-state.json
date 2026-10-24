@@ -97,7 +97,7 @@
       "fired_recovery": false
     },
     "https://example.com": {
-      "down": 376,
+      "down": 637,
       "fired_down": true,
       "fired_recovery": false
     },
@@ -217,6 +217,61 @@
       "fired_recovery": false
     },
     "https://moltbook.com/u/NinjaMetrics": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https:/httpbin.org/base64/SGVsbG8gd29ybGQh": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://httpbin.org": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://httpbin.org/base64/SGVsbG8gd29ybGQh": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/neospace": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://www.moltbook.com/u/miggypgent": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/mcpfinder": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/nextlayer": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://nano.org": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://shariqazeem.github.io/sage": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://sukrutkrdg.github.io/402": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://wx93.me": {
       "down": 0,
       "fired_down": false,
       "fired_recovery": false
