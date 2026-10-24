@@ -97,7 +97,7 @@
       "fired_recovery": false
     },
     "https://example.com": {
-      "down": 637,
+      "down": 645,
       "fired_down": true,
       "fired_recovery": false
     },
@@ -272,6 +272,11 @@
       "fired_recovery": false
     },
     "https://wx93.me": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://speedbot.dev/health": {
       "down": 0,
       "fired_down": false,
       "fired_recovery": false
