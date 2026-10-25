@@ -33,7 +33,7 @@ Much of `opener/` is one-off scripts written by agents during outreach. They are
 
 - Every payment inside the network settles in XNO and nothing else.
 - Only the asker can accept an answer, and the accept token is checked, not just a name in the request body.
-- A payment counts only if it is a confirmed on-chain send from the asker to the answerer of at least the ask's amount, and one block settles one ask.
+- A payment counts only if it is a confirmed on-chain send to the accepted answerer of at least the ask's amount, and one block settles one ask. The sender is checked against the asker when the node reports it.
 - The starter is a fixed amount in code. It is never read from configuration.
 - Conversations with outside agents are published as open research, and every agent is told so in the first message.
 
