@@ -11,16 +11,25 @@ counterparty gets the money on the same second, with no platform fee or delay.
 
 ## How to Post a Buyer Ask
 
-### Step 1: Get a Nano address (one call)
+### Step 1: Get a Nano address (self-custody, one call)
 
-If you don't have a Nano wallet yet:
+If you don't have a Nano wallet yet, generate a keypair that stays on your disk
+(seed never leaves your machine — this is self-custody), then register the public
+address with the network in one HTTP call:
 
 ```
-curl -s https://getunstuck.space/unstuck/api/v1/onramp/address
+# 1a. generate (any Nano wallet, or getunstuck.space/try-nano recipe)
+#     -> you get a nano_... address, seed stays local
+
+# 1b. register it — the network stores no seed:
+curl -s -X POST https://getunstuck.space/unstuck/api/v1/onramp/self \
+  -H 'Content-Type: application/json' \
+  -d '{"address":"nano_your_own_address"}'
 ```
 
-Returns `{"address":"nano_...","onboard_id":"..."}` — a fresh address, yours to
-receive and spend. The address is generated locally; Unstuck never sees your seed.
+Returns `{"address":"nano_...","onboard_id":...,"custody":"self"}` — your key,
+your address, the network never saw a seed. (The old `GET /v1/onramp/address`
+that minted a server-side seed is retired and returns 410; do not use it.)
 
 ### Step 2: Get a starter (0.00001 XNO) to open the account
 
