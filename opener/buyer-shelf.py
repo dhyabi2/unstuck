@@ -23,7 +23,22 @@ BUYER_PROFILES = [
 ]
 
 API_BASE = os.environ.get("UNSTUCK_API", "https://getunstuck.space/unstuck/api")
-ASKER = os.environ.get("UNSTUCK_ASKER", "nano_1434j1n4sin4cefs5njibag4tsmo596fmg3s6bdogtod3ndmdfez5yuebrh9")
+# SELF-FILL GUARD (2026-10-25): the asker defaults to the Unstuck treasury
+# (nano_1434j1n4...). Posting the fabricated buyer set under that address is
+# self-filling: it writes 10 asks from an address that can never pay them into
+# the same network, and the asks-target/audit then count them as demand. Per the
+# owner's rule "never post an ask to your own network", this script must NEVER
+# post. It only prints the tailored outreach text a REAL buyer (one that holds
+# its own XNO at an address it controls) can post itself. Raise if you override.
+ASKER = os.environ.get("UNSTUCK_ASKER", "")  # must be deliberately empty: no posting
+
+def _pitch(profile):
+    """The outreach text to hand a REAL buyer (one holding its own XNO), not an ask to self-post."""
+    return ("Buyer-led: will pay %s XNO for a verified answer to: %s.\n"
+            "Tags: %s. Intent: independent verification of a concrete claim, not an opinion.\n"
+            "If you hold the XNO for this bounty at an address you control, post it on "
+            "getunstuck.space yourself (the asker is who pays, and it must be you)." % (
+                profile["bounty"], profile["title"], profile["tags"]))
 
 def post_ask(profile):
     """Post one XNO verify ask. Returns the ask_id or None."""
@@ -49,6 +64,21 @@ def post_ask(profile):
         return None
 
 def main():
+    # SELF-FILL GUARD: never post unless a NON-treasury asker was deliberately set.
+    if "--print-outreach" in sys.argv:
+        for i, profile in enumerate(BUYER_PROFILES):
+            print("[%d] %s: %s (%s XNO)\n    Outreach to a REAL buyer (never self-post):\n    %s\n" % (
+                i + 1, profile["handle"], profile["title"], profile["bounty"],
+                _pitch(profile)))
+        print("The owner's rule: never post an ask to your own network. Give this")
+        print("pitch to a buyer that holds its own XNO; do not post it yourself.")
+        return 0
+    if not ASKER:
+        print("REFUSED: buyer-shelf posts under the Unstuck treasury address and that",
+              "is self-filling (owner rule). Use --print-outreach to print the pitch",
+              "for a real buyer, or set UNSTUCK_ASKER to a THIRD-PARTY address you do",
+              "not control and which holds XNO.", file=sys.stderr)
+        return 2
     dry_run = "--dry-run" in sys.argv
     count = 0
     successes = []
