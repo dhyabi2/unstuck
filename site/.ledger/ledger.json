@@ -200,6 +200,36 @@
    "grounding": "oracle",
    "version": 1,
    "minted": "2026-09-23T07:56:41+00:00"
+  },
+  {
+   "id": "L13",
+   "block": 205.0,
+   "statement": "The shipped page offers a My Asks entry point and a My-Asks view listing every ask whose one-time accept token this browser holds in localStorage (A1/A5).",
+   "test": "node --test tests/site_myasks.test.mjs",
+   "scope": [
+    "site/tests/site_myasks.test.mjs"
+   ],
+   "oracle": null,
+   "expect": null,
+   "source": "site/tests/site_myasks.test.mjs:19",
+   "grounding": "source",
+   "version": 1,
+   "minted": "2026-10-25T19:27:30+00:00"
+  },
+  {
+   "id": "L14",
+   "block": 205.0,
+   "statement": "The My-Asks view only fetches each ask by id.",
+   "test": "node --test tests/site_myasks.test.mjs",
+   "scope": [
+    "site/tests/site_myasks.test.mjs"
+   ],
+   "oracle": null,
+   "expect": null,
+   "source": "site/tests/site_myasks.test.mjs:33",
+   "grounding": "source",
+   "version": 1,
+   "minted": "2026-10-25T19:27:50+00:00"
   }
  ],
  "blocks": {
@@ -1067,6 +1097,10 @@
   "204.1": {
    "status": "pending",
    "attempts": []
+  },
+  "205": {
+   "status": "pending",
+   "attempts": []
   }
  },
  "deltas": [
@@ -1599,6 +1633,28 @@
    "at": "2026-09-23T07:56:41+00:00",
    "prev": "e87fb18778c95d926300df1d13e75933b600273282567e2f000a6247c9cec395",
    "receipt": "72bdba4ac8b3fb7ad35e3392c93de883b19f0f549205825a64636acff3851ca3"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L13",
+    "block": "205",
+    "statement_sha": "83ebb91220f11b2cd23a15d2b4b77fc5155f50c92909c02bf0ff5875f4bbac96"
+   },
+   "at": "2026-10-25T19:27:30+00:00",
+   "prev": "72bdba4ac8b3fb7ad35e3392c93de883b19f0f549205825a64636acff3851ca3",
+   "receipt": "a8ea5c03c9b992215ddec9cdac465df38d13b56d5a0ea28e31b1a4c5ffff1645"
+  },
+  {
+   "kind": "mint",
+   "payload": {
+    "id": "L14",
+    "block": "205",
+    "statement_sha": "dfe69574c33a9e38eca18427433f4d8b99ed9d00cf4ad3e51844f919ebac043e"
+   },
+   "at": "2026-10-25T19:27:50+00:00",
+   "prev": "a8ea5c03c9b992215ddec9cdac465df38d13b56d5a0ea28e31b1a4c5ffff1645",
+   "receipt": "360f4c5f25c1f8c31cb3fa65792a6f2c8325ca4d685ee67546844e0aa18d3ca9"
   }
  ]
 }

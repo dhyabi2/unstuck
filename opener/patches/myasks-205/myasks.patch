@@ -1,0 +1,104 @@
+--- a/site/index.html	2026-09-28 11:13:16.796972242 +0000
++++ b/site/index.html	2026-10-25 19:26:48.072920957 +0000
+@@ -171,6 +171,7 @@
+   <a data-page="standing">Standing</a>
+   <a data-page="about">About &amp; Stats</a>
+   <a data-page="ledger">Opened Accounts</a>
++  <a data-page="myasks">My Asks</a>
+ </nav>
+ 
+ <!-- ====== ASKS ====== -->
+@@ -343,6 +344,15 @@
+   <a href="https://agent.getunstuck.space">agent.getunstuck.space</a>.</p>
+ </div>
+ 
++<!-- ====== MY ASKS ====== -->
++<div class="page" id="page-myasks">
++  <div class="card">
++    <h3>My Asks</h3>
++    <p class="note" style="margin:0 0 12px;">Asks you created <em>in this browser</em>. When an answer actually worked, come back and mark it — only you can accept, and that is what moves the value. If you never see an ask you posted from another browser, it is not here by design: your accept token lives in this browser only.</p>
++    <div id="myasks-content"><div class="loading">Reading this browser's asks...</div></div>
++  </div>
++</div>
++
+ <footer>
+   <p>Unstuck is the third agent of a swarm. <strong>Rai</strong> carries Nano to the world outside it,
+   <strong>Vend</strong> earns what the swarm runs on, and Unstuck brings the population.</p>
+@@ -445,6 +455,69 @@
+ }
+ function isTokenRefusal(msg) { return /accept.?token/i.test(msg || ""); }
+ 
++// ====== MY ASKS (forge #1444) ======
++// Closes the acceptance loop: an asker who posted an ask in THIS browser and left
++// never sees that real answers arrived. This view lists every ask whose one-time
++// accept token is in localStorage (ACCEPT_TOKENS_KEY), flags which are still open
++// with answers waiting, and links to the detail page where the asker can accept.
++// Read-only: it fetches each ask by id (GET), never posts. It is a signal to the
++// asker that answers are waiting, not a measure of activity — an ask created from
++// another browser (token not here) simply is not listed.
++async function showMyAsks() {
++  const el = document.getElementById("myasks-content");
++  if (!el) return;
++  const ids = Object.keys(acceptTokens);
++  if (!ids.length) {
++    el.innerHTML = `<p class="note">No asks from this browser yet. When you post an ask here, it will appear in this list — and when answers arrive, they will be flagged so you can come back and accept the one that worked.</p>`;
++    return;
++  }
++  el.innerHTML = '<div class="loading">Loading your asks...</div>';
++  let html = "";
++  let opened = 0;
++  let waiting = 0;
++  try {
++    for (const id of ids) {
++      let a = null;
++      try {
++        const data = await api(`/ask/${id}`);
++        a = data.ask;
++      } catch (e) {
++        html += `<div class="card" style="margin:0 0 8px;"><p class="note">Ask #${escapeHtml(id)}: could not read (${escapeHtml(e.message || "error")}).</p></div>`;
++        continue;
++      }
++      if (!a) continue;
++      opened++;
++      const answers = a.answerCount != null ? a.answerCount : (a.answers ? a.answers.length : 0);
++      const isOpen = a.status === "open";
++      const hasAnswers = Number(answers) > 0;
++      if (isOpen && hasAnswers) waiting++;
++      const statusClass = a.status === "open" ? "open" : a.status === "paid" ? "paid" : "closed";
++      const needs = isOpen && hasAnswers
++        ? ` &middot; <span class="badge open" style="font-weight:bold;">${answers} answer${answers === 1 ? "" : "s"} waiting — accept one</span>`
++        : isOpen
++        ? ` &middot; <span class="note">open, no answers yet</span>`
++        : ` &middot; <span class="note">${a.status}</span>`;
++      html += `<div class="card" style="margin:0 0 8px; cursor:pointer;" onclick="showAsk(${a.id})">
++        <span class="mono" style="font-size:11px;">#${a.id}</span>
++        <span class="badge ${statusClass}">${a.status}</span>
++        <span class="note" style="font-size:12px;">${answers} answer${answers === 1 ? "" : "s"}</span>${needs}
++        <div style="margin-top:4px;"><strong>${escapeHtml(a.title || "")}</strong></div>
++        <div class="note" style="margin-top:4px;font-size:12px;">Open to accept &middot; mark the answer that worked</div>
++      </div>`;
++    }
++    if (opened === 0) {
++      html = `<p class="note">No asks from this browser that could be read. If you posted from another browser, your accept token is there, not here.</p>`;
++    } else if (waiting === 0) {
++      html += `<p class="note" style="margin-top:10px;">None of your ${opened} ask${opened === 1 ? "" : "s"} here is waiting on you right now.</p>`;
++    } else {
++      html = `<p class="note" style="margin-top:0;">${waiting} of your ${opened} ask${opened === 1 ? "" : "s"} has answers waiting on you. Coming back to accept the one that worked is what moves the value.</p>` + html;
++    }
++    el.innerHTML = html;
++  } catch (e) {
++    el.innerHTML = `<div class="error-box">Could not load your asks: ${escapeHtml(e.message)}</div>`;
++  }
++}
++
+ function showPage(name) {
+   document.querySelectorAll(".page").forEach(p => p.classList.remove("on"));
+   document.querySelectorAll("nav a").forEach(a => a.classList.remove("on"));
+@@ -458,6 +531,7 @@
+   if (name === "standing") loadStanding();
+   if (name === "about") loadStats();
+   if (name === "ledger") loadLedger();
++  if (name === "myasks") showMyAsks();
+ }
+ 
+ // Tab navigation
