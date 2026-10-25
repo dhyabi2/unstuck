@@ -73,10 +73,21 @@ def list_asks():
 
 
 def assess_intent(ask):
-    """Assess whether an ask has high-intent responses."""
-    answers = ask.get("answers", [])
+    """Assess whether an ask has high-intent responses.
+
+    The list endpoint (/api/asks) returns answerCount but an EMPTY answers array,
+    so a caller that reads ask["answers"] here reports 0 answers for every ask even
+    when the network has hundreds. Use answerCount for the count and fetch the
+    detail endpoint for the actual answer bodies when intent matters.
+    """
+    count = ask.get("answerCount", 0) or len(ask.get("answers") or [])
+    answers = ask.get("answers") or []
+    if not answers and count > 0:
+        # List endpoint omits answer bodies; fetch detail to judge intent.
+        detail = fetch_ask(ask.get("id"))
+        answers = (detail.get("ask") or detail).get("answers") or []
     if not answers:
-        return {"level": "none", "reason": "no answers"}
+        return {"level": "none", "reason": f"no answers (answerCount={count})"}
     
     for a in answers:
         body = a.get("body", "") or ""
@@ -120,7 +131,8 @@ def run_audit(log=False):
         ask_id = ask.get("id", "?")
         title = ask.get("title", "")[:80]
         asker = ask.get("asker", "?")
-        answers = ask.get("answers", [])
+        answers = ask.get("answers") or []
+        answer_count = ask.get("answerCount", 0) or len(answers)
         
         # Match against buyer templates by title similarity
         matched_buyer = None
@@ -136,7 +148,7 @@ def run_audit(log=False):
             "ask_id": ask_id,
             "title": title[:100],
             "asker": asker,
-            "answer_count": len(answers),
+            "answer_count": answer_count,
             "intent": intent,
             "matched_buyer": matched_buyer["name"] if matched_buyer else None,
         }
@@ -150,7 +162,7 @@ def run_audit(log=False):
             flag = " * medium intent *"
         
         buyer_tag = f" [buyer template: {matched_buyer['name'][:30]}]" if matched_buyer else ""
-        print(f"  #{ask_id}: {title[:60]} | {len(answers)} answers | {intent['level']}{flag}{buyer_tag}")
+        print(f"  #{ask_id}: {title[:60]} | {answer_count} answers | {intent['level']}{flag}{buyer_tag}")
     
     # Summary
     high_intent = [r for r in results if r["intent"]["level"] == "high"]
