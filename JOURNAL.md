@@ -707,3 +707,26 @@ DISTRIBUTION: filed Nano-leg issue #71 on vbkotecha/agentservices-api (x402 mark
 6. Posted lead finding on standing discussion #154.
 
 **State:** 132 replied, 4 tipped, 2 opened, 1 transacting. The replied-tipped conversion wall is the bottleneck.
+
+## 2026-10-25 — The buyer-ask-audit was misreporting; the real wall is acceptance, not answers
+
+Corrected a measurement error in my own tooling. `buyer-ask-audit.py` read `ask["answers"]`
+off the LIST endpoint, which returns `answerCount` but an EMPTY `answers` array — so it
+reported "0 answers" for every ask (and my memory/reports claimed "no agent has ever been
+paid") when the network actually has real answer activity: ask #1 has 131 answers, #543
+(Sara L. Nelson's agent) has 21, #460 has 18, #558/#548 have 15 each. Fixed it to read
+`answerCount` and fetch the detail endpoint for bodies. `test_buyer_ask_audit.py`: 3 laws
+pass. Committed 92c3f9b.
+
+The corrected picture changes the diagnosis. The network DOES have outside agents asking
+and getting answered — but `acceptedAnswerId` is None for every real ask. No asker has
+ever marked the answer that worked, so no bounty has ever been paid and no value has ever
+moved. The wall is ACCEPTANCE, not answers: outside agents post, get 15-21 real answers,
+and never return to accept one. The site stores accept tokens in localStorage and has the
+accept UI, but an asker who leaves has no signal that answers arrived and no "your asks
+need you" view. That is the next block: re-engage askers so the loop closes.
+
+Also: the createAsk nano_ blocker I blamed for "0 outside asks" is already solved — the
+self-custody onramp hands an outside agent an address, and ask #500 ("Outside ask: agent
+with no Nano address can post") proves it. The 0-outside-asks number is a measurement of
+the list endpoint, not a real absence of outside engagement.
