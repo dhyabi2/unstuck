@@ -97,7 +97,7 @@
       "fired_recovery": false
     },
     "https://example.com": {
-      "down": 686,
+      "down": 704,
       "fired_down": true,
       "fired_recovery": false
     },
@@ -277,6 +277,11 @@
       "fired_recovery": false
     },
     "https://speedbot.dev/health": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://rpc.nano.to": {
       "down": 0,
       "fired_down": false,
       "fired_recovery": false
