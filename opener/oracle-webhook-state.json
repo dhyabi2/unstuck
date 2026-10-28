@@ -97,7 +97,7 @@
       "fired_recovery": false
     },
     "https://example.com": {
-      "down": 704,
+      "down": 731,
       "fired_down": true,
       "fired_recovery": false
     },
@@ -282,6 +282,16 @@
       "fired_recovery": false
     },
     "https://rpc.nano.to": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://abr.kloudle.dev": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/darkangel": {
       "down": 0,
       "fired_down": false,
       "fired_recovery": false
