@@ -385,7 +385,7 @@ function handleAgentDotWellKnown(req, res) {
       { path: "/standing", method: "GET", description: "Agent standing (distinct funded counterparties)" },
       { path: "/v1/x402", method: "GET", description: "x402 capabilities discovery" },
       { path: "/v1/echo", method: "POST", description: "Seller verification (returns HTTP 402)" },
-      { path: "/v1/verify-payment", method: "GET", description: "Verify a Nano payment block hash" },
+      { path: "/v1/verify-payment", method: "GET", description: "Verify a Nano payment block hash (?block=&account=&amount=): verified only for a confirmed send to account for exactly amount raw" },
       { path: "/v1/oracle-check", method: "GET", description: "Free live oracle-integrity scorecard for any URL (?url=...): reachability, TLS, redirect chain, CONTENT DRIFT since the last reading, stability, and a deterministic 0-100 score with every point attributed. No account, no key, no charge." },
       { path: "/v1/oracle-sources", method: "GET", description: "Every URL the integrity checker has a reading for, with its own honest counts" },
     ],
@@ -432,53 +432,93 @@ function handleEcho(req, res) {
   }).catch(() => send(res, 400, { error: "invalid JSON body" }));
 }
 
+// --- Reading a Nano send block (read-only; no key, nothing broadcast) ---
+
+/** Ask one public node for a block. Resolves the parsed block_info, rejects on any error. */
+function nodeBlockInfo(nodeUrl, blockHash) {
+  const https = require("https");
+  const payload = JSON.stringify({ action: "block_info", json_block: "true", hash: blockHash });
+  return new Promise((resolve, reject) => {
+    const r = https.request(nodeUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(payload) },
+      timeout: 10000,
+    }, (rpcRes) => {
+      let data = "";
+      rpcRes.on("data", (c) => (data += c));
+      rpcRes.on("end", () => {
+        let json;
+        try { json = JSON.parse(data); } catch (_) { return reject(new Error("failed to parse RPC response")); }
+        if (json.error) return reject(new Error(String(json.error)));
+        resolve(json);
+      });
+      rpcRes.on("error", reject);
+    });
+    r.on("timeout", () => r.destroy(new Error("RPC timeout")));
+    r.on("error", (e) => reject(new Error(`RPC error: ${e.message}`)));
+    r.write(payload);
+    r.end();
+  });
+}
+
+/** nano_ and xrb_ name the same key; compare the part after the prefix. */
+function sameAccount(a, b) {
+  const strip = (x) => String(x || "").replace(/^(nano|xrb)_/, "");
+  return !!a && !!b && strip(a) === strip(b);
+}
+
 /**
- * GET /v1/verify-payment?block=<blockHash>&account=<nano_address>
+ * What a block_info says about a payment. The destination of a send is
+ * contents.link_as_account — contents.link is hex and never equals a nano_ address.
+ */
+function readSend(info, { payTo, amount } = {}) {
+  const contents = info.contents || {};
+  const isSend = info.subtype === "send";
+  const destination = isSend ? (contents.link_as_account || null) : null;
+  const confirmed = info.confirmed === "true" || info.confirmed === true;
+  const matchesDestination = !payTo || sameAccount(destination, payTo);
+  const matchesAmount = !amount || (/^\d+$/.test(String(info.amount || "")) && BigInt(info.amount) === BigInt(amount));
+  return {
+    confirmed, isSend, destination, matchesDestination, matchesAmount,
+    payer: info.block_account || contents.account || null,
+    ok: confirmed && isSend && matchesDestination && matchesAmount,
+  };
+}
+
+/**
+ * GET /v1/verify-payment?block=<blockHash>&account=<nano_address>&amount=<raw>
  * Checks a Nano block hash against the network's RPC to verify a payment.
- * Agents can use this after paying to confirm the payment is on-chain.
+ * verified is true only when the block is a confirmed SEND, its destination is
+ * `account` (if given) and its amount is exactly `amount` raw (if given).
  * This is a read-only RPC proxy — does not hold keys.
  */
 function handleVerifyPayment(req, res) {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   const blockHash = url.searchParams.get("block");
   const account = url.searchParams.get("account");
+  const amount = url.searchParams.get("amount");
   if (!blockHash || !/^[0-9A-Fa-f]{64}$/.test(blockHash)) {
     return send(res, 400, { verified: false, error: "missing or invalid block hash (expected 64 hex chars)" });
   }
-  // Use the public RPC to check this block
-  const https = require("https");
-  const rpcPayload = JSON.stringify({ action: "block_info", json_block: "true", hash: blockHash });
-  const rpcReq = https.request("https://rpc.nano.to", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(rpcPayload) },
-  }, (rpcRes) => {
-    let data = "";
-    rpcRes.on("data", c => data += c);
-    rpcRes.on("end", () => {
-      try {
-        const json = JSON.parse(data);
-        if (json.error) return send(res, 200, { verified: false, error: json.error });
-        // Check the block is a send or receive and the account matches
-        const matchesAccount = !account || json.block_account === account ||
-          (json.subtype === "send" && json.contents && json.contents.link === account);
-        send(res, 200, {
-          verified: !json.error && json.confirmed === "true",
-          hash: blockHash,
-          account: json.block_account || null,
-          amount: json.amount || "0",
-          subtype: json.subtype || null,
-          height: json.height || null,
-          confirmed: json.confirmed === "true",
-          matchesAccount: !!matchesAccount,
-        });
-      } catch (e) {
-        send(res, 200, { verified: false, error: "failed to parse RPC response" });
-      }
+  if (amount !== null && !/^\d+$/.test(amount)) {
+    return send(res, 400, { verified: false, error: "invalid amount (expected raw units as a decimal string)" });
+  }
+  nodeBlockInfo("https://rpc.nano.to", blockHash).then((json) => {
+    const r = readSend(json, { payTo: account, amount });
+    send(res, 200, {
+      verified: r.ok,
+      hash: blockHash,
+      account: json.block_account || null,
+      amount: json.amount || "0",
+      subtype: json.subtype || null,
+      height: json.height || null,
+      confirmed: r.confirmed,
+      destination: r.destination,
+      matchesAccount: !account || sameAccount(json.block_account, account) || sameAccount(r.destination, account),
+      matchesDestination: r.matchesDestination,
+      matchesAmount: r.matchesAmount,
     });
-  });
-  rpcReq.on("error", (e) => send(res, 200, { verified: false, error: `RPC error: ${e.message}` }));
-  rpcReq.write(rpcPayload);
-  rpcReq.end();
+  }).catch((e) => send(res, 200, { verified: false, error: e.message }));
 }
 
 /**

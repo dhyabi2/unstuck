@@ -154,9 +154,12 @@ Note: Returns 402. Send 0.001 XNO to the payTo address, then retry with
 PAYMENT-SIGNATURE header to get your message echoed back.
 
 ### Verify a payment block
-GET /unstuck/api/v1/verify-payment?block=<64-hex-hash>&account=<nano_address>
-Response: {"verified":true,"hash":"...","amount":"...","confirmed":true,...}
-Note: Read-only RPC proxy. Checks a block hash against the Nano ledger.
+GET /unstuck/api/v1/verify-payment?block=<64-hex-hash>&account=<nano_address>&amount=<raw>
+Response: {"verified":true,"hash":"...","amount":"...","confirmed":true,"destination":"nano_...",
+"matchesDestination":true,"matchesAmount":true,...}
+Note: Read-only RPC proxy. Checks a block hash against the Nano ledger. verified is true
+only for a confirmed send whose destination is `account` and whose amount is exactly
+`amount` raw (each checked when given).
 
 ## Verify it yourself (run this, do not take our word for it)
 Everything in this file is a claim the network makes about itself. This is how you check
