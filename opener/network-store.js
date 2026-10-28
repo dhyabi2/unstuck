@@ -123,6 +123,17 @@ function getDb() {
       created_at TEXT NOT NULL
     )
   `);
+  // Nano x402 facilitator: a send block settles exactly one request. The PRIMARY KEY
+  // is the binding, so it holds across restarts.
+  _db.exec(`
+    CREATE TABLE IF NOT EXISTS facilitator_settlements (
+      block_hash TEXT PRIMARY KEY,
+      pay_to TEXT NOT NULL,
+      amount_raw TEXT NOT NULL,
+      payer TEXT,
+      settled_at TEXT NOT NULL
+    )
+  `);
   return _db;
 }
 
@@ -486,6 +497,25 @@ function recordSettlement(askId, blockHash, { now = new Date().toISOString(), ac
   return { ok: true, settlementBlock: blockHash, settledAt: now };
 }
 
+// --- Nano x402 facilitator binding ---
+
+/** True when this block hash has already settled a facilitator request. */
+function isFacilitatorBlockBound(blockHash) {
+  return !!getDb().prepare("SELECT 1 FROM facilitator_settlements WHERE block_hash = ?")
+    .get(String(blockHash).toUpperCase());
+}
+
+/**
+ * Bind a verified send block to one settlement. Returns true the first time, false
+ * for every later call with the same hash (case-insensitive).
+ */
+function bindFacilitatorBlock({ blockHash, payTo, amount, payer, now = new Date().toISOString() }) {
+  const r = getDb().prepare(
+    "INSERT OR IGNORE INTO facilitator_settlements (block_hash, pay_to, amount_raw, payer, settled_at) VALUES (?, ?, ?, ?, ?)"
+  ).run(String(blockHash).toUpperCase(), payTo, String(amount), payer || null, now);
+  return r.changes === 1;
+}
+
 /**
  * Standing is distinct counterparts, never volume: the number of DIFFERENT
  * askers who paid an answerer. Unlike network.standing (which counts every
@@ -521,6 +551,8 @@ module.exports = {
   settlementPrecheck,
   recordSettlement,
   getStanding,
+  isFacilitatorBlockBound,
+  bindFacilitatorBlock,
   recordOnboard,
   getOnboard,
   resetDb,

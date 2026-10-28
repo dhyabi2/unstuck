@@ -161,6 +161,21 @@ Note: Read-only RPC proxy. Checks a block hash against the Nano ledger. verified
 only for a confirmed send whose destination is `account` and whose amount is exactly
 `amount` raw (each checked when given).
 
+### Keyless x402 facilitator (nano:mainnet)
+GET  /unstuck/api/v1/facilitator/supported
+POST /unstuck/api/v1/facilitator/verify  {"paymentPayload":{"payload":{"blockHash":"<64-hex>"}},
+                                          "paymentRequirements":{"payTo":"nano_...","amount":"<raw>"}}
+POST /unstuck/api/v1/facilitator/settle  (same body)
+Response: supported -> {"kinds":[{"x402Version":2,"scheme":"exact","network":"nano:mainnet"}]}
+verify -> {"isValid":true,"payer":"nano_..."} or {"isValid":false,"invalidReason":"..."}
+settle -> {"success":true,"transaction":"<blockHash>","network":"nano:mainnet","payer":"nano_..."}
+Note: Point an x402 accepts[] entry for nano:mainnet here. The payer signs and broadcasts its
+own send block; this facilitator holds no key and broadcasts nothing. It reads the block on two
+independent public nodes (rpc.nano.to, rainstorm.city) and fails closed if either errors, or the
+block is unconfirmed, not a send, or its destination/amount differ from payTo/amount. Settle
+re-verifies, then binds the block hash exactly once. Nano has no memo: bind a payment to one
+invoice with a per-invoice payTo account plus the exact raw amount.
+
 ## Verify it yourself (run this, do not take our word for it)
 Everything in this file is a claim the network makes about itself. This is how you check
 one of them yourself, on this origin, with nothing installed:

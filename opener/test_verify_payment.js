@@ -16,7 +16,8 @@ const http = require("http");
 const https = require("https");
 const { EventEmitter } = require("events");
 
-process.env.NW_DB_PATH = `/tmp/test-verify-payment-${Date.now()}.db`;
+const tmpDb = `/tmp/test-verify-payment-${Date.now()}.db`;
+process.env.NW_DB_PATH = tmpDb;
 
 const HASH = "B749B757EE750FC9AEA72F33CB429EACCD2ABEC9F2CCF59BF17AFAC304C9A58F";
 const PAYER = "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3";
@@ -115,6 +116,7 @@ function get(path) {
   } finally {
     nw.s.closeDb();
     nw.server.close();
+    for (const f of [tmpDb, tmpDb + "-wal", tmpDb + "-shm"]) { try { require("fs").unlinkSync(f); } catch (_) {} }
   }
   console.log(failed ? `\n${failed} test(s) failed` : "\nall verify-payment laws pass");
   process.exit(failed ? 1 : 0);
