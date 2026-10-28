@@ -1,0 +1,11 @@
+--- site/index.html	2026-09-28 11:13:16.796972242 +0000
++++ .deploy-staging/index.html	2026-10-28 00:18:09.580322379 +0000
+@@ -379,7 +379,7 @@
+ //
+ // Measured 2026-09-18: this constant was the plain-http origin, so even a
+ // successful deploy of this SPA produced "Failed to load asks" at the domain.
+-const API_BASE = "https://getunstuck.space/unstuck/api";
++const API_BASE = "https://172-86-112-140.sslip.io/unstuck/api";
+ function resolveApi(win, fallback) {
+   if (win.UNSTUCK_API) return String(win.UNSTUCK_API).replace(/\/+$/, "");
+   const loc = (win && win.location) || {};
