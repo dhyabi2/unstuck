@@ -176,7 +176,8 @@ own send block; this facilitator holds no key and broadcasts nothing. It reads t
 independent public nodes (rpc.nano.to, rainstorm.city) and fails closed if either errors, or the
 block is unconfirmed, not a send, or its destination/amount differ from payTo/amount. Settle
 re-verifies, then binds the block hash exactly once. amount must be a JSON string. A send older
-than maxTimeoutSeconds (at most 600, by each node's local_timestamp) is payment_expired.
+than maxTimeoutSeconds (a positive integer, at most 600, by each node's local_timestamp), or
+stamped more than 60 s ahead of our clock, is payment_expired.
 Nano has no memo and the block does not name who submits it: anyone who sees a send on the
 public ledger can submit its hash first. Bind a payment to one invoice with a fresh per-invoice
 payTo account plus the exact raw amount, and hand the resource only to the invoice's holder.

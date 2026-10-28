@@ -156,6 +156,17 @@ function pay(blockHash, { payTo = PAYEE, amount = AMOUNT } = {}) {
     check("F4 maxTimeoutSeconds narrows the window and never widens it",
       mOk.body.isValid === true && mNo.body.invalidReason === "payment_expired" && oWide.body.invalidReason === "payment_expired",
       JSON.stringify([mOk.body, mNo.body, oWide.body]));
+    const FUT = "7".repeat(64);
+    sendBlock(FUT, { ts: String(Date.now()) }); // milliseconds, i.e. far in the future
+    const fu = await req("POST", "/v1/facilitator/verify", pay(FUT));
+    check("F4 a timestamp ahead of the clock is refused", fu.body.invalidReason === "payment_expired", JSON.stringify(fu.body));
+    const badMt = [];
+    for (const val of ["60", 0, -5, 60.5, 1e300, true]) {
+      const b = pay(MID); b.paymentRequirements.maxTimeoutSeconds = val;
+      badMt.push((await req("POST", "/v1/facilitator/verify", b)).body.invalidReason);
+    }
+    check("F4 an unreadable maxTimeoutSeconds is refused, not widened",
+      badMt.every((x) => x === "invalid_payment_requirements"), JSON.stringify(badMt));
     const numAmt = pay(MID); numAmt.paymentRequirements.amount = 1;
     const na = await req("POST", "/v1/facilitator/verify", numAmt);
     check("F4 a JSON-number amount is refused", na.body.isValid === false && na.body.invalidReason === "invalid_payment_requirements", JSON.stringify(na.body));

@@ -547,6 +547,7 @@ const NANO_ADDRESS_RE = /^(nano|xrb)_[13][13456789abcdefghijkmnopqrstuwxyz]{59}$
 // past payment to the same payTo cannot be redeemed. paymentRequirements.maxTimeoutSeconds
 // narrows it; it never widens it.
 const FACILITATOR_MAX_AGE_S = 600;
+const FACILITATOR_CLOCK_SKEW_S = 60;
 const FACILITATOR_NODES = (process.env.NANO_FACILITATOR_NODES || "https://rpc.nano.to,https://rainstorm.city/api")
   .split(",").map((x) => x.trim()).filter(Boolean);
 
@@ -562,15 +563,17 @@ async function facilitatorVerify(body) {
   const payTo = pr.payTo;
   // Only a string: a JSON number above 2^53 has already been rounded by JSON.parse.
   const amount = typeof pr.amount === "string" ? pr.amount : "";
-  const maxAge = Number.isInteger(pr.maxTimeoutSeconds) && pr.maxTimeoutSeconds > 0
-    ? Math.min(pr.maxTimeoutSeconds, FACILITATOR_MAX_AGE_S) : FACILITATOR_MAX_AGE_S;
+  const mt = pr.maxTimeoutSeconds;
+  const maxAge = mt == null ? FACILITATOR_MAX_AGE_S : Math.min(mt, FACILITATOR_MAX_AGE_S);
   const fail = (invalidReason, payer = null) => ({ isValid: false, invalidReason, payer, blockHash, payTo, amount });
   if ((pr.network && pr.network !== FACILITATOR_NETWORK) || (pp.network && pp.network !== FACILITATOR_NETWORK)) {
     return fail("unsupported_network");
   }
   if ((pr.scheme && pr.scheme !== "exact") || (pp.scheme && pp.scheme !== "exact")) return fail("unsupported_scheme");
   if (!/^[0-9A-Fa-f]{64}$/.test(blockHash)) return fail("invalid_payload");
-  if (!NANO_ADDRESS_RE.test(String(payTo || "")) || !/^\d+$/.test(amount)) {
+  // A maxTimeoutSeconds the seller gave but we cannot read is refused, never widened to the default.
+  if (!NANO_ADDRESS_RE.test(String(payTo || "")) || !/^\d+$/.test(amount) ||
+      (mt != null && !(Number.isSafeInteger(mt) && mt > 0))) {
     return fail("invalid_payment_requirements");
   }
   let infos;
@@ -590,7 +593,8 @@ async function facilitatorVerify(body) {
     if (!r.matchesAmount) return fail("amount_mismatch", payer);
     if (!payer || r.payer !== payer) return fail("node_disagreement", payer);
     const ts = /^\d+$/.test(String(info.local_timestamp || "")) ? Number(info.local_timestamp) : 0;
-    if (!ts || now - ts > maxAge) return fail("payment_expired", payer);
+    // A timestamp ahead of our clock (beyond small skew) is unreadable, e.g. milliseconds: fail closed.
+    if (!ts || now - ts > maxAge || ts - now > FACILITATOR_CLOCK_SKEW_S) return fail("payment_expired", payer);
   }
   if (s.isFacilitatorBlockBound(blockHash)) return fail("already_settled", payer);
   return { isValid: true, payer, blockHash, payTo, amount };
