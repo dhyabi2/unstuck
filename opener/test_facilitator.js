@@ -25,9 +25,10 @@ const OTHER = "nano_3yo6rq85c1agb5ynn69fnmxi4y9bpct8ju1emcuc4ajx5t3o3z69i1kx847x
 const AMOUNT = "500000000000000000000000000";
 
 const BLOCKS = {};
-function sendBlock(hash, { confirmed = "true", subtype = "send", to = PAYEE, amount = AMOUNT } = {}) {
+const NOW = () => String(Math.floor(Date.now() / 1000));
+function sendBlock(hash, { confirmed = "true", subtype = "send", to = PAYEE, amount = AMOUNT, ts = NOW() } = {}) {
   BLOCKS[hash] = {
-    block_account: PAYER, amount, balance: "1", height: "7", confirmed, subtype,
+    block_account: PAYER, amount, balance: "1", height: "7", confirmed, subtype, local_timestamp: ts,
     contents: { type: "state", account: PAYER, link: "00".repeat(32), link_as_account: to },
   };
 }
@@ -136,6 +137,28 @@ function pay(blockHash, { payTo = PAYEE, amount = AMOUNT } = {}) {
 
     const ws = await req("POST", "/v1/facilitator/settle", pay(UNC));
     check("F3 settle of an invalid block is refused", ws.body.success === false && ws.body.errorReason === "block_unconfirmed", JSON.stringify(ws.body));
+
+    const OLD = "4".repeat(64);
+    sendBlock(OLD, { ts: String(Math.floor(Date.now() / 1000) - 3600) });
+    const o = await req("POST", "/v1/facilitator/settle", pay(OLD));
+    check("F4 a send older than the window is refused", o.body.success === false && o.body.errorReason === "payment_expired", JSON.stringify(o.body));
+    const NOTS = "5".repeat(64);
+    sendBlock(NOTS, { ts: "0" });
+    const nt = await req("POST", "/v1/facilitator/verify", pay(NOTS));
+    check("F4 a send with no node timestamp is refused", nt.body.isValid === false && nt.body.invalidReason === "payment_expired", JSON.stringify(nt.body));
+    const MID = "6".repeat(64);
+    sendBlock(MID, { ts: String(Math.floor(Date.now() / 1000) - 120) });
+    const mOk = await req("POST", "/v1/facilitator/verify", pay(MID));
+    const narrow = pay(MID); narrow.paymentRequirements.maxTimeoutSeconds = 60;
+    const mNo = await req("POST", "/v1/facilitator/verify", narrow);
+    const wide = pay(OLD); wide.paymentRequirements.maxTimeoutSeconds = 86400;
+    const oWide = await req("POST", "/v1/facilitator/verify", wide);
+    check("F4 maxTimeoutSeconds narrows the window and never widens it",
+      mOk.body.isValid === true && mNo.body.invalidReason === "payment_expired" && oWide.body.invalidReason === "payment_expired",
+      JSON.stringify([mOk.body, mNo.body, oWide.body]));
+    const numAmt = pay(MID); numAmt.paymentRequirements.amount = 1;
+    const na = await req("POST", "/v1/facilitator/verify", numAmt);
+    check("F4 a JSON-number amount is refused", na.body.isValid === false && na.body.invalidReason === "invalid_payment_requirements", JSON.stringify(na.body));
 
     const bad = await req("POST", "/v1/facilitator/verify", pay("zz"));
     check("F2 malformed blockHash is invalid", bad.body.isValid === false && bad.body.invalidReason === "invalid_payload", JSON.stringify(bad.body));

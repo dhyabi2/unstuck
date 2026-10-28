@@ -111,6 +111,12 @@ function get(path) {
       bare.hash === HASH && bare.account === PAYER && bare.amount === AMOUNT && bare.subtype === "send" &&
       bare.height === "7" && bare.confirmed === true && typeof bare.matchesAccount === "boolean", JSON.stringify(bare));
 
+    const emptyAcct = await get(q("&account="));
+    check("V3 an empty account is refused, not ignored", emptyAcct.verified === false && /invalid account/.test(emptyAcct.error || ""), JSON.stringify(emptyAcct));
+    const fromPayer = await get(q(`&account=${PAYER}`));
+    check("V3 matchesAccount is false when account is only the sender",
+      fromPayer.verified === false && fromPayer.matchesAccount === false, JSON.stringify(fromPayer));
+
     const missing = await get(`/v1/verify-payment?block=${"D".repeat(64)}`);
     check("V1 an unknown block is NOT verified", missing.verified === false, JSON.stringify(missing));
   } finally {

@@ -508,6 +508,10 @@ function handleVerifyPayment(req, res) {
   if (amount !== null && !/^\d+$/.test(amount)) {
     return send(res, 400, { verified: false, error: "invalid amount (expected raw units as a decimal string)" });
   }
+  // A given-but-empty account would switch the payee check off; refuse it instead.
+  if (account !== null && !NANO_ADDRESS_RE.test(account)) {
+    return send(res, 400, { verified: false, error: "invalid account (expected a nano_ address)" });
+  }
   nodeBlockInfo("https://rpc.nano.to", blockHash).then((json) => {
     const r = readSend(json, { payTo: account, amount });
     send(res, 200, {
@@ -519,7 +523,8 @@ function handleVerifyPayment(req, res) {
       height: json.height || null,
       confirmed: r.confirmed,
       destination: r.destination,
-      matchesAccount: !account || sameAccount(json.block_account, account) || sameAccount(r.destination, account),
+      // Kept for old clients; now the payee only (a send FROM account no longer matches).
+      matchesAccount: r.matchesDestination,
       matchesDestination: r.matchesDestination,
       matchesAmount: r.matchesAmount,
     });
@@ -537,6 +542,11 @@ function handleVerifyPayment(req, res) {
 // per-invoice account) plus the exact raw amount.
 
 const FACILITATOR_NETWORK = "nano:mainnet";
+const NANO_ADDRESS_RE = /^(nano|xrb)_[13][13456789abcdefghijkmnopqrstuwxyz]{59}$/;
+// A send older than this (seconds, by each node's local_timestamp) is not accepted, so a
+// past payment to the same payTo cannot be redeemed. paymentRequirements.maxTimeoutSeconds
+// narrows it; it never widens it.
+const FACILITATOR_MAX_AGE_S = 600;
 const FACILITATOR_NODES = (process.env.NANO_FACILITATOR_NODES || "https://rpc.nano.to,https://rainstorm.city/api")
   .split(",").map((x) => x.trim()).filter(Boolean);
 
@@ -550,14 +560,17 @@ async function facilitatorVerify(body) {
   const pr = (body && body.paymentRequirements) || {};
   const blockHash = String((pp.payload && pp.payload.blockHash) || pp.blockHash || "");
   const payTo = pr.payTo;
-  const amount = pr.amount != null ? String(pr.amount) : "";
+  // Only a string: a JSON number above 2^53 has already been rounded by JSON.parse.
+  const amount = typeof pr.amount === "string" ? pr.amount : "";
+  const maxAge = Number.isInteger(pr.maxTimeoutSeconds) && pr.maxTimeoutSeconds > 0
+    ? Math.min(pr.maxTimeoutSeconds, FACILITATOR_MAX_AGE_S) : FACILITATOR_MAX_AGE_S;
   const fail = (invalidReason, payer = null) => ({ isValid: false, invalidReason, payer, blockHash, payTo, amount });
   if ((pr.network && pr.network !== FACILITATOR_NETWORK) || (pp.network && pp.network !== FACILITATOR_NETWORK)) {
     return fail("unsupported_network");
   }
   if ((pr.scheme && pr.scheme !== "exact") || (pp.scheme && pp.scheme !== "exact")) return fail("unsupported_scheme");
   if (!/^[0-9A-Fa-f]{64}$/.test(blockHash)) return fail("invalid_payload");
-  if (!/^(nano|xrb)_[13][13456789abcdefghijkmnopqrstuwxyz]{59}$/.test(String(payTo || "")) || !/^\d+$/.test(amount)) {
+  if (!NANO_ADDRESS_RE.test(String(payTo || "")) || !/^\d+$/.test(amount)) {
     return fail("invalid_payment_requirements");
   }
   let infos;
@@ -567,15 +580,17 @@ async function facilitatorVerify(body) {
     return fail("node_error");
   }
   if (infos.length < 2) return fail("node_error");
-  let payer = null;
+  const payer = readSend(infos[0]).payer;
+  const now = Math.floor(Date.now() / 1000);
   for (const info of infos) {
     const r = readSend(info, { payTo, amount });
-    payer = payer || r.payer;
     if (!r.confirmed) return fail("block_unconfirmed", payer);
     if (!r.isSend) return fail("not_a_send", payer);
     if (!r.matchesDestination) return fail("destination_mismatch", payer);
     if (!r.matchesAmount) return fail("amount_mismatch", payer);
-    if (r.payer !== payer) return fail("node_disagreement", payer);
+    if (!payer || r.payer !== payer) return fail("node_disagreement", payer);
+    const ts = /^\d+$/.test(String(info.local_timestamp || "")) ? Number(info.local_timestamp) : 0;
+    if (!ts || now - ts > maxAge) return fail("payment_expired", payer);
   }
   if (s.isFacilitatorBlockBound(blockHash)) return fail("already_settled", payer);
   return { isValid: true, payer, blockHash, payTo, amount };
