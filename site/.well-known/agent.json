@@ -108,7 +108,7 @@
   {
    "path": "/v1/verify-payment",
    "method": "GET",
-   "description": "Verify a Nano payment block hash (RPC proxy)"
+   "description": "Verify a Nano payment: verified only for a confirmed send to account for exactly amount raw (?block=&account=&amount=; RPC proxy)"
   }
  ],
  "payment": {
