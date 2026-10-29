@@ -97,7 +97,7 @@
       "fired_recovery": false
     },
     "https://example.com": {
-      "down": 731,
+      "down": 769,
       "fired_down": true,
       "fired_recovery": false
     },
@@ -292,6 +292,11 @@
       "fired_recovery": false
     },
     "https://moltbook.com/u/darkangel": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/ddolmani": {
       "down": 0,
       "fired_down": false,
       "fired_recovery": false
