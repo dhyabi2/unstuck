@@ -18,6 +18,8 @@
  *   GET  /health             -> 200 {status:"ok"}
  *   GET  /v1/x402            -> 200 {x402Version, accepts} — x402 discovery for agents
  *   POST /v1/echo            -> 402 with accepts for nano:mainnet — seller verification
+ *   GET  /v1/facilitator/supported, POST /v1/facilitator/verify, POST /v1/facilitator/settle
+ *                            -> keyless x402 facilitator for nano:mainnet (two public nodes, fail closed)
  *   GET  /v1/oracle-check    -> 200 the oracle-integrity scorecard for a URL (?url=...),
  *                               free and live: reachability, TLS, redirect chain, CONTENT DRIFT
  *                               against the stored hash, stability, and a deterministic score
@@ -385,7 +387,10 @@ function handleAgentDotWellKnown(req, res) {
       { path: "/standing", method: "GET", description: "Agent standing (distinct funded counterparties)" },
       { path: "/v1/x402", method: "GET", description: "x402 capabilities discovery" },
       { path: "/v1/echo", method: "POST", description: "Seller verification (returns HTTP 402)" },
-      { path: "/v1/verify-payment", method: "GET", description: "Verify a Nano payment block hash" },
+      { path: "/v1/verify-payment", method: "GET", description: "Verify a Nano payment block hash (?block=&account=&amount=): verified only for a confirmed send to account (required) for exactly amount raw (if given); matchesPayee = destination is account, matchesAccount = account is the block's own account (old meaning). Changed 2026-10-28 (main answered verified:true for any confirmed block): verified is now false when (1) no account is given; (2) account is the block's sender, i.e. a payer checking its own send (use matchesAccount for that now); (3) amount is given and differs; (4) the block is a RECEIVE (send the payer's SEND hash, your receive's contents.link, with account=<your address>&amount=<raw>); (5) the block is a legacy pre-state send (no subtype). The node RPC call now times out after 10 s (verified:false, error). matchesAccount now treats xrb_ and nano_ forms of one account as equal. Empty/malformed account or non-integer amount is a 400." },
+      { path: "/v1/facilitator/supported", method: "GET", description: "Keyless x402 facilitator for nano:mainnet: kinds [{x402Version:2, scheme:exact, network:nano:mainnet}]" },
+      { path: "/v1/facilitator/verify", method: "POST", description: "{paymentPayload:{scheme:exact, network:nano:mainnet, payload:{blockHash, payerSignature}}, paymentRequirements:{scheme:exact, network:nano:mainnet, payTo, amount}} -> {isValid, invalidReason?, payer}; payerSignature is required: the block account's Nano's ed25519-blake2b block signature (as made by nanocurrency signBlock; a plain RFC 8032 ed25519 signature is rejected) over sha256('x402-nano-payer-proof:v1:'+BLOCKHASH+':'+payTo+':'+amount), BLOCKHASH as UPPERCASE hex; read on two public nodes, fails closed" },
+      { path: "/v1/facilitator/settle", method: "POST", description: "Re-verifies (payer proof included), then binds the block hash exactly once -> {success, transaction, network, payer, errorReason?}; holds no key, broadcasts nothing" },
       { path: "/v1/oracle-check", method: "GET", description: "Free live oracle-integrity scorecard for any URL (?url=...): reachability, TLS, redirect chain, CONTENT DRIFT since the last reading, stability, and a deterministic 0-100 score with every point attributed. No account, no key, no charge." },
       { path: "/v1/oracle-sources", method: "GET", description: "Every URL the integrity checker has a reading for, with its own honest counts" },
     ],
@@ -432,53 +437,253 @@ function handleEcho(req, res) {
   }).catch(() => send(res, 400, { error: "invalid JSON body" }));
 }
 
+// --- Reading a Nano send block (read-only; no key, nothing broadcast) ---
+
+/** Ask one public node for a block. Resolves the parsed block_info, rejects on any error. */
+function nodeBlockInfo(nodeUrl, blockHash) {
+  const https = require("https");
+  const payload = JSON.stringify({ action: "block_info", json_block: "true", hash: blockHash });
+  return new Promise((resolve, reject) => {
+    const r = https.request(nodeUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(payload) },
+      timeout: 10000,
+    }, (rpcRes) => {
+      let data = "";
+      rpcRes.on("data", (c) => (data += c));
+      rpcRes.on("end", () => {
+        // Everything a node sends is untrusted: a reply of `null`, a number or an array must
+        // fail closed here, never throw out of this handler and take the server down.
+        try {
+          let json;
+          try { json = JSON.parse(data); } catch (_) { return reject(new Error("failed to parse RPC response")); }
+          if (!json || typeof json !== "object" || Array.isArray(json)) {
+            return reject(new Error("unexpected RPC response"));
+          }
+          if (json.error) return reject(new Error(String(json.error)));
+          resolve(json);
+        } catch (e) {
+          reject(new Error("unexpected RPC response"));
+        }
+      });
+      rpcRes.on("error", reject);
+    });
+    r.on("timeout", () => r.destroy(new Error("RPC timeout")));
+    r.on("error", (e) => reject(new Error(`RPC error: ${e.message}`)));
+    r.write(payload);
+    r.end();
+  });
+}
+
+/** nano_ and xrb_ name the same key; compare the part after the prefix. */
+function sameAccount(a, b) {
+  const strip = (x) => String(x || "").replace(/^(nano|xrb)_/, "");
+  return !!a && !!b && strip(a) === strip(b);
+}
+
 /**
- * GET /v1/verify-payment?block=<blockHash>&account=<nano_address>
+ * What a block_info says about a payment. The destination of a send is
+ * contents.link_as_account — contents.link is hex and never equals a nano_ address.
+ */
+function readSend(info, { payTo, amount } = {}) {
+  const contents = info.contents || {};
+  const isSend = info.subtype === "send";
+  const destination = isSend ? (contents.link_as_account || null) : null;
+  const confirmed = info.confirmed === "true" || info.confirmed === true;
+  const matchesDestination = !payTo || sameAccount(destination, payTo);
+  const matchesAmount = !amount || (/^\d+$/.test(String(info.amount || "")) && BigInt(info.amount) === BigInt(amount));
+  return {
+    confirmed, isSend, destination, matchesDestination, matchesAmount,
+    payer: info.block_account || contents.account || null,
+    ok: confirmed && isSend && matchesDestination && matchesAmount,
+  };
+}
+
+/**
+ * GET /v1/verify-payment?block=<blockHash>&account=<nano_address>&amount=<raw>
  * Checks a Nano block hash against the network's RPC to verify a payment.
- * Agents can use this after paying to confirm the payment is on-chain.
+ * verified is true only when the block is a confirmed SEND, `account` is given and is its
+ * destination (the payee), and its amount is exactly `amount` raw (if given). With no
+ * account, verified is false (a confirmed send to anyone proves nothing about a payment
+ * to you); confirmedSend still says whether it is a confirmed send at all.
+ * matchesAccount keeps its old meaning (account is the block's own account, i.e. the
+ * sender of a send); matchesPayee is the payee check that gates verified.
  * This is a read-only RPC proxy — does not hold keys.
  */
 function handleVerifyPayment(req, res) {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   const blockHash = url.searchParams.get("block");
   const account = url.searchParams.get("account");
+  const amount = url.searchParams.get("amount");
   if (!blockHash || !/^[0-9A-Fa-f]{64}$/.test(blockHash)) {
     return send(res, 400, { verified: false, error: "missing or invalid block hash (expected 64 hex chars)" });
   }
-  // Use the public RPC to check this block
-  const https = require("https");
-  const rpcPayload = JSON.stringify({ action: "block_info", json_block: "true", hash: blockHash });
-  const rpcReq = https.request("https://rpc.nano.to", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(rpcPayload) },
-  }, (rpcRes) => {
-    let data = "";
-    rpcRes.on("data", c => data += c);
-    rpcRes.on("end", () => {
-      try {
-        const json = JSON.parse(data);
-        if (json.error) return send(res, 200, { verified: false, error: json.error });
-        // Check the block is a send or receive and the account matches
-        const matchesAccount = !account || json.block_account === account ||
-          (json.subtype === "send" && json.contents && json.contents.link === account);
-        send(res, 200, {
-          verified: !json.error && json.confirmed === "true",
-          hash: blockHash,
-          account: json.block_account || null,
-          amount: json.amount || "0",
-          subtype: json.subtype || null,
-          height: json.height || null,
-          confirmed: json.confirmed === "true",
-          matchesAccount: !!matchesAccount,
-        });
-      } catch (e) {
-        send(res, 200, { verified: false, error: "failed to parse RPC response" });
-      }
-    });
-  });
-  rpcReq.on("error", (e) => send(res, 200, { verified: false, error: `RPC error: ${e.message}` }));
-  rpcReq.write(rpcPayload);
-  rpcReq.end();
+  if (amount !== null && !/^\d+$/.test(amount)) {
+    return send(res, 400, { verified: false, error: "invalid amount (expected raw units as a decimal string)" });
+  }
+  // A given-but-empty account would switch the payee check off; refuse it instead.
+  if (account !== null && !NANO_ADDRESS_RE.test(account)) {
+    return send(res, 400, { verified: false, error: "invalid account (expected a nano_ address)" });
+  }
+  nodeBlockInfo("https://rpc.nano.to", blockHash).then((json) => {
+    const r = readSend(json, { payTo: account, amount });
+    const matchesPayee = account !== null && r.matchesDestination;
+    const out = {
+      verified: r.ok && matchesPayee,
+      hash: blockHash,
+      account: json.block_account || null,
+      amount: json.amount || "0",
+      subtype: json.subtype || null,
+      height: json.height || null,
+      confirmed: r.confirmed,
+      confirmedSend: r.confirmed && r.isSend,
+      destination: r.destination,
+      // Old meaning, kept for old clients: account is the block's own account (for a send,
+      // its sender). It never gates verified.
+      matchesAccount: account === null || sameAccount(json.block_account, account),
+      // New: account is the send's destination. This is what verified requires.
+      matchesPayee,
+      matchesDestination: matchesPayee, // alias of matchesPayee
+      matchesAmount: r.matchesAmount,
+    };
+    if (account === null) out.note = "account (the payee) is required for verified to be true";
+    send(res, 200, out);
+  }).catch((e) => send(res, 200, { verified: false, error: e.message }));
+}
+
+// --- Nano x402 facilitator (keyless) ---
+//
+// The x402 facilitator shape for nano:mainnet: GET supported, POST verify, POST settle,
+// each taking {paymentPayload, paymentRequirements}. The payer signs and broadcasts its
+// own send block; this server holds no key and broadcasts nothing. It reads the block on
+// two independent public nodes and fails closed if any node errors or disagrees. Settle
+// re-verifies, then binds the block hash exactly once (facilitator_settlements table in
+// network-store.js). Nano has no memo, so the binding to an invoice is payTo (use a
+// per-invoice account) plus the exact raw amount. Because any ledger watcher can read a
+// send, verify and settle also require a payer proof: payload.payerSignature, the block
+// account's ed25519 signature over payerProofHash(...), so only the payer can settle it.
+
+const FACILITATOR_NETWORK = "nano:mainnet";
+const NANO_ADDRESS_RE = /^(nano|xrb)_[13][13456789abcdefghijkmnopqrstuwxyz]{59}$/;
+// A send older than this (seconds, by each node's local_timestamp) is not accepted, so a
+// past payment to the same payTo cannot be redeemed. paymentRequirements.maxTimeoutSeconds
+// narrows it; it never widens it.
+const FACILITATOR_MAX_AGE_S = 600;
+const FACILITATOR_CLOCK_SKEW_S = 60;
+const FACILITATOR_NODES = (process.env.NANO_FACILITATOR_NODES || "https://rpc.nano.to,https://rainstorm.city/api")
+  .split(",").map((x) => x.trim()).filter(Boolean);
+
+const FACILITATOR_SCHEME = "exact";
+const PAYER_PROOF_PREFIX = "x402-nano-payer-proof:v1:";
+
+/**
+ * The 32-byte hash a payer signs to prove it presents its own send:
+ *   sha256("x402-nano-payer-proof:v1:" + BLOCKHASH_UPPERCASE + ":" + payTo + ":" + amount)
+ * with payTo and amount exactly as in paymentRequirements. The prefix keeps it distinct
+ * from the block hash itself, whose signature is public in the block.
+ * Sign it with the block account's key, e.g. nanocurrency's signBlock({hash, secretKey}).
+ */
+function payerProofHash({ blockHash, payTo, amount }) {
+  return require("crypto").createHash("sha256")
+    .update(`${PAYER_PROOF_PREFIX}${String(blockHash).toUpperCase()}:${payTo}:${amount}`, "utf8")
+    .digest("hex").toUpperCase();
+}
+
+/** true, or the invalidReason: payer_proof_missing / payer_proof_invalid. Never throws. */
+function verifyPayerProof({ blockHash, payTo, amount, payer, signature }) {
+  if (signature === undefined || signature === null || signature === "") return "payer_proof_missing";
+  if (typeof signature !== "string" || !/^[0-9A-Fa-f]{128}$/.test(signature)) return "payer_proof_invalid";
+  try {
+    const nano = require("nanocurrency");
+    const publicKey = nano.derivePublicKey(payer);
+    const hash = payerProofHash({ blockHash, payTo, amount });
+    return nano.verifyBlock({ hash, signature: signature.toUpperCase(), publicKey }) ? true : "payer_proof_invalid";
+  } catch (_) {
+    return "payer_proof_invalid";
+  }
+}
+
+function handleFacilitatorSupported(req, res) {
+  send(res, 200, { kinds: [{
+    x402Version: 2, scheme: FACILITATOR_SCHEME, network: FACILITATOR_NETWORK,
+    extra: { payerProof: "required", payerProofHash: "sha256('" + PAYER_PROOF_PREFIX + "'+BLOCKHASH+':'+payTo+':'+amount), BLOCKHASH as UPPERCASE hex, payTo and amount exactly as in paymentRequirements", payerSignature: "Nano ed25519-blake2b block signature by the block account (nanocurrency signBlock); plain RFC 8032 ed25519 is rejected" },
+  }] });
+}
+
+/** Resolves {isValid, invalidReason?, payer, blockHash, payTo, amount}. Never throws. */
+async function facilitatorVerify(body) {
+  const pp = (body && body.paymentPayload) || {};
+  const pr = (body && body.paymentRequirements) || {};
+  const blockHash = String((pp.payload && pp.payload.blockHash) || pp.blockHash || "");
+  // Only a string: an array like ["nano_..."] would stringify past the regex and then
+  // break the settle insert.
+  const payTo = typeof pr.payTo === "string" ? pr.payTo : null;
+  // Only a string: a JSON number above 2^53 has already been rounded by JSON.parse.
+  const amount = typeof pr.amount === "string" ? pr.amount : "";
+  const mt = pr.maxTimeoutSeconds;
+  const maxAge = mt == null ? FACILITATOR_MAX_AGE_S : Math.min(mt, FACILITATOR_MAX_AGE_S);
+  const fail = (invalidReason, payer = null) => ({ isValid: false, invalidReason, payer, blockHash, payTo, amount });
+  // network and scheme are required, exactly, on both sides: a missing or empty one is not
+  // "any network". The payload may carry them top-level or under x402 v2's `accepted`.
+  const ppAcc = (pp.accepted && typeof pp.accepted === "object") ? pp.accepted : {};
+  const ppNetwork = pp.network !== undefined ? pp.network : ppAcc.network;
+  const ppScheme = pp.scheme !== undefined ? pp.scheme : ppAcc.scheme;
+  if (pr.network !== FACILITATOR_NETWORK || ppNetwork !== FACILITATOR_NETWORK) return fail("unsupported_network");
+  if (pr.scheme !== FACILITATOR_SCHEME || ppScheme !== FACILITATOR_SCHEME) return fail("unsupported_scheme");
+  if (!/^[0-9A-Fa-f]{64}$/.test(blockHash)) return fail("invalid_payload");
+  // A maxTimeoutSeconds the seller gave but we cannot read is refused, never widened to the default.
+  if (typeof payTo !== "string" || !NANO_ADDRESS_RE.test(payTo) || !/^\d+$/.test(amount) ||
+      (mt != null && !(Number.isSafeInteger(mt) && mt > 0))) {
+    return fail("invalid_payment_requirements");
+  }
+  let infos;
+  try {
+    infos = await Promise.all(FACILITATOR_NODES.map((node) => nodeBlockInfo(node, blockHash)));
+  } catch (e) {
+    return fail("node_error");
+  }
+  if (infos.length < 2) return fail("node_error");
+  const payer = readSend(infos[0]).payer;
+  const now = Math.floor(Date.now() / 1000);
+  for (const info of infos) {
+    const r = readSend(info, { payTo, amount });
+    if (!r.confirmed) return fail("block_unconfirmed", payer);
+    if (!r.isSend) return fail("not_a_send", payer);
+    if (!r.matchesDestination) return fail("destination_mismatch", payer);
+    if (!r.matchesAmount) return fail("amount_mismatch", payer);
+    if (!payer || r.payer !== payer) return fail("node_disagreement", payer);
+    const ts = /^\d+$/.test(String(info.local_timestamp || "")) ? Number(info.local_timestamp) : 0;
+    // A timestamp ahead of our clock (beyond small skew) is unreadable, e.g. milliseconds: fail closed.
+    if (!ts || now - ts > maxAge || ts - now > FACILITATOR_CLOCK_SKEW_S) return fail("payment_expired", payer);
+  }
+  // Payer proof: anyone can read a send off the public ledger, so the presenter must show it
+  // holds the key of the block's account (see payerProofHash).
+  const proof = verifyPayerProof({ blockHash, payTo, amount, payer, signature: pp.payload && pp.payload.payerSignature });
+  if (proof !== true) return fail(proof, payer);
+  if (s.isFacilitatorBlockBound(blockHash)) return fail("already_settled", payer);
+  return { isValid: true, payer, blockHash, payTo, amount };
+}
+
+function handleFacilitatorVerify(req, res) {
+  readJson(req).then(async (body) => {
+    const v = await facilitatorVerify(body);
+    const out = { isValid: v.isValid, payer: v.payer };
+    if (!v.isValid) out.invalidReason = v.invalidReason;
+    send(res, 200, out);
+  }).catch(() => send(res, 400, { isValid: false, invalidReason: "invalid_json", payer: null }));
+}
+
+function handleFacilitatorSettle(req, res) {
+  readJson(req).then(async (body) => {
+    const v = await facilitatorVerify(body);
+    const out = { success: false, transaction: v.blockHash || "", network: FACILITATOR_NETWORK, payer: v.payer };
+    if (!v.isValid) return send(res, 200, { ...out, errorReason: v.invalidReason });
+    // The bind is synchronous and the hash is a PRIMARY KEY: of two racing settles, one wins.
+    if (!s.bindFacilitatorBlock({ blockHash: v.blockHash, payTo: v.payTo, amount: v.amount, payer: v.payer })) {
+      return send(res, 200, { ...out, errorReason: "already_settled" });
+    }
+    send(res, 200, { ...out, success: true });
+  }).catch(() => send(res, 400, { success: false, transaction: "", network: FACILITATOR_NETWORK, payer: null, errorReason: "invalid_json" }));
 }
 
 /**
@@ -580,6 +785,10 @@ const server = http.createServer(async (req, res) => {
     handleVerifyPayment(req, res);
     return;
   }
+  // Keyless x402 facilitator for nano:mainnet (reads two public nodes, holds no key).
+  if (req.method === "GET" && path === "/v1/facilitator/supported") return handleFacilitatorSupported(req, res);
+  if (req.method === "POST" && path === "/v1/facilitator/verify") return handleFacilitatorVerify(req, res);
+  if (req.method === "POST" && path === "/v1/facilitator/settle") return handleFacilitatorSettle(req, res);
   // Oracle-integrity scorecard (Block 186) — free and live, and it never charges anyone.
   if (req.method === "GET" && path === "/v1/oracle-check") return handleOracleCheck(req, res);
   if (req.method === "GET" && path === "/v1/oracle-sources") return handleOracleSources(req, res);
@@ -587,7 +796,7 @@ const server = http.createServer(async (req, res) => {
   send(res, 404, { error: "not found" });
 });
 
-module.exports = { server, s };
+module.exports = { server, s, payerProofHash };
 
 // Only start listening when run directly (not when required by tests).
 if (require.main === module) {
