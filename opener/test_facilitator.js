@@ -7,6 +7,11 @@
  *   F2 — verify is valid only when BOTH public nodes read a confirmed send to payTo
  *        for exactly amount raw; any node error fails closed.
  *   F3 — settle re-verifies and binds a block hash exactly once.
+ *   F5 — verify and settle require a payer proof: the block account's signature over
+ *        payerProofHash; missing or wrong is refused, and a refused front-run leaves
+ *        the block settleable by its real payer.
+ *   F6 — network and scheme are required exactly; a missing or empty one is refused.
+ *   F7 — a node answering null or a non-JSON body fails closed and the server stays up.
  *
  * Method: https.request is stubbed per node host, so no live network is used.
  */
@@ -15,11 +20,15 @@ const http = require("http");
 const https = require("https");
 const { EventEmitter } = require("events");
 const fs = require("fs");
+const nano = require("nanocurrency");
 
 const tmpDb = `/tmp/test-facilitator-${Date.now()}.db`;
 process.env.NW_DB_PATH = tmpDb;
 
-const PAYER = "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3";
+// The payer is a key this test holds (a fixed test seed, never funded), so it can sign proofs.
+const PAYER_SK = nano.deriveSecretKey("5".repeat(64), 0);
+const PAYER = nano.deriveAddress(nano.derivePublicKey(PAYER_SK), { useNanoPrefix: true });
+const WATCHER_SK = nano.deriveSecretKey("6".repeat(64), 0); // a ledger watcher, not the payer
 const PAYEE = "nano_1yo6c1t64ahfjdw1dxizmbbnpdmbrckwhw9phbg5pdkeubrizga4qhnjmnx7";
 const OTHER = "nano_3yo6rq85c1agb5ynn69fnmxi4y9bpct8ju1emcuc4ajx5t3o3z69i1kx847x";
 const AMOUNT = "500000000000000000000000000";
@@ -27,12 +36,13 @@ const AMOUNT = "500000000000000000000000000";
 const BLOCKS = {};
 const NOW = () => String(Math.floor(Date.now() / 1000));
 function sendBlock(hash, { confirmed = "true", subtype = "send", to = PAYEE, amount = AMOUNT, ts = NOW() } = {}) {
-  BLOCKS[hash] = {
+  BLOCKS[hash.toUpperCase()] = {
     block_account: PAYER, amount, balance: "1", height: "7", confirmed, subtype, local_timestamp: ts,
     contents: { type: "state", account: PAYER, link: "00".repeat(32), link_as_account: to },
   };
 }
 const DOWN = new Set(); // hosts that refuse the connection
+const RAW = {}; // host -> a verbatim body that host answers instead of block_info
 const SEEN = new Set(); // hosts that were asked
 
 https.request = function stubRequest(url, opts, cb) {
@@ -47,7 +57,9 @@ https.request = function stubRequest(url, opts, cb) {
     const { hash } = JSON.parse(body);
     const res = new EventEmitter();
     cb(res);
-    res.emit("data", JSON.stringify(BLOCKS[hash] || { error: "Block not found" }));
+    if (RAW[host] !== undefined) { res.emit("data", RAW[host]); return res.emit("end"); }
+    // A node looks a hash up case-insensitively.
+    res.emit("data", JSON.stringify(BLOCKS[hash.toUpperCase()] || { error: "Block not found" }));
     res.emit("end");
   });
   return r;
@@ -79,9 +91,16 @@ function req(method, path, body) {
   });
 }
 
-function pay(blockHash, { payTo = PAYEE, amount = AMOUNT } = {}) {
+function proof(blockHash, { payTo = PAYEE, amount = AMOUNT, sk = PAYER_SK } = {}) {
+  return nano.signBlock({ hash: nw.payerProofHash({ blockHash, payTo, amount }), secretKey: sk });
+}
+
+function pay(blockHash, { payTo = PAYEE, amount = AMOUNT, payerSignature } = {}) {
+  if (payerSignature === undefined) payerSignature = proof(blockHash, { payTo, amount });
+  const payload = { blockHash };
+  if (payerSignature !== null) payload.payerSignature = payerSignature;
   return {
-    paymentPayload: { x402Version: 2, scheme: "exact", network: "nano:mainnet", payload: { blockHash } },
+    paymentPayload: { x402Version: 2, scheme: "exact", network: "nano:mainnet", payload },
     paymentRequirements: { scheme: "exact", network: "nano:mainnet", payTo, amount, asset: "XNO" },
   };
 }
@@ -132,6 +151,18 @@ function pay(blockHash, { payTo = PAYEE, amount = AMOUNT } = {}) {
     const s2 = await req("POST", "/v1/facilitator/settle", pay(GOOD.toLowerCase()));
     check("F3 second settle of the same block is refused",
       s2.body.success === false && s2.body.errorReason === "already_settled", JSON.stringify(s2.body));
+
+    // A hash with letters, so the case-insensitive replay refusal is really exercised.
+    const MIXED = "aBcDeF0123456789AbCdEf0123456789aBcDeF0123456789AbCdEf0123456789";
+    sendBlock(MIXED);
+    const m1 = await req("POST", "/v1/facilitator/settle", pay(MIXED));
+    const m2 = await req("POST", "/v1/facilitator/settle", pay(MIXED.toLowerCase()));
+    const m3 = await req("POST", "/v1/facilitator/settle", pay(MIXED.toUpperCase()));
+    const m4 = await req("POST", "/v1/facilitator/verify", pay(MIXED.toLowerCase()));
+    check("F3 a mixed-case hash settles once; its lower/upper-case replays are refused",
+      m1.body.success === true && m2.body.errorReason === "already_settled" &&
+      m3.body.errorReason === "already_settled" && m4.body.invalidReason === "already_settled",
+      JSON.stringify([m1.body, m2.body, m3.body, m4.body]));
     const v2 = await req("POST", "/v1/facilitator/verify", pay(GOOD));
     check("F3 a settled block no longer verifies", v2.body.isValid === false && v2.body.invalidReason === "already_settled", JSON.stringify(v2.body));
 
@@ -176,6 +207,66 @@ function pay(blockHash, { payTo = PAYEE, amount = AMOUNT } = {}) {
     const net = await req("POST", "/v1/facilitator/verify",
       { ...pay(GOOD), paymentRequirements: { ...pay(GOOD).paymentRequirements, network: "eip155:8453" } });
     check("F2 another network is invalid", net.body.isValid === false && net.body.invalidReason === "unsupported_network", JSON.stringify(net.body));
+
+    // F5 payer proof
+    const PP = "8".repeat(64);
+    sendBlock(PP);
+    const noSig = await req("POST", "/v1/facilitator/verify", pay(PP, { payerSignature: null }));
+    const noSigS = await req("POST", "/v1/facilitator/settle", pay(PP, { payerSignature: null }));
+    check("F5 a missing payer proof is refused by verify and settle",
+      noSig.body.isValid === false && noSig.body.invalidReason === "payer_proof_missing" &&
+      noSigS.body.success === false && noSigS.body.errorReason === "payer_proof_missing",
+      JSON.stringify([noSig.body, noSigS.body]));
+    const watcher = await req("POST", "/v1/facilitator/settle", pay(PP, { payerSignature: proof(PP, { sk: WATCHER_SK }) }));
+    check("F5 a front-run settle signed by someone else's key is refused",
+      watcher.body.success === false && watcher.body.errorReason === "payer_proof_invalid", JSON.stringify(watcher.body));
+    const otherReq = await req("POST", "/v1/facilitator/verify",
+      pay(PP, { payerSignature: proof(PP, { amount: "1" }) }));
+    const malformed = await req("POST", "/v1/facilitator/verify", pay(PP, { payerSignature: "zz" }));
+    const blockSig = await req("POST", "/v1/facilitator/verify",
+      pay(PP, { payerSignature: nano.signBlock({ hash: PP, secretKey: PAYER_SK }) }));
+    check("F5 a proof for other requirements, a malformed one, or the block's own signature is refused",
+      otherReq.body.invalidReason === "payer_proof_invalid" && malformed.body.invalidReason === "payer_proof_invalid" &&
+      blockSig.body.invalidReason === "payer_proof_invalid",
+      JSON.stringify([otherReq.body, malformed.body, blockSig.body]));
+    const good = await req("POST", "/v1/facilitator/settle", pay(PP, { payerSignature: proof(PP).toLowerCase() }));
+    check("F5 after refused attempts, the real payer's proof settles the block",
+      good.body.success === true && good.body.payer === PAYER, JSON.stringify(good.body));
+
+    // F6 network and scheme are required exactly
+    const NS = "9".repeat(64);
+    sendBlock(NS);
+    const reasons = [];
+    for (const mutate of [
+      (b) => { delete b.paymentRequirements.network; },
+      (b) => { b.paymentRequirements.network = ""; },
+      (b) => { delete b.paymentPayload.network; },
+      (b) => { b.paymentPayload.network = "nano"; },
+    ]) { const b = pay(NS); mutate(b); reasons.push((await req("POST", "/v1/facilitator/verify", b)).body.invalidReason); }
+    check("F6 a missing, empty or other network is refused", reasons.every((x) => x === "unsupported_network"), JSON.stringify(reasons));
+    const sreasons = [];
+    for (const mutate of [
+      (b) => { delete b.paymentRequirements.scheme; },
+      (b) => { b.paymentRequirements.scheme = ""; },
+      (b) => { delete b.paymentPayload.scheme; },
+      (b) => { b.paymentPayload.scheme = "upto"; },
+    ]) { const b = pay(NS); mutate(b); sreasons.push((await req("POST", "/v1/facilitator/verify", b)).body.invalidReason); }
+    check("F6 a missing, empty or other scheme is refused", sreasons.every((x) => x === "unsupported_scheme"), JSON.stringify(sreasons));
+    const accBody = pay(NS); delete accBody.paymentPayload.scheme; delete accBody.paymentPayload.network;
+    accBody.paymentPayload.accepted = { scheme: "exact", network: "nano:mainnet" };
+    const acc = await req("POST", "/v1/facilitator/verify", accBody);
+    check("F6 network/scheme under the payload's x402 v2 `accepted` are read", acc.body.isValid === true, JSON.stringify(acc.body));
+
+    // F7 a node answering null or a non-JSON body
+    const f7 = [];
+    for (const body of ["null", "<html>bad gateway</html>", "42", "[]"]) {
+      RAW["rainstorm.city"] = body;
+      f7.push((await req("POST", "/v1/facilitator/verify", pay(NS))).body.invalidReason);
+    }
+    delete RAW["rainstorm.city"];
+    const alive = await req("GET", "/v1/facilitator/supported");
+    check("F7 a null/non-JSON/non-object node reply fails closed and the server stays up",
+      f7.every((x) => x === "node_error") && alive.status === 200, JSON.stringify(f7));
   } finally {
     nw.s.closeDb();
     nw.server.close();

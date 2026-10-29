@@ -5,8 +5,12 @@
  * Laws:
  *   V1 — verified is true only for a confirmed SEND whose destination (link_as_account)
  *        is the account asked about and whose amount is the amount asked about.
- *   V2 — the response keeps its old fields and adds destination, matchesDestination,
- *        matchesAmount.
+ *   V2 — the response keeps its old fields (matchesAccount with its OLD meaning: account is
+ *        the block's own account) and adds destination, matchesPayee (alias
+ *        matchesDestination), matchesAmount, confirmedSend.
+ *   V3 — an empty/malformed account or a non-integer amount is a 400.
+ *   V4 — without account, verified is false (confirmedSend still reports the block).
+ *   V5 — a node answering null or a non-JSON body fails closed; the server stays up.
  *
  * Method: the node RPC is stubbed (https.request is replaced), so no live network is used.
  * The canned block mirrors a real confirmed 0.0005 XNO send to the treasury.
@@ -27,6 +31,7 @@ const AMOUNT = "500000000000000000000000000"; // 0.0005 XNO in raw
 
 // The stubbed node answers: hash -> block_info body (or an Error to simulate a dead node).
 const BLOCKS = {};
+const RAW = {}; // hash -> a verbatim body the node answers instead of block_info
 function sendBlock(hash, { confirmed = "true", subtype = "send", to = PAYEE, amount = AMOUNT } = {}) {
   BLOCKS[hash] = {
     block_account: PAYER, amount, balance: "1", height: "7", local_timestamp: "0",
@@ -48,6 +53,7 @@ https.request = function stubRequest(url, opts, cb) {
     const { hash } = JSON.parse(body);
     const res = new EventEmitter();
     cb(res);
+    if (RAW[hash] !== undefined) { res.emit("data", RAW[hash]); return res.emit("end"); }
     const out = BLOCKS[hash] || { error: "Block not found" };
     res.emit("data", JSON.stringify(out));
     res.emit("end");
@@ -70,7 +76,7 @@ function get(path) {
     http.get({ host: "localhost", port: PORT, path }, (res) => {
       let data = "";
       res.on("data", (c) => (data += c));
-      res.on("end", () => resolve(JSON.parse(data)));
+      res.on("end", () => { const j = JSON.parse(data); Object.defineProperty(j, "status", { value: res.statusCode }); resolve(j); });
     }).on("error", reject);
   });
 }
@@ -87,7 +93,10 @@ function get(path) {
     const right = await get(q(`&account=${PAYEE}`));
     check("V1 a confirmed send to the payee is verified", right.verified === true, JSON.stringify(right));
     check("V2 destination is link_as_account", right.destination === PAYEE, JSON.stringify(right));
-    check("V2 matchesDestination true for the payee", right.matchesDestination === true, JSON.stringify(right));
+    check("V2 matchesPayee (and its alias matchesDestination) true for the payee",
+      right.matchesPayee === true && right.matchesDestination === true, JSON.stringify(right));
+    check("V2 matchesAccount keeps its old meaning: false when account is only the payee",
+      right.matchesAccount === false, JSON.stringify(right));
 
     const okAmt = await get(q(`&account=${PAYEE}&amount=${AMOUNT}`));
     check("V1 exact amount verifies", okAmt.verified === true && okAmt.matchesAmount === true, JSON.stringify(okAmt));
@@ -102,11 +111,15 @@ function get(path) {
 
     const RECV = "C".repeat(64);
     sendBlock(RECV, { subtype: "receive" });
-    const rcv = await get(`/v1/verify-payment?block=${RECV}`);
+    const rcv = await get(`/v1/verify-payment?block=${RECV}&account=${PAYEE}`);
     check("V1 a confirmed receive is NOT a payment", rcv.verified === false, JSON.stringify(rcv));
 
     const bare = await get(q(""));
-    check("V1 no account/amount: a confirmed send still verifies", bare.verified === true, JSON.stringify(bare));
+    check("V4 no account: verified is false, confirmedSend still true",
+      bare.verified === false && bare.confirmedSend === true && bare.matchesPayee === false && /account/.test(bare.note || ""),
+      JSON.stringify(bare));
+    const amtOnly = await get(q(`&amount=${AMOUNT}`));
+    check("V4 amount without account is not verified", amtOnly.verified === false && amtOnly.matchesAmount === true, JSON.stringify(amtOnly));
     check("V2 old fields kept (hash, account, amount, subtype, height, confirmed, matchesAccount)",
       bare.hash === HASH && bare.account === PAYER && bare.amount === AMOUNT && bare.subtype === "send" &&
       bare.height === "7" && bare.confirmed === true && typeof bare.matchesAccount === "boolean", JSON.stringify(bare));
@@ -114,10 +127,31 @@ function get(path) {
     const emptyAcct = await get(q("&account="));
     check("V3 an empty account is refused, not ignored", emptyAcct.verified === false && /invalid account/.test(emptyAcct.error || ""), JSON.stringify(emptyAcct));
     const fromPayer = await get(q(`&account=${PAYER}`));
-    check("V3 matchesAccount is false when account is only the sender",
-      fromPayer.verified === false && fromPayer.matchesAccount === false, JSON.stringify(fromPayer));
+    check("V3 account = the sender: not verified, matchesPayee false, matchesAccount true (old meaning)",
+      fromPayer.verified === false && fromPayer.matchesPayee === false && fromPayer.matchesAccount === true,
+      JSON.stringify(fromPayer));
+    const bad400 = [];
+    for (const extra of ["&account=nano_123", `&account=${PAYEE}x`, `&account=${PAYEE}&amount=`,
+      `&account=${PAYEE}&amount=1.5`, `&account=${PAYEE}&amount=-1`, `&account=${PAYEE}&amount=1e27`]) {
+      const r = await get(q(extra));
+      bad400.push([r.status, r.verified]);
+    }
+    check("V3 a malformed account or a non-integer amount is a 400",
+      bad400.every(([st, v]) => st === 400 && v === false), JSON.stringify(bad400));
+    check("V3 an empty account is a 400", emptyAcct.status === 400, String(emptyAcct.status));
 
-    const missing = await get(`/v1/verify-payment?block=${"D".repeat(64)}`);
+    const v5 = [];
+    for (const [i, body] of ["null", "not json at all", "7", "[]"].entries()) {
+      const h = String(i).repeat(64);
+      RAW[h] = body;
+      v5.push(await get(`/v1/verify-payment?block=${h}&account=${PAYEE}`));
+    }
+    const stillUp = await get(q(`&account=${PAYEE}`));
+    check("V5 a null/non-JSON/non-object node reply fails closed and the server stays up",
+      v5.every((r) => r.verified === false && typeof r.error === "string") && stillUp.verified === true,
+      JSON.stringify(v5));
+
+    const missing = await get(`/v1/verify-payment?block=${"D".repeat(64)}&account=${PAYEE}`);
     check("V1 an unknown block is NOT verified", missing.verified === false, JSON.stringify(missing));
   } finally {
     nw.s.closeDb();
