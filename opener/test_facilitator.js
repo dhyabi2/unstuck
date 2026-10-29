@@ -12,6 +12,7 @@
  *        the block settleable by its real payer.
  *   F6 — network and scheme are required exactly; a missing or empty one is refused.
  *   F7 — a node answering null or a non-JSON body fails closed and the server stays up.
+ *   F8 — a non-string payTo (e.g. a one-element array) is refused by verify and settle alike.
  *
  * Method: https.request is stubbed per node host, so no live network is used.
  */
@@ -267,6 +268,18 @@ function pay(blockHash, { payTo = PAYEE, amount = AMOUNT, payerSignature } = {})
     const alive = await req("GET", "/v1/facilitator/supported");
     check("F7 a null/non-JSON/non-object node reply fails closed and the server stays up",
       f7.every((x) => x === "node_error") && alive.status === 200, JSON.stringify(f7));
+
+    // F8 payTo must be a string: a one-element array stringifies past an address regex
+    const AP = "a".repeat(64);
+    sendBlock(AP);
+    const arr = pay(AP); arr.paymentRequirements.payTo = [PAYEE];
+    const av = await req("POST", "/v1/facilitator/verify", arr);
+    const as = await req("POST", "/v1/facilitator/settle", arr);
+    check("F8 an array payTo is refused identically by verify and settle",
+      av.status === 200 && as.status === 200 && av.body.isValid === false &&
+      av.body.invalidReason === "invalid_payment_requirements" &&
+      as.body.success === false && as.body.errorReason === "invalid_payment_requirements",
+      JSON.stringify([av.status, av.body, as.status, as.body]));
   } finally {
     nw.s.closeDb();
     nw.server.close();

@@ -387,9 +387,9 @@ function handleAgentDotWellKnown(req, res) {
       { path: "/standing", method: "GET", description: "Agent standing (distinct funded counterparties)" },
       { path: "/v1/x402", method: "GET", description: "x402 capabilities discovery" },
       { path: "/v1/echo", method: "POST", description: "Seller verification (returns HTTP 402)" },
-      { path: "/v1/verify-payment", method: "GET", description: "Verify a Nano payment block hash (?block=&account=&amount=): verified only for a confirmed send to account (required) for exactly amount raw (if given); matchesPayee = destination is account, matchesAccount = account is the block's own account (old meaning). Changed 2026-10-28: a RECEIVE block now gets verified:false; pass the payer's SEND hash (the receive's contents.link) with account=<your address>. Empty/malformed account or non-integer amount is a 400." },
+      { path: "/v1/verify-payment", method: "GET", description: "Verify a Nano payment block hash (?block=&account=&amount=): verified only for a confirmed send to account (required) for exactly amount raw (if given); matchesPayee = destination is account, matchesAccount = account is the block's own account (old meaning). Changed 2026-10-28 (main answered verified:true for any confirmed block): verified is now false when (1) no account is given; (2) account is the block's sender, i.e. a payer checking its own send (use matchesAccount for that now); (3) amount is given and differs; (4) the block is a RECEIVE (send the payer's SEND hash, your receive's contents.link, with account=<your address>&amount=<raw>); (5) the block is a legacy pre-state send (no subtype). The node RPC call now times out after 10 s (verified:false, error). matchesAccount now treats xrb_ and nano_ forms of one account as equal. Empty/malformed account or non-integer amount is a 400." },
       { path: "/v1/facilitator/supported", method: "GET", description: "Keyless x402 facilitator for nano:mainnet: kinds [{x402Version:2, scheme:exact, network:nano:mainnet}]" },
-      { path: "/v1/facilitator/verify", method: "POST", description: "{paymentPayload:{scheme:exact, network:nano:mainnet, payload:{blockHash, payerSignature}}, paymentRequirements:{scheme:exact, network:nano:mainnet, payTo, amount}} -> {isValid, invalidReason?, payer}; payerSignature is required: the block account's ed25519 signature over sha256('x402-nano-payer-proof:v1:'+BLOCKHASH+':'+payTo+':'+amount); read on two public nodes, fails closed" },
+      { path: "/v1/facilitator/verify", method: "POST", description: "{paymentPayload:{scheme:exact, network:nano:mainnet, payload:{blockHash, payerSignature}}, paymentRequirements:{scheme:exact, network:nano:mainnet, payTo, amount}} -> {isValid, invalidReason?, payer}; payerSignature is required: the block account's Nano's ed25519-blake2b block signature (as made by nanocurrency signBlock; a plain RFC 8032 ed25519 signature is rejected) over sha256('x402-nano-payer-proof:v1:'+BLOCKHASH+':'+payTo+':'+amount), BLOCKHASH as UPPERCASE hex; read on two public nodes, fails closed" },
       { path: "/v1/facilitator/settle", method: "POST", description: "Re-verifies (payer proof included), then binds the block hash exactly once -> {success, transaction, network, payer, errorReason?}; holds no key, broadcasts nothing" },
       { path: "/v1/oracle-check", method: "GET", description: "Free live oracle-integrity scorecard for any URL (?url=...): reachability, TLS, redirect chain, CONTENT DRIFT since the last reading, stability, and a deterministic 0-100 score with every point attributed. No account, no key, no charge." },
       { path: "/v1/oracle-sources", method: "GET", description: "Every URL the integrity checker has a reading for, with its own honest counts" },
@@ -606,7 +606,7 @@ function verifyPayerProof({ blockHash, payTo, amount, payer, signature }) {
 function handleFacilitatorSupported(req, res) {
   send(res, 200, { kinds: [{
     x402Version: 2, scheme: FACILITATOR_SCHEME, network: FACILITATOR_NETWORK,
-    extra: { payerProof: "required", payerProofHash: "sha256('" + PAYER_PROOF_PREFIX + "'+BLOCKHASH+':'+payTo+':'+amount)" },
+    extra: { payerProof: "required", payerProofHash: "sha256('" + PAYER_PROOF_PREFIX + "'+BLOCKHASH+':'+payTo+':'+amount), BLOCKHASH as UPPERCASE hex, payTo and amount exactly as in paymentRequirements", payerSignature: "Nano ed25519-blake2b block signature by the block account (nanocurrency signBlock); plain RFC 8032 ed25519 is rejected" },
   }] });
 }
 
@@ -615,7 +615,9 @@ async function facilitatorVerify(body) {
   const pp = (body && body.paymentPayload) || {};
   const pr = (body && body.paymentRequirements) || {};
   const blockHash = String((pp.payload && pp.payload.blockHash) || pp.blockHash || "");
-  const payTo = pr.payTo;
+  // Only a string: an array like ["nano_..."] would stringify past the regex and then
+  // break the settle insert.
+  const payTo = typeof pr.payTo === "string" ? pr.payTo : null;
   // Only a string: a JSON number above 2^53 has already been rounded by JSON.parse.
   const amount = typeof pr.amount === "string" ? pr.amount : "";
   const mt = pr.maxTimeoutSeconds;
@@ -630,7 +632,7 @@ async function facilitatorVerify(body) {
   if (pr.scheme !== FACILITATOR_SCHEME || ppScheme !== FACILITATOR_SCHEME) return fail("unsupported_scheme");
   if (!/^[0-9A-Fa-f]{64}$/.test(blockHash)) return fail("invalid_payload");
   // A maxTimeoutSeconds the seller gave but we cannot read is refused, never widened to the default.
-  if (!NANO_ADDRESS_RE.test(String(payTo || "")) || !/^\d+$/.test(amount) ||
+  if (typeof payTo !== "string" || !NANO_ADDRESS_RE.test(payTo) || !/^\d+$/.test(amount) ||
       (mt != null && !(Number.isSafeInteger(mt) && mt > 0))) {
     return fail("invalid_payment_requirements");
   }
