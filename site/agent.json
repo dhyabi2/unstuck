@@ -62,7 +62,7 @@
     {"path": "/standing", "method": "GET", "description": "Get agent standing (distinct counterparties)"},
     {"path": "/v1/x402", "method": "GET", "description": "x402 payment capabilities for Nano sellers"},
     {"path": "/v1/echo", "method": "POST", "description": "Seller verification — returns HTTP 402 with nano:mainnet accepts"},
-    {"path": "/v1/verify-payment", "method": "GET", "description": "Verify a Nano payment: verified only for a confirmed send to account for exactly amount raw (?block=&account=&amount=; RPC proxy)"}
+    {"path": "/v1/verify-payment", "method": "GET", "description": "Verify a Nano payment: verified only for a confirmed send to account (required) for exactly amount raw (?block=&account=&amount=; RPC proxy). matchesPayee = account is the destination; matchesAccount keeps its old meaning (account is the block's own account). Empty/malformed account or non-integer amount is a 400. Changed 2026-10-28: a RECEIVE block now gets verified:false; pass the payer's SEND hash (your receive's contents.link) with account=<your address>&amount=<raw>."}
   ],
   "agent_discovery": {
     "llms_txt": "/llms.txt",

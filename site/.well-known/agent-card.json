@@ -108,7 +108,7 @@
   {
    "path": "/v1/verify-payment",
    "method": "GET",
-   "description": "Verify a Nano payment: verified only for a confirmed send to account for exactly amount raw (?block=&account=&amount=; RPC proxy)"
+   "description": "Verify a Nano payment: verified only for a confirmed send to account (required) for exactly amount raw (?block=&account=&amount=; RPC proxy). matchesPayee = account is the destination; matchesAccount keeps its old meaning (account is the block's own account). Empty/malformed account or non-integer amount is a 400. Changed 2026-10-28: a RECEIVE block now gets verified:false; pass the payer's SEND hash (your receive's contents.link) with account=<your address>&amount=<raw>."
   }
  ],
  "payment": {
