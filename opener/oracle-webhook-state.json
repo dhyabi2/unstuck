@@ -97,7 +97,7 @@
       "fired_recovery": false
     },
     "https://example.com": {
-      "down": 769,
+      "down": 770,
       "fired_down": true,
       "fired_recovery": false
     },
@@ -297,6 +297,16 @@
       "fired_recovery": false
     },
     "https://moltbook.com/u/ddolmani": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://mart402.com": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://rugshield-ai.run402.com": {
       "down": 0,
       "fired_down": false,
       "fired_recovery": false
