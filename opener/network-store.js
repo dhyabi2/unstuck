@@ -362,13 +362,13 @@ function addAnswer(askId, { answerer, body }) {
  * not the caller-claimed `acceptedBy` address. Anyone can name an asker; the token is
  * the only secret only the creator holds.
  */
-function acceptAnswer(askId, answerId, acceptedBy, acceptToken) {
+function acceptAnswer(askId, answerId, acceptedBy, proof) {
   const db = getDb();
   const ask = getAsk(askId);
   if (!ask) throw new Error(`no ask ${askId}`);
 
   // Validate via network.js — this checks everything, including the accept token
-  n.acceptAnswer(ask, answerId, acceptedBy, acceptToken);
+  n.acceptAnswer(ask, answerId, acceptedBy, proof);
 
   // Persist: update ask status and accepted answer
   db.prepare("UPDATE asks SET status = 'paid', accepted_answer_id = ? WHERE id = ?")
@@ -396,7 +396,7 @@ function acceptAnswer(askId, answerId, acceptedBy, acceptToken) {
  * carried an extra, uncommitted accept_token gate on this path; the committed
  * code let anyone who knew a paid ask's id settle it with any 64-hex hash.
  */
-function settlementPrecheck(askId, blockHash, { acceptedBy, acceptToken } = {}) {
+function settlementPrecheck(askId, blockHash, { acceptedBy, acceptToken, signature } = {}) {
   const db = getDb();
   const ask = getAsk(askId);
   if (!ask) throw new Error(`no ask ${askId}`);
@@ -406,9 +406,9 @@ function settlementPrecheck(askId, blockHash, { acceptedBy, acceptToken } = {}) 
   if (acceptedBy !== ask.asker) {
     throw new Error("only the asker can record a settlement");
   }
-  if (typeof acceptToken !== "string" || acceptToken.length === 0 || acceptToken !== ask.acceptToken) {
-    throw new Error("settling requires the ask's accept token (returned at create time)");
-  }
+  // Signed authority (or, in "either" mode, the legacy token). The message binds the block.
+  n.authorize(ask, { token: acceptToken, signature },
+    /^[0-9A-Fa-f]{64}$/.test(String(blockHash)) ? n.settleMessage(ask, blockHash) : null, "settling");
   if (ask.status !== "paid") {
     throw new Error(`cannot settle an ask that is ${ask.status}, only paid asks settle`);
   }
@@ -458,9 +458,9 @@ function settlementPrecheck(askId, blockHash, { acceptedBy, acceptToken } = {}) 
  * Every check in `settlementPrecheck` is re-run here, so the store is safe
  * whichever way it is reached.
  */
-function recordSettlement(askId, blockHash, { now = new Date().toISOString(), acceptedBy, acceptToken, verification } = {}) {
+function recordSettlement(askId, blockHash, { now = new Date().toISOString(), acceptedBy, acceptToken, signature, verification } = {}) {
   const db = getDb();
-  settlementPrecheck(askId, blockHash, { acceptedBy, acceptToken });
+  settlementPrecheck(askId, blockHash, { acceptedBy, acceptToken, signature });
   // The ledger has the last word. Nothing is written until a caller has read
   // this block off a node and says what it read.
   if (!verification || verification.valid !== true) {

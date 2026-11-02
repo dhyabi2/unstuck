@@ -118,13 +118,13 @@ function handleAccept(req, res, id) {
   readJson(req).then((body) => {
     try {
       // Forge #1: authority is the ask's accept token, never the claimed asker.
-      const r = n.acceptAnswer(ask, Number(body.answerId), body.acceptedBy, body.accept_token);
+      const r = n.acceptAnswer(ask, Number(body.answerId), body.acceptedBy, { token: body.accept_token, signature: body.signature });
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify(r));
     } catch (e) {
       // A missing answer is a 404; a bad token is 403; a domain violation is a 400.
       if (/no answer/.test(e.message)) return send(res, 404, { error: e.message });
-      if (/accept token/.test(e.message)) return send(res, 403, { error: e.message });
+      if (/accept token|asker signature|asker's signature/.test(e.message)) return send(res, 403, { error: e.message });
       send(res, 400, { error: e.message });
     }
   }).catch(() => send(res, 400, { error: "invalid JSON body" }));

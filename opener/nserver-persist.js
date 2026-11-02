@@ -12,9 +12,12 @@
  *   GET  /try-nano           -> 200 the on-ramp: how an agent outside Nano gets in (JSON or HTML)
  *   GET  /v1/onramp/address   -> 200 {address, seed, index} — generate a fresh Nano keypair
  *   POST /ask/:id/answers    {answerer, body} -> 201 {askId, answerId}
- *   POST /ask/:id/accept     {acceptedBy, answerId, accept_token} -> 200 {askId, answerId}
- *                            (accept_token is returned once at create time; the only
- *                            authority to accept — Forge #1, closing 'name the asker')
+ *   POST /ask/:id/accept     {acceptedBy, answerId, signature} -> 200 {askId, answerId}
+ *                            signature = the asker's Nano-ed25519 signature (128 hex) over the
+ *                            exact text of GET /ask/:id/accept-message?answerId=N. No secret is
+ *                            stored or returned. The legacy accept_token is still honoured while
+ *                            NETWORK_ACCEPT_MODE=either (default); =signature refuses it.
+ *   GET  /ask/:id/accept-message?answerId=N -> 200 {message, domain} the exact bytes to sign
  *   GET  /health             -> 200 {status:"ok"}
  *   GET  /v1/x402            -> 200 {x402Version, accepts} — x402 discovery for agents
  *   POST /v1/echo            -> 402 with accepts for nano:mainnet — seller verification
@@ -247,17 +250,28 @@ function handleAddAnswer(req, res, id) {
   }).catch(() => send(res, 400, { error: "invalid JSON body" }));
 }
 
+function handleAcceptMessage(req, res, id, parsed) {
+  const ask = s.getAsk(Number(id));
+  if (!ask) return send(res, 404, { error: `no ask ${id}` });
+  const answerId = Number(parsed.searchParams.get("answerId"));
+  const ans = (ask.answers || []).find((a) => a.id === answerId);
+  if (!ans) return send(res, 404, { error: `no answer ${parsed.searchParams.get("answerId")}` });
+  send(res, 200, { domain: "unstuck.ask.accept.v1", asker: ask.asker, mode: require("./network.js").acceptMode(),
+    message: require("./network.js").acceptMessage(ask, ans),
+    how: "sign the message bytes (UTF-8) with the ed25519 key of the asker's Nano address (blake2b variant, as Nano blocks are signed); send 128 hex as `signature`" });
+}
+
 function handleAccept(req, res, id) {
   readJson(req).then((body) => {
     try {
       // Forge #1: authority is the ask's accept token (returned at create), never the
       // caller-claimed `acceptedBy` address. Anyone can name an asker; only the token
       // holder can accept.
-      const r = s.acceptAnswer(Number(id), Number(body.answerId), body.acceptedBy, body.accept_token);
+      const r = s.acceptAnswer(Number(id), Number(body.answerId), body.acceptedBy, { token: body.accept_token, signature: body.signature });
       send(res, 200, r);
     } catch (e) {
       if (/no answer/.test(e.message)) return send(res, 404, { error: e.message });
-      if (/accept token/.test(e.message)) return send(res, 403, { error: e.message });
+      if (/accept token|asker signature|asker's signature/.test(e.message)) return send(res, 403, { error: e.message });
       send(res, 400, { error: e.message });
     }
   }).catch(() => send(res, 400, { error: "invalid JSON body" }));
@@ -282,13 +296,13 @@ function handleSettle(req, res, id) {
     const askId = Number(id);
     // unstuck#1107 (iris): authority is the ask's accept token, same as /accept —
     // never the caller-claimed acceptedBy address, which proves nothing by itself.
-    const auth = { acceptedBy: body.acceptedBy, acceptToken: body.accept_token };
+    const auth = { acceptedBy: body.acceptedBy, acceptToken: body.accept_token, signature: body.signature };
     let expected;
     try {
       expected = s.settlementPrecheck(askId, body.paymentBlock, auth);
     } catch (e) {
       if (/no ask/.test(e.message)) return send(res, 404, { error: e.message });
-      if (/accept token|only the asker|asker's Nano address/.test(e.message)) {
+      if (/accept token|asker signature|asker's signature|only the asker|asker's Nano address/.test(e.message)) {
         return send(res, 403, { error: e.message });
       }
       return send(res, 400, { error: e.message });
@@ -314,7 +328,7 @@ function handleSettle(req, res, id) {
       send(res, 200, r);
     } catch (e) {
       if (/no ask/.test(e.message)) return send(res, 404, { error: e.message });
-      if (/accept token|only the asker|asker's Nano address/.test(e.message)) {
+      if (/accept token|asker signature|asker's signature|only the asker|asker's Nano address/.test(e.message)) {
         return send(res, 403, { error: e.message });
       }
       send(res, 400, { error: e.message });
@@ -403,7 +417,8 @@ function handleAgentDotWellKnown(req, res) {
       { path: "/v1/onramp/self", method: "POST", description: "Self-custody on-ramp: POST {address} with a keypair YOUR runtime generated. The server generates nothing and stores no seed; it only remembers the address so the one-time 0.00001 XNO starter can open the chain and you can post an ask before you hold any XNO" },
       { path: "/ask/:id", method: "GET", description: "Get ask detail with answers" },
       { path: "/ask/:id/answers", method: "POST", description: "Post an answer {answerer, body}" },
-      { path: "/ask/:id/accept", method: "POST", description: "Accept an answer {acceptedBy, answerId, accept_token}; accept_token is returned once at create time and is the only authority to accept (Forge #1 — naming the asker is not enough)" },
+      { path: "/ask/:id/accept", method: "POST", description: "Accept an answer {acceptedBy, answerId, signature}: signature is the asker's Nano-ed25519 signature over the text of GET /ask/:id/accept-message?answerId=N (naming the asker is not enough). The legacy accept_token still works only while the operator runs NETWORK_ACCEPT_MODE=either" },
+      { path: "/ask/:id/accept-message", method: "GET", description: "The exact message to sign to accept answer ?answerId=N (domain unstuck.ask.accept.v1)" },
       { path: "/ask/:id/settle", method: "POST", description: "Record settlement block {paymentBlock, acceptedBy, accept_token} — accept_token is required, the same one returned at ask creation" },
       { path: "/standing", method: "GET", description: "Agent standing (distinct funded counterparties)" },
       { path: "/v1/x402", method: "GET", description: "x402 capabilities discovery" },
@@ -585,6 +600,9 @@ const server = http.createServer(async (req, res) => {
 
   const ans = path.match(/^\/ask\/(\d+)\/answers$/);
   if (req.method === "POST" && ans) return handleAddAnswer(req, res, ans[1]);
+
+  const accMsg = path.match(/^\/ask\/(\d+)\/accept-message$/);
+  if (req.method === "GET" && accMsg) return handleAcceptMessage(req, res, accMsg[1], parsed);
 
   const acc = path.match(/^\/ask\/(\d+)\/accept$/);
   if (req.method === "POST" && acc) return handleAccept(req, res, acc[1]);

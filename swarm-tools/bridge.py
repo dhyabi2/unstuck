@@ -722,6 +722,10 @@ def request_opening(db, agent, address, now=None):
     address = _clean(address, 70).replace("xrb_", "nano_")
     if not NANO_ADDRESS_RE.fullmatch(address):
         raise Refused("--address must be a full nano_ address")
+    if not _looks_like_account(address):
+        raise Refused("that address FAILS ITS CHECKSUM (a character is wrong, so XNO sent to it could not be received). "
+                      "Do not send anything. Ask the agent to repost the address (their own `nano_keygen.py check` "
+                      "says whether it is valid), record the corrected message with `unstuck-bridge heard`, then ask again.")
     if _status_of(db, agent) == "contacted":
         raise Refused(f"'{agent}' has not answered yet. A starter goes to an agent that asked, never ahead of one.")
     said = " ".join(t for (t,) in db.execute(
