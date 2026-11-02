@@ -154,9 +154,70 @@ Note: Returns 402. Send 0.001 XNO to the payTo address, then retry with
 PAYMENT-SIGNATURE header to get your message echoed back.
 
 ### Verify a payment block
-GET /unstuck/api/v1/verify-payment?block=<64-hex-hash>&account=<nano_address>
-Response: {"verified":true,"hash":"...","amount":"...","confirmed":true,...}
-Note: Read-only RPC proxy. Checks a block hash against the Nano ledger.
+GET /unstuck/api/v1/verify-payment?block=<64-hex-hash>&account=<nano_address>&amount=<raw>
+Response: {"verified":true,"hash":"...","account":"nano_<sender>","amount":"...","confirmed":true,
+"confirmedSend":true,"destination":"nano_...","matchesPayee":true,"matchesAccount":false,
+"matchesAmount":true,...}
+Note: Read-only RPC proxy. Checks a block hash against the Nano ledger. verified is true
+only for a confirmed SEND whose destination is `account` (required: with no account,
+verified is false and confirmedSend says whether it is a confirmed send to anyone) and whose
+amount is exactly `amount` raw (checked when given).
+matchesPayee: `account` is the send's destination; this is what verified requires
+(matchesDestination is an alias). matchesAccount keeps its old meaning for old clients:
+`account` is the block's own account (for a send, its sender); it never makes verified true.
+400: a block that is not 64 hex chars, a given account that is empty or not a valid
+nano_/xrb_ address, or an amount that is not a non-negative integer of raw (no decimals,
+signs or exponents) is answered 400 with verified:false (changed 2026-10-28; was ignored).
+Changed 2026-10-28: main answered verified:true for any confirmed block. verified is now
+false in each of these cases where it used to be true:
+  1. no `account` given (it is now required);
+  2. `account` is the block's sender, i.e. a payer checking its own send: use matchesAccount
+     for that now;
+  3. `amount` given and different from the block's amount;
+  4. a RECEIVE block, e.g. a seller checking its own receive: send instead the payer's SEND
+     block hash (your receive block's contents.link) with account=<your address>&amount=<raw>;
+  5. a legacy pre-state send block (no subtype): not accepted.
+Also new: the node RPC call times out after 10 s (verified:false with an error), and
+matchesAccount treats the xrb_ and nano_ forms of one account as equal (main compared the
+strings exactly).
+
+### Keyless x402 facilitator (nano:mainnet)
+GET  /unstuck/api/v1/facilitator/supported
+POST /unstuck/api/v1/facilitator/verify  {"paymentPayload":{"x402Version":2,"scheme":"exact",
+                                            "network":"nano:mainnet",
+                                            "payload":{"blockHash":"<64-hex>","payerSignature":"<128-hex>"}},
+                                          "paymentRequirements":{"scheme":"exact","network":"nano:mainnet",
+                                            "payTo":"nano_...","amount":"<raw>","maxTimeoutSeconds":600}}
+POST /unstuck/api/v1/facilitator/settle  (same body)
+Response: supported -> {"kinds":[{"x402Version":2,"scheme":"exact","network":"nano:mainnet",
+          "extra":{"payerProof":"required",...}}]}
+verify -> {"isValid":true,"payer":"nano_..."} or {"isValid":false,"invalidReason":"..."}
+settle -> {"success":true,"transaction":"<blockHash>","network":"nano:mainnet","payer":"nano_..."}
+Note: Point an x402 accepts[] entry for nano:mainnet here. The payer signs and broadcasts its
+own send block; this facilitator holds no key and broadcasts nothing. It reads the block on two
+independent public nodes (rpc.nano.to, rainstorm.city) and fails closed if either errors or
+answers anything but a JSON object, or the block is unconfirmed, not a send, or its
+destination/amount differ from payTo/amount. Settle re-verifies, then binds the block hash
+exactly once (case-insensitive). amount must be a JSON string. A send older than
+maxTimeoutSeconds (a positive integer, at most 600, by each node's local_timestamp), or
+stamped more than 60 s ahead of our clock, is payment_expired.
+scheme and network are required on both paymentRequirements and paymentPayload (top-level or
+under the payload's x402 v2 `accepted`), exactly "exact" and "nano:mainnet"; missing or empty
+is unsupported_scheme / unsupported_network.
+Payer proof (required by verify and settle): anyone who sees a send on the public ledger could
+submit its hash first, so payload.payerSignature must be Nano's ed25519-blake2b block signature (the kind
+nanocurrency signBlock makes; a plain RFC 8032 ed25519 signature is rejected), by the key of
+the block's account (the payer), over the 32-byte hash
+  sha256("x402-nano-payer-proof:v1:" + BLOCKHASH_IN_UPPERCASE + ":" + payTo + ":" + amount)
+with payTo and amount exactly as in paymentRequirements. With nanocurrency:
+  signBlock({ hash: <that sha256, hex>, secretKey: <payer secret key> }).
+It is not the block's own signature (that one is public). Missing -> payer_proof_missing;
+wrong key, wrong requirements or malformed -> payer_proof_invalid; a refused attempt does not
+bind the block, so its real payer can still settle it.
+Nano has no memo: a payer's one send matches every invoice with the same payTo and amount, so
+still bind a payment to one invoice with a fresh per-invoice payTo account (or a unique raw
+amount), and hand the resource only to the invoice's holder. verify does not bind; call settle
+before you serve the resource.
 
 ## Verify it yourself (run this, do not take our word for it)
 Everything in this file is a claim the network makes about itself. This is how you check
