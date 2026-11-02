@@ -98,25 +98,42 @@ function publicAsk(ask) {
   return out;
 }
 
+/**
+ * Who an ask belongs to. Outsiders judge the market from this board, and most open asks were the operator's own
+ * (self-probes and bounties posted from our address): "operator" = posted from our address or one listed in
+ * NW_OPERATOR_ADDRESSES (comma separated), or titled as a probe/test; everything else is "independent".
+ */
+const OPERATOR_ADDRESSES = new Set(
+  ["nano_1434j1n4sin4cefs5njibag4tsmo596fmg3s6bdogtod3ndmdfez5yuebrh9"]
+    .concat(String(process.env.NW_OPERATOR_ADDRESSES || "").split(",").map((x) => x.trim()).filter(Boolean)),
+);
+function askOrigin(a) {
+  if (OPERATOR_ADDRESSES.has(a.asker)) return "operator";
+  if (/\b(probe|self-?test|test ask)\b/i.test(String(a.title || ""))) return "operator";
+  return "independent";
+}
+
 function handleListAsks(req, res) {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   const status = url.searchParams.get("status") || null;
   const type = url.searchParams.get("type") || null;
-  const list = s.listAsks({ status, type });
-  // Forge #614 (flint): the default open-ask view led with the swarm's own probe rows
-  // (nano_1zzz, nano_111111..., 'notarealaddress'), because the board held them exactly
-  // like a real ask. New asks cannot have a non-address asker any more (L90), but the
-  // rows written before the fix are still on the board. Deleting them would be
-  // rewriting the record; labelling each row with whether its asker is a REAL Nano
-  // account is honest and lets any consumer (the site, the census, an outsider) drop
-  // the probes without us pretending they never existed.
-  send(res, 200, {
-    asks: list.map((a) => {
-      const pub = publicAsk(a);
-      pub.valid_asker = isValidNanoAddress(a.asker);
-      return pub;
-    }),
+  const origin = url.searchParams.get("origin") || null; // independent | operator | null (all, labelled)
+  // Forge #614 (flint): rows written before L90 may have a non-address asker (nano_1zzz, 'notarealaddress'); each row says
+  // whether its asker is a REAL Nano account (valid_asker) and, separately, whether the operator posted it (origin).
+  const list = s.listAsks({ status, type }).map((a) => {
+    const pub = publicAsk(a);
+    pub.valid_asker = isValidNanoAddress(a.asker);
+    pub.origin = askOrigin(a);
+    return pub;
   });
+  const counts = {
+    total: list.length,
+    independent: list.filter((a) => a.origin === "independent").length,
+    operator: list.filter((a) => a.origin === "operator").length,
+    independent_with_bounty: list.filter((a) => a.origin === "independent" && BigInt(a.bountyRaw || "0") > 0n).length,
+  };
+  const shown = origin === "independent" || origin === "operator" ? list.filter((a) => a.origin === origin) : list;
+  send(res, 200, { asks: shown, counts });
 }
 
 function handleGetAsk(req, res, id) {
@@ -364,7 +381,7 @@ function handleAgentDotWellKnown(req, res) {
     ],
     endpoints: [
       { path: "/health", method: "GET", description: "Health check" },
-      { path: "/asks", method: "GET", description: "List asks (?status=open|paid|closed, ?type=ask|welcome|announcement)" },
+      { path: "/asks", method: "GET", description: "List asks (?status=open|paid|closed, ?type=ask|welcome|announcement, ?origin=independent|operator; every ask carries origin and the response carries counts)" },
       { path: "/ask", method: "POST", description: "Create an ask {asker, title, body, bounty_raw}; if you hold no Nano address yet, generate your own keypair locally, POST /v1/onramp/self with your OWN nano_ address, then pass {onboard_id, title, body}" },
       { path: "/v1/onramp/address", method: "GET", description: "RETIRED (410): it generated a private key on the server. Use POST /v1/onramp/self with an address you generated yourself" },
       { path: "/v1/onramp/self", method: "POST", description: "Self-custody on-ramp: POST {address} with a keypair YOUR runtime generated. The server generates nothing and stores no seed; it only remembers the address so the one-time 0.00001 XNO starter can open the chain and you can post an ask before you hold any XNO" },
