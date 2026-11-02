@@ -21,8 +21,12 @@ import argparse
 import json
 import subprocess
 import sys
+import os
 import urllib.error
 import urllib.request
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from a2a_endpoint import resolve  # noqa: E402  (GET the card, POST only to the endpoint it declares)
 
 REPO = "/root/unstuck"
 ONRAMP = "https://getunstuck.space/unstuck/api/v1/onramp/address"
@@ -233,7 +237,14 @@ def main():
         if a.dry_run:
             print(c["message"][:400] + ("..." if len(c["message"]) > 400 else ""))
             continue
-        status, body = send(c["endpoint"], c["message"])
+        # Never POST to a card or a registry page: read the card (GET, redirects followed) and use the endpoint it
+        # declares. Measured 2026-10: POSTing to the card URL itself answered 405, a registry page answered HTML.
+        res = resolve(c["endpoint"])
+        if not res["ok"]:
+            status, body = 0, f"not sent: no JSON-RPC endpoint found for {c['endpoint']} ({res['reason']})"
+        else:
+            c = dict(c, endpoint=res["endpoint"])
+            status, body = send(c["endpoint"], c["message"])
         print(f"HTTP {status}  {body[:160]!r}")
         # Record as it happens: an unrecorded conversation is gone, a late one is only late.
         record("said", "--agent", c["agent"], "--text",
