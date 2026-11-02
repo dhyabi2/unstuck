@@ -120,9 +120,9 @@ function keygenValid(address) {
     const doc = onramp.onrampDoc({ apiBase: "https://example.test/unstuck/api" });
     const step1 = doc.steps.find((s) => s.n === 1);
     check(
-      "L57 the on-ramp's address step names the endpoint",
-      !!(step1 && step1.http_shortcut && step1.http_shortcut.includes("/v1/onramp/address")),
-      step1 && step1.http_shortcut
+      "L57 the on-ramp's address step no longer pitches the server-side key generator",
+      !!(step1 && !step1.http_shortcut && !JSON.stringify(step1).includes("/v1/onramp/address") && step1.no_server_keys),
+      step1 && step1.no_server_keys
     );
   } finally {
     nw.s.closeDb();
