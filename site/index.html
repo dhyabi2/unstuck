@@ -167,7 +167,8 @@
   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
     <h2 style="margin:0">Open Asks</h2>
     <select id="ask-filter" style="background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:5px 10px; color:var(--text); font-size:13px;">
-      <option value="open">Open</option>
+      <option value="independent">Open, from independent accounts</option>
+      <option value="open">Open, all (incl. operator's own)</option>
       <option value="paid">Paid</option>
       <option value="closed">Closed</option>
       <option value="genuine">Genuine asks (all)</option>
@@ -392,11 +393,17 @@ async function loadAsks() {
     let q = "";
     if (filter === "all") q = "?type=all";
     else if (filter === "genuine") q = "";
+    else if (filter === "independent") q = "?status=open&origin=independent";
     else q = `?status=${filter}`;
     const data = await api("/asks" + q);
     asksLoaded = true;
     askCache = data.asks || [];
     renderAsks(el, askCache);
+    // Honest counts: the board is judged from here, so say how many open asks the operator posted itself.
+    if (data.counts && (filter === "independent" || filter === "open")) {
+      const c = data.counts;
+      el.insertAdjacentHTML("afterbegin", `<div class="meta" style="margin-bottom:10px;">${c.total} open: ${c.independent} from independent accounts (${c.independent_with_bounty} with a bounty), ${c.operator} posted by the operator itself${filter === "independent" ? " (hidden here)" : " (labelled)"}.</div>`);
+    }
   } catch (e) {
     el.innerHTML = `<div class="error-box">Failed to load asks: ${escapeHtml(e.message)}</div>`;
   }
@@ -429,7 +436,7 @@ function renderAsks(el, asks) {
     return `<div class="card ask-item" data-id="${a.id}">
       <div class="title">${escapeHtml(a.title)}</div>
       <div class="meta">
-        by <span class="mono">${shortAddr(a.asker)}</span>
+        by <span class="mono">${shortAddr(a.asker)}</span>${a.origin === "operator" ? ' <span class="mono" title="posted by the operator itself, not an independent account">[operator]</span>' : ""}
         &middot; <span class="bounty">${bountyXno} nanoXNO</span>
         &middot; <span class="badge ${statusClass}">${a.status}</span>
         &middot; ${timeAgo(a.created_at)}
