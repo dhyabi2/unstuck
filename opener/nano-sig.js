@@ -176,12 +176,20 @@ function sign(message, secret, H = nanoHash) {
   return Buffer.concat([R, toLe(mod(r + k * a, L), 32)]);
 }
 
+const isIdentity = (p) => mod(p[0]) === 0n && mod(p[1] - p[2]) === 0n;
+/** A point whose order divides 8 (identity, or one of the 7 torsion points). */
+const isSmallOrder = (p) => isIdentity(mul(p, 8n));
+
 function verify(message, signature, pub, H = nanoHash) {
   try {
     const sig = Buffer.from(signature), pk = Buffer.from(pub), msg = Buffer.from(message);
     if (sig.length !== 64 || pk.length !== 32) return false;
     const A = decode(pk), R = decode(sig.subarray(0, 32));
     if (!A || !R) return false;
+    // A small-order public key (e.g. the burn address nano_1111...hifc8npp, all-zero key) has
+    // no secret behind it, and with R chosen among the torsion points and s = 0 the equation
+    // holds for most messages: anyone could "sign" for it. Refuse small-order A and R.
+    if (isSmallOrder(A) || isSmallOrder(R)) return false;
     const s = le(sig.subarray(32));
     if (s >= L) return false;
     const k = mod(le(H(Buffer.concat([sig.subarray(0, 32), pk, msg]))), L);

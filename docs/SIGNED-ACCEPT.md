@@ -12,8 +12,9 @@ signature against the address already stored on the ask. Nothing secret is store
 1. `GET /unstuck/api/ask/<id>/accept-message?answerId=<n>` returns `{ domain, asker, mode, message }`.
 2. The asker signs `message` (UTF-8 bytes) with the key of its Nano address (ed25519 with blake2b, the way Nano
    signs blocks) and sends `POST /ask/<id>/accept {"acceptedBy": "<asker>", "answerId": n, "signature": "<128 hex>"}`.
-3. Settlement works the same way: sign the settle message (`unstuck.ask.settle.v1`) and send `signature` to
-   `/ask/<id>/settle` in place of `accept_token`.
+3. Settlement works the same way: `GET /unstuck/api/ask/<id>/settle-message?paymentBlock=<64 hex>` returns
+   `{ domain, asker, mode, message }` for a paid ask; sign `message` and send
+   `POST /ask/<id>/settle {"paymentBlock": "<64 hex>", "acceptedBy": "<asker>", "signature": "<128 hex>"}`.
 
 Signature domain (domain-separated, so a signature made for this cannot be replayed as a Nano block or any other message):
 
@@ -27,6 +28,16 @@ bounty:<raw> XNO
 answer_sha256:<hex sha256 of the answer text>
 ```
 
+Settle message (`answer:` is the accepted answer's id; the block hash is upper-cased):
+
+```
+unstuck.ask.settle.v1
+ask:<id>
+answer:<accepted answer id>
+asker:<asker address>
+block:<64 hex block hash>
+```
+
 Binding the answerer, bounty and answer text means a signature cannot be reused to pay a different answer or to
 accept an answer that was edited after it was signed. A repeat is impossible by itself: accepting moves the ask
 out of `open`.
@@ -36,16 +47,24 @@ out of `open`.
 `NETWORK_ACCEPT_MODE` (operator setting): `either` (default; old asks still hold tokens), `signature` (tokens refused),
 `token` (legacy only). Move to `signature` once the open asks have settled or closed. Switching it is the operator's call.
 
+`either` is a transition mode, not the fix: in it a new ask still gets an `accept_token`, and a leaked token
+still accepts and settles exactly as before. Only `signature` closes the bearer-token hole; in that mode no
+token is minted, returned or stored. Any value that is set but is not one of the three (e.g. a typo such as
+`signatures`) fails closed to `signature` and is logged; only an unset or empty value means `either`.
+
+A signature never verifies for a small-order public key (such as the all-zero burn address
+`nano_1111...hifc8npp`, which no one holds a key for), nor with a small-order `R`.
+
 ## Verified (run 2026-11-02)
 
 `node opener/test_signed_accept.js`: blake2b-512 equals node for 9 lengths; the ed25519 core (sha512 swapped in)
 equals node's RFC 8032 ed25519 byte for byte; the official Nano vector (key 9F0E44... -> `nano_3i1aq1cc...`);
 accept by the asker's signature with no token; wrong key, flipped bit, other ask, other answerer, edited answer
 all refused with the ask left open; the three modes; the settle message binds the block hash.
-Existing `test_network.js` and `test_nserver.js` still pass. The SQLite-backed tests (`test_network_store.js`,
-`test_nserver_persist.js`, `test_network_settle.js`) need `better-sqlite3`, which was not installed in this
-environment, so they were NOT run here; `node --check` passes on the changed store and server files. Run them on
-the box before deploy.
+Existing `test_network.js` and `test_nserver.js` still pass, and so do the SQLite-backed tests
+(`test_network_store.js`, `test_nserver_persist.js`, `test_network_settle.js`), which use the built-in
+`node:sqlite` and need nothing installed. `node opener/test_signed_settle.js` runs accept and settle by signature
+end to end over HTTP against the real server with a temp database (node stubbed).
 
 ## Client sketch (stdlib Python is enough)
 

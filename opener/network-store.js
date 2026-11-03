@@ -215,14 +215,19 @@ function createAsk({ asker, onboardId, addr, title, body, bountyRaw, bountyAsset
   const askType = validTypes.includes(type)
     ? (type === 'ask' && SELF_TEST_TITLE.test(domainAsk.title) ? 'test' : type)
     : (SELF_TEST_TITLE.test(domainAsk.title) ? 'test' : 'ask');
-  const acceptToken = generateAcceptToken();
+  // In "signature" mode nothing secret is minted: the asker's Nano key is the only authority,
+  // so there is no bearer token to leak from a log. "either" still mints one (transition mode,
+  // for clients that have not moved to signing yet).
+  const acceptToken = n.acceptMode() === "signature" ? null : generateAcceptToken();
   const stmt = db.prepare(
     "INSERT INTO asks (asker, title, body, bounty_raw, type, accept_token, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
   );
   const now = domainAsk.created_at;
   stmt.run(domainAsk.asker, domainAsk.title, domainAsk.body, domainAsk.bountyRaw, askType, acceptToken, now);
   const id = Number(db.prepare("SELECT last_insert_rowid() AS id").get().id);
-  return { id, status: "open", type: askType, created_at: now, accept_token: acceptToken };
+  const out = { id, status: "open", type: askType, created_at: now };
+  if (acceptToken) out.accept_token = acceptToken;
+  return out;
 }
 
 /**
@@ -406,9 +411,13 @@ function settlementPrecheck(askId, blockHash, { acceptedBy, acceptToken, signatu
   if (acceptedBy !== ask.asker) {
     throw new Error("only the asker can record a settlement");
   }
+  // A malformed hash is a bad request whatever proof came with it (it used to surface as
+  // "signature does not verify", a 403, because there was no message to verify against).
+  if (!blockHash || !/^[0-9A-Fa-f]{64}$/.test(String(blockHash))) {
+    throw new Error("a settlement is recorded by a 64-hex block hash or not at all");
+  }
   // Signed authority (or, in "either" mode, the legacy token). The message binds the block.
-  n.authorize(ask, { token: acceptToken, signature },
-    /^[0-9A-Fa-f]{64}$/.test(String(blockHash)) ? n.settleMessage(ask, blockHash) : null, "settling");
+  n.authorize(ask, { token: acceptToken, signature }, n.settleMessage(ask, blockHash), "settling");
   if (ask.status !== "paid") {
     throw new Error(`cannot settle an ask that is ${ask.status}, only paid asks settle`);
   }

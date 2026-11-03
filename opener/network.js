@@ -179,15 +179,33 @@ function acceptMessage(ask, answer) {
   return [ACCEPT_DOMAIN, `ask:${ask.id}`, `answer:${answer.id}`, `asker:${ask.asker}`,
     `answerer:${answer.answerer}`, `bounty:${ask.bountyRaw} ${ask.bountyAsset}`, `answer_sha256:${bodyHash}`].join("\n");
 }
-/** The exact bytes the asker signs to record that `blockHash` paid the bounty. */
+/**
+ * The exact bytes the asker signs to record that `blockHash` paid the bounty.
+ * `answer:` is the accepted answer's id (not an address); served verbatim by
+ * GET /ask/:id/settle-message?paymentBlock=<hash>.
+ */
 function settleMessage(ask, blockHash) {
-  return [SETTLE_DOMAIN, `ask:${ask.id}`, `asker:${ask.asker}`, `answerer:${ask.acceptedAnswerId}`,
+  return [SETTLE_DOMAIN, `ask:${ask.id}`, `answer:${ask.acceptedAnswerId}`, `asker:${ask.asker}`,
     `block:${String(blockHash).toUpperCase()}`].join("\n");
 }
 
+const ACCEPT_MODES = ["either", "signature", "token"];
+let warnedMode = null;
+/**
+ * Unset or empty -> "either" (the transition default). Anything set but not one of the three
+ * known modes (a typo such as "signatures") fails CLOSED to "signature": an operator who meant
+ * to turn tokens off must never silently get the mode that still honours them.
+ */
 function acceptMode() {
-  const m = process.env.NETWORK_ACCEPT_MODE || "either";
-  return ["either", "signature", "token"].includes(m) ? m : "either";
+  const raw = process.env.NETWORK_ACCEPT_MODE;
+  if (raw === undefined || String(raw).trim() === "") return "either";
+  const m = String(raw).trim().toLowerCase();
+  if (ACCEPT_MODES.includes(m)) return m;
+  if (warnedMode !== raw) {
+    warnedMode = raw;
+    console.error(`NETWORK_ACCEPT_MODE=${JSON.stringify(raw)} is not one of ${ACCEPT_MODES.join("|")}; failing closed to "signature" (accept tokens refused)`);
+  }
+  return "signature";
 }
 
 /**

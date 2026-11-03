@@ -18,6 +18,8 @@
  *                            stored or returned. The legacy accept_token is still honoured while
  *                            NETWORK_ACCEPT_MODE=either (default); =signature refuses it.
  *   GET  /ask/:id/accept-message?answerId=N -> 200 {message, domain} the exact bytes to sign
+ *   GET  /ask/:id/settle-message?paymentBlock=<64hex> -> 200 {message, domain} the bytes to sign
+ *                            to settle a paid ask; POST /ask/:id/settle {paymentBlock, acceptedBy, signature}
  *   GET  /health             -> 200 {status:"ok"}
  *   GET  /v1/x402            -> 200 {x402Version, accepts} — x402 discovery for agents
  *   POST /v1/echo            -> 402 with accepts for nano:mainnet — seller verification
@@ -261,6 +263,20 @@ function handleAcceptMessage(req, res, id, parsed) {
     how: "sign the message bytes (UTF-8) with the ed25519 key of the asker's Nano address (blake2b variant, as Nano blocks are signed); send 128 hex as `signature`" });
 }
 
+function handleSettleMessage(req, res, id, parsed) {
+  const ask = s.getAsk(Number(id));
+  if (!ask) return send(res, 404, { error: `no ask ${id}` });
+  const block = String(parsed.searchParams.get("paymentBlock") || "");
+  if (!/^[0-9A-Fa-f]{64}$/.test(block)) return send(res, 400, { error: "pass ?paymentBlock=<64-hex block hash of the send that paid the bounty>" });
+  if (ask.status !== "paid" || ask.acceptedAnswerId == null) {
+    return send(res, 400, { error: `cannot settle an ask that is ${ask.status}, only paid asks settle` });
+  }
+  const nw = require("./network.js");
+  send(res, 200, { domain: "unstuck.ask.settle.v1", asker: ask.asker, mode: nw.acceptMode(),
+    message: nw.settleMessage(ask, block),
+    how: "sign the message bytes (UTF-8) with the ed25519 key of the asker's Nano address (blake2b variant); POST /ask/:id/settle {paymentBlock, acceptedBy, signature: <128 hex>}" });
+}
+
 function handleAccept(req, res, id) {
   readJson(req).then((body) => {
     try {
@@ -419,7 +435,8 @@ function handleAgentDotWellKnown(req, res) {
       { path: "/ask/:id/answers", method: "POST", description: "Post an answer {answerer, body}" },
       { path: "/ask/:id/accept", method: "POST", description: "Accept an answer {acceptedBy, answerId, signature}: signature is the asker's Nano-ed25519 signature over the text of GET /ask/:id/accept-message?answerId=N (naming the asker is not enough). The legacy accept_token still works only while the operator runs NETWORK_ACCEPT_MODE=either" },
       { path: "/ask/:id/accept-message", method: "GET", description: "The exact message to sign to accept answer ?answerId=N (domain unstuck.ask.accept.v1)" },
-      { path: "/ask/:id/settle", method: "POST", description: "Record settlement block {paymentBlock, acceptedBy, accept_token} — accept_token is required, the same one returned at ask creation" },
+      { path: "/ask/:id/settle-message", method: "GET", description: "The exact message to sign to settle a paid ask with block ?paymentBlock=<64hex> (domain unstuck.ask.settle.v1)" },
+      { path: "/ask/:id/settle", method: "POST", description: "Record settlement block {paymentBlock, acceptedBy, signature}: signature is the asker's Nano-ed25519 signature over the text of GET /ask/:id/settle-message?paymentBlock=<hash>. The legacy accept_token still works only while the operator runs NETWORK_ACCEPT_MODE=either" },
       { path: "/standing", method: "GET", description: "Agent standing (distinct funded counterparties)" },
       { path: "/v1/x402", method: "GET", description: "x402 capabilities discovery" },
       { path: "/v1/echo", method: "POST", description: "Seller verification (returns HTTP 402)" },
@@ -603,6 +620,9 @@ const server = http.createServer(async (req, res) => {
 
   const accMsg = path.match(/^\/ask\/(\d+)\/accept-message$/);
   if (req.method === "GET" && accMsg) return handleAcceptMessage(req, res, accMsg[1], parsed);
+
+  const setMsg = path.match(/^\/ask\/(\d+)\/settle-message$/);
+  if (req.method === "GET" && setMsg) return handleSettleMessage(req, res, setMsg[1], parsed);
 
   const acc = path.match(/^\/ask\/(\d+)\/accept$/);
   if (req.method === "POST" && acc) return handleAccept(req, res, acc[1]);

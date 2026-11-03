@@ -129,5 +129,48 @@ law("S6 the settle message binds the block hash (case-insensitive hex)", () => {
   assert.ok(sig.verifyByAddress(a.asker, n.settleMessage(a, h), sign(askerKey, n.settleMessage(a, h))));
 });
 
+law("S7 a typo'd NETWORK_ACCEPT_MODE fails CLOSED to signature (tokens refused), never open to either", () => {
+  for (const typo of ["signatures", "sig", "Signature-only", "none", "off"]) {
+    withMode(typo, () => {
+      assert.strictEqual(n.acceptMode(), "signature", typo);
+      const { a, aid } = freshAsk("T");
+      assert.throws(() => n.acceptAnswer(a, aid, a.asker, "T"), /no longer honoured/, typo);
+      assert.strictEqual(a.status, "open");
+    });
+  }
+  withMode(" Signature ", () => assert.strictEqual(n.acceptMode(), "signature"));
+  withMode("TOKEN", () => assert.strictEqual(n.acceptMode(), "token"));
+  withMode("", () => assert.strictEqual(n.acceptMode(), "either"));
+  withMode(null, () => assert.strictEqual(n.acceptMode(), "either"));
+});
+law("S8 no signature verifies for a small-order key (the burn address): torsion R with s=0 is refused", () => {
+  const zero = Buffer.alloc(32);
+  const burn = sig.pubToAddress(zero);
+  assert.strictEqual(burn, "nano_1111111111111111111111111111111111111111111111111111hifc8npp");
+  // The four points in the subgroup the all-zero key generates, encoded: identity, A, 2A=(0,-1), -A.
+  const P = (1n << 255n) - 19n;
+  const le32 = (v) => { const b = Buffer.alloc(32); for (let i = 0; i < 32; i++) { b[i] = Number(v & 255n); v >>= 8n; } return b; };
+  const negA = Buffer.alloc(32); negA[31] = 0x80;
+  const torsion = [le32(1n), zero, le32(P - 1n), negA];
+  let forged = 0;
+  for (let i = 0; i < 20; i++) {
+    const msg = `unstuck.ask.accept.v1\nask:${i}\nasker:${burn}`;
+    for (const R of torsion) {
+      const s = Buffer.concat([R, Buffer.alloc(32)]).toString("hex");
+      if (sig.verifyByAddress(burn, msg, s)) forged++;
+    }
+  }
+  assert.strictEqual(forged, 0, `${forged} forged signatures verified for the burn address`);
+  // An honest key still verifies.
+  assert.ok(sig.verifyByAddress(askerKey.address, "m", sign(askerKey, "m")));
+});
+law("S9 the settle message names the accepted answer id as answer:, not answerer:", () => {
+  const { a } = freshAsk();
+  a.acceptedAnswerId = 1;
+  const m = n.settleMessage(a, "AB".repeat(32));
+  assert.match(m, /^unstuck\.ask\.settle\.v1\nask:7\nanswer:1\nasker:nano_/);
+  assert.doesNotMatch(m, /answerer:/);
+});
+
 if (failed) { console.log(`${failed} failed`); process.exit(1); }
 console.log("all signed-accept laws hold");

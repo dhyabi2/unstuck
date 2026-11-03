@@ -64,10 +64,11 @@ function handleCreateAsk(req, res) {
         bountyRaw: body.bounty_raw,
       });
       ask.id = nextId++;
-      ask.acceptToken = require("crypto").randomBytes(24).toString("base64url"); // Forge #1
+      // Forge #1; no token is minted in signature mode (the asker's key is the authority).
+      ask.acceptToken = n.acceptMode() === "signature" ? null : require("crypto").randomBytes(24).toString("base64url");
       asks.set(ask.id, ask);
       res.writeHead(201, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ id: ask.id, status: ask.status, accept_token: ask.acceptToken }));
+      res.end(JSON.stringify({ id: ask.id, status: ask.status, ...(ask.acceptToken ? { accept_token: ask.acceptToken } : {}) }));
     } catch (e) {
       send(res, 400, { error: e.message });
     }
