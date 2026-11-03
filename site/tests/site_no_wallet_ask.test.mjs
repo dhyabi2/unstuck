@@ -4,7 +4,8 @@
  *
  * The gap this file makes executable. Block 108 shipped the no-wallet path on the network
  * server (`GET /v1/onramp/address` hands out {address, seed, index, onboard_id}; `POST /ask`
- * accepts {onboard_id, title, body} and stores the handed-out nano_ address as the asker).
+ * accepts {onboard_id, title, body} and stores the handed-out nano_ address as the asker; that server-side handout is now retired,
+ * answers 410, and the documents name POST /v1/onramp/self with an address the agent made).
  * But nothing a visitor could READ named it:
  *
  *   measured 2026-09-19 against the shipped llms.txt and agent.json:
@@ -20,11 +21,13 @@
  * The laws, each named so a failure says which property broke:
  *
  *   L67 — every published discovery document that names POST /ask also names the no-wallet
- *         path to it: GET /v1/onramp/address and the onboard_id handoff. A document that
- *         tells an agent to post without its wallet does not exist.
- *   L68 — the documented two calls really produce a 201: fetch the on-ramp as the document
- *         describes it, post an ask with the onboard_id it returned, read the ask back and
- *         see the handed-out nano_ address stored as the asker. (round trip: a local scratch
+ *         path to it: POST /v1/onramp/self (an address the agent generated itself) and the
+ *         onboard_id handoff — and none of them pitches the retired server-side key handout
+ *         GET /v1/onramp/address, which now answers 410 Gone.
+ *   L68 — the documented two calls really produce a 201: generate a keypair locally, register
+ *         the address at the on-ramp as the document describes it, post an ask with the
+ *         onboard_id it returned, read the ask back and see the agent's own nano_ address
+ *         stored as the asker. (round trip: a local scratch
  *         instance of the shipped server; file half: the paths the documents name are exactly
  *         the paths probed.)
  *   L74 — the round trip above runs against that scratch instance, never the live origin, and
@@ -55,7 +58,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { startScratchNetwork, scratchDbExists } from "./scratch-network.mjs";
+import { startScratchNetwork, scratchDbExists, ownKeypair } from "./scratch-network.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SITE = path.resolve(HERE, "..");
@@ -63,8 +66,10 @@ const SITE = path.resolve(HERE, "..");
 const LIVE_ORIGIN = "https://getunstuck.space";
 const API_PATH = "/unstuck/api";
 
-/** The on-ramp path the server actually serves, relative to the API base. */
-const ONRAMP_PATH = "/v1/onramp/address";
+/** The self-custody on-ramp path, relative to the API base. */
+const ONRAMP_PATH = "/v1/onramp/self";
+/** The retired server-side key handout (410 Gone); no document may pitch it. */
+const RETIRED_PATH = "/v1/onramp/address";
 /** The ask path, relative to the API base. */
 const ASK_PATH = "/ask";
 
@@ -86,7 +91,7 @@ const read = (rel) => fs.readFileSync(path.join(SITE, rel), "utf8");
 // L67 — a document that names POST /ask also names the way in without a wallet
 // ---------------------------------------------------------------------------
 
-test("L67 every document that names POST /ask names GET /v1/onramp/address", () => {
+test("L67 every document that names POST /ask names POST /v1/onramp/self", () => {
   // The falsifiable core: this must be checked against the documents, not asserted about
   // them. A document that posts asks but never says how an agent with no address gets one
   // leaves the whole conversion target stuck at read-only.
@@ -108,6 +113,14 @@ test("L67 every document that names POST /ask names GET /v1/onramp/address", () 
   );
 });
 
+test("L67 no discovery document pitches the retired GET /v1/onramp/address", () => {
+  // The network no longer makes keys for anyone: the server-side handout answers 410 Gone.
+  // A document that still sends an agent there sends it to a dead end and, worse, pitches
+  // a key the agent did not generate.
+  const offenders = DOCS.filter((d) => read(d.file).includes(RETIRED_PATH)).map((d) => d.file);
+  assert.deepEqual(offenders, [], `these documents still name the retired ${RETIRED_PATH}: ${offenders.join(", ")}`);
+});
+
 test("L67 every JSON document that names POST /ask declares the onboard_id body", () => {
   // The on-ramp path alone is not enough: an agent that fetches an address still needs to be
   // told that the ask it is about to post takes onboard_id rather than an asker address.
@@ -123,7 +136,11 @@ test("L67 every JSON document that names POST /ask declares the onboard_id body"
     );
     const fc = obj.first_call;
     assert.ok(fc, `${d.file} carries no first_call recipe for an agent with no wallet`);
-    assert.equal(fc.call_1.method, "GET", `${d.file} first_call.call_1 must be a GET`);
+    assert.equal(fc.call_1.method, "POST", `${d.file} first_call.call_1 must be a POST`);
+    assert.ok(
+      fc.call_1.body && "address" in fc.call_1.body && !JSON.stringify(fc.call_1).includes("seed"),
+      `${d.file} first_call.call_1 must send only the agent's own address and carry no seed: ${JSON.stringify(fc.call_1)}`
+    );
     assert.equal(fc.call_1.path, ONRAMP_PATH, `${d.file} first_call.call_1 must be ${ONRAMP_PATH}`);
     assert.equal(fc.call_2.method, "POST", `${d.file} first_call.call_2 must be a POST`);
     assert.equal(fc.call_2.path, ASK_PATH, `${d.file} first_call.call_2 must be ${ASK_PATH}`);
@@ -144,8 +161,8 @@ test("L67 llms.txt gives the no-wallet path both as its own section and next to 
   const txt = read("llms.txt");
   // Next to the endpoint, so an agent that jumps straight to the ask line sees it.
   assert.ok(
-    txt.includes(`GET ${API_PATH}${ONRAMP_PATH}`) || txt.includes(`GET /unstuck/api${ONRAMP_PATH}`),
-    `llms.txt must name GET ${API_PATH}${ONRAMP_PATH}`
+    txt.includes(`POST ${API_PATH}${ONRAMP_PATH}`),
+    `llms.txt must name POST ${API_PATH}${ONRAMP_PATH}`
   );
   // The section heading, so a text-reading agent scanning headings finds it.
   assert.match(
@@ -161,11 +178,11 @@ test("L67 llms.txt gives the no-wallet path both as its own section and next to 
     `llms.txt names onboard_id ${mentions} time(s); the path needs it in the section, the response and next to POST /ask`
   );
   // And the endpoint path documented here must still be a full API-base-relative path (L65).
-  const bare = [...txt.matchAll(/^(GET|POST)\s+(\/v1\/onramp\/address)/gm)];
+  const bare = [...txt.matchAll(/^(GET|POST)\s+(\/v1\/onramp\/self)/gm)];
   assert.deepEqual(
     bare.map((m) => m[0]),
     [],
-    "llms.txt names /v1/onramp/address without the API base, so an agent resolves it against the origin root and 404s"
+    "llms.txt names /v1/onramp/self without the API base, so an agent resolves it against the origin root and 404s"
   );
 });
 
@@ -200,19 +217,24 @@ async function jsonReq(method, url, body, timeoutMs = 15000) {
 /**
  * The exact round trip the documents describe, against a scratch instance of the shipped server.
  *
- * The order matters and is the law's whole content: ask the on-ramp for an address (call 1),
+ * The order matters and is the law's whole content: register an address the agent generated (call 1),
  * post an ask carrying only the onboard_id it handed back (call 2), then read the ask back and
  * require the stored asker to be that address. A server that invented an asker, or accepted an
  * onboard_id it never issued, fails here.
  */
 async function roundTrip(base, title) {
-  // Call 1, exactly as the documents describe it.
-  const onramp = await jsonReq("GET", `${base}${API_PATH}${ONRAMP_PATH}`);
-  assert.ok(!onramp.error, `GET ${API_PATH}${ONRAMP_PATH} did not answer: ${onramp.error}`);
-  assert.equal(onramp.status, 200, `GET ${API_PATH}${ONRAMP_PATH} answered ${onramp.status}`);
-  const { address, seed, onboard_id: onboardId } = onramp.body || {};
-  assert.match(String(address), /^nano_[13][0-9a-z]{59}$/, `on-ramp returned no nano_ address: ${JSON.stringify(address)}`);
-  assert.match(String(seed), /^[0-9A-Fa-f]{64}$/, `on-ramp returned no 64-hex seed: ${JSON.stringify(seed)}`);
+  // Call 0: the agent generates its own keypair, locally. The network never makes a key.
+  const own = ownKeypair();
+  // The retired server-side handout must stay retired.
+  const gone = await jsonReq("GET", `${base}${API_PATH}${RETIRED_PATH}`);
+  assert.equal(gone.status, 410, `the retired GET ${API_PATH}${RETIRED_PATH} answered ${gone.status}, not 410`);
+  // Call 1, exactly as the documents describe it: register only the address.
+  const onramp = await jsonReq("POST", `${base}${API_PATH}${ONRAMP_PATH}`, { address: own.address });
+  assert.ok(!onramp.error, `POST ${API_PATH}${ONRAMP_PATH} did not answer: ${onramp.error}`);
+  assert.equal(onramp.status, 201, `POST ${API_PATH}${ONRAMP_PATH} answered ${onramp.status}`);
+  const { address, onboard_id: onboardId } = onramp.body || {};
+  assert.equal(address, own.address, `on-ramp did not register the agent's own address: ${JSON.stringify(address)}`);
+  assert.ok(!/[0-9A-Fa-f]{64}/.test(onramp.text), "the on-ramp response carries a 64-hex string; it must never carry a key");
   assert.ok(Number.isInteger(onboardId), `on-ramp returned no onboard_id: ${JSON.stringify(onboardId)}`);
 
   // Call 2, with no asker address anywhere in the body — the whole point.
@@ -229,13 +251,13 @@ async function roundTrip(base, title) {
   );
   assert.ok(Number.isInteger(posted.body && posted.body.id), `the ask was accepted with no id: ${posted.text}`);
 
-  // Read it back: the stored asker must be the address the on-ramp handed out, not a fiction.
+  // Read it back: the stored asker must be the agent's own address, not a fiction.
   const got = await jsonReq("GET", `${base}${API_PATH}${ASK_PATH}/${posted.body.id}`);
   assert.equal(got.status, 200, `reading the ask back answered ${got.status}`);
   assert.equal(
     got.body && got.body.ask && got.body.ask.asker,
     address,
-    "the stored asker is not the on-ramp address; the asker field must never be a fiction"
+    "the stored asker is not the agent's own address; the asker field must never be a fiction"
   );
   return { address, onboardId, askId: posted.body.id };
 }

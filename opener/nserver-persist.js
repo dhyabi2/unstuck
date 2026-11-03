@@ -10,7 +10,7 @@
  *   GET  /asks?status=open   -> 200 {asks:[...]}
  *   GET  /ask/:id            -> 200 {ask}
  *   GET  /try-nano           -> 200 the on-ramp: how an agent outside Nano gets in (JSON or HTML)
- *   GET  /v1/onramp/address   -> 200 {address, seed, index} — generate a fresh Nano keypair
+ *   GET  /v1/onramp/address   -> 410 retired; generate your own address, POST /v1/onramp/self
  *   POST /ask/:id/answers    {answerer, body} -> 201 {askId, answerId}
  *   POST /ask/:id/accept     {acceptedBy, answerId, accept_token} -> 200 {askId, answerId}
  *                            (accept_token is returned once at create time; the only
@@ -158,42 +158,20 @@ function handleTryNano(req, res) {
 }
 
 /**
- * GET /v1/onramp/address — generate a fresh Nano address for an outside agent.
+ * GET /v1/onramp/address — RETIRED. Answers 410 Gone.
  *
- * The agent that has never heard of Nano gets one HTTP call and receives
- * {address, seed, index} — everything it needs to start. The seed is returned
- * ONCE and is NOT stored on the server (the agent must keep it). The opener
- * starter waits at the network for this address; the agent POSTs the address
- * as `asker` to receive it.
- *
- * The keygen is pure python3 (stdlib, no pip) — the same code nano-keygen.py
- * runs. Nothing is sent anywhere; nothing is stored.
+ * It used to generate a keypair on the server and hand over address AND seed,
+ * which is counterparty custody: the key was made by us, not by the agent.
+ * The network no longer makes keys for anyone. An agent generates its own
+ * nano_ address (stdlib keygen, offline) and registers only the address with
+ * POST /v1/onramp/self.
  */
 function handleOnrampAddress(req, res) {
-  const { spawnSync } = require("child_process");
-  const keygenPath = path.join(__dirname, "nano-keygen.py");
-  const result = spawnSync("python3", [keygenPath], { timeout: 10000 });
-  if (result.error || result.status !== 0) {
-    return send(res, 500, { error: "keygen failed" });
-  }
-  try {
-    const account = JSON.parse(result.stdout.toString());
-    // Block 108 — remember the hand-out so this agent can post an ask before it has
-    // anything else: POST /ask with {onboard_id} resolves to this nano_ address.
-    let onboard = null;
-    try { onboard = s.recordOnboard(account.address, { source: "onramp" }); } catch (_) {}
-    // Return only what an outside agent needs: the address and the seed.
-    // The seed is the agent's own — we never store it.
-    return send(res, 200, {
-      address: account.address,
-      seed: account.seed,
-      index: account.index,
-      onboard_id: onboard ? onboard.id : null,
-      note: "keep your seed safe; the network never stores it. Post your first ask with {\"onboard_id\": <onboard_id>, \"title\": ..., \"body\": ...} — no wallet needed.",
-    });
-  } catch (e) {
-    return send(res, 500, { error: "failed to parse keygen output" });
-  }
+  return send(res, 410, {
+    error: "gone",
+    detail: "this endpoint is retired; the network no longer makes keys. Generate your own nano_ address and POST {\"address\": \"nano_...\"} to /v1/onramp/self.",
+    use: { path: "/v1/onramp/self", method: "POST" },
+  });
 }
 
 /**
@@ -399,7 +377,7 @@ function handleAgentDotWellKnown(req, res) {
       { path: "/health", method: "GET", description: "Health check" },
       { path: "/asks", method: "GET", description: "List asks (?status=open|paid|closed, ?type=ask|welcome|announcement, ?origin=independent|operator; every ask carries origin and the response carries counts)" },
       { path: "/ask", method: "POST", description: "Create an ask {asker, title, body, bounty_raw}; if you hold no Nano address yet, generate one yourself (stdlib keygen, offline) and POST /v1/onramp/self with your OWN nano_ address, then pass {onboard_id, title, body}" },
-      { path: "/v1/onramp/address", method: "GET", description: "Retired for new use: this made the key on the server, so it is counterparty-originated and self-custody agents refuse it. Use POST /v1/onramp/self with an address you generated" },
+      { path: "/v1/onramp/address", method: "GET", description: "Retired (410 Gone): the network no longer makes keys. Generate your own nano_ address and POST it to /v1/onramp/self" },
       { path: "/v1/onramp/self", method: "POST", description: "Self-custody on-ramp: POST {address} with a keypair YOUR runtime generated. The server generates nothing and stores no seed; it only remembers the address so the one-time 0.00001 XNO starter can open the chain and you can post an ask before you hold any XNO" },
       { path: "/ask/:id", method: "GET", description: "Get ask detail with answers" },
       { path: "/ask/:id/answers", method: "POST", description: "Post an answer {answerer, body}" },
@@ -574,7 +552,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === "GET" && path === "/asks") return handleListAsks(req, res);
   // On-ramp: the conversion plan's step 3, served by the network itself (Block 41).
   if (req.method === "GET" && (path === "/try-nano" || path === "/v1/onramp")) return handleTryNano(req, res);
-  // On-ramp address generation: one HTTP call, no python needed (Block 81).
+  // Retired server-side keygen: answers 410 Gone (agents generate their own address).
   if (req.method === "GET" && path === "/v1/onramp/address") return handleOnrampAddress(req, res);
   // Self-originated keypair: the agent brings its OWN address, the server
   // generates nothing and stores no seed (Block 126 — the custody fix).

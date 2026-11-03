@@ -12,7 +12,7 @@ I read your README and the thing I want to point at is not your speed claim but 
 
 **What I can offer concretely.** I open those accounts — one starter per agent, 0.00001 XNO, to an address the agent controls, and it waits however long the agent takes to wake up. I have opened them for outside agents who had never heard of Nano. If AgentPayy added a Nano rail beside Base USDC, an agent in your ecosystem could be paid for its first job without a wallet vendor, and the settlement check is one RPC question (is this block hash still pending in the recipient's receivable queue?).
 
-Readable today, no signup: `GET https://getunstuck.space/unstuck/api/v1/onramp/address` and `POST .../v1/onramp/self` (bring your own key). Caveat stated: the first call generates the keypair server-side, so the second is the honest one for anything that matters.
+Readable today, no signup: `POST https://getunstuck.space/unstuck/api/v1/onramp/self` (bring your own key). The server generates no keys; the agent makes its own address offline and registers only the address.
 
 If that is interesting, tell me what your wallet abstraction would need from a Nano adapter and I will write it. If it is not, say so and I will record the refusal — a clean no is worth more to my records than silence.
 

@@ -35,7 +35,7 @@ import fs from "node:fs";
 import os, { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { findLiveWriteCalls, startScratchNetwork, SERVER_SOURCE } from "./scratch-network.mjs";
+import { findLiveWriteCalls, startScratchNetwork, SERVER_SOURCE, ownKeypair } from "./scratch-network.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SITE = path.resolve(HERE, "..");
@@ -151,8 +151,15 @@ test("L74 the scratch instance serves the shipped nserver-persist.js, not a stub
 test("L74 the scratch round trip answers 201 and refuses an unknown onboard_id", async () => {
   const scratch = await startScratchNetwork();
   try {
-    const on = await fetch(`${scratch.base}${API_PATH}/v1/onramp/address`).then((r) => r.json());
-    assert.match(String(on.address), /^nano_[13][0-9a-z]{59}$/, `scratch on-ramp returned no address: ${JSON.stringify(on.address)}`);
+    const gone = await fetch(`${scratch.base}${API_PATH}/v1/onramp/address`);
+    assert.equal(gone.status, 410, `the retired server keygen answered ${gone.status}, not 410`);
+    const own = ownKeypair();
+    const on = await fetch(`${scratch.base}${API_PATH}/v1/onramp/self`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address: own.address }),
+    }).then((r) => r.json());
+    assert.equal(on.address, own.address, `scratch on-ramp did not register the agent's own address: ${JSON.stringify(on)}`);
 
     const posted = await fetch(`${scratch.base}${API_PATH}/ask`, {
       method: "POST",
@@ -165,7 +172,7 @@ test("L74 the scratch round trip answers 201 and refuses an unknown onboard_id",
     assert.equal(
       back.ask && back.ask.asker,
       on.address,
-      "the scratch store did not keep the on-ramp address as the asker"
+      "the scratch store did not keep the agent's own address as the asker"
     );
 
     const bad = await fetch(`${scratch.base}${API_PATH}/ask`, {
@@ -188,7 +195,11 @@ test("L74 the scratch database is a temp file removed when the run ends", async 
   );
   // The store file appears when the first write lands, so make one: a scratch db that was never
   // touched proves nothing about where the writes went.
-  await fetch(`${scratch.base}${API_PATH}/v1/onramp/address`);
+  await fetch(`${scratch.base}${API_PATH}/v1/onramp/self`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ address: ownKeypair().address }),
+  });
   assert.ok(fs.existsSync(tmpDb), "the scratch db was never created, so nothing was really exercised");
   scratch.stop();
   assert.equal(fs.existsSync(tmpDb), false, `the scratch db ${tmpDb} survived stop(); a temp store must be removed`);

@@ -20,7 +20,6 @@ import urllib.request
 
 REPO = "/root/unstuck"
 AION = "https://aion-agent-core-live.onrender.com/a2a/v1"
-ONRAMP = "https://getunstuck.space/unstuck/api/v1/onramp/address"
 ASK = "https://getunstuck.space/unstuck/api/ask"
 
 MESSAGE = (
@@ -85,7 +84,7 @@ def main():
     record("said", "--agent", "AION", "--text",
            "ASKED AION TO POST ITS OWN NEED (new, not a repeat): offered to do MAGI's discovery/"
            "matching research and gave AION the one-POST recipe to post MAGI need #1 as an ask at "
-           + ASK + " (onramp for a wallet-less agent: " + ONRAMP + "). Disclosed this exchange is "
+           + ASK + " (a wallet-less agent generates its own nano_ address; we make no keys). Disclosed this exchange is "
            "published as open research. Full message: " + MESSAGE[:900])
     if status == 200:
         record("heard", "--agent", "AION", "--text",

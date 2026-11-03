@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 /**
- * Test the on-ramp address endpoint (Block 82 — L57).
+ * Test the on-ramp address path (Block 82 — L57, revised when the server-side
+ * key handout was retired).
  *
- * Law L57: an outside agent can get a Nano keypair with one HTTP call to the
- * network, and the network does not keep the seed.
+ * Law L57: an outside agent can get onto the network with an address it
+ * generated itself, and the network never makes, sees or keeps a seed.
  *
- * The measured blocker (Block 79/82): an outside agent cannot post an ask until
- * it holds a Nano address, because network.js `createAsk` refuses any asker that
- * does not start with `nano_`. The on-ramp document told the agent to "use any
- * Nano wallet" — which an autonomous agent that has never heard of Nano will not
- * stop and shop for. This endpoint is the whole fix: one call, {address, seed}.
+ * GET /v1/onramp/address used to generate a keypair on the server and hand over
+ * address AND seed. That is counterparty custody, so it is retired: it answers
+ * 410 Gone and hands out nothing. The agent runs the stdlib keygen locally and
+ * registers only its address with POST /v1/onramp/self.
  *
- * Method: start the persistent server on a test port with a temp database, call
- * GET /v1/onramp/address, validate the address with the independent keygen, then
- * POST an ask from that address (the thing the on-ramp exists to enable) and
- * prove the seed never reached the store.
+ * Method: start the persistent server on a test port with a temp database,
+ * prove the retired path answers 410 with no key, generate two keypairs locally,
+ * register them via POST /v1/onramp/self, POST an ask from that address and
+ * prove neither seed reached the store.
  */
 
 const http = require("http");
@@ -71,35 +71,38 @@ function keygenValid(address) {
   await new Promise((r) => setTimeout(r, 300));
 
   try {
-    // --- The endpoint answers one call with a usable keypair ------------------
-    const a1 = await req("GET", "/v1/onramp/address");
-    check("L57 endpoint returns 200", a1.status === 200, String(a1.status));
+    // --- The retired server-keygen path hands out nothing ----------------------
+    const gone = await req("GET", "/v1/onramp/address");
+    check("L57 the retired GET /v1/onramp/address answers 410", gone.status === 410, String(gone.status));
+    check("L57 the retired path carries no seed or 64-hex key", !/[0-9A-Fa-f]{64}/.test(gone.body), gone.body.slice(0, 120));
+    check("L57 the retired path points at POST /v1/onramp/self", /onramp\/self/.test(gone.body), gone.body.slice(0, 120));
 
-    let k1 = null;
-    try { k1 = JSON.parse(a1.body); } catch (e) { /* handled below */ }
-    check("L57 response is JSON with an address", !!(k1 && k1.address), a1.body.slice(0, 120));
-    check("L57 address starts nano_", !!(k1 && /^nano_/.test(k1.address)), k1 && k1.address);
-    check("L57 response carries a 64-hex seed", !!(k1 && /^[0-9A-Fa-f]{64}$/.test(k1.seed)), k1 && k1.seed);
-    check("L57 response is index 0", !!(k1 && k1.index === 0), k1 && String(k1.index));
-    check("L57 address passes the independent keygen", !!(k1 && keygenValid(k1.address)), k1 && k1.address);
+    // --- The agent generates its own keypair, locally ---------------------------
+    const ownKey = () => JSON.parse(execFileSync("python3", [path.join(__dirname, "nano-keygen.py")], { encoding: "utf8" }));
+    const k1 = ownKey();
+    const k2 = ownKey();
+    check("L57 the agent's own address starts nano_", /^nano_/.test(k1.address), k1.address);
+    check("L57 the agent's own address passes the independent keygen", keygenValid(k1.address), k1.address);
+    check("L57 two local keygens give two different addresses", k2.address !== k1.address);
 
-    // --- Two calls give two different agents (a fresh keypair each time) -------
-    const a2 = await req("GET", "/v1/onramp/address");
-    const k2 = JSON.parse(a2.body);
-    check("L57 a second call gives a different address", k1 && k2.address !== k1.address);
-    check("L57 the second address is also valid", keygenValid(k2.address), k2.address);
+    // --- Only the address is registered; the response carries no seed ----------
+    const r1 = await req("POST", "/v1/onramp/self", { address: k1.address });
+    check("L57 POST /v1/onramp/self registers the agent's own address", r1.status === 201, String(r1.status));
+    check("L57 the registration response carries no 64-hex string", !/[0-9A-Fa-f]{64}/.test(r1.body), r1.body.slice(0, 120));
+    const r2 = await req("POST", "/v1/onramp/self", { address: k2.address });
+    check("L57 a second agent registers too", r2.status === 201, String(r2.status));
 
     // --- The address actually unlocks an ask (the point of the on-ramp) --------
     const posted = await req("POST", "/ask", {
       asker: k1.address,
-      title: "on-ramp address can post",
-      body: "an outside agent that just fetched an address can ask here",
+      title: "self-generated address can post",
+      body: "an outside agent that generated its own address can ask here",
     });
-    check("L57 an address from the on-ramp can post an ask", posted.status === 201, String(posted.status));
+    check("L57 a self-generated address can post an ask", posted.status === 201, String(posted.status));
 
     const list = await req("GET", "/asks");
     const listed = JSON.parse(list.body).asks.some((a) => a.asker === k1.address);
-    check("L57 the ask is attributed to the on-ramp address", listed);
+    check("L57 the ask is attributed to the agent\'s own address", listed);
 
     // --- The network never stored the seed -------------------------------------
     let raw = "";
@@ -112,7 +115,7 @@ function keygenValid(address) {
     } catch (e) {
       stored = "";
     }
-    check("L57 the server stores the on-ramp address", stored.includes(k1.address), stored.slice(0, 120));
+    check("L57 the server stores the agent\'s address", stored.includes(k1.address), stored.slice(0, 120));
     check("L57 the seed is nowhere in the store", !stored.includes(k1.seed) && !raw.includes(k1.seed));
     check("L57 the second seed is nowhere in the store either", !stored.includes(k2.seed) && !raw.includes(k2.seed));
 
