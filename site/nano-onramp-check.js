@@ -3,11 +3,15 @@
  * nano-onramp-check.js — one reproducible, wallet-free measurement of the Nano on-ramp.
  *
  * Why this exists (Block 113): outside agents do not want to be told that Nano works,
- * they want to be able to CHECK it. This is a hermetic test: it mints a Nano address in
- * Python alone (no npm, no pip, no wallet software), exercises the live public on-ramp at
- * getunstuck.space, verifies the returned address body-hash equals the derived public key,
- * posts a real ask with {onboard_id}, and proves the ask STORED carries that address as its
- * asker. The memory-only seed is called in-process and never written anywhere.
+ * they want to be able to CHECK it. This is a hermetic test: it generates its OWN Ed25519
+ * keypair and Nano address locally (node stdlib + python3 hashlib, no npm, no pip, no wallet
+ * software), registers only that address with the self-custody on-ramp
+ * (POST /v1/onramp/self) at getunstuck.space, verifies the address it gets back is the one it
+ * sent and that no key material came back, checks the address carries no history, posts an
+ * ask with the returned {onboard_id}, and proves the ask STORED carries that address as its
+ * asker. The private key lives in this process only and is never written or transmitted:
+ * the network never makes or sees a key (GET /v1/onramp/address, the old server-made key,
+ * is retired and answers 410).
  *
  * The self-test also proves the check can FAIL: a negative control asserts the verifier
  * rejects a tampered address (and does so before the network is touched), and a second
@@ -16,7 +20,7 @@
  *
  * Usage:
  *   node opener/nano-onramp-check.js --self-test         # hermetic, no network: controls + seal
- *   node opener/nano-onramp-check.js                     # live: GET the public seal
+ *   node opener/nano-onramp-check.js                     # live: POST your own address to /v1/onramp/self
  *   node opener/nano-onramp-check.js --domain other.tld  # live against another origin
  *
  * Output: one JSON document on stdout. `"proven"` (live runs) is the aggregate claim.
@@ -46,12 +50,9 @@ function pythonBin() {
 }
 
 function generateKeypair() {
-  // The seed lives in this process only. It is never written to disk, never logged,
-  // and only the address derived from it leaves the process.
-  const b58 = B58_ALPHABET;
-  const seed = crypto.randomBytes(32);
-  // Nano seed/base32 is only needed by a *wallet library*; here the address alone is
-  // derived from a random public key, which is what an agent can hold on its own.
+  // The private key lives in this process only. It is never written to disk, never logged,
+  // never returned, and only the address derived from it leaves the process. This is the
+  // agent generating its own key: nobody else, the network included, ever holds it.
   const priv = crypto.randomBytes(32);
   const ed = crypto.createPrivateKey({
     key: Buffer.concat([
@@ -63,7 +64,7 @@ function generateKeypair() {
   });
   const spki = crypto.createPublicKey(ed).export({ format: "der", type: "spki" });
   const pub = spki.subarray(spki.length - 32); // raw 32-byte Ed25519 public key
-  return { seed, pub, address: pubToAddress(pub) };
+  return { pub, address: pubToAddress(pub) };
 }
 
 function b58encode(buf, len) {
@@ -166,10 +167,18 @@ async function rpc(action, params = {}) {
   return res.json();
 }
 
-async function fetchOnramp(domain) {
-  const url = `https://${domain}/unstuck/api/v1/onramp/address`;
+// The self-custody on-ramp: send ONLY the address this process generated. The server
+// generates nothing and stores no seed; it answers {address, onboard_id, custody: "self"}.
+async function registerSelf(domain, address) {
+  const url = `https://${domain}/unstuck/api/v1/onramp/self`;
   const res = await fetch(url, {
-    headers: { Accept: "application/json", "User-Agent": "unstuck-onramp-check/1.0" },
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      "User-Agent": "unstuck-onramp-check/1.0",
+    },
+    body: JSON.stringify({ address }),
     signal: AbortSignal.timeout(20000),
   });
   const text = await res.text();
@@ -222,7 +231,11 @@ async function scratchAsk() {
   await new Promise((res) => nw.server.listen(port, res));
   try {
     const base = `http://127.0.0.1:${port}`;
-    const on = await fetch(`${base}/unstuck/api/v1/onramp/address`, {
+    const kp = generateKeypair();
+    const on = await fetch(`${base}/unstuck/api/v1/onramp/self`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address: kp.address }),
       signal: AbortSignal.timeout(10000),
     }).then((r) => r.json());
     const post = await fetch(`${base}/unstuck/api/ask`, {
@@ -238,7 +251,7 @@ async function scratchAsk() {
       ok: post.status === 201,
       status: post.status,
       id: pj.id,
-      askerMatches: !!(stored && stored.asker === on.address),
+      askerMatches: !!(stored && on.address === kp.address && stored.asker === kp.address),
       engine: "repository server (nserver-persist.js)",
     };
   } finally {
@@ -256,9 +269,11 @@ async function scratchAsk() {
 // so the published check proved nothing past its first three steps. A check whose last step
 // only works inside our checkout is not a check an outside agent can run.
 //
-// The fallback keeps the server's CONTRACT without the server: it applies the same rule the
-// real handler does — an onboard_id is only resolvable if the on-ramp actually handed it out —
-// so the equality assertion still has something to fail against. `engine` says plainly which
+// The fallback keeps the server's CONTRACT without the server: it applies the same rules the
+// real handlers do — POST /v1/onramp/self accepts only a well-formed address the caller made
+// (the server generates no key and returns no seed), GET /v1/onramp/address is retired (410),
+// and an onboard_id is only resolvable if the on-ramp actually registered it — so the equality
+// assertion still has something to fail against. `engine` says plainly which
 // one ran, because a fallback that silently replaced the real server would turn a weak run into
 // a claim about code that never executed.
 
@@ -269,7 +284,7 @@ function nanoAddressIsWellFormed(address) {
 async function scratchFallback(tmpDb) {
   const http = require("http");
   const fs = require("fs");
-  const handed = new Map(); // onboard_id -> address, exactly the hand-out register the server keeps
+  const registered = new Map(); // onboard_id -> address the caller generated, as the server's onboard register
   let nextOnboard = 1;
   const asks = new Map();
   let nextAsk = 1;
@@ -281,11 +296,24 @@ async function scratchFallback(tmpDb) {
       res.writeHead(code, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify(body));
     };
-    if (req.method === "GET" && path === "/v1/onramp/address") {
-      const kp = generateKeypair();
-      const id = nextOnboard++;
-      handed.set(String(id), kp.address);
-      return json(200, { address: kp.address, seed: kp.seed.toString("hex"), index: 0, onboard_id: id });
+    if (path === "/v1/onramp/address") {
+      return json(410, { error: "gone", use: { path: "/v1/onramp/self", method: "POST" } });
+    }
+    if (req.method === "POST" && path === "/v1/onramp/self") {
+      let raw = "";
+      req.on("data", (c) => (raw += c));
+      req.on("end", () => {
+        let body = {};
+        try { body = JSON.parse(raw || "{}"); } catch (_) { return json(400, { error: "invalid JSON body" }); }
+        const address = String((body && body.address) || "").trim();
+        if (!/^nano_[13][13456789abcdefghijkmnopqrstuwxyz]{59}$/.test(address) || !nanoAddressIsWellFormed(address)) {
+          return json(400, { error: "pass {\"address\": \"nano_...\"} that your own runtime generated" });
+        }
+        const id = nextOnboard++;
+        registered.set(String(id), address);
+        return json(201, { address, onboard_id: id, custody: "self" });
+      });
+      return undefined;
     }
     if (req.method === "POST" && path === "/ask") {
       let raw = "";
@@ -293,7 +321,7 @@ async function scratchFallback(tmpDb) {
       req.on("end", () => {
         let body = {};
         try { body = JSON.parse(raw || "{}"); } catch (_) { return json(400, { error: "invalid JSON body" }); }
-        const asker = body.onboard_id != null ? handed.get(String(body.onboard_id)) : body.asker;
+        const asker = body.onboard_id != null ? registered.get(String(body.onboard_id)) : body.asker;
         if (!asker) return json(400, { error: "unknown onboard_id" });
         const id = nextAsk++;
         const ask = { id, asker, title: body.title, body: body.body, status: "open", answers: [] };
@@ -311,7 +339,13 @@ async function scratchFallback(tmpDb) {
   await new Promise((res) => server.listen(port, "127.0.0.1", res));
   try {
     const base = `http://127.0.0.1:${server.address().port}`;
-    const on = await fetch(`${base}/unstuck/api/v1/onramp/address`, { signal: AbortSignal.timeout(10000) }).then((r) => r.json());
+    const kp = generateKeypair();
+    const on = await fetch(`${base}/unstuck/api/v1/onramp/self`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address: kp.address }),
+      signal: AbortSignal.timeout(10000),
+    }).then((r) => r.json());
     const post = await fetch(`${base}/unstuck/api/ask`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -322,10 +356,10 @@ async function scratchFallback(tmpDb) {
     const list = await fetch(`${base}/unstuck/api/asks`, { signal: AbortSignal.timeout(10000) }).then((r) => r.json());
     const stored = (list.asks || []).find((a) => String(a.id) === String(pj.id));
     return {
-      ok: post.status === 201 && nanoAddressIsWellFormed(on.address),
+      ok: post.status === 201 && nanoAddressIsWellFormed(kp.address),
       status: post.status,
       id: pj.id,
-      askerMatches: !!(stored && stored.asker === on.address),
+      askerMatches: !!(stored && on.address === kp.address && stored.asker === kp.address),
       engine: "self-contained fallback (single-file download; no repository beside it)",
       engine_warning:
         "This ran the fallback, not the repository server. Re-run inside a checkout of the project to exercise the real code.",
@@ -372,23 +406,34 @@ function selfTest() {
 async function liveCheck(domain, { noPost = false } = {}) {
   const out = { mode: "live", domain, steps: {}, proven: false, notes: [] };
 
-  // Step 1 — an agent with no wallet gets an address in one unauthenticated call.
-  const on = await fetchOnramp(domain);
+  // Step 1 — an agent with no wallet generates its OWN key and address, locally, and
+  // registers only the address in one unauthenticated call (POST /v1/onramp/self).
+  const kp = generateKeypair();
+  out.steps.local_address = kp.address;
+  const on = await registerSelf(domain, kp.address);
+  out.steps.onramp_endpoint = "POST /unstuck/api/v1/onramp/self";
   out.steps.onramp_http_status = on.status;
-  if (!on.json || !on.json.address) {
-    out.notes.push("on-ramp did not return an address; nothing else can be proven");
+  if (on.status !== 201 || !on.json || !on.json.address || on.json.onboard_id == null) {
+    out.notes.push("the self-custody on-ramp did not register the address; nothing else can be proven");
     return out;
   }
-  out.steps.onramp_returns_address = true;
+  out.steps.onramp_returns_address = on.json.address === kp.address;
   out.steps.onramp_address = on.json.address;
-  out.steps.onramp_fields = Object.keys(on.json).filter((k) => k !== "seed");
-  out.steps.seed_returned = typeof on.json.seed === "string" && on.json.seed.length > 0;
+  out.steps.onramp_fields = Object.keys(on.json);
+  out.steps.onramp_custody = on.json.custody === undefined ? null : on.json.custody;
+  // The network must never hand back key material: no seed/private-key field, no 64-hex string.
+  out.steps.no_key_material_returned =
+    !("seed" in on.json) && !("private_key" in on.json) && !/[0-9A-Fa-f]{64}/.test(on.text);
+  if (!out.steps.onramp_returns_address) {
+    out.notes.push("the on-ramp answered with an address other than the one this process generated");
+    return out;
+  }
 
-  // Step 2 — the address it hands out is a REAL Nano address (self-checksum).
+  // Step 2 — the address is a REAL Nano address (self-checksum), recomputed independently.
   const v = verifyAddress(on.json.address);
   out.steps.onramp_address_checksum_ok = v.ok;
   if (!v.ok) {
-    out.notes.push("the on-ramp handed out an address whose checksum does not match its key");
+    out.notes.push("the registered address has a checksum that does not match its key");
     return out;
   }
 
@@ -442,7 +487,7 @@ async function liveCheck(domain, { noPost = false } = {}) {
 
   out.proven =
     out.steps.onramp_returns_address === true &&
-    out.steps.seed_returned === true &&
+    out.steps.no_key_material_returned === true &&
     out.steps.onramp_address_checksum_ok === true &&
     out.steps.address_is_unused === true &&
     (noPost || out.steps.ask_asker_equals_onramp_address === true);

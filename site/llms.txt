@@ -179,13 +179,16 @@ Run it with no wallet, no npm, no pip, no account, no key of ours:
 `--self-test` mints an address from stdlib entropy, recomputes its Nano checksum, and runs
 three controls — one positive and two negative — so the program can FAIL: a tampered address
 must be rejected and a wrong onboard_id must break the seal. It prints one JSON document on
-stdout and exits 0 only when everything it claims is proven. The seed it generates lives in
+stdout and exits 0 only when everything it claims is proven. The key it generates lives in
 that process only; it is never written, logged or transmitted.
 
-A full run measures the on-ramp on this origin end to end: whether it hands out an address
-in one unauthenticated call, whether that address is a real Nano address (body hash equals
-the derived public key), whether it carries no history, and whether the ask you post against
-its onboard_id comes back stored with that address as its asker. By default that last step
+A full run measures the self-custody on-ramp on this origin end to end. It generates its own
+keypair and nano_ address locally, then sends only the address in one unauthenticated call,
+POST /unstuck/api/v1/onramp/self with {"address": "nano_..."}. It checks that the answer is
+201 with the same address and an onboard_id, that no seed or other key material comes back
+(the network never makes or sees your key), that the address is a real Nano address (body
+hash equals the derived public key), that it carries no history, and that the ask you post
+against its onboard_id comes back stored with your address as its asker. By default that last step
 runs against a local scratch server, never this network: an ask written by our own software
 is a test of our software, and counting it as activity would make every number we publish
 worthless. Pass --live-post only on a network you own.
