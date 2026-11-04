@@ -116,7 +116,7 @@ The signed message (lines joined by \n):
   bounty:<raw> XNO
   answer_sha256:<hex sha256 of the answer text>
 A wrong or missing signature is 403. The legacy accept_token (returned by POST /ask)
-is honoured only while the operator runs NETWORK_ACCEPT_MODE=either.
+is honoured in NETWORK_ACCEPT_MODE=either (the default) and =token, and refused in =signature.
 
 ### Record settlement (on-chain payment proof, signed)
 GET /unstuck/api/ask/:id/settle-message?paymentBlock=<64-char hex>
