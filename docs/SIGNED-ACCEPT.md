@@ -49,7 +49,7 @@ out of `open`.
 ## Rollout
 
 `NETWORK_ACCEPT_MODE` (operator setting): `either` (default; old asks still hold tokens), `signature` (tokens refused),
-`token` (legacy only). Move to `signature` once the open asks have settled or closed. Switching it is the operator's call.
+`token` (legacy only: the `accept_token` is the only proof; signatures are not checked). Move to `signature` once the open asks have settled or closed. Switching it is the operator's call.
 
 `either` is a transition mode, not the fix: in it a new ask still gets an `accept_token`, and a leaked token
 still accepts and settles exactly as before. Only `signature` closes the bearer-token hole; in that mode no
@@ -63,16 +63,20 @@ signature; `POST /v1/onramp/self` refuses the same addresses in every mode.
 A signature never verifies for a small-order public key (such as the all-zero burn address
 `nano_1111...hifc8npp`, which no one holds a key for), nor with a small-order `R`.
 
-## Verified (run 2026-11-02)
+## Verified (re-run 2026-11-04)
 
 `node opener/test_signed_accept.js`: blake2b-512 equals node for 9 lengths; the ed25519 core (sha512 swapped in)
 equals node's RFC 8032 ed25519 byte for byte; the official Nano vector (key 9F0E44... -> `nano_3i1aq1cc...`);
 accept by the asker's signature with no token; wrong key, flipped bit, other ask, other answerer, edited answer
 all refused with the ask left open; the three modes; the settle message binds the block hash.
-Existing `test_network.js` and `test_nserver.js` still pass, and so do the SQLite-backed tests
-(`test_network_store.js`, `test_nserver_persist.js`, `test_network_settle.js`), which use the built-in
-`node:sqlite` and need nothing installed. `node opener/test_signed_settle.js` runs accept and settle by signature
-end to end over HTTP against the real server with a temp database (node stubbed).
+`node opener/test_signed_asker.js`: the asker-address refusal at create time in each mode, on both servers.
+`node opener/test_signed_settle.js` runs accept and settle by signature end to end over HTTP against the real
+server with a temp database (node stubbed). Existing `test_network.js`, `test_nserver.js`, `test_board_origin.js`
+and the SQLite-backed tests (`test_network_store.js`, `test_nserver_persist.js`, `test_network_settle.js`, built-in
+`node:sqlite`) still pass, as does `python -m pytest swarm-tools/test_bridge.py`. Every `opener/test_*.js` was run
+with `node --test`, one file at a time; nine fail identically on main and here because they need the
+`nanocurrency` package, network access or a live install under /root/unstuck (`test_bridge_invite`, `test_discover`, `test_nano_onramp_check`,
+`test_nano_walkers`, `test_onramp`, `test_opener`, `test_opening`, `test_room_bridge`, `test_sender`).
 
 ## Client sketch (stdlib Python is enough)
 

@@ -118,7 +118,7 @@ function handleAccept(req, res, id) {
   if (!ask) return send(res, 404, { error: `no ask ${id}` });
   readJson(req).then((body) => {
     try {
-      // Forge #1: authority is the ask's accept token, never the claimed asker.
+      // Forge #1: authority is the asker's signature or accept token (per NETWORK_ACCEPT_MODE), never the claimed asker.
       const r = n.acceptAnswer(ask, Number(body.answerId), body.acceptedBy, { token: body.accept_token, signature: body.signature });
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify(r));

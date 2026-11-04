@@ -176,7 +176,7 @@ function addAnswer(ask, { answerer, body, now = new Date().toISOString() }) {
 // signature against the address already on the ask. Nothing secret is stored or returned.
 //
 // NETWORK_ACCEPT_MODE: "either" (default, while old asks hold tokens), "signature" (tokens
-// refused), "token" (legacy only). Switching mode is the operator's deploy decision.
+// refused), "token" (legacy only: the accept token is the only proof, signatures are not checked). Switching mode is the operator's deploy decision.
 const ACCEPT_DOMAIN = "unstuck.ask.accept.v1";
 const SETTLE_DOMAIN = "unstuck.ask.settle.v1";
 
@@ -228,9 +228,9 @@ function authorize(ask, proof, message, verb) {
     throw new Error(`${verb} requires a valid asker signature (no accept token needed): the signature does not verify for the asker's address over the exact message`);
   }
   if (mode !== "signature" && typeof p.token === "string" && p.token.length > 0 && p.token === ask.acceptToken) return;
-  throw new Error(mode === "signature"
-    ? `${verb} requires the asker's signature over the accept message (accept token no longer honoured)`
-    : `${verb} requires the asker's signature over the exact message, or the ask's accept token (returned at create time)`);
+  if (mode === "signature") throw new Error(`${verb} requires the asker's signature over the accept message (accept token no longer honoured)`);
+  if (mode === "token") throw new Error(`${verb} requires the ask's accept token (returned at create time); NETWORK_ACCEPT_MODE=token does not check signatures`);
+  throw new Error(`${verb} requires the asker's signature over the exact message, or the ask's accept token (returned at create time)`);
 }
 
 /**
@@ -238,10 +238,10 @@ function authorize(ask, proof, message, verb) {
  * accepted answer. Returns { askId, answerId }. Throws if the acceptedBy claim does not
  * prove the asker, answer not present, asker is the answerer, or the ask is not open/payable.
  *
- * The authority is the ask's one-time accept token (returned to the creator at create
- * time), never a caller-claimed Nano address — anyone can name an asker, so an
- * address claim is not proof of identity. Forge #1 (network: anyone can accept an
- * answer by naming the asker) is closed by requiring the secret token.
+ * The authority is the asker's signature over acceptMessage() or the ask's accept token,
+ * as authorize() allows for NETWORK_ACCEPT_MODE (either: both; signature: signature only;
+ * token: token only), never a caller-claimed Nano address — anyone can name an asker, so an
+ * address claim is not proof of identity (Forge #1).
  */
 function acceptAnswer(ask, answerId, acceptedBy, proof) {
   if (typeof acceptedBy !== "string" || !acceptedBy.startsWith("nano_")) {

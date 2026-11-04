@@ -745,7 +745,10 @@ def request_opening(db, agent, address, now=None):
 
 
 def openings(db, state="pending"):
-    return [{"id": i, "agent": a, "address": ad, "member": m, "state": st, "block": b, "note": n}
+    """Requests as queued. A queued address is re-checked as it is reported (`checksum_ok`): a row written before
+    request_opening checked checksums is not proof the address can receive. Never send to one that is False."""
+    return [{"id": i, "agent": a, "address": ad, "member": m, "state": st, "block": b, "note": n,
+             "checksum_ok": _looks_like_account(ad)}
             for i, a, ad, m, st, b, n in db.execute(
                 "SELECT id, agent, address, member, state, block, note FROM opening_requests "
                 "WHERE state=? OR ?='all' ORDER BY id", (state, state))]

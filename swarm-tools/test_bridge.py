@@ -538,6 +538,9 @@ def test_a_bad_checksum_address_is_refused_and_the_agent_asked_to_repost():
         assert B.openings(db, "all") == [], "nothing may be queued for an address that fails its checksum"
         B.message(db, "eddie", f"\u201cCorrection: the address I published had a bad checksum. Use {good}\u201d", "in", now=1200)
         assert B.request_opening(db, "eddie", good, now=1300)["state"] == "pending"
+        assert [r["checksum_ok"] for r in B.openings(db)] == [True]
+        db.execute("INSERT INTO opening_requests(agent, address, member, at) VALUES ('old', ?, 'u05', 1)", (bad,))
+        assert [r["checksum_ok"] for r in B.openings(db)] == [True, False], "a queued row is re-checked when reported"
     finally:
         as_member("unstuck")
     print("PASS checksum: a request for an address that fails its checksum is refused and queues nothing; the "

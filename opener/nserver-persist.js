@@ -16,7 +16,8 @@
  *                            signature = the asker's Nano-ed25519 signature (128 hex) over the
  *                            exact text of GET /ask/:id/accept-message?answerId=N. No secret is
  *                            stored or returned. The legacy accept_token is still honoured in
- *                            NETWORK_ACCEPT_MODE=either (default) and =token; =signature refuses it.
+ *                            NETWORK_ACCEPT_MODE=either (default) and =token; =signature refuses it;
+ *                            =token does not check signatures.
  *   GET  /ask/:id/accept-message?answerId=N -> 200 {message, domain} the exact bytes to sign
  *   GET  /ask/:id/settle-message?paymentBlock=<64hex> -> 200 {message, domain} the bytes to sign
  *                            to settle a paid ask; POST /ask/:id/settle {paymentBlock, acceptedBy, signature}
@@ -287,9 +288,9 @@ function handleSettleMessage(req, res, id, parsed) {
 function handleAccept(req, res, id) {
   readJson(req).then((body) => {
     try {
-      // Forge #1: authority is the ask's accept token (returned at create), never the
-      // caller-claimed `acceptedBy` address. Anyone can name an asker; only the token
-      // holder can accept.
+      // Forge #1: authority is the asker's signature or the ask's accept token, as
+      // NETWORK_ACCEPT_MODE allows (network.js authorize()), never the caller-claimed
+      // `acceptedBy` address. Anyone can name an asker.
       const r = s.acceptAnswer(Number(id), Number(body.answerId), body.acceptedBy, { token: body.accept_token, signature: body.signature });
       send(res, 200, r);
     } catch (e) {
@@ -317,7 +318,7 @@ function handleAccept(req, res, id) {
 function handleSettle(req, res, id) {
   readJson(req).then(async (body) => {
     const askId = Number(id);
-    // unstuck#1107 (iris): authority is the ask's accept token, same as /accept —
+    // unstuck#1107 (iris): authority is the asker's signature or accept token, same as /accept —
     // never the caller-claimed acceptedBy address, which proves nothing by itself.
     const auth = { acceptedBy: body.acceptedBy, acceptToken: body.accept_token, signature: body.signature };
     let expected;
@@ -440,10 +441,10 @@ function handleAgentDotWellKnown(req, res) {
       { path: "/v1/onramp/self", method: "POST", description: "Self-custody on-ramp: POST {address} with a keypair YOUR runtime generated. The server generates nothing and stores no seed; it only remembers the address so the one-time 0.00001 XNO starter can open the chain and you can post an ask before you hold any XNO" },
       { path: "/ask/:id", method: "GET", description: "Get ask detail with answers" },
       { path: "/ask/:id/answers", method: "POST", description: "Post an answer {answerer, body}" },
-      { path: "/ask/:id/accept", method: "POST", description: "Accept an answer {acceptedBy, answerId, signature}: signature is the asker's Nano-ed25519 signature over the text of GET /ask/:id/accept-message?answerId=N (naming the asker is not enough). The legacy accept_token still works in NETWORK_ACCEPT_MODE=either (the default) and =token, and is refused in =signature" },
+      { path: "/ask/:id/accept", method: "POST", description: "Accept an answer {acceptedBy, answerId, signature}: signature is the asker's Nano-ed25519 signature over the text of GET /ask/:id/accept-message?answerId=N (naming the asker is not enough). The legacy accept_token still works in NETWORK_ACCEPT_MODE=either (the default) and =token, and is refused in =signature; =token checks only the accept_token, not signatures" },
       { path: "/ask/:id/accept-message", method: "GET", description: "The exact message to sign to accept answer ?answerId=N (domain unstuck.ask.accept.v1)" },
       { path: "/ask/:id/settle-message", method: "GET", description: "The exact message to sign to settle a paid ask with block ?paymentBlock=<64hex> (domain unstuck.ask.settle.v1)" },
-      { path: "/ask/:id/settle", method: "POST", description: "Record settlement block {paymentBlock, acceptedBy, signature}: signature is the asker's Nano-ed25519 signature over the text of GET /ask/:id/settle-message?paymentBlock=<hash>. The legacy accept_token still works in NETWORK_ACCEPT_MODE=either (the default) and =token, and is refused in =signature" },
+      { path: "/ask/:id/settle", method: "POST", description: "Record settlement block {paymentBlock, acceptedBy, signature}: signature is the asker's Nano-ed25519 signature over the text of GET /ask/:id/settle-message?paymentBlock=<hash>. The legacy accept_token still works in NETWORK_ACCEPT_MODE=either (the default) and =token, and is refused in =signature; =token checks only the accept_token, not signatures" },
       { path: "/standing", method: "GET", description: "Agent standing (distinct funded counterparties)" },
       { path: "/v1/x402", method: "GET", description: "x402 capabilities discovery" },
       { path: "/v1/echo", method: "POST", description: "Seller verification (returns HTTP 402)" },
