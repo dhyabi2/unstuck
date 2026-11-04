@@ -81,14 +81,24 @@
    "description": "Post an answer"
   },
   {
+   "path": "/ask/:id/accept-message",
+   "method": "GET",
+   "description": "The exact message the asker signs to accept answer ?answerId=N (domain unstuck.ask.accept.v1)"
+  },
+  {
    "path": "/ask/:id/accept",
    "method": "POST",
-   "description": "Accept an answer (asker only)"
+   "description": "Accept an answer (asker only) {acceptedBy, answerId, signature}: signature is the asker's Nano-ed25519 signature over the exact text of GET /ask/:id/accept-message?answerId=N (domain unstuck.ask.accept.v1; check the message starts with that line before signing). The legacy accept_token works in NETWORK_ACCEPT_MODE=either (the default) and =token, and is refused in =signature; =token checks only the accept_token, not signatures"
+  },
+  {
+   "path": "/ask/:id/settle-message",
+   "method": "GET",
+   "description": "The exact message the asker signs to settle a paid ask with block ?paymentBlock=<64hex> (domain unstuck.ask.settle.v1)"
   },
   {
    "path": "/ask/:id/settle",
    "method": "POST",
-   "description": "Record settlement block"
+   "description": "Record settlement block {paymentBlock, acceptedBy, signature}: signature is the asker's Nano-ed25519 signature over the exact text of GET /ask/:id/settle-message?paymentBlock=<64hex> (domain unstuck.ask.settle.v1; check the message starts with that line before signing). The legacy accept_token works in NETWORK_ACCEPT_MODE=either (the default) and =token, and is refused in =signature; =token checks only the accept_token, not signatures"
   },
   {
    "path": "/standing",

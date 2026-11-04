@@ -492,7 +492,7 @@ def test_unwritten_counts_only_live_outside_agents():
 def test_members_hold_no_wallet_and_ask_the_lead():
     """Members cannot send: they ask, and the request is refused unless the money rule is checkable from the record."""
     db = B.connect(os.path.join(tempfile.mkdtemp(), "open.db"))
-    addr = "nano_1" + "3" * 59
+    addr = "nano_3qucf316qrxtq684zpsqm58993imii7dh976gghp37j8rcuq9aafw8ds3j6s"  # checksum-valid
     try:
         as_member("u05")
         B.seen(db, "clerk", "https://clerk.example.io/a2a", "usdc", now=1000)
@@ -522,6 +522,29 @@ def test_members_hold_no_wallet_and_ask_the_lead():
     print("PASS openings: a member holds no wallet and asks the lead; the request is refused until the agent has "
           "answered AND gave the address in its own recorded words, once per agent ever, by its owner only; only "
           "the lead settles a request, and a sent starter is `tipped`, never `opened`")
+
+
+def test_a_bad_checksum_address_is_refused_and_the_agent_asked_to_repost():
+    """Real case (eddie_researcher, The Colony): the address as first posted failed its checksum; a starter sent to it
+    would have been lost. The request is refused BEFORE any conversation check, and the corrected address passes."""
+    db = B.connect(os.path.join(tempfile.mkdtemp(), "chk.db"))
+    bad = "nano_3qucf316qrxtq684zpsqm58993imii7dh976gghp37j8rcuq9aafm94b37z3"
+    good = "nano_3qucf316qrxtq684zpsqm58993imii7dh976gghp37j8rcuq9aafw8ds3j6s"
+    try:
+        as_member("u05")
+        B.seen(db, "eddie", "https://thecolony.ai/u/eddie", "usdc", now=1000)
+        B.message(db, "eddie", f"\u201cMy address: {bad}\u201d", "in", now=1100)
+        refused(lambda: B.request_opening(db, "eddie", bad), "FAILS ITS CHECKSUM")
+        assert B.openings(db, "all") == [], "nothing may be queued for an address that fails its checksum"
+        B.message(db, "eddie", f"\u201cCorrection: the address I published had a bad checksum. Use {good}\u201d", "in", now=1200)
+        assert B.request_opening(db, "eddie", good, now=1300)["state"] == "pending"
+        assert [r["checksum_ok"] for r in B.openings(db)] == [True]
+        db.execute("INSERT INTO opening_requests(agent, address, member, at) VALUES ('old', ?, 'u05', 1)", (bad,))
+        assert [r["checksum_ok"] for r in B.openings(db)] == [True, False], "a queued row is re-checked when reported"
+    finally:
+        as_member("unstuck")
+    print("PASS checksum: a request for an address that fails its checksum is refused and queues nothing; the "
+          "agent's own corrected address goes through")
 
 
 def test_a_reply_is_their_words_not_our_findings():
@@ -688,6 +711,7 @@ if __name__ == "__main__":
     test_swarm_one_conversation_one_owner()
     test_unwritten_counts_only_live_outside_agents()
     test_members_hold_no_wallet_and_ask_the_lead()
+    test_a_bad_checksum_address_is_refused_and_the_agent_asked_to_repost()
     test_bridge()
     test_waiting_and_full_export()
     test_review()

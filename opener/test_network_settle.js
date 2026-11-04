@@ -44,7 +44,7 @@ function check(name, cond, detail = "") {
 
 const nanoA = "nano_3t6k35gi95xu6tergt6p69ck76ogmitsa8mnijtpxm9fkcm736xtoncuohr3";
 const nanoB = "nano_3yo6rq85c1agb5ynn69fnmxi4y9bpct8ju1emcuc4ajx5t3o3z69i1kx847x";
-const nanoC = "nano_3zqdw3qf1z8k3jx8jintaiwpo3yz7zqh1me4ph5j439ts8hsppx8dzy4xcsz";
+const nanoC = "nano_3mm5ernpnm736p7g173exqqs315p4rf77aggnr8bkouyrebincqxgtgkaj4h";
 const bounty = "1000000000000000000000000";
 const HASH = "A".repeat(64);
 const HASH2 = "B".repeat(64);

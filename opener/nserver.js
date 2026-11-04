@@ -64,10 +64,11 @@ function handleCreateAsk(req, res) {
         bountyRaw: body.bounty_raw,
       });
       ask.id = nextId++;
-      ask.acceptToken = require("crypto").randomBytes(24).toString("base64url"); // Forge #1
+      // Forge #1; no token is minted in signature mode (the asker's key is the authority).
+      ask.acceptToken = n.acceptMode() === "signature" ? null : require("crypto").randomBytes(24).toString("base64url");
       asks.set(ask.id, ask);
       res.writeHead(201, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ id: ask.id, status: ask.status, accept_token: ask.acceptToken }));
+      res.end(JSON.stringify({ id: ask.id, status: ask.status, ...(ask.acceptToken ? { accept_token: ask.acceptToken } : {}) }));
     } catch (e) {
       send(res, 400, { error: e.message });
     }
@@ -117,14 +118,14 @@ function handleAccept(req, res, id) {
   if (!ask) return send(res, 404, { error: `no ask ${id}` });
   readJson(req).then((body) => {
     try {
-      // Forge #1: authority is the ask's accept token, never the claimed asker.
-      const r = n.acceptAnswer(ask, Number(body.answerId), body.acceptedBy, body.accept_token);
+      // Forge #1: authority is the asker's signature or accept token (per NETWORK_ACCEPT_MODE), never the claimed asker.
+      const r = n.acceptAnswer(ask, Number(body.answerId), body.acceptedBy, { token: body.accept_token, signature: body.signature });
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify(r));
     } catch (e) {
       // A missing answer is a 404; a bad token is 403; a domain violation is a 400.
       if (/no answer/.test(e.message)) return send(res, 404, { error: e.message });
-      if (/accept token/.test(e.message)) return send(res, 403, { error: e.message });
+      if (/accept token|asker signature|asker's signature/.test(e.message)) return send(res, 403, { error: e.message });
       send(res, 400, { error: e.message });
     }
   }).catch(() => send(res, 400, { error: "invalid JSON body" }));

@@ -15,6 +15,8 @@
  * Standing (reputation) is distinct counterparties, never volume. An answerer is
  * worth what it was PAID by different askers, not how much it received.
  */
+const crypto = require("crypto");
+const sig = require("./nano-sig.js");
 
 // --- Ask lifecycle ---
 
@@ -31,6 +33,13 @@ const ASK_FLOW = ["open", "paid", "closed"];
 function createAsk({ asker, title, body, bountyRaw, bountyAsset = VALID_ASSET, now = new Date().toISOString() }) {
   if (typeof asker !== "string" || !asker.startsWith("nano_")) {
     throw new Error("an ask needs a Nano asker address");
+  }
+  // When a signature can be the authority (any mode but "token"), an asker whose address has a
+  // broken checksum or a key nobody can sign with (burn / small-order) makes an ask that can
+  // never be accepted or settled by signature. Refuse it here, not after an answerer has worked.
+  if (acceptMode() !== "token") {
+    const c = sig.checkSigningAddress(asker);
+    if (!c.ok) throw new Error(`an ask needs an asker address that can sign its accept: ${c.reason}`);
   }
   if (typeof title !== "string" || title.trim().length === 0) {
     throw new Error("an ask needs a non-empty title");
@@ -159,26 +168,90 @@ function addAnswer(ask, { answerer, body, now = new Date().toISOString() }) {
   return id;
 }
 
+// --- Signed authority (replaces the accept_token as the way to prove "I am the asker") ---
+//
+// A token is a bearer secret: whoever copies it from a log is the asker, and a lost token
+// strands the bounty (the asker holds a veto over payment nobody can verify). A Nano address
+// is an ed25519 public key, so the asker can SIGN the exact action and the server checks the
+// signature against the address already on the ask. Nothing secret is stored or returned.
+//
+// NETWORK_ACCEPT_MODE: "either" (default, while old asks hold tokens), "signature" (tokens
+// refused), "token" (legacy only: the accept token is the only proof, signatures are not checked). Switching mode is the operator's deploy decision.
+const ACCEPT_DOMAIN = "unstuck.ask.accept.v1";
+const SETTLE_DOMAIN = "unstuck.ask.settle.v1";
+
+/** The exact bytes the asker signs to accept `answer` on `ask`. Binds ask, answer, both addresses, bounty and the answer text. */
+function acceptMessage(ask, answer) {
+  const bodyHash = crypto.createHash("sha256").update(String(answer.body || ""), "utf8").digest("hex");
+  return [ACCEPT_DOMAIN, `ask:${ask.id}`, `answer:${answer.id}`, `asker:${ask.asker}`,
+    `answerer:${answer.answerer}`, `bounty:${ask.bountyRaw} ${ask.bountyAsset}`, `answer_sha256:${bodyHash}`].join("\n");
+}
+/**
+ * The exact bytes the asker signs to record that `blockHash` paid the bounty.
+ * `answer:` is the accepted answer's id (not an address); served verbatim by
+ * GET /ask/:id/settle-message?paymentBlock=<hash>.
+ */
+function settleMessage(ask, blockHash) {
+  return [SETTLE_DOMAIN, `ask:${ask.id}`, `answer:${ask.acceptedAnswerId}`, `asker:${ask.asker}`,
+    `block:${String(blockHash).toUpperCase()}`].join("\n");
+}
+
+const ACCEPT_MODES = ["either", "signature", "token"];
+let warnedMode = null;
+/**
+ * Unset or empty -> "either" (the transition default). Anything set but not one of the three
+ * known modes (a typo such as "signatures") fails CLOSED to "signature": an operator who meant
+ * to turn tokens off must never silently get the mode that still honours them.
+ */
+function acceptMode() {
+  const raw = process.env.NETWORK_ACCEPT_MODE;
+  if (raw === undefined || String(raw).trim() === "") return "either";
+  const m = String(raw).trim().toLowerCase();
+  if (ACCEPT_MODES.includes(m)) return m;
+  if (warnedMode !== raw) {
+    warnedMode = raw;
+    console.error(`NETWORK_ACCEPT_MODE=${JSON.stringify(raw)} is not one of ${ACCEPT_MODES.join("|")}; failing closed to "signature" (accept tokens refused)`);
+  }
+  return "signature";
+}
+
+/**
+ * Throws unless `proof` (a token string, or { signature, token }) proves the asker.
+ * `message` is what a signature must cover; null when the thing signed does not exist (the
+ * caller then fails on its own "no answer" check, after this refusal).
+ */
+function authorize(ask, proof, message, verb) {
+  const p = typeof proof === "string" ? { token: proof } : (proof || {});
+  const mode = acceptMode();
+  if (mode !== "token" && typeof p.signature === "string" && p.signature) {
+    if (message && sig.verifyByAddress(ask.asker, message, p.signature)) return;
+    throw new Error(`${verb} requires a valid asker signature (no accept token needed): the signature does not verify for the asker's address over the exact message`);
+  }
+  if (mode !== "signature" && typeof p.token === "string" && p.token.length > 0 && p.token === ask.acceptToken) return;
+  if (mode === "signature") throw new Error(`${verb} requires the asker's signature over the accept message (accept token no longer honoured)`);
+  if (mode === "token") throw new Error(`${verb} requires the ask's accept token (returned at create time); NETWORK_ACCEPT_MODE=token does not check signatures`);
+  throw new Error(`${verb} requires the asker's signature over the exact message, or the ask's accept token (returned at create time)`);
+}
+
 /**
  * The asker accepts an answer: marks the ask paid (bounty goes out) and records the
  * accepted answer. Returns { askId, answerId }. Throws if the acceptedBy claim does not
  * prove the asker, answer not present, asker is the answerer, or the ask is not open/payable.
  *
- * The authority is the ask's one-time accept token (returned to the creator at create
- * time), never a caller-claimed Nano address — anyone can name an asker, so an
- * address claim is not proof of identity. Forge #1 (network: anyone can accept an
- * answer by naming the asker) is closed by requiring the secret token.
+ * The authority is the asker's signature over acceptMessage() or the ask's accept token,
+ * as authorize() allows for NETWORK_ACCEPT_MODE (either: both; signature: signature only;
+ * token: token only), never a caller-claimed Nano address — anyone can name an asker, so an
+ * address claim is not proof of identity (Forge #1).
  */
-function acceptAnswer(ask, answerId, acceptedBy, acceptToken) {
+function acceptAnswer(ask, answerId, acceptedBy, proof) {
   if (typeof acceptedBy !== "string" || !acceptedBy.startsWith("nano_")) {
     throw new Error("accepting requires the asker's Nano address");
   }
   if (acceptedBy !== ask.asker) {
     throw new Error("only the asker can accept an answer");
   }
-  if (typeof acceptToken !== "string" || acceptToken.length === 0 || acceptToken !== ask.acceptToken) {
-    throw new Error("accepting requires the ask's accept token (returned at create time)");
-  }
+  const ansForMsg = (ask.answers || []).find((a) => a.id === answerId);
+  authorize(ask, proof, ansForMsg ? acceptMessage(ask, ansForMsg) : null, "accepting");
   if (ask.status !== "open") {
     throw new Error(`cannot accept on a ${ask.status} ask`);
   }
@@ -231,6 +304,10 @@ module.exports = {
   answerRefusal,
   isWellFormedNanoAddress,
   acceptAnswer,
+  acceptMessage,
+  settleMessage,
+  authorize,
+  acceptMode,
   standing,
   standingOf,
   VALID_ASSET,

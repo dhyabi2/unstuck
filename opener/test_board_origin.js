@@ -3,7 +3,7 @@
 const http = require("http"), fs = require("fs");
 const tmpDb = `/tmp/test-board-origin-${Date.now()}.db`;
 process.env.NW_DB_PATH = tmpDb;
-process.env.NW_OPERATOR_ADDRESSES = "nano_3aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+process.env.NW_OPERATOR_ADDRESSES = "nano_3e91wa1un79cqb33wrkay93r6jbsfojixypfj9gx1eshr4zg4hk7ujquk4cq";
 const nw = require("./nserver-persist.js");
 const PORT = 4313;
 nw.server.listen(PORT);

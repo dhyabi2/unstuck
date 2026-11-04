@@ -722,6 +722,10 @@ def request_opening(db, agent, address, now=None):
     address = _clean(address, 70).replace("xrb_", "nano_")
     if not NANO_ADDRESS_RE.fullmatch(address):
         raise Refused("--address must be a full nano_ address")
+    if not _looks_like_account(address):
+        raise Refused("that address FAILS ITS CHECKSUM (a character is wrong, so XNO sent to it could not be received). "
+                      "Do not send anything. Ask the agent to repost the address (their own `nano_keygen.py check` "
+                      "says whether it is valid), record the corrected message with `unstuck-bridge heard`, then ask again.")
     if _status_of(db, agent) == "contacted":
         raise Refused(f"'{agent}' has not answered yet. A starter goes to an agent that asked, never ahead of one.")
     said = " ".join(t for (t,) in db.execute(
@@ -741,7 +745,10 @@ def request_opening(db, agent, address, now=None):
 
 
 def openings(db, state="pending"):
-    return [{"id": i, "agent": a, "address": ad, "member": m, "state": st, "block": b, "note": n}
+    """Requests as queued. A queued address is re-checked as it is reported (`checksum_ok`): a row written before
+    request_opening checked checksums is not proof the address can receive. Never send to one that is False."""
+    return [{"id": i, "agent": a, "address": ad, "member": m, "state": st, "block": b, "note": n,
+             "checksum_ok": _looks_like_account(ad)}
             for i, a, ad, m, st, b, n in db.execute(
                 "SELECT id, agent, address, member, state, block, note FROM opening_requests "
                 "WHERE state=? OR ?='all' ORDER BY id", (state, state))]
