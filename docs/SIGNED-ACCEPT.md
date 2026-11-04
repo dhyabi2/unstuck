@@ -38,6 +38,10 @@ asker:<asker address>
 block:<64 hex block hash>
 ```
 
+Clients: before signing, check that the served `message` begins with the expected domain line
+(`unstuck.ask.accept.v1` or `unstuck.ask.settle.v1`) and names your own ask, answer, address and block; never sign
+server-supplied bytes that do not.
+
 Binding the answerer, bounty and answer text means a signature cannot be reused to pay a different answer or to
 accept an answer that was edited after it was signed. A repeat is impossible by itself: accepting moves the ask
 out of `open`.
@@ -51,6 +55,10 @@ out of `open`.
 still accepts and settles exactly as before. Only `signature` closes the bearer-token hole; in that mode no
 token is minted, returned or stored. Any value that is set but is not one of the three (e.g. a typo such as
 `signatures`) fails closed to `signature` and is logged; only an unset or empty value means `either`.
+
+Outside `token` mode, `POST /ask` refuses (400) an asker address with a broken checksum or a key no one can sign
+with (not a curve point, or small-order such as the burn address), since such an ask could never be accepted by
+signature; `POST /v1/onramp/self` refuses the same addresses in every mode.
 
 A signature never verifies for a small-order public key (such as the all-zero burn address
 `nano_1111...hifc8npp`, which no one holds a key for), nor with a small-order `R`.

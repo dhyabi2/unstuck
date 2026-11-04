@@ -180,6 +180,20 @@ const isIdentity = (p) => mod(p[0]) === 0n && mod(p[1] - p[2]) === 0n;
 /** A point whose order divides 8 (identity, or one of the 7 torsion points). */
 const isSmallOrder = (p) => isIdentity(mul(p, 8n));
 
+/**
+ * True when the 32-byte key behind an address can never sign: it does not decode to a curve
+ * point, or it is small-order (the burn address nano_1111...hifc8npp, all-zero key, and the
+ * other torsion points). verify() already refuses signatures for such keys.
+ */
+function isUnsignableKey(pub) {
+  try {
+    const pk = Buffer.from(pub);
+    if (pk.length !== 32) return true;
+    const A = decode(pk);
+    return !A || isSmallOrder(A);
+  } catch (_) { return true; }
+}
+
 function verify(message, signature, pub, H = nanoHash) {
   try {
     const sig = Buffer.from(signature), pk = Buffer.from(pub), msg = Buffer.from(message);
@@ -205,4 +219,17 @@ function verifyByAddress(address, message, signatureHex) {
   return verify(message, Buffer.from(signatureHex, "hex"), pub);
 }
 
-module.exports = { blake2b, pubToAddress, addressToPub, checkAddress, publicKey, sign, verify, verifyByAddress, sha512, nanoHash };
+/**
+ * { ok, reason } - ok only when the address passes checkAddress AND its key could sign (so a
+ * signed accept or settle by its owner is possible at all).
+ */
+function checkSigningAddress(address) {
+  const c = checkAddress(address);
+  if (!c.ok) return c;
+  if (isUnsignableKey(addressToPub(address))) {
+    return { ok: false, reason: "its public key is not a usable signing key (not a curve point, or a burn / small-order key): nobody holds a secret for it" };
+  }
+  return { ok: true, reason: "" };
+}
+
+module.exports = { blake2b, pubToAddress, addressToPub, checkAddress, checkSigningAddress, isUnsignableKey, publicKey, sign, verify, verifyByAddress, sha512, nanoHash };

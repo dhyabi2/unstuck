@@ -36,6 +36,7 @@ const path = require("path");
 const c = require("crypto");
 const s = require("./network-store.js");
 const n = require("./network.js");
+const sig = require("./nano-sig.js");
 const settle = require("./network-settle.js");
 const onramp = require("./onramp.js");
 // The oracle-integrity scorecard (Block 186). Required lazily inside the handler so a failure to
@@ -229,6 +230,12 @@ function handleOnrampSelf(req, res) {
       return send(res, 400, {
         error: "pass {\"address\": \"nano_...\"} — the address your own runtime generated; the server generates nothing and stores no seed on this path",
       });
+    }
+    // A typo'd checksum or a key nobody can sign with (burn / small-order) would take the
+    // starter into an account no one controls and could never sign an accept. Refuse it here.
+    const check = sig.checkSigningAddress(address);
+    if (!check.ok) {
+      return send(res, 400, { error: `that address cannot be used: ${check.reason}. Copy the address your runtime generated exactly.` });
     }
     let onboard = null;
     try { onboard = s.recordOnboard(address, { source: "onramp-self" }); } catch (_) {}

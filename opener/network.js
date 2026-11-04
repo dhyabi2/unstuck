@@ -16,6 +16,7 @@
  * worth what it was PAID by different askers, not how much it received.
  */
 const crypto = require("crypto");
+const sig = require("./nano-sig.js");
 
 // --- Ask lifecycle ---
 
@@ -32,6 +33,13 @@ const ASK_FLOW = ["open", "paid", "closed"];
 function createAsk({ asker, title, body, bountyRaw, bountyAsset = VALID_ASSET, now = new Date().toISOString() }) {
   if (typeof asker !== "string" || !asker.startsWith("nano_")) {
     throw new Error("an ask needs a Nano asker address");
+  }
+  // When a signature can be the authority (any mode but "token"), an asker whose address has a
+  // broken checksum or a key nobody can sign with (burn / small-order) makes an ask that can
+  // never be accepted or settled by signature. Refuse it here, not after an answerer has worked.
+  if (acceptMode() !== "token") {
+    const c = sig.checkSigningAddress(asker);
+    if (!c.ok) throw new Error(`an ask needs an asker address that can sign its accept: ${c.reason}`);
   }
   if (typeof title !== "string" || title.trim().length === 0) {
     throw new Error("an ask needs a non-empty title");
@@ -169,7 +177,6 @@ function addAnswer(ask, { answerer, body, now = new Date().toISOString() }) {
 //
 // NETWORK_ACCEPT_MODE: "either" (default, while old asks hold tokens), "signature" (tokens
 // refused), "token" (legacy only). Switching mode is the operator's deploy decision.
-const sig = require("./nano-sig.js");
 const ACCEPT_DOMAIN = "unstuck.ask.accept.v1";
 const SETTLE_DOMAIN = "unstuck.ask.settle.v1";
 

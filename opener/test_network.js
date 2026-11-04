@@ -12,12 +12,12 @@
 const assert = require("assert");
 const n = require("./network.js");
 
-// Well-formed Nano addresses (65 chars, nano_ prefix, valid Base32 alphabet) for
+// Valid Nano addresses (65 chars, nano_ prefix, valid Base32 alphabet, correct checksum, real key) for
 // domain-logic fixtures. addAnswer (L73/L78) refuses any answerer that is not a
 // well-formed Nano address, so the old one-letter placeholders can no longer reach
 // acceptAnswer — answerers must be real addresses.
-const ASKER = "nano_a6i9zwyrf8z3ru1wjg8n3331rfu3gwzgpggxk3t8dk9ouemkzs4yhstdqq7w";
-const ANSWERER = "nano_577qcmif4cusqwj43qxnrucdhg3dndaqdwtqpqwcsxhzjzpxxpxzgncjymmt";
+const ASKER = "nano_34qbus66fip335w765z4tq4d9acxqryh5awb7bq9fzteztrio3cfd3t8xzcf";
+const ANSWERER = "nano_14z1yzfidmbymibu9b4zsmu7zeo8esiaj7oxep3hbw3zqp3zoh79n5oktnzn";
 const INTRUDER = "nano_336t1jj7sgnfc1nxm45hxxpn8mywd5sixtzf3x4bik5n38df9pui378i36st";
 
 let failed = 0;
