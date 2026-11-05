@@ -84,11 +84,14 @@ async function main() {
     });
     ok(direct.status === 201, `direct nano_ asker posts an ask (got ${direct.status})`);
 
-    // 2. An agent with NO Nano address gets one from the on-ramp, in one call.
-    const onramp = await req("GET", "/v1/onramp/address");
-    ok(onramp.status === 200, `on-ramp hands out a keypair (got ${onramp.status})`);
-    ok(/^nano_/.test(onramp.body.address || ""), "on-ramp returns a nano_ address");
-    ok(typeof onramp.body.seed === "string" && onramp.body.seed.length === 64, "on-ramp returns a 64-hex seed");
+    // 2. An agent with NO Nano address makes its OWN keypair locally and registers
+    //    only the public address (GET /v1/onramp/address is retired, Block 191).
+    const kg = require("child_process").spawnSync("python3", [path.join(__dirname, "nano-keygen.py")], { timeout: 10000 });
+    const ownAddress = JSON.parse(kg.stdout.toString()).address;
+    const onramp = await req("POST", "/v1/onramp/self", { address: ownAddress });
+    ok(onramp.status === 201, `self-custody on-ramp registers the agent's own address (got ${onramp.status})`);
+    ok(onramp.body.address === ownAddress, "on-ramp echoes the agent's own nano_ address");
+    ok(!("seed" in onramp.body), "on-ramp returns no seed");
     ok(Number.isInteger(onramp.body.onboard_id), `on-ramp returns an onboard_id (got ${onramp.body.onboard_id})`);
 
     const address = onramp.body.address;

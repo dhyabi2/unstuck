@@ -3,9 +3,8 @@
  * test_onramp_self.js — the self-custody on-ramp (Block 126).
  *
  * The law this file proves: POST /v1/onramp/self stores an address the AGENT
- * generated and never a seed, while GET /v1/onramp/address (the older path)
- * keeps returning a server-generated keypair — so the two paths are
- * distinguishable and the self-custody one cannot silently become the other.
+ * generated and never a seed, and GET /v1/onramp/address (the older path, which
+ * generated a keypair server-side) is retired with 410 and returns no key material.
  *
  * Why it exists: an outside conversant agent named the objection precisely
  * (Sara L. Nelson, 2026-09-20) — the address generator hands the agent an
@@ -98,13 +97,15 @@ function check(name, fn) {
     assert.ok(!any64hex, `response must contain no 64-hex string, found one in: ${r.raw.slice(0, 200)}`);
   });
 
-  // L126c — the older path still hands over a server-generated keypair, so the two
-  // are distinguishable. If this ever stops being true the change is not silent.
-  await check("L126c GET /v1/onramp/address still returns a server-generated keypair", async () => {
+  // L126c / L191 — the older path is RETIRED: it answers 410, carries no seed and
+  // no 64-hex value, and names the self-custody replacement. If a server-generated
+  // keypair ever comes back on this route, this goes red.
+  await check("L126c GET /v1/onramp/address is retired (410) and returns no key material", async () => {
     const r = await req("GET", "/v1/onramp/address");
-    assert.strictEqual(r.status, 200);
-    assert.ok(/^nano_/.test(r.body.address), "must return a nano_ address");
-    assert.ok(/^[0-9A-Fa-f]{64}$/.test(r.body.seed), "must return the seed, which is why this path is counterparty-originated");
+    assert.strictEqual(r.status, 410, `expected 410, got ${r.status}`);
+    assert.ok(!r.body || !("seed" in r.body), "a retired route must not carry a 'seed' field");
+    assert.ok(!/[0-9a-fA-F]{64}/.test(r.raw), "a retired route must contain no 64-hex string");
+    assert.ok(/\/v1\/onramp\/self/.test(r.raw), "the 410 must name POST /v1/onramp/self as the replacement");
   });
 
   // L126d — a malformed address is refused rather than silently stored, so the
