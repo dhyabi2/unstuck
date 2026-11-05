@@ -89,22 +89,55 @@ else {
   ok(j2.includes("address_is_unused = true"), "MUTANT 2 written");
 }
 
-// 5. The default run must NOT write to the public network: it uses a local scratch
-//    server, so no ask this check makes can ever be counted as outside activity.
+// 5. The live run is OPT-IN. Without --live, the network flags are ignored and the run stays
+//    dry, because a live run registers a throwaway address whose key dies with this process:
+//    a starter the network sends there can never be spent.
 const np = run(["--no-post", "--domain", "getunstuck.space"]);
 const npj = parse(np.out);
-ok(npj !== null, "--no-post emits JSON");
-ok(npj && npj.steps && npj.steps.ask_http_status === undefined,
-   "--no-post posts no ask (no ask_http_status reported)");
+ok(npj !== null, "--no-post without --live emits JSON");
+ok(npj && npj.mode === "dry", `without --live the run is dry (mode ${npj && npj.mode})`);
+ok(npj && npj.domain === undefined, "without --live no origin is named as measured");
+ok(npj && (npj.notes || []).some((n) => /ignored without --live/.test(n)),
+   "flags that only mean something live are reported as ignored");
 
-// 6. The full default run keeps its ask on the scratch server, and says so.
+// 6. The default run keeps its ask on the scratch server, and says so.
 const def = run([]);
 const defj = parse(def.out);
+ok(defj && defj.mode === "dry", `a default run is dry (mode ${defj && defj.mode})`);
 ok(defj && defj.steps && /scratch/.test(String(defj.steps.ask_target)),
    "a default run writes to the scratch server, not the public network");
 ok(defj && defj.steps && defj.steps.ask_asker_equals_onramp_address === true,
    "the scratch ask is still stored with the on-ramp address as its asker");
-ok(defj && defj.proven === true, "the default run proves the full path end to end");
+ok(defj && defj.proven === true, "the default run proves the scratch path end to end");
+
+// 7. Observed, not read off the report: with every non-loopback fetch trapped, a default run
+//    makes NO request off this machine, and still proves its path. Control: the same trap on a
+//    --live run DOES fire (and its throw keeps that run off the network too), so the trap is not
+//    inert. Nothing in this section reaches the public on-ramp.
+const HOOK = path.join(MUT_DIR, "trap-fetch.js");
+fs.writeFileSync(HOOK, `
+const real = globalThis.fetch;
+globalThis.fetch = (input, init) => {
+  const u = String(input && input.url ? input.url : input);
+  if (!/^http:\\/\\/127\\.0\\.0\\.1[:/]/.test(u)) {
+    process.stderr.write("EXTERNAL_FETCH " + u + "\\n");
+    return Promise.reject(new Error("trapped external fetch " + u));
+  }
+  return real(input, init);
+};
+`);
+function trapped(args) {
+  const r = spawnSync(process.execPath, ["--require", HOOK, SCRIPT, ...args], { encoding: "utf8", timeout: 120000 });
+  return { code: r.status, out: r.stdout || "", err: r.stderr || "" };
+}
+const td = trapped([]);
+const tdj = parse(td.out);
+ok(!/EXTERNAL_FETCH/.test(td.err), `a default run makes no off-machine request (${(td.err.match(/EXTERNAL_FETCH \S+/g) || []).join(", ") || "none"})`);
+ok(tdj && tdj.proven === true && td.code === 0, "a default run with the network trapped still proves its path");
+const tl = trapped(["--live"]);
+ok(/EXTERNAL_FETCH https:\/\/getunstuck\.space\/unstuck\/api\/v1\/onramp\/self/.test(tl.err),
+   "CONTROL: the trap catches --live reaching for the public on-ramp");
+ok(tl.code !== 0, "CONTROL: a trapped --live run does not report proven");
 
 console.log(`\n${failures === 0 ? "L65 PASS" : failures + " FAILURE(S)"}`);
 try { fs.rmSync(MUT_DIR, { recursive: true, force: true }); } catch (_) {}

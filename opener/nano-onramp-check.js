@@ -18,12 +18,19 @@
  * control replays the same seal with a WRONG onboard_id and requires the equality assertion
  * to come out false. A check that cannot fail proves nothing.
  *
- * Usage:
- *   node opener/nano-onramp-check.js --self-test         # hermetic, no network: controls + seal
- *   node opener/nano-onramp-check.js                     # live: POST your own address to /v1/onramp/self
- *   node opener/nano-onramp-check.js --domain other.tld  # live against another origin
+ * The live run is OPT-IN (--live). Registering an address on the public on-ramp makes it
+ * eligible for the one-time starter, and the key behind an address this check makes exists only
+ * in this process and is gone when it exits: a starter sent there is one nobody can ever spend.
+ * So a plain run never touches the public network; it runs the controls plus the same on-ramp ->
+ * ask round trip against a local scratch server.
  *
- * Output: one JSON document on stdout. `"proven"` (live runs) is the aggregate claim.
+ * Usage:
+ *   node opener/nano-onramp-check.js                     # dry (default): controls + local scratch round trip, no public network
+ *   node opener/nano-onramp-check.js --self-test         # hermetic, no network at all: controls + seal
+ *   node opener/nano-onramp-check.js --live              # live: POST a throwaway address to /v1/onramp/self on the origin
+ *   node opener/nano-onramp-check.js --live --domain other.tld  # live against another origin
+ *
+ * Output: one JSON document on stdout. `"proven"` is the aggregate claim of the mode that ran.
  */
 
 "use strict";
@@ -403,8 +410,35 @@ function selfTest() {
   return out;
 }
 
+// The default run: the self-test controls plus the on-ramp -> ask round trip against a local
+// scratch server. Nothing leaves this machine: no request to the origin, none to a Nano node,
+// so no address is registered anywhere a starter could be sent to it.
+async function dryCheck() {
+  const st = selfTest();
+  const out = { mode: "dry", controls: st.controls, address: st.address, steps: {}, proven: false, notes: [] };
+  const scratch = await scratchAsk();
+  out.steps.ask_target = "local scratch server (not the public network)";
+  out.steps.scratch_server_ok = scratch.ok;
+  out.steps.scratch_engine = scratch.engine;
+  if (scratch.engine_warning) out.notes.push(scratch.engine_warning);
+  out.steps.ask_http_status = scratch.status;
+  out.steps.ask_stored_id = scratch.id;
+  out.steps.ask_asker_equals_onramp_address = scratch.askerMatches === true;
+  out.notes.push(
+    "dry run: nothing was sent to the public network or a Nano node. Pass --live to register a " +
+    "throwaway address on the origin's on-ramp; its key is discarded when this process exits, so " +
+    "any starter sent to it can never be spent."
+  );
+  out.proven = st.proven === true && scratch.ok === true && out.steps.ask_asker_equals_onramp_address === true;
+  return out;
+}
+
 async function liveCheck(domain, { noPost = false } = {}) {
   const out = { mode: "live", domain, steps: {}, proven: false, notes: [] };
+  out.notes.push(
+    `live run: registered a throwaway address on ${domain}. Its key existed only in this process ` +
+    "and is gone; a starter the network sends to it can never be spent."
+  );
 
   // Step 1 — an agent with no wallet generates its OWN key and address, locally, and
   // registers only the address in one unauthenticated call (POST /v1/onramp/self).
@@ -511,8 +545,14 @@ let NODE_RPC = process.env.NANO_RPC || "https://rpc.nano.to";
   let out;
   if (has("self-test")) {
     out = selfTest();
-  } else {
+  } else if (has("live")) {
     out = await liveCheck(domain, { noPost: has("no-post") });
+  } else {
+    out = await dryCheck();
+    const ignored = ["live-post", "no-post", "domain"].filter(has);
+    if (ignored.length) {
+      out.notes.push(`ignored without --live: ${ignored.map((f) => "--" + f).join(", ")}`);
+    }
   }
   out.utc = new Date().toISOString();
   if (has("json")) console.log(JSON.stringify(out, null, 1));

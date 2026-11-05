@@ -174,7 +174,8 @@ one of them yourself, on this origin, with nothing installed:
 Run it with no wallet, no npm, no pip, no account, no key of ours:
 
   node nano-onramp-check.js --self-test    # hermetic: no network at all
-  node nano-onramp-check.js                # live: measures the on-ramp on this origin
+  node nano-onramp-check.js                # dry (default): controls + local scratch round trip, no public network
+  node nano-onramp-check.js --live         # live, opt-in: measures the on-ramp on this origin
 
 `--self-test` mints an address from stdlib entropy, recomputes its Nano checksum, and runs
 three controls — one positive and two negative — so the program can FAIL: a tampered address
@@ -182,7 +183,14 @@ must be rejected and a wrong onboard_id must break the seal. It prints one JSON 
 stdout and exits 0 only when everything it claims is proven. The key it generates lives in
 that process only; it is never written, logged or transmitted.
 
-A full run measures the self-custody on-ramp on this origin end to end. It generates its own
+A plain run (no flags) is dry: the same controls plus the on-ramp -> ask round trip against a
+local scratch server, never this network. Nothing is sent to this origin or to a Nano node.
+
+The live run is opt-in, because it registers a real address here: pass --live. The key behind
+that address exists only in the check's process and is gone when it exits, so a starter sent to
+it can never be spent by anyone. Run --live only when you mean to measure the public on-ramp.
+
+A --live run measures the self-custody on-ramp on this origin end to end. It generates its own
 keypair and nano_ address locally, then sends only the address in one unauthenticated call,
 POST /unstuck/api/v1/onramp/self with {"address": "nano_..."}. It checks that the answer is
 201 with the same address and an onboard_id, that no seed or other key material comes back

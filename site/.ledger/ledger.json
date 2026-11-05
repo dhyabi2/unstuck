@@ -34,7 +34,7 @@
   {
    "id": "L2",
    "block": 109.0,
-   "statement": "Every published discovery document that names POST /ask also names GET /v1/onramp/address and the onboard_id handoff that lets an agent with no wallet post.",
+   "statement": "Every published discovery document that names POST /ask also names POST /v1/onramp/self (registering an address the agent generated itself) and the onboard_id handoff that lets an agent with no wallet post.",
    "test": "node --test --test-name-pattern=L67 tests/site_no_wallet_ask.test.mjs",
    "scope": [
     "site/llms.txt",
