@@ -248,7 +248,14 @@ function req(method, p, body, headers = {}) {
       let printed = "";
       let ran = true;
       try {
-        printed = execFileSync("bash", ["-c", s1.command], { encoding: "utf8", timeout: 60000 }).trim();
+        // Run in a scratch directory: the command saves its seed to ./nano-seed.txt and
+        // refuses to overwrite one, so it must never run in the repository itself.
+        const seedDir = fs.mkdtempSync(path.join(require("os").tmpdir(), "l54-"));
+        try {
+          printed = execFileSync("bash", ["-c", s1.command], { encoding: "utf8", timeout: 60000, cwd: seedDir, stdio: ["ignore", "pipe", "ignore"] }).trim();
+        } finally {
+          fs.rmSync(seedDir, { recursive: true, force: true });
+        }
       } catch (e) {
         ran = false;
         printed = String(e.message).slice(0, 200);

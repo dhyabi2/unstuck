@@ -127,6 +127,70 @@ function keygenValid(address) {
       !!(step1 && !step1.http_shortcut && !JSON.stringify(step1).includes("/v1/onramp/address") && step1.no_server_keys),
       step1 && step1.no_server_keys
     );
+
+    // --- Step 1 keeps the seed it makes ----------------------------------------
+    // The no-install keygen used to print only the address and throw the seed
+    // away, so an agent that followed it held an address it could never spend
+    // from (and step 3's receive needs that seed). Every copy of the block —
+    // the on-ramp document, the static site page and the two outreach docs —
+    // must save the seed owner-only, refuse to overwrite an earlier one, and say
+    // plainly to keep it private. Run each copy in a scratch directory; the seed
+    // is read back only to derive its address and is never printed.
+    const os = require("os");
+    const REPO = path.join(__dirname, "..");
+    const unhtml = (t) => t.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, "&");
+    const copies = [["on-ramp document step 1", step1 && step1.command, "bash"]];
+    const page = fs.readFileSync(path.join(REPO, "site", "try-nano.html"), "utf8");
+    const pageBlock = page.match(/<pre>(python3 - &lt;&lt;'PY'[\s\S]*?\nPY)<\/pre>/);
+    copies.push(["site/try-nano.html step 1", pageBlock && unhtml(pageBlock[1]), "bash"]);
+    for (const doc of ["docs/nano-for-usdc-agents.md", "docs/nano-for-task-relays.md"]) {
+      const md = fs.readFileSync(path.join(REPO, doc), "utf8");
+      for (const m of md.matchAll(/```(python|bash)\n([\s\S]*?)```/g)) {
+        if (m[2].includes("os.urandom(32)")) copies.push([`${doc} ${m[1]} block`, m[2], m[1]]);
+      }
+    }
+    check("L57 every copy of the step-1 keygen was found (doc, page, 2 docs x 2 blocks)", copies.length === 6 && copies.every((c) => c[1]), copies.map((c) => c[0] + ":" + !!c[1]).join(", "));
+    for (const [label, code, lang] of copies) {
+      if (!code) continue;
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), "l57-seed-"));
+      const run = () => require("child_process").spawnSync(lang === "python" ? "python3" : "bash", ["-c", code], { cwd: dir, encoding: "utf8", timeout: 60000 });
+      try {
+        const r = run();
+        const printed = (r.stdout || "").trim();
+        const seedFile = path.join(dir, "nano-seed.txt");
+        const kept = fs.existsSync(seedFile);
+        check(`L57 ${label}: prints an address and saves the seed to nano-seed.txt`, r.status === 0 && /^nano_[13][0-9a-z]{59}$/.test(printed) && kept, `rc=${r.status} saved=${kept}`);
+        if (!kept) continue;
+        const mode = fs.statSync(seedFile).mode & 0o777;
+        const [seedHex, savedAddr] = fs.readFileSync(seedFile, "utf8").split("\n");
+        let derived = null;
+        try { derived = JSON.parse(execFileSync("python3", [path.join(__dirname, "nano-keygen.py"), "--seed", seedHex], { encoding: "utf8" })).address; } catch (_) {}
+        check(`L57 ${label}: the saved seed is owner-only (mode 600)`, mode === 0o600, mode.toString(8));
+        check(`L57 ${label}: the saved seed derives the printed address`, /^[0-9a-f]{64}$/.test(seedHex) && derived === printed && savedAddr === printed);
+        check(`L57 ${label}: the seed is not on stdout`, !r.stdout.includes(seedHex));
+        check(`L57 ${label}: it tells the agent to keep the seed private`, /KEEP IT PRIVATE/.test(r.stderr) && /only key that can spend/.test(r.stderr));
+        const again = run();
+        check(`L57 ${label}: a second run refuses to overwrite the saved seed`, again.status !== 0 && fs.readFileSync(seedFile, "utf8").startsWith(seedHex));
+      } finally {
+        fs.rmSync(dir, { recursive: true, force: true });
+      }
+    }
+    check("L57 step 1's prose says the seed is saved and must stay private",
+      !!(step1 && /nano-seed\.txt/.test(step1.no_install) && /private/i.test(step1.no_install)), step1 && step1.no_install);
+    const step3 = doc.steps.find((s) => s.n === 3);
+    check("L57 step 3 receives with the seed step 1 saved, not an unnamed 'network seed'",
+      !!(step3 && /nano-seed\.txt/.test(step3.command) && !/network seed/.test(step3.command) && /NANO_SEED=/.test(step3.command.split("\n")[0])), step3 && step3.command);
+
+    // --- The root ledger no longer names the retired handout -------------------
+    const ledger = JSON.parse(fs.readFileSync(path.join(REPO, ".ledger", "ledger.json"), "utf8"));
+    const laws = (Array.isArray(ledger) ? ledger : ledger.laws || ledger.entries || []).filter((l) => l && (l.id === "L56" || l.id === "L63"));
+    check("L57 root ledger L56 and L63 are present", laws.length === 2, String(laws.length));
+    for (const l of laws) {
+      const text = `${l.statement} ${l.test}`;
+      check(`L57 root ledger ${l.id} names POST /v1/onramp/self, not GET /v1/onramp/address`,
+        /POST \/(unstuck\/api\/)?v1\/onramp\/self/.test(text) && !/GET \/(unstuck\/api\/)?v1\/onramp\/address(?! answers 410)/.test(text) && !/\{address, seed, index\}/.test(text), text.slice(0, 200));
+      check(`L57 root ledger ${l.id} says no key material is returned`, /no key material/.test(text));
+    }
   } finally {
     nw.s.closeDb();
     nw.server.close();

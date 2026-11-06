@@ -27,3 +27,6 @@ site/.ledger/tmp/
 opener/keys/
 site/network.db
 opener/dealwork.key
+
+# The on-ramp step-1 keygen saves a private seed here; never commit one.
+nano-seed.txt

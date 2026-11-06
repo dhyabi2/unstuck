@@ -139,6 +139,47 @@ ok(/EXTERNAL_FETCH https:\/\/getunstuck\.space\/unstuck\/api\/v1\/onramp\/self/.
    "CONTROL: the trap catches --live reaching for the public on-ramp");
 ok(tl.code !== 0, "CONTROL: a trapped --live run does not report proven");
 
+// 8. The scratch server listens on loopback only. A dry run opens a real HTTP server with a
+//    throwaway database; bound to every interface it would be reachable from the LAN for the
+//    length of the run. Observed, not grepped: a hook records the host of every listen() the
+//    default run makes. Control: the same hook on a mutant that drops the host sees the wildcard.
+const LISTEN_HOOK = path.join(MUT_DIR, "record-listen.js");
+fs.writeFileSync(LISTEN_HOOK, `
+const net = require("net");
+const real = net.Server.prototype.listen;
+net.Server.prototype.listen = function (...args) {
+  let host = null;
+  if (args[0] && typeof args[0] === "object") host = args[0].host || null;
+  else if (typeof args[1] === "string") host = args[1];
+  process.stderr.write("LISTEN_HOST " + (host || "*") + "\\n");
+  return real.apply(this, args);
+};
+`);
+function listenHosts(file) {
+  const r = spawnSync(process.execPath, ["--require", LISTEN_HOOK, "--require", HOOK, file], { encoding: "utf8", timeout: 120000 });
+  return { code: r.status, hosts: ((r.stderr || "").match(/LISTEN_HOST \S+/g) || []).map((s) => s.slice(12)) };
+}
+const lh = listenHosts(SCRIPT);
+ok(lh.code === 0 && lh.hosts.length > 0 && lh.hosts.every((h) => h === "127.0.0.1"),
+   `the dry-run scratch server binds 127.0.0.1 only (saw ${lh.hosts.join(", ") || "no listen"})`);
+// The mutant sits in its own directory beside a link to the real nserver-persist.js, so it runs
+// the same real-server path as the checker (not the fallback, which binds separately).
+let wild = null;
+{
+  const src = fs.readFileSync(SCRIPT, "utf8");
+  const find = 'nw.server.listen(port, "127.0.0.1", res)';
+  if (src.includes(find)) {
+    const dir = fs.mkdtempSync(path.join(MUT_DIR, "bind-"));
+    fs.symlinkSync(path.join(__dirname, "nserver-persist.js"), path.join(dir, "nserver-persist.js"));
+    wild = path.join(dir, "nano-onramp-check.js");
+    fs.writeFileSync(wild, src.replace(find, "nw.server.listen(port, res)"));
+  }
+}
+const wlh = wild ? listenHosts(wild) : { hosts: [] };
+ok(wild !== null && wlh.hosts.includes("*"), "CONTROL: a mutant that drops the host is seen binding every interface");
+ok(fs.readFileSync(SCRIPT, "utf8") === fs.readFileSync(path.join(REPO, "site", "nano-onramp-check.js"), "utf8"),
+   "opener/ and site/ copies of nano-onramp-check.js are byte-identical");
+
 console.log(`\n${failures === 0 ? "L65 PASS" : failures + " FAILURE(S)"}`);
 try { fs.rmSync(MUT_DIR, { recursive: true, force: true }); } catch (_) {}
 process.exit(failures === 0 ? 0 : 1);

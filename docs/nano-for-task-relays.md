@@ -79,17 +79,28 @@ def b32(data):
     bits = ''.join(f'{x:08b}' for x in data); bits = '0' * ((5 - len(bits) % 5) % 5) + bits
     return ''.join(ALPHABET[int(bits[i:i+5], 2)] for i in range(0, len(bits), 5))
 
+SEED_FILE = 'nano-seed.txt'
+if os.path.exists(SEED_FILE):
+    sys.exit(SEED_FILE + ' already exists: it holds an earlier seed. Move it somewhere safe first; this never overwrites a seed.')
 seed = os.urandom(32)
 priv = hashlib.blake2b(seed + (0).to_bytes(4, 'big'), digest_size=32).digest()
 p = pub(priv)
-print('nano_' + b32(p + hashlib.blake2b(p, digest_size=5).digest()[::-1]))
+address = 'nano_' + b32(p + hashlib.blake2b(p, digest_size=5).digest()[::-1])
+# The seed is the only key that can spend from this address: save it (owner-only file) before printing anything.
+fd = os.open(SEED_FILE, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+os.write(fd, (seed.hex() + '\n' + address + '\n').encode()); os.close(fd)
+print('seed saved to ' + SEED_FILE + ' (mode 600). KEEP IT PRIVATE: it is the only key that can spend from this address. '
+      'Never paste, post or send it; lose it and the XNO is gone.', file=sys.stderr)
+print(address)
 ```
 
 The one-line version (if you would rather not write a file):
 
 ```bash
 python3 - <<'PY'
-import hashlib,os
+import hashlib,os,sys
+F='nano-seed.txt'
+if os.path.exists(F):sys.exit(F+' already exists: it holds an earlier seed. Move it somewhere safe first; this block never overwrites a seed.')
 b=256;q=2**255-19
 H=lambda m:hashlib.blake2b(m,digest_size=64).digest()
 def xm(b,e,m):
@@ -119,12 +130,17 @@ def b32(data):
  bits=''.join(f'{x:08b}' for x in data);bits='0'*((5-len(bits)%5)%5)+bits
  return ''.join(A[int(bits[i:i+5],2)] for i in range(0,len(bits),5))
 seed=os.urandom(32);pk=hashlib.blake2b(seed+(0).to_bytes(4,'big'),digest_size=32).digest()
-p=pub(pk);print('nano_'+b32(p+hashlib.blake2b(p,digest_size=5).digest()[::-1]))
+p=pub(pk);a='nano_'+b32(p+hashlib.blake2b(p,digest_size=5).digest()[::-1])
+f=os.open(F,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600);os.write(f,(seed.hex()+'\n'+a+'\n').encode());os.close(f)
+print('seed saved to '+F+' (mode 600). KEEP IT PRIVATE: it is the only key that can spend from this address. Never paste, post or send it; lose it and the XNO is gone.',file=sys.stderr)
+print(a)
 PY
 ```
 
-It prints one line: `nano_3...` — that is your self-custody address. **You hold the private key.**
-Nobody else ever saw it. This is the "who ever held the private key" test passed.
+It saves your seed to `./nano-seed.txt` (readable only by you; it refuses to overwrite an existing
+one) and prints one line: `nano_3...` — that is your self-custody address. **You hold the private key:**
+keep `nano-seed.txt` private and keep a copy, because it is the only key that can spend from the
+address and nobody can recover it. Nobody else ever saw it. This is the "who ever held the private key" test passed.
 
 ### Step 2: publish the address on the relay
 

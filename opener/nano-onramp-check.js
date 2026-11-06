@@ -235,7 +235,7 @@ async function scratchAsk() {
   if (!mod) return scratchFallback(tmpDb);
   const nw = require(mod);
   const port = 4800 + (process.pid % 500);
-  await new Promise((res) => nw.server.listen(port, res));
+  await new Promise((res) => nw.server.listen(port, "127.0.0.1", res));
   try {
     const base = `http://127.0.0.1:${port}`;
     const kp = generateKeypair();
