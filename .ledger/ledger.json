@@ -888,8 +888,8 @@
   {
    "id": "L56",
    "block": 82.0,
-   "statement": "L57: one HTTP call gives an outside agent a Nano address it can post an ask with and the network never stores the seed.",
-   "test": "node opener/test_onramp_address.js prints 'all on-ramp address laws pass' (14 checks, 0 failures): GET /v1/onramp/address answers 200 with a fresh {address, seed, index}; that address passes the independent keygen (python3 opener/nano-keygen.py --check); a POST /ask with it as asker returns 201 and the address is stored; and neither seed is stored. On-ramp law L54 also runs green in the same file: node opener/test_onramp.js prints L54 PASS.",
+   "statement": "L57: an outside agent generates its own Nano address locally, registers it with one POST /v1/onramp/self call that returns no key material, posts an ask with it, and the network never makes, sends or stores a seed.",
+   "test": "node opener/test_onramp_address.js prints 'all on-ramp address laws pass' (0 failures): the agent generates its own keypair locally (python3 opener/nano-keygen.py) and that address passes the independent keygen check; POST /v1/onramp/self registers it and the response carries no key material (no seed, no 64-hex string); a POST /ask with it as asker returns 201 and the address is stored; neither seed is stored; and the retired GET /v1/onramp/address answers 410 with no seed and points at POST /v1/onramp/self. On-ramp law L54 also runs green in the same file: node opener/test_onramp.js prints L54 PASS.",
    "scope": [],
    "oracle": null,
    "expect": null,
@@ -987,8 +987,8 @@
   {
    "id": "L63",
    "block": 108.0,
-   "statement": "An agent with no Nano address can post an ask: the network hands it an on-ramp address, records the onboard id, and stores that nano_ address as the asker.",
-   "test": "POST /ask with {onboard_id} after GET /unstuck/api/v1/onramp/address returns 201 and the stored asker is the on-ramp nano_ address; a POST with neither asker nor onboard_id is refused 400.",
+   "statement": "An agent with no Nano address can post an ask: it generates its own address, registers it with POST /v1/onramp/self (no key material returned), the network records the onboard id, and stores that nano_ address as the asker.",
+   "test": "POST /ask with {onboard_id} after POST /unstuck/api/v1/onramp/self (registering an address the agent generated itself; the response returns no key material) returns 201 and the stored asker is that agent's own nano_ address; a POST with neither asker nor onboard_id is refused 400.",
    "scope": [
     "opener/network-store.js",
     "opener/nserver-persist.js",

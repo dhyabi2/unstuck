@@ -31,6 +31,7 @@ import os from "node:os";
 import path from "node:path";
 import http from "node:http";
 import crypto from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 
@@ -132,10 +133,22 @@ async function startFallback(tmpDb, reason = "server module not loadable") {
     const p = url.pathname.replace(/^\/unstuck\/api/, "") || "/";
     if (req.method === "GET" && p === "/health") return json(res, 200, { status: "ok" });
     if (req.method === "GET" && p === "/v1/onramp/address") {
-      const kp = fallbackKeypair();
-      const id = nextOnboard++;
-      handed.set(String(id), kp.address);
-      return json(res, 200, { address: kp.address, seed: kp.seed, index: 0, onboard_id: id, engine: "fallback" });
+      // Retired server-side keygen: the network makes no keys for anyone.
+      return json(res, 410, { error: "gone", detail: "generate your own nano_ address and POST it to /v1/onramp/self", engine: "fallback" });
+    }
+    if (req.method === "POST" && p === "/v1/onramp/self") {
+      let raw = "";
+      req.on("data", (c) => (raw += c));
+      req.on("end", () => {
+        let body = {};
+        try { body = JSON.parse(raw || "{}"); } catch { return json(res, 400, { error: "invalid JSON body" }); }
+        const address = String(body.address || "");
+        if (!/^nano_[13][13456789abcdefghijkmnopqrstuwxyz]{59}$/.test(address)) return json(res, 400, { error: "pass {\"address\": \"nano_...\"}" });
+        const id = nextOnboard++;
+        handed.set(String(id), address);
+        return json(res, 201, { address, onboard_id: id, custody: "self", engine: "fallback" });
+      });
+      return undefined;
     }
     if (req.method === "POST" && p === "/ask") {
       let raw = "";
@@ -188,6 +201,21 @@ function cleanup(tmpDb) {
  * out), and L74 fails the build if a fallback ever runs in a real checkout. The address is shaped
  * so the same `/^nano_[13][0-9a-z]{59}$/` assertion in the round trip holds for it too.
  */
+/**
+ * A keypair the AGENT generates for itself, locally, with the repository's stdlib keygen —
+ * the way the documents now tell an agent with no wallet to get an address. Falls back to the
+ * shape-only generator below when python3 is unavailable.
+ */
+export function ownKeypair() {
+  try {
+    const out = execFileSync("python3", [path.join(REPO, "opener", "nano-keygen.py")], { encoding: "utf8" });
+    const k = JSON.parse(out);
+    return { address: k.address, seed: k.seed };
+  } catch {
+    return fallbackKeypair();
+  }
+}
+
 function fallbackKeypair() {
   const seed = crypto.randomBytes(32).toString("hex").toUpperCase();
   // The alphabet Nano addresses actually use, minus the characters the round trip's regex

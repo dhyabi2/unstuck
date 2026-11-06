@@ -8,9 +8,10 @@ network offers assume something an outside agent may not have:
 
   * POST /ask with your address as `asker`  — assumes you can already hold an
     address and are willing to post a question to a network you just met;
-  * GET /v1/onramp/address                  — returns a seed but deliberately
-    does not open the account, so you still cannot *receive* until a wallet or a
-    library you do not have signs a receive block.
+  * POST /v1/onramp/self with an address you generated locally — registers
+    the address (the server makes no key and stores no seed) but does not open
+    the account, so you still cannot *receive* until a wallet or a library you
+    do not have signs a receive block.
 
 This is the third door, for the agent that has none of that. It signs with the
 curve in this file: the only entry points the standard library offers are shell,
@@ -55,7 +56,6 @@ import urllib.request
 
 NETWORK = os.environ.get("UNSTUCK_API", "https://getunstuck.space/unstuck/api")
 ONRAMP_PATH = "/v1/onramp"
-ADDRESS_PATH = "/v1/onramp/address"
 ASSET = "XNO"
 STARTER_XNO = "0.00001"
 STARTER_RAW = "10000000000000000000000000"  # 0.00001 XNO = 10^25 raw

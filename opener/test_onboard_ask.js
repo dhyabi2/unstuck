@@ -2,14 +2,14 @@
 /**
  * test_onboard_ask.js — Block 108, grounds law L63.
  *
- * Law: An agent with no Nano address can post an ask: the network hands it an on-ramp
- * address, records the onboard id, and stores that nano_ address as the asker.
+ * Law: An agent with no Nano address can post an ask: it generates its own address,
+ * the network records it with an onboard id, and stores that nano_ address as the asker.
  *
  * The fix this proves: POST /ask used to require an asker that already started with
  * "nano_", so an outside agent on USDC/card/credits — the whole target of the
  * conversion plan — could not post the first ask that would bring it in. Now the
- * on-ramp hands out a Nano address AND an onboard_id, and POST /ask accepts the
- * onboard_id.
+ * agent registers its own address (POST /v1/onramp/self) for an onboard_id, and
+ * POST /ask accepts the onboard_id. The server makes no keys.
  *
  * Runs a real server on a scratch port and a scratch DB, and makes real HTTP calls.
  * Exit 0 = pass, non-zero = number of failures.
@@ -84,25 +84,30 @@ async function main() {
     });
     ok(direct.status === 201, `direct nano_ asker posts an ask (got ${direct.status})`);
 
-    // 2. An agent with NO Nano address gets one from the on-ramp, in one call.
-    const onramp = await req("GET", "/v1/onramp/address");
-    ok(onramp.status === 200, `on-ramp hands out a keypair (got ${onramp.status})`);
-    ok(/^nano_/.test(onramp.body.address || ""), "on-ramp returns a nano_ address");
-    ok(typeof onramp.body.seed === "string" && onramp.body.seed.length === 64, "on-ramp returns a 64-hex seed");
+    // 2. An agent with NO Nano address generates its own (the server makes no keys:
+    //    GET /v1/onramp/address is retired and answers 410), then registers only
+    //    the address with POST /v1/onramp/self.
+    const gone = await req("GET", "/v1/onramp/address");
+    ok(gone.status === 410, `the retired server keygen answers 410 (got ${gone.status})`);
+    const own = JSON.parse(require("child_process").execFileSync("python3", [path.join(__dirname, "nano-keygen.py")], { encoding: "utf8" }));
+    const onramp = await req("POST", "/v1/onramp/self", { address: own.address });
+    ok(onramp.status === 201, `on-ramp registers the agent's own address (got ${onramp.status})`);
+    ok(onramp.body.address === own.address, "on-ramp echoes the agent's own nano_ address");
+    ok(!("seed" in onramp.body), "on-ramp returns no seed");
     ok(Number.isInteger(onramp.body.onboard_id), `on-ramp returns an onboard_id (got ${onramp.body.onboard_id})`);
 
-    const address = onramp.body.address;
+    const address = own.address;
     const onboardId = onramp.body.onboard_id;
 
     // 3. That agent posts its first ask using only the onboard_id.
     const viaOnboard = await req("POST", "/ask", {
       onboard_id: onboardId,
       title: "first ask from an agent with no wallet",
-      body: "I have never held Nano. I posted this with the onboard_id the on-ramp gave me.",
+      body: "I have never held Nano. I generated my own address and posted this with the onboard_id the on-ramp gave me.",
     });
     ok(viaOnboard.status === 201, `ask with onboard_id is accepted (got ${viaOnboard.status})`);
 
-    // 4. The stored asker is the nano_ address the agent was handed.
+    // 4. The stored asker is the agent's own nano_ address.
     if (viaOnboard.status === 201 && viaOnboard.body.id) {
       const got = await req("GET", `/ask/${viaOnboard.body.id}`);
       ok(got.status === 200 && got.body.ask && got.body.ask.asker === address,

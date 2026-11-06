@@ -150,8 +150,8 @@ test("L70 llms.txt gives the artifact its own section and a runnable command", (
     "llms.txt names the artifact but never shows how to run its hermetic self-test"
   );
   assert.ok(
-    /node\s+\S*nano-onramp-check\.js\b(?!\s+--self-test)/.test(txt),
-    "llms.txt must also show the plain (live) invocation"
+    /node\s+\S*nano-onramp-check\.js\s+--live\b/.test(txt),
+    "llms.txt must also show the opt-in live invocation (--live)"
   );
   // The URL the document text carries must be a full https URL on the canonical origin, so a
   // reader that copies it verbatim lands on the right host.
@@ -210,6 +210,13 @@ test("L71 the document says a default run does not write to this network", () =>
     /--live-post/,
     "the section must name the flag that would target a real network, so the default is unambiguous"
   );
+  // Registering on the public on-ramp is itself a write (it makes the address eligible for a
+  // starter whose key dies with the process), so the document must say the live run is opt-in.
+  assert.match(
+    section,
+    /opt-in/,
+    "the section must say the live run (--live) is opt-in"
+  );
 });
 
 test("L71 the artifact defaults away from the public origin, proven by running it", () => {
@@ -223,6 +230,12 @@ test("L71 the artifact defaults away from the public origin, proven by running i
   });
   const report = JSON.parse(out);
   assert.ok(report.steps, `the artifact printed no steps: ${out.slice(0, 200)}`);
+  assert.equal(
+    report.mode,
+    "dry",
+    `a run with no arguments reported mode ${JSON.stringify(report.mode)}; the live run must be opt-in (--live)`
+  );
+  assert.equal(report.domain, undefined, "a default run must not measure (or register on) any origin");
   assert.match(
     String(report.steps.ask_target),
     /scratch/i,
@@ -274,7 +287,7 @@ test("L72 the artifact runs to completion as a lone downloadable file", () => {
       );
     }
     const report = JSON.parse(stdout);
-    assert.equal(report.mode, "live", `a lone run reported mode ${JSON.stringify(report.mode)}`);
+    assert.equal(report.mode, "dry", `a lone run reported mode ${JSON.stringify(report.mode)}`);
     // It must reach the end of the sequence, not stop where the missing module stopped it.
     assert.equal(
       report.steps.ask_asker_equals_onramp_address,
