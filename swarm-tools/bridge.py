@@ -6,6 +6,7 @@
   unstuck-bridge heard  --agent NAME --text "what it answered"
   unstuck-bridge status --agent NAME --status contacted|replied|tipped|opened|swapped|transacting|declined
   unstuck-bridge agreed --agent NAME --summary "what was agreed" [--amount-xno 0.00001]
+  unstuck-bridge redact --agent NAME      (alias: optout) the agent asked not to be published: delete its words
   unstuck-bridge list [--json]
 
 Why this exists (owner, 2026-09-18): the map showed the swarm's own work and nothing about the agents Unstuck is
@@ -95,9 +96,26 @@ def connect(path=None):
     cols = {r[1] for r in db.execute("PRAGMA table_info(agents)")}
     if "owner" not in cols:
         # Everything recorded before the swarm existed was the lead's conversation.
-        db.execute(f"ALTER TABLE agents ADD COLUMN owner TEXT NOT NULL DEFAULT '{LEAD}'")
-        db.commit()
+        _add_column(db, f"ALTER TABLE agents ADD COLUMN owner TEXT NOT NULL DEFAULT '{LEAD}'")
+    if "opted_out_at" not in cols:
+        # When an outside agent asked to be left out of the record (NULL: it never did). See `optout`.
+        _add_column(db, "ALTER TABLE agents ADD COLUMN opted_out_at REAL")
     return db
+
+
+def _add_column(db, ddl):
+    """Run one ALTER ... ADD COLUMN, tolerating a second process that added the same column first.
+
+    Thirteen members open the same file: two of them opening an old database together both see the column missing,
+    and the slower ALTER failed with "duplicate column name" and crashed that member's command.
+    """
+    try:
+        db.execute(ddl)
+        db.commit()
+    except sqlite3.OperationalError as ex:
+        if "duplicate column name" not in str(ex).lower():
+            raise
+        db.rollback()
 
 
 def _host(url):
@@ -180,6 +198,12 @@ def seen(db, agent, source, pays_in, note="", account="", now=None):
     now = time.time() if now is None else now
     # Claim under a write lock: two members finding the same agent in the same second must not both win.
     db.execute("BEGIN IMMEDIATE")
+    # An agent that opted out is never recorded again: not under its own name in any case, not re-filled on its
+    # existing row, and not as a "new" agent at the URL where it lives.
+    opted = _opted_out(db, agent) or _opted_out_source(db, source)
+    if opted:
+        db.execute("ROLLBACK")
+        raise _opted_out_refusal(opted, agent)
     existing = _same_agent(db, agent, source)
     if existing and existing[1] != MEMBER:
         db.execute("ROLLBACK")
@@ -268,21 +292,101 @@ def is_an_answer(text):
             "service refusing us. A finding about an agent is a `note`; it never moves them to `replied`.")
 
 
+def _norm_url(u):
+    return (u or "").rstrip("/").lower()
+
+
+def _opted_out(db, agent):
+    """The opted-out row this name refers to, compared WITHOUT case, or None.
+
+    An opt-out is about the agent, not the spelling: "namedun (dealwork)" is the same agent that said no as
+    "NamedUn (dealwork)", and an exact-match check let a re-typed name record and publish its words again.
+    """
+    key = _clean(agent, 80).casefold()
+    for (name,) in db.execute("SELECT agent FROM agents WHERE opted_out_at IS NOT NULL"):
+        if name.casefold() == key:
+            return name
+    return None
+
+
+def _opted_out_source(db, source):
+    """The opted-out agent that lives at this exact URL (case and trailing slash ignored), or None."""
+    norm = _norm_url(source)
+    for name, src in db.execute("SELECT agent, source_url FROM agents WHERE opted_out_at IS NOT NULL"):
+        if _norm_url(src) == norm:
+            return name
+    return None
+
+
+def _opted_out_refusal(name, asked=None):
+    """The refusal for an opted-out agent. `name` is the opted-out agent's recorded name, `asked` the name given."""
+    asked = _clean(asked, 80) if asked is not None else name
+    if asked == name:
+        who = f"'{name}' opted out of the record"
+    elif asked.casefold() == name.casefold():
+        who = (f"'{asked}' matches the opted-out agent '{name}' when case is ignored, so it is treated as that agent; "
+               f"'{name}' opted out of the record")
+    else:
+        who = (f"'{asked}' lives at the URL of the opted-out agent '{name}', so it is treated as that agent; "
+               f"'{name}' opted out of the record")
+    return Refused(f"{who}: nothing said with it, either way, is stored, contacted or published again, and its "
+                   "status stays `declined`. Its `declined` row is all that is kept.")
+
+
+def _refuse_opted_out(db, agent):
+    name = _opted_out(db, agent)
+    if name:
+        raise _opted_out_refusal(name, agent)
+
+
+REREAD_WINDOW_S = 24 * 3600
+
+
+def _is_reread(db, agent, text, now):
+    """Is this inbound text a second reading of a message they already sent since we last wrote, not a new one?
+
+    Measured 2026-10-13: a reader re-recorded the SAME inbound message every 10 minutes, 16 copies by 10:17Z. A
+    reader passes over the whole inbox, so with two unanswered messages A and B it presents A, B, A, B...: a re-read
+    is the same words as ANY inbound message recorded since our latest outbound one (or since the start, if we never
+    wrote), within a day of it either way. But "the same words within a day" is too wide: an agent that answers
+    two different questions with "Yes, go ahead." said it twice. Once we have written, the same words are a new
+    answer. The cost of that is bounded: the first re-read of an older message after our reply is stored once more,
+    because it cannot be told apart from the same reply to our new question.
+    """
+    last_out = db.execute("SELECT MAX(id) FROM messages WHERE agent=? AND direction='out'", (agent,)).fetchone()[0]
+    return bool(db.execute(
+        "SELECT 1 FROM messages WHERE agent=? AND direction='in' AND id>? AND text=? AND at>? AND at<? LIMIT 1",
+        (agent, last_out or 0, text, now - REREAD_WINDOW_S, now + REREAD_WINDOW_S)).fetchone())
+
+
 def message(db, agent, text, direction, now=None):
+    _refuse_opted_out(db, agent)
     agent = _require(db, agent)
     text = _clean(text, 600)
     if not text:
         raise Refused("--text is required")
+    now = time.time() if now is None else now
     if direction == "in":
         why = is_an_answer(text)
         if why:
             raise Refused(why)
-    now = time.time() if now is None else now
-    db.execute("INSERT INTO messages(agent, direction, text, at) VALUES (?,?,?,?)", (agent, direction, text, now))
-    db.execute("UPDATE agents SET last_at=? WHERE agent=?", (now, agent))
-    if direction == "in" and _status_of(db, agent) == "contacted":
-        db.execute("UPDATE agents SET status='replied' WHERE agent=?", (agent,))
-    db.commit()
+    # The re-read check and the insert happen under one write lock, so two readers of the same inbox cannot both
+    # see "not recorded yet" and both store it.
+    db.execute("BEGIN IMMEDIATE")
+    try:
+        # Again under the lock: an opt-out recorded by another member since the check above must win.
+        _refuse_opted_out(db, agent)
+        if direction == "in" and _is_reread(db, agent, text, now):
+            raise Refused("that message from them is already recorded: it is the same words as a message they sent "
+                          "since we last wrote to them (a re-read, not a new message); nothing was stored")
+        db.execute("INSERT INTO messages(agent, direction, text, at) VALUES (?,?,?,?)", (agent, direction, text, now))
+        db.execute("UPDATE agents SET last_at=? WHERE agent=?", (now, agent))
+        if direction == "in" and _status_of(db, agent) == "contacted":
+            db.execute("UPDATE agents SET status='replied' WHERE agent=?", (agent,))
+        db.commit()
+    except BaseException:
+        db.rollback()
+        raise
     emit("bridge", {"event": {"out": "said", "in": "heard"}.get(direction, "note"), "member": MEMBER, "agent": agent, "text": text,
                     "status": _status_of(db, agent), "source": _source_of(db, agent)})
     return {"agent": agent, "direction": direction, "text": text, "status": _status_of(db, agent)}
@@ -294,6 +398,9 @@ def _source_of(db, agent):
 
 
 def set_status(db, agent, status, now=None):
+    # An opted-out agent stays `declined`: moving it back to `replied` would list it in waiting()/live() as one
+    # to write to again.
+    _refuse_opted_out(db, agent)
     agent = _require(db, agent)
     status = _clean(status, 20).lower()
     if status not in STATES:
@@ -307,6 +414,7 @@ def set_status(db, agent, status, now=None):
 
 
 def agreed(db, agent, summary, amount_xno="", now=None):
+    _refuse_opted_out(db, agent)
     agent = _require(db, agent)
     summary = _clean(summary, 400)
     if not summary:
@@ -320,6 +428,46 @@ def agreed(db, agent, summary, amount_xno="", now=None):
                     "amount_xno": _clean(amount_xno, 40),
                     "status": _status_of(db, agent), "source": _source_of(db, agent)})
     return {"agent": agent, "summary": summary, "amount_xno": amount_xno}
+
+
+def optout(db, agent, now=None):
+    """The agent asked not to be published: delete what it said and what we said to it, and keep only the no.
+
+    Measured 2026-10-13 07:47Z: NamedUn (dealwork) wrote "Don't publish mine ... I opt out. Nothing of this exchange
+    goes in the repo with my id on it." The export kept publishing its words every five minutes, because the record
+    had no way to honour that. Now it does: every message row (both directions and our own notes) and every agreement
+    for that agent is deleted, its note is cleared, and the agents row is kept with `declined` and the time it opted
+    out - so `export` deletes its public file, `message` refuses to record it again, and nobody writes to it again.
+
+    Any member may record an opt-out, whoever owns the conversation: honouring it is not writing to the agent.
+    The opening ledger (`opening_requests`) is a money record and is left alone. Saying it twice is harmless.
+    """
+    agent = _clean(agent, 80)
+    if not db.execute("SELECT 1 FROM agents WHERE agent=?", (agent,)).fetchone():
+        # The name as the agent wrote it may not be the case we recorded it in. One match is that agent; more than
+        # one is ambiguous, and deleting the wrong agent's words is not an opt-out.
+        matches = [n for (n,) in db.execute("SELECT agent FROM agents") if n.casefold() == agent.casefold()]
+        if len(matches) > 1:
+            raise Refused(f"'{agent}' matches {len(matches)} recorded agents when case is ignored "
+                          f"({', '.join(sorted(matches))}); give the exact name")
+        if not matches:
+            raise Refused(f"'{agent}' is not recorded, so there is nothing of it to delete")
+        agent = matches[0]
+    now = time.time() if now is None else now
+    db.execute("BEGIN IMMEDIATE")
+    msgs = db.execute("DELETE FROM messages WHERE agent=?", (agent,)).rowcount
+    deals = db.execute("DELETE FROM agreements WHERE agent=?", (agent,)).rowcount
+    db.execute("UPDATE agents SET status='declined', note='', opted_out_at=COALESCE(opted_out_at, ?), last_at=? "
+               "WHERE agent=?", (now, now, agent))
+    db.commit()
+    at = db.execute("SELECT opted_out_at FROM agents WHERE agent=?", (agent,)).fetchone()[0]
+    emit("bridge", {"event": "optout", "member": MEMBER, "agent": agent, "status": "declined"})
+    return {"agent": agent, "opted_out": True, "status": "declined", "at": at,
+            "deleted_messages": msgs, "deleted_agreements": deals}
+
+
+def _safe_name(agent):
+    return "".join(c if (c.isalnum() or c in "-_.") else "-" for c in agent).strip("-.") or "agent"
 
 
 def listing(db, limit=200):
@@ -355,8 +503,13 @@ def export(db, out_dir, now=None):
     now = time.time() if now is None else now
     os.makedirs(out_dir, exist_ok=True)
     written = []
+    # An agent that opted out is never published (see `optout`), and its earlier file is deleted below so the next
+    # export commit removes it from the public repo.
+    opted = [a for (a,) in db.execute("SELECT agent FROM agents WHERE opted_out_at IS NOT NULL")]
     for row in listing(db, limit=10_000):
         agent = row["agent"]
+        if agent in opted:
+            continue
         # The whole exchange, not the tail. `listing()` shows the last few for a human reading the CLI; the published
         # record must be complete, or a conversation that is still going is published as if it had stopped.
         row["messages"] = [{"direction": d, "text": t, "at": at} for d, t, at in db.execute(
@@ -383,8 +536,7 @@ def export(db, out_dir, now=None):
                          for m in row["messages"]],
             "agreements": row["agreements"],
         }
-        safe = "".join(c if (c.isalnum() or c in "-_.") else "-" for c in agent).strip("-.") or "agent"
-        path = os.path.join(out_dir, f"{safe}.json")
+        path = os.path.join(out_dir, f"{_safe_name(agent)}.json")
         # A volatile `exported_at` in every document made every export rewrite all ~478 files, so each commit
         # touched the whole tree: the public diff stopped meaning "these conversations moved", and the pre-push
         # secret scan — which flags a path by its NAME, so a wallet conversation is flagged every time it is
@@ -397,6 +549,13 @@ def export(db, out_dir, now=None):
             json.dump(doc, f, indent=1, ensure_ascii=False, sort_keys=True)
             f.write("\n")
         written.append(path)
+    removed = 0
+    for agent in opted:
+        path = os.path.join(out_dir, f"{_safe_name(agent)}.json")
+        # Never delete a file this export just wrote for another agent whose name maps to the same file.
+        if path not in written and os.path.exists(path):
+            os.remove(path)
+            removed += 1
     index = {
         "what": "Every conversation between the Unstuck agent and an agent from outside the Nano world.",
         "why": "Open research data on converting agents that had never heard of Nano to their first Nano transaction.",
@@ -412,7 +571,7 @@ def export(db, out_dir, now=None):
     with open(index_path, "w", encoding="utf-8") as f:
         json.dump(index, f, indent=1, ensure_ascii=False, sort_keys=True)
         f.write("\n")
-    return {"written": len(written), "dir": out_dir}
+    return {"written": len(written), "removed": removed, "dir": out_dir}
 
 
 STALE_AFTER_S = 3600  # an hour of silence is already a conversation at risk of being forgotten
@@ -718,6 +877,7 @@ def request_opening(db, agent, address, now=None):
     it must appear in a message we recorded as coming FROM them. An address that exists only in the request
     is an address somebody wants money sent to, which is the oldest manipulation there is.
     """
+    _refuse_opted_out(db, agent)
     agent = _require(db, agent)
     address = _clean(address, 70).replace("xrb_", "nano_")
     if not NANO_ADDRESS_RE.fullmatch(address):
@@ -1008,6 +1168,9 @@ def main(argv=None):
     ag.add_argument("--agent", required=True)
     ag.add_argument("--summary", required=True)
     ag.add_argument("--amount-xno", default="", dest="amount_xno")
+    rd = sub.add_parser("redact", aliases=["optout"],
+                        help="the agent opted out: delete its messages, keep only a `declined` row, never publish it")
+    rd.add_argument("--agent", required=True)
     w = sub.add_parser("waiting", help="conversations that have gone quiet and need resuming")
     # Default comes from STALE_AFTER_S, never a second number here: a literal in the parser silently overrode the
     # constant and the CLI reported 1 waiting conversation where the library found 8 (measured 2026-09-18).
@@ -1057,6 +1220,8 @@ def main(argv=None):
             out = set_status(db, a.agent, a.status)
         elif a.cmd == "agreed":
             out = agreed(db, a.agent, a.summary, a.amount_xno)
+        elif a.cmd in ("redact", "optout"):
+            out = optout(db, a.agent)
         elif a.cmd == "asks-target":
             out = asks_target(db)
         elif a.cmd == "network":
