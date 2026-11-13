@@ -54,6 +54,24 @@
           "value": "strict-origin-when-cross-origin"
         }
       ]
+    },
+    {
+      "source": "/.well-known/x402",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/.well-known/agent",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json; charset=utf-8"
+        }
+      ]
     }
   ]
 }
