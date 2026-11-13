@@ -48,7 +48,9 @@ const NOT_SHIPPED = [".vercel/", "tests/", ".gitignore"];
  * host that terminates TLS for this box and proxies /unstuck/api to the network
  * server (NW_PORT 4310), so the whole SPA can call it without mixed-content trouble.
  */
-const TLS_API_BASE = "https://172-86-112-140.sslip.io/unstuck/api";
+// Amended 2026-11-13: the page's baked fallback has been the domain since 2026-09-26 (the sslip host stayed in this
+// constant and L31 failed at HEAD ever since). The law is unchanged: an unproxied host falls back to a TLS base.
+const TLS_API_BASE = "https://getunstuck.space/unstuck/api";
 
 /** Pull `resolveApi` out of the shipped HTML and make it callable. */
 function loadResolveApi() {
