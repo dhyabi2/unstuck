@@ -164,7 +164,7 @@ function generatedPage() {
       } catch {
         return null;
       }
-    })() || "https://172-86-112-140.sslip.io/unstuck/api";
+    })() || "https://getunstuck.space/unstuck/api"; // 2026-11-13: the same default as opener/sync-onramp-page.js
   return onramp.onrampHtml(onramp.onrampDoc({ openerAddress, apiBase }));
 }
 

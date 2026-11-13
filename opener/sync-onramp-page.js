@@ -26,7 +26,8 @@ if (!/^nano_[13][0-9a-zA-Z]{59}$/.test(String(openerAddress))) {
   process.exit(1);
 }
 
-const apiBase = env.NW_PUBLIC_BASE || "https://172-86-112-140.sslip.io/unstuck/api";
+// 2026-11-13: the domain is the canonical base (agent.json, llms.txt and the page all name it).
+const apiBase = env.NW_PUBLIC_BASE || "https://getunstuck.space/unstuck/api";
 const doc = o.onrampDoc({ openerAddress, apiBase });
 const html = o.onrampHtml(doc);
 
