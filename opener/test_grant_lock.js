@@ -55,7 +55,10 @@ for (const [amount, why] of refused) {
 // An invented kind is refused: there is no third amount to reach for.
 assert.throws(() => o.ONLY_ALLOWED("bounty", GRANT), /not a kind of send/);
 assert.throws(() => o.ONLY_ALLOWED("escrow", STARTER), /not a kind of send/);
-assert.deepEqual(Object.keys(o.AMOUNTS).sort(), ["ambassador_grant", "starter"], "exactly two amounts exist");
+// Three since 2026-11-10: the owner approved one fixed job payout (test_job_lock.js holds its laws). The list is
+// still closed - a fourth kind fails here until a person changes this line on purpose.
+assert.deepEqual(Object.keys(o.AMOUNTS).sort(), ["ambassador_grant", "job_delivery", "job_payout", "job_verdict", "starter"],
+  "exactly five amounts exist (2026-11-13: the owner approved a delivery and a verdict size)");
 
 // The floor: grants stop before the treasury can be emptied, even by a correctly sized grant.
 // Every expected figure here is DERIVED. A hand-typed 31-digit literal is how the original starter shipped 1000x too
@@ -113,7 +116,7 @@ assert.match(sent[0].agreement, /ambassador/, "the agreement it was given for is
 assert.equal(led.startersSent(db).length, 1, "the grant did not become a second starter in the openings ledger");
 
 console.log(
-  "PASS grant lock: exactly two amounts exist — the 0.00001 starter that opens an account and the 0.1 ambassador " +
+  "PASS grant lock: beside the job payout (its own law file) the two older amounts are unchanged — the 0.00001 starter that opens an account and the 0.1 ambassador " +
   "grant that is ten thousand starters; each is refused under the other's kind, an invented kind has no amount, " +
   refused.length + " other sizes are refused at every entry point, grants stop at the 8.9 XNO treasury floor while " +
   "starters do not, and the same agent takes a starter first and a grant later — each once, ever",

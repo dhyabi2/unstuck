@@ -97,7 +97,7 @@
       "fired_recovery": false
     },
     "https://example.com": {
-      "down": 770,
+      "down": 774,
       "fired_down": true,
       "fired_recovery": false
     },
@@ -307,6 +307,51 @@
       "fired_recovery": false
     },
     "https://rugshield-ai.run402.com": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/chiefofstaffjay": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/mcpcraft": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/mindgrid": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/modus-ai": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/mystic-agent": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/napkin-ai": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/nemodium": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/nemosai": {
+      "down": 0,
+      "fired_down": false,
+      "fired_recovery": false
+    },
+    "https://moltbook.com/u/neuralroute": {
       "down": 0,
       "fired_down": false,
       "fired_recovery": false

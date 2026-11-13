@@ -258,4 +258,129 @@ function grantsSent(db) {
   return db.prepare("SELECT account, agent, block, amount_raw, agreement, settled_at AS sent_at FROM grants WHERE state='sent' ORDER BY settled_at").all();
 }
 
-module.exports = { open, reserve, confirm, release, markUnknown, opened, startersSent, recordChainCheck, counts, lock, reserveGrant, confirmGrant, releaseGrant, grantsSent };
+// ---- Job payouts (owner, 2026-11-10) -------------------------------------------------------------------------------
+// One row per listed job, keyed by the job's id: a job is paid once, ever. The caps are counted HERE, inside the same
+// transaction that reserves the row, so two senders racing cannot both be the fiftieth payout or the fifth of the day.
+// A row whose broadcast outcome is unknown still counts against every cap: the money may have left.
+const JOBS_SCHEMA = `
+CREATE TABLE IF NOT EXISTS job_payouts (
+  job_id      TEXT PRIMARY KEY,
+  account     TEXT NOT NULL,
+  agent       TEXT NOT NULL,
+  state       TEXT NOT NULL,
+  amount_raw  TEXT NOT NULL,
+  proof       TEXT NOT NULL DEFAULT '',
+  block       TEXT,
+  note        TEXT,
+  reserved_at TEXT NOT NULL,
+  settled_at  TEXT
+);`;
+
+function reserveJob(db, jobId, account, { agent, amountRaw, proof = "", maxTotal, maxPerDay, budgetRaw, dayBudgetRaw, tierAmounts, now = new Date().toISOString() } = {}) {
+  db.exec(JOBS_SCHEMA);
+  if (!jobId) return { ok: false, reason: "a payout is recorded against the job it pays for" };
+  if (!agent) return { ok: false, reason: "a payout is recorded against the agent that delivered" };
+  if (!amountRaw) return { ok: false, reason: "a payout is recorded with its amount" };
+  // Two ways to be capped, and a reservation must name exactly one (2026-11-13). The 0.01 XNO payout is capped by
+  // COUNT (fifty ever, five a day). The delivery and verdict sizes are capped by a BUDGET in raw that they share.
+  // Each family counts only its own rows, so neither can spend the other's room. The table has no kind column:
+  // a row's family is its amount, which is why the tier sizes are passed in and compared as exact strings.
+  const byBudget = budgetRaw !== undefined || dayBudgetRaw !== undefined || tierAmounts !== undefined;
+  const byCount = maxTotal !== undefined || maxPerDay !== undefined;
+  if (byBudget && byCount) return { ok: false, reason: "the payout caps are ambiguous (a count and a budget), so nothing is reserved" };
+  const digits = (v) => typeof v === "string" && /^[1-9][0-9]{0,45}$/.test(v);
+  let tiers = null, budget = null, dayBudget = null;
+  if (byBudget) {
+    // A missing or nonsense budget fails closed. "No budget given" must never mean "no budget".
+    if (!digits(budgetRaw) || !digits(dayBudgetRaw) || !Array.isArray(tierAmounts) || tierAmounts.length < 1 || !tierAmounts.every(digits)) {
+      return { ok: false, reason: "the payout caps are missing, so nothing is reserved" };
+    }
+    if (!digits(String(amountRaw)) || !tierAmounts.includes(String(amountRaw))) {
+      return { ok: false, reason: "that amount is not one of the sizes this budget covers, so nothing is reserved" };
+    }
+    tiers = tierAmounts.slice(); budget = BigInt(budgetRaw); dayBudget = BigInt(dayBudgetRaw);
+    if (dayBudget > budget) return { ok: false, reason: "the payout caps are missing, so nothing is reserved" };
+  } else if (!Number.isInteger(maxTotal) || maxTotal < 1 || !Number.isInteger(maxPerDay) || maxPerDay < 1) {
+    // A missing or nonsense cap fails closed. "No cap given" must never mean "no cap".
+    return { ok: false, reason: "the payout caps are missing, so nothing is reserved" };
+  }
+  db.exec("BEGIN IMMEDIATE");
+  try {
+    const existing = db.prepare("SELECT state, block FROM job_payouts WHERE job_id = ?").get(jobId);
+    if (existing) {
+      db.exec("ROLLBACK");
+      return { ok: false, reason: `job ${jobId} is already ${existing.state}`, state: existing.state, block: existing.block || null };
+    }
+    const day = String(now).slice(0, 10);
+    if (tiers) {
+      // Summed in BigInt: 1 XNO is 10^30 raw and does not fit an SQLite integer. Reserved and unknown rows count.
+      const rows = db.prepare("SELECT amount_raw, substr(reserved_at, 1, 10) AS d FROM job_payouts").all()
+        .filter((r) => tiers.includes(String(r.amount_raw)));
+      const spent = rows.reduce((a, r) => a + BigInt(r.amount_raw), 0n);
+      const spentToday = rows.filter((r) => r.d === day).reduce((a, r) => a + BigInt(r.amount_raw), 0n);
+      const want = BigInt(amountRaw);
+      if (spent + want > budget) {
+        db.exec("ROLLBACK");
+        return { ok: false, reason: `the total cap is reached: ${spent} of ${budget} raw is spent, ever, and this payout does not fit` };
+      }
+      if (spentToday + want > dayBudget) {
+        db.exec("ROLLBACK");
+        return { ok: false, reason: `the daily cap is reached: ${spentToday} of ${dayBudget} raw on ${day}, and this payout does not fit` };
+      }
+    } else {
+      const total = db.prepare("SELECT COUNT(*) AS n FROM job_payouts WHERE amount_raw = ?").get(String(amountRaw)).n;
+      if (total >= maxTotal) {
+        db.exec("ROLLBACK");
+        return { ok: false, reason: `the total cap is reached: ${total} of ${maxTotal} payouts, ever` };
+      }
+      const today = db.prepare("SELECT COUNT(*) AS n FROM job_payouts WHERE amount_raw = ? AND substr(reserved_at, 1, 10) = ?").get(String(amountRaw), day).n;
+      if (today >= maxPerDay) {
+        db.exec("ROLLBACK");
+        return { ok: false, reason: `the daily cap is reached: ${today} of ${maxPerDay} payouts on ${day}` };
+      }
+    }
+    // Across every size: one payout per account per day.
+    const sameAccount = db.prepare("SELECT job_id FROM job_payouts WHERE account = ? AND substr(reserved_at, 1, 10) = ?").get(account, day);
+    if (sameAccount) {
+      db.exec("ROLLBACK");
+      return { ok: false, reason: `that account was already paid today (job ${sameAccount.job_id}); one payout per account per day` };
+    }
+    db.prepare(
+      "INSERT INTO job_payouts (job_id, account, agent, state, amount_raw, proof, reserved_at) VALUES (?, ?, ?, 'reserved', ?, ?, ?)"
+    ).run(jobId, account, agent, String(amountRaw), proof, now);
+    db.exec("COMMIT");
+    return { ok: true, state: "reserved" };
+  } catch (e) {
+    try { db.exec("ROLLBACK"); } catch { /* the transaction is already gone */ }
+    return { ok: false, reason: String(e.message || e) };
+  }
+}
+
+/** Give back a reserved payout: a dry run, or a failure BEFORE anything was broadcast, spends neither the job nor a cap. */
+function releaseJob(db, jobId, reason = "") {
+  const r = db.prepare("DELETE FROM job_payouts WHERE job_id = ? AND state = 'reserved'").run(jobId);
+  return { released: r.changes === 1, reason };
+}
+
+function confirmJob(db, jobId, block, { now = new Date().toISOString() } = {}) {
+  if (!block || String(block).length !== 64) throw new Error("a payout is recorded by its block hash or not at all");
+  const r = db.prepare("UPDATE job_payouts SET state='sent', block=?, settled_at=? WHERE job_id=? AND state='reserved'")
+    .run(block, now, jobId);
+  return r.changes === 1;
+}
+
+/** The network was asked and we did not learn the answer. The row stays, counts against the caps, and is never retried. */
+function markJobUnknown(db, jobId, note, { now = new Date().toISOString() } = {}) {
+  const r = db.prepare("UPDATE job_payouts SET state='unknown', note=?, settled_at=? WHERE job_id=? AND state='reserved'")
+    .run(String(note || ""), now, jobId);
+  return r.changes === 1;
+}
+
+/** Every payout that left or may have left. Spending, not adoption. */
+function jobsSent(db) {
+  db.exec(JOBS_SCHEMA);
+  return db.prepare("SELECT job_id, account, agent, state, amount_raw, proof, block, reserved_at, settled_at FROM job_payouts WHERE state IN ('sent','unknown') ORDER BY reserved_at").all();
+}
+
+module.exports = { open, reserve, confirm, release, markUnknown, opened, startersSent, recordChainCheck, counts, lock, reserveGrant, confirmGrant, releaseGrant, grantsSent,
+  reserveJob, releaseJob, confirmJob, markJobUnknown, jobsSent };

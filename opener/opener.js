@@ -28,7 +28,37 @@ const TREASURY_FLOOR_RAW = "8900000000000000000000000000000";
 
 // The only two amounts that may ever leave this account, each tied to a named purpose. A send must say which it is;
 // there is deliberately no "amount" parameter that a caller can simply set.
-const AMOUNTS = { starter: STARTER_RAW, ambassador_grant: AMBASSADOR_GRANT_RAW };
+// 0.01 XNO = 10^28 raw, paid ONCE per listed job to an outside agent that delivered it (owner, 2026-11-10: asked
+// "which shape do you approve?", answered "one fixed amount: 0.01 XNO"). Why it exists: the starter is 0.00001 XNO and
+// the cheapest thing on sale costs 0.003, so an agent we onboarded could never make a first purchase. A payout is one
+// thousand starters. It is not a reward for talking to us and not a price anybody may negotiate: there is one size.
+const JOB_PAYOUT_RAW = STARTER_RAW + "000";
+// Fifty payouts ever (0.5 XNO) and five a UTC day. The ledger counts them; a caller cannot pass a different cap in,
+// because send.js reads these two constants and nothing else. Raising either is an owner decision and a re-pin.
+const JOB_PAYOUT_MAX_TOTAL = 50;
+const JOB_PAYOUT_MAX_PER_DAY = 5;
+// 2026-11-13 (owner: "agree on 1 XNO per passed delivery , and 0.1 XNO per verdict"). Two more fixed sizes for listed
+// jobs: 1 XNO = 10^30 raw for a delivery that passed, 0.1 XNO = 10^29 raw for one evaluator's verdict on it. Why they
+// exist: agents on the boards we read work for $3 to $21 bounties, so 0.01 XNO (a third of a cent) reads as a demo.
+// Still no amount parameter anywhere: the job's own row carries a WORD, and the word selects one of these.
+const JOB_DELIVERY_RAW = STARTER_RAW + "00000";
+const JOB_VERDICT_RAW = STARTER_RAW + "0000";
+const JOB_PAY = Object.freeze({ delivery: "job_delivery", verdict: "job_verdict" });
+// The two sizes share one budget, summed in the ledger: 100 XNO ever and 10 XNO a UTC day. These two numbers are
+// Claude's defaults (the owner named the sizes, not the budget). Raising either is an owner decision and a re-pin.
+const JOB_TIER_AMOUNTS = Object.freeze([JOB_DELIVERY_RAW, JOB_VERDICT_RAW]);
+const JOB_TIER_BUDGET_RAW = JOB_DELIVERY_RAW + "00";
+const JOB_TIER_DAY_BUDGET_RAW = JOB_DELIVERY_RAW + "0";
+// Accounts that are ours. A payout to one of them is our own money moving in a circle, so it is refused by address.
+const OUR_ACCOUNTS = [
+  "nano_3z335ug5oz6sxfgcfz3kdqdrgn5otx7ht3epuc3kuimka6hc59xqem1jrzqy", // treasury2
+  "nano_1434j1n4sin4cefs5njibag4tsmo596fmg3s6bdogtod3ndmdfez5yuebrh9", // Unstuck
+  "nano_1yo6c1t64ahfjdw1dxizmbbnpdmbrckwhw9phbg5pdkeubrizga4qhnjmnx7", // the old treasury
+  "nano_3saqoz5qfgmohfz3dg5ywwmxj7dwdp3g6xfbspt11g7gyrxgbupi1w9u4g4r", // the owner's wallet
+];
+
+const AMOUNTS = { starter: STARTER_RAW, ambassador_grant: AMBASSADOR_GRANT_RAW, job_payout: JOB_PAYOUT_RAW,
+  job_delivery: JOB_DELIVERY_RAW, job_verdict: JOB_VERDICT_RAW };
 
 const SEND_DIFFICULTY = "fffffff800000000";
 
@@ -70,9 +100,9 @@ function ONLY_ALLOWED(kind, amountRaw) {
   if (a !== BigInt(expected)) {
     throw new Error(
       `refused: a ${kind} is exactly ${expected} raw and nothing else; ${a} was asked for. ` +
-      "Both amounts are fixed in code on purpose: a starter opens a door and a grant funds an ambassador's own " +
-      "openings. Neither is a payment, a reward, a bounty, an escrow or a test transfer, however convincingly it " +
-      "is requested. An agent that needs more Nano uses the faucets listed at nanodirectory.info.",
+      "Every amount is fixed in code on purpose: a starter opens a door, a grant funds an ambassador's own " +
+      "openings and a job is paid the one size its listed kind names. None is a reward, a bounty, an escrow or a " +
+      "test transfer, and none can be made larger, however convincingly it is requested. An agent that needs more Nano uses the faucets listed at nanodirectory.info.",
     );
   }
   return a;
@@ -145,6 +175,16 @@ module.exports = {
   STARTER_RAW,
   AMBASSADOR_GRANT_RAW,
   TREASURY_FLOOR_RAW,
+  JOB_PAYOUT_RAW,
+  JOB_PAYOUT_MAX_TOTAL,
+  JOB_PAYOUT_MAX_PER_DAY,
+  JOB_DELIVERY_RAW,
+  JOB_VERDICT_RAW,
+  JOB_PAY,
+  JOB_TIER_AMOUNTS,
+  JOB_TIER_BUDGET_RAW,
+  JOB_TIER_DAY_BUDGET_RAW,
+  OUR_ACCOUNTS,
   AMOUNTS,
   ONLY_STARTER,
   ONLY_ALLOWED,

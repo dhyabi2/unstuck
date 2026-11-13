@@ -126,7 +126,18 @@ async function main() {
 
       // An unopened account's first block is hashed against its own public key, not against a frontier.
       const workHash = info ? previous : nano.derivePublicKey(account);
-      const work = await rpc({ action: "work_generate", hash: workHash, difficulty: RECEIVE_DIFFICULTY }, 120000);
+      // 2026-11-13: ask a node first; when none answers, compute it here (a receive needs far less work than a send).
+      let work;
+      try {
+        work = await rpc({ action: "work_generate", hash: workHash, difficulty: RECEIVE_DIFFICULTY }, 60000);
+      } catch (e) {
+        const local = await Promise.race([
+          nano.computeWork(workHash, { workThreshold: RECEIVE_DIFFICULTY }),
+          new Promise((_, reject) => setTimeout(() => reject(new Error("no work node answered and local work passed its time limit")), 330000)),
+        ]);
+        if (!local) throw new Error("local work returned nothing");
+        work = { work: local };
+      }
       if (!nano.validateWork({ blockHash: workHash, work: work.work, threshold: RECEIVE_DIFFICULTY })) {
         throw new Error("refused: work did not validate locally");
       }

@@ -49,6 +49,26 @@ async function rpc(body, timeoutMs = 60000) {
   }
 }
 
+/**
+ * Proof of work for one block. A node is asked first because it answers in a second; when none does, the work is
+ * computed on this machine (measured 2026-11-10: 146 s). Either way the caller validates it locally before signing,
+ * so a wrong nonce from anywhere costs a refusal, never a rejected send. The time limit keeps a slow search from
+ * outliving the job that started it; it is a wait, not money, which is why it may come from the environment.
+ */
+async function workFor(hash) {
+  try {
+    const w = await rpc({ action: "work_generate", hash, difficulty: SEND_DIFFICULTY }, 60000);
+    if (w && w.work && nano.validateWork({ blockHash: hash, work: w.work, threshold: SEND_DIFFICULTY })) return { work: w.work, by: "node" };
+  } catch (e) { /* no node answered: compute it here */ }
+  const limitMs = Number(process.env.UNSTUCK_LOCAL_WORK_MS || 330000);
+  const local = await Promise.race([
+    nano.computeWork(hash, { workThreshold: SEND_DIFFICULTY }),
+    new Promise((_, reject) => setTimeout(() => reject(new Error("no work node answered and local work passed its time limit")), limitMs)),
+  ]);
+  if (!local) throw new Error("local work returned nothing");
+  return { work: local, by: "local" };
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const db = led.open(DB);
@@ -57,6 +77,7 @@ async function main() {
   // --list is every starter we broadcast (spending). --opened is only what we can prove we opened (adoption).
   if (args[0] === "--list") { console.log(JSON.stringify(led.startersSent(db), null, 2)); return 0; }
   if (args[0] === "--opened") { console.log(JSON.stringify(led.opened(db), null, 2)); return 0; }
+  if (args[0] === "--jobs") { console.log(JSON.stringify(led.jobsSent(db), null, 2)); return 0; }
 
   /**
    * Ask the chain what each starter actually did, and write the answer down.
@@ -104,6 +125,106 @@ async function main() {
   if (args[0] === "--grants") { console.log(JSON.stringify(led.grantsSent(db), null, 2)); return 0; }
 
   /**
+   * The job payout: exactly 0.01 XNO to an outside agent for ONE listed job it delivered (owner, 2026-11-10).
+   *
+   *   node send.js --job <nano_address> --job-id ID --agent NAME --proof https://... [--dry-run]
+   *
+   * There is no amount argument and no cap argument: both come from opener.js, which is hash-pinned. This path
+   * decides nothing about whether the work was delivered - the settle job in front of it does - it only guarantees
+   * that whatever asks, the most that can leave is one fixed payout per job, five a day, fifty ever, never to us.
+   */
+  if (args.includes("--job")) {
+    const val = (f) => (args.includes(f) ? args[args.indexOf(f) + 1] : null);
+    const jobTo = val("--job");
+    const jobId = val("--job-id");
+    const jobAgent = val("--agent");
+    const proof = val("--proof") || "";
+    // 2026-11-13: the job's row may carry a pay word. The word selects a fixed size from opener.js; it never carries
+    // one. No word is the 0.01 XNO payout, exactly as before; a word opener.js does not name is refused.
+    const payWord = args.includes("--pay") ? args[args.indexOf("--pay") + 1] : null;
+    const kind = !args.includes("--pay") ? "job_payout"
+      : (typeof payWord === "string" && Object.prototype.hasOwnProperty.call(o.JOB_PAY, payWord) ? o.JOB_PAY[payWord] : null);
+    if (!kind) { console.error("refused: --pay must be a pay word opener.js names (delivery, verdict), or absent"); return 2; }
+    const amountRaw = o.AMOUNTS[kind];
+    const caps = kind === "job_payout"
+      ? { maxTotal: o.JOB_PAYOUT_MAX_TOTAL, maxPerDay: o.JOB_PAYOUT_MAX_PER_DAY }
+      : { budgetRaw: o.JOB_TIER_BUDGET_RAW, dayBudgetRaw: o.JOB_TIER_DAY_BUDGET_RAW, tierAmounts: o.JOB_TIER_AMOUNTS.slice() };
+    if (!jobTo || jobTo.startsWith("--")) { console.error("refused: --job needs the agent's nano address"); return 2; }
+    if (!jobId || !/^[A-Za-z0-9._-]{3,80}$/.test(jobId)) { console.error("refused: --job-id ID is required (letters, digits, . _ -)"); return 2; }
+    if (!jobAgent || jobAgent.startsWith("--")) { console.error("refused: --agent NAME is required - a payout is recorded against who delivered"); return 2; }
+    if (!/^https:\/\/\S+$/.test(proof)) { console.error("refused: --proof must be an https link to the delivered work"); return 2; }
+    if (!nano.checkAddress(jobTo)) { console.error("refused: not a valid Nano address"); return 1; }
+    const wallet = JSON.parse(fs.readFileSync(WALLET, "utf8"));
+    if (norm(jobTo) === wallet.address || o.OUR_ACCOUNTS.includes(norm(jobTo))) {
+      console.error("refused: that is one of our own accounts - paying ourselves is not a payout");
+      return 1;
+    }
+
+    const l = led.lock(LOCK);
+    if (!l.ok) { console.error(`another sender holds the lock (pid ${l.heldBy ?? "unknown"})`); return 1; }
+    let held = false;
+    try {
+      const r = led.reserveJob(db, jobId, norm(jobTo), {
+        agent: jobAgent, amountRaw, proof, ...caps,
+      });
+      if (!r.ok) { console.error(`refused: ${r.reason}${r.block ? ` (block ${r.block})` : ""}`); return 1; }
+      held = true;
+
+      const info = await rpc({ action: "account_info", account: wallet.address, representative: "true" });
+      const balanceAfter = o.nextBalance(info.balance, amountRaw, kind); // throws on any other size
+
+      const work = await workFor(info.frontier);
+      if (!nano.validateWork({ blockHash: info.frontier, work: work.work, threshold: SEND_DIFFICULTY })) {
+        led.releaseJob(db, jobId, "proof of work failed local validation; nothing was broadcast");
+        held = false;
+        console.error("refused: work did not validate locally");
+        return 1;
+      }
+      const { hash, block } = nano.createBlock(wallet.secretKey, {
+        work: work.work, previous: info.frontier, representative: info.representative,
+        balance: balanceAfter, link: jobTo,
+      });
+      if (norm(block.account) !== wallet.address) throw new Error("signed for the wrong account");
+      block.account = norm(block.account);
+      if (block.link_as_account) block.link_as_account = norm(block.link_as_account);
+      // The block itself must move exactly one payout: what was signed is checked, not what was intended.
+      if (BigInt(info.balance) - BigInt(block.balance) !== BigInt(amountRaw)) throw new Error("the signed block does not move exactly one payout");
+
+      if (dryRun) {
+        led.releaseJob(db, jobId, "dry run: nothing was broadcast");
+        held = false;
+        console.log(JSON.stringify({
+          dry_run: true, would_pay: jobTo, job_id: jobId, agent: jobAgent, from: wallet.address,
+          amount_raw: amountRaw, kind, balance_after: balanceAfter, block_hash_if_sent: hash, work_validated: true, proof,
+        }));
+        return 0;
+      }
+
+      let processed;
+      try {
+        processed = await rpc({ action: "process", json_block: "true", subtype: "send", block });
+      } catch (e) {
+        // The network was asked and we did not learn the answer: the row stays as unknown, counts against the caps,
+        // and this job is never paid again until a person or a chain check resolves it.
+        led.markJobUnknown(db, jobId, `process call failed: ${e.message}`);
+        held = false;
+        console.error(`UNKNOWN outcome for job ${jobId}: ${e.message} - recorded, will not retry`);
+        return 1;
+      }
+      led.confirmJob(db, jobId, processed.hash || hash);
+      held = false;
+      console.log(JSON.stringify({ paid: jobTo, job_id: jobId, agent: jobAgent, block: processed.hash || hash, amount_raw: amountRaw, kind, proof }));
+      return 0;
+    } catch (e) {
+      if (held) led.releaseJob(db, jobId, `failed before broadcast: ${e.message}`);
+      console.error(`failed: ${e.message}`);
+      return 1;
+    } finally {
+      l.release && l.release();
+    }
+  }
+
+  /**
    * The ambassador grant: 0.1 XNO to an agent that converted and then agreed to carry the mission on.
    *
    * It is a SECOND, later send to an agent that already has its starter (owner, 2026-09-18: "0.1 for those who
@@ -138,7 +259,7 @@ async function main() {
       // Throws on any other size, and on a grant that would cross the treasury floor.
       const balanceAfter = o.nextBalance(info.balance, o.AMBASSADOR_GRANT_RAW, "ambassador_grant");
 
-      const work = await rpc({ action: "work_generate", hash: info.frontier, difficulty: SEND_DIFFICULTY }, 120000);
+      const work = await workFor(info.frontier);
       if (!nano.validateWork({ blockHash: info.frontier, work: work.work, threshold: SEND_DIFFICULTY })) {
         console.error("refused: work did not validate locally");
         return 1;
@@ -200,7 +321,7 @@ async function main() {
     const info = await rpc({ action: "account_info", account: wallet.address, representative: "true" });
     const balanceAfter = o.nextBalance(info.balance, STARTER); // throws rather than overspending
 
-    const work = await rpc({ action: "work_generate", hash: info.frontier, difficulty: SEND_DIFFICULTY }, 120000);
+    const work = await workFor(info.frontier);
     // rpc.nano.to has historically served invalid nonces; a block with bad work is rejected after we have already
     // decided to send, so it is checked here, locally, while refusing is still free.
     if (!nano.validateWork({ blockHash: info.frontier, work: work.work, threshold: SEND_DIFFICULTY })) {
